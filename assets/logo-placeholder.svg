@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" fill="none">
+  <!-- CI PLACEHOLDER – replace with official Patrick Leißner logo file -->
+  <!-- Background: CI Grün #2E4F3C -->
+  <rect width="120" height="120" fill="#2E4F3C"/>
+  <!-- Sun rays from lower-center (CI Gold #D0AB3B) -->
+  <!-- Central glow -->
+  <circle cx="60" cy="78" r="6" fill="rgba(208,171,59,0.18)"/>
+  <!-- Rays -->
+  <line x1="60" y1="78" x2="60" y2="54" stroke="#D0AB3B" stroke-width="1.6" stroke-linecap="round" opacity="0.9"/>
+  <line x1="60" y1="78" x2="60" y2="96" stroke="#D0AB3B" stroke-width="1.2" stroke-linecap="round" opacity="0.55"/>
+  <line x1="60" y1="78" x2="41" y2="66" stroke="#D0AB3B" stroke-width="1.6" stroke-linecap="round" opacity="0.9"/>
+  <line x1="60" y1="78" x2="79" y2="66" stroke="#D0AB3B" stroke-width="1.6" stroke-linecap="round" opacity="0.9"/>
+  <line x1="60" y1="78" x2="34" y2="78" stroke="#D0AB3B" stroke-width="1.2" stroke-linecap="round" opacity="0.55"/>
+  <line x1="60" y1="78" x2="86" y2="78" stroke="#D0AB3B" stroke-width="1.2" stroke-linecap="round" opacity="0.55"/>
+  <line x1="60" y1="78" x2="42" y2="93" stroke="#D0AB3B" stroke-width="1.2" stroke-linecap="round" opacity="0.45"/>
+  <line x1="60" y1="78" x2="78" y2="93" stroke="#D0AB3B" stroke-width="1.2" stroke-linecap="round" opacity="0.45"/>
+  <line x1="60" y1="78" x2="44" y2="60" stroke="#D0AB3B" stroke-width="1.4" stroke-linecap="round" opacity="0.7"/>
+  <line x1="60" y1="78" x2="76" y2="60" stroke="#D0AB3B" stroke-width="1.4" stroke-linecap="round" opacity="0.7"/>
+  <!-- PL Monogram (CI Gold, Outfit Bold style) -->
+  <text x="60" y="72" font-family="'Outfit', Verdana, sans-serif" font-size="40" font-weight="700" fill="#D0AB3B" text-anchor="middle" letter-spacing="-2">PL</text>
+</svg>

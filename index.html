@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Patrick Leißner – Energieberatung: Individuelle Planung von Photovoltaikanlagen und Wärmepumpen. Frei durch eigene Energie. Kostenlose Erstberatung – jetzt Termin vereinbaren.">
+
+  <!-- Open Graph (Social Media Preview) -->
+  <meta property="og:title" content="Patrick Leißner – Energieberatung | Photovoltaik &amp; Wärmepumpe">
+  <meta property="og:description" content="Frei durch eigene Energie. Individuelle Planung von PV-Anlagen und Wärmepumpen – persönlich, ehrlich, unabhängig.">
+  <meta property="og:type" content="website">
+
+  <title>Patrick Leißner – Energieberatung | Photovoltaik &amp; Wärmepumpe</title>
+
+  <!-- Google Fonts (CI: Outfit ist die alleinige Hausschrift) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- Skip to content (Accessibility) -->
+  <a href="#main" class="skip-link">Zum Hauptinhalt springen</a>
+
+  <!-- ═══════════════════════════════════════════════════════
+       NAVIGATION
+  ═══════════════════════════════════════════════════════ -->
+  <header class="site-header" role="banner" id="site-header">
+    <nav class="nav-container" aria-label="Hauptnavigation">
+
+      <!-- Logo (CI: Negativ-Variante auf Dunkelgrün) -->
+      <!-- Logo-Datei: assets/logo-placeholder.svg → ersetzen durch offizielle Negativ-Logo-Datei -->
+      <a href="#" class="nav-logo" aria-label="Patrick Leißner Energieberatung – zur Startseite">
+        <img src="assets/logo-placeholder.svg" alt="Patrick Leißner Energieberatung Logo" width="40" height="40" loading="eager">
+        <span class="nav-logo-text">Patrick Leißner</span>
+      </a>
+
+      <!-- Desktop Nav Links -->
+      <ul class="nav-links" role="list">
+        <li><a href="#leistungen" data-nav>Leistungen</a></li>
+        <li><a href="#ueber-pl" data-nav>Über mich</a></li>
+        <li><a href="#termine" data-nav>Termine</a></li>
+        <li><a href="#kontakt" data-nav>Kontakt</a></li>
+      </ul>
+
+      <!-- Desktop CTA -->
+      <a href="#termine" class="btn btn-accent nav-cta">Termin buchen</a>
+
+      <!-- Mobile Hamburger -->
+      <button
+        class="hamburger"
+        aria-label="Menü öffnen"
+        aria-expanded="false"
+        aria-controls="mobile-menu"
+        id="hamburger-btn"
+      >
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </nav>
+
+    <!-- Mobile Menu Overlay -->
+    <div class="mobile-menu" id="mobile-menu" aria-hidden="true" role="dialog" aria-label="Hauptnavigation">
+      <ul role="list">
+        <li><a href="#leistungen" class="mobile-nav-link">Leistungen</a></li>
+        <li><a href="#ueber-pl" class="mobile-nav-link">Über mich</a></li>
+        <li><a href="#termine" class="mobile-nav-link">Termine</a></li>
+        <li><a href="#kontakt" class="mobile-nav-link">Kontakt</a></li>
+        <li><a href="#termine" class="btn btn-accent mobile-nav-link">Termin buchen</a></li>
+      </ul>
+    </div>
+  </header>
+
+  <!-- ═══════════════════════════════════════════════════════
+       MAIN CONTENT
+  ═══════════════════════════════════════════════════════ -->
+  <main id="main">
+
+    <!-- ────────────────────────────────────────────────────
+         HERO
+    ──────────────────────────────────────────────────── -->
+    <section id="hero" class="hero" aria-label="Einleitung">
+      <!-- WebGL Shader Background (CI-Gold Nebula) -->
+      <canvas class="hero-canvas" id="heroCanvas" aria-hidden="true"></canvas>
+
+      <div class="container hero-content">
+        <div class="hero-badge animate-fade-up">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true">
+            <circle cx="12" cy="12" r="5"/>
+            <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+          </svg>
+          Patrick Leißner · Energieberatung
+        </div>
+
+        <!-- CI: Großer Titel immer in Gold (Outfit Bold) -->
+        <h1 class="animate-fade-up" style="--delay: 1">
+          Frei durch eigene Energie.
+        </h1>
+
+        <p class="hero-subline animate-fade-up" style="--delay: 2">
+          Steigende Energiepreise, unsichere Versorgung – es ist Zeit, selbst die Kontrolle zu übernehmen.
+          Mit individuell geplanter Photovoltaik und Wärmepumpe begleite ich dich auf dem Weg
+          zur echten Energieautarkie – persönlich, ehrlich und mit technischem Know-how.
+        </p>
+
+        <div class="hero-actions animate-fade-up" style="--delay: 3">
+          <a href="#termine" class="btn btn-accent btn-lg">Jetzt Termin vereinbaren</a>
+          <a href="#leistungen" class="btn btn-ghost btn-lg">Meine Leistungen</a>
+        </div>
+      </div>
+
+      <div class="scroll-indicator" aria-hidden="true">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 5v14M5 12l7 7 7-7"/>
+        </svg>
+      </div>
+    </section>
+
+    <!-- ────────────────────────────────────────────────────
+         LEISTUNGEN
+    ──────────────────────────────────────────────────── -->
+    <section id="leistungen" class="section section-alt" aria-labelledby="leistungen-heading">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-label">Was ich anbiete</span>
+          <h2 id="leistungen-heading">Meine Leistungen</h2>
+          <p>
+            Von der ersten Idee bis zur fertigen Planung – unabhängig von Herstellern
+            und Installateuren, immer auf deine Bedürfnisse zugeschnitten.
+          </p>
+        </div>
+
+        <div class="services-grid">
+
+          <!-- Photovoltaik -->
+          <article class="service-card reveal" aria-label="Leistung: Photovoltaikanlage">
+            <div class="service-icon" aria-hidden="true">
+              <!-- Solar Panel Icon -->
+              <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="2" y="3" width="20" height="14" rx="2"/>
+                <path d="M8 21h8M12 17v4"/>
+                <path d="M2 8h20M8 3v14M14 3v14"/>
+              </svg>
+            </div>
+            <h3>Photovoltaikanlage</h3>
+            <ul class="service-list" aria-label="Leistungsumfang Photovoltaik">
+              <li>Standort- und Dachflächenanalyse</li>
+              <li>Leistungsdimensionierung &amp; Ertragsimulation</li>
+              <li>Wirtschaftlichkeitsberechnung &amp; Amortisation</li>
+              <li>Förderantrag &amp; Netzanschlusskoordination</li>
+              <li>Vollständige Ausschreibungs­dokumentation</li>
+            </ul>
+            <a href="#kontakt" class="service-link">
+              Jetzt anfragen
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M5 12h14M12 5l7 7-7 7"/>
+              </svg>
+            </a>
+          </article>
+
+          <!-- Wärmepumpe -->
+          <article class="service-card reveal" aria-label="Leistung: Wärmepumpe">
+            <div class="service-icon" aria-hidden="true">
+              <!-- Heat Pump Icon -->
+              <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12 22C6.477 22 2 17.523 2 12S6.477 2 12 2s10 4.477 10 10-4.477 10-10 10z"/>
+                <path d="M12 6v6l4 2"/>
+                <path d="M8 12a4 4 0 0 1 4-4"/>
+                <path d="M15.5 15.5A5.97 5.97 0 0 0 18 12"/>
+              </svg>
+            </div>
+            <h3>Wärmepumpe</h3>
+            <ul class="service-list" aria-label="Leistungsumfang Wärmepumpe">
+              <li>Heizlastberechnung &amp; Bedarfsanalyse</li>
+              <li>Systemauswahl (Luft / Erde / Wasser-Wasser)</li>
+              <li>Hydraulisches Konzept &amp; Heizkreisplanung</li>
+              <li>Fördermittelberatung (BEG, BAFA)</li>
+              <li>Fachplanungsdokumentation &amp; Ausschreibung</li>
+            </ul>
+            <a href="#kontakt" class="service-link">
+              Jetzt anfragen
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M5 12h14M12 5l7 7-7 7"/>
+              </svg>
+            </a>
+          </article>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ────────────────────────────────────────────────────
+         ÜBER PL
+    ──────────────────────────────────────────────────── -->
+    <section id="ueber-pl" class="section" aria-labelledby="ueber-heading">
+      <div class="container">
+        <div class="about-grid">
+
+          <!-- Foto-Platzhalter -->
+          <div class="about-image reveal" aria-hidden="true">
+            <div class="about-image-placeholder">
+              <!-- CI PLATZHALTER: Ersetzen Sie diesen Block durch ein <img src="..." alt="Foto von PL"> -->
+              <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                <circle cx="12" cy="7" r="4"/>
+              </svg>
+              <span>Foto folgt</span>
+            </div>
+          </div>
+
+          <!-- Text -->
+          <div class="about-content reveal">
+            <span class="section-label">Über mich</span>
+            <h2 id="ueber-heading">Erfahrung,<br>die zählt.</h2>
+            <p>
+              Als unabhängiger Energieberater mit langjähriger Erfahrung bin ich dein
+              neutraler Ansprechpartner – ohne Bindung an einen Hersteller oder Installateur,
+              immer auf Augenhöhe und mit echtem Engagement.
+            </p>
+            <p>
+              Mein Ziel: für jeden Kunden die technisch und wirtschaftlich optimale Lösung
+              finden und die Planung professionell in die Ausführung überführen.
+              Für mehr Unabhängigkeit, Sicherheit und ein gutes Gefühl.
+            </p>
+
+            <div class="about-stats" role="list" aria-label="Kennzahlen">
+              <div class="stat" role="listitem">
+                <!-- CI PLATZHALTER: Ersetzen Sie die Zahlen durch tatsächliche Werte -->
+                <span class="stat-number">150+</span>
+                <span class="stat-label">Projekte</span>
+              </div>
+              <div class="stat" role="listitem">
+                <span class="stat-number">10+</span>
+                <span class="stat-label">Jahre Erfahrung</span>
+              </div>
+              <div class="stat" role="listitem">
+                <span class="stat-number">100%</span>
+                <span class="stat-label">Unabhängig</span>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ────────────────────────────────────────────────────
+         PARTNER
+    ──────────────────────────────────────────────────── -->
+    <section id="partner" class="section-partner" aria-labelledby="partner-heading">
+      <!-- Background Paths – inserted by JS -->
+
+      <div class="container partner-content">
+        <div class="section-header reveal">
+          <span class="section-label">Vertrauen &amp; Qualität</span>
+          <h2 id="partner-heading">Starke Partner</h2>
+          <p>Als unabhängiger Berater arbeite ich mit führenden Herstellern zusammen –
+          damit du stets die beste Technik bekommst.</p>
+        </div>
+
+        <!-- Orbital Timeline – wird per JS befüllt und animiert -->
+        <div class="orbital-wrapper" id="orbitalWrapper" role="region" aria-label="Partner-Übersicht">
+          <!-- Zentrum -->
+          <div class="orbital-center-orb" aria-hidden="true">
+            <div class="orbital-ping orbital-ping-1"></div>
+            <div class="orbital-ping orbital-ping-2"></div>
+            <div class="orbital-center-dot"></div>
+          </div>
+          <!-- Umlaufbahn -->
+          <div class="orbital-ring" aria-hidden="true"></div>
+          <!-- Partnerknoten und Info-Panel werden per JS eingefügt -->
+        </div>
+
+        <!-- Inline-Popups sind jetzt direkt an den Knoten – kein Panel mehr nötig -->
+      </div>
+    </section>
+
+    <!-- ────────────────────────────────────────────────────
+         TERMINE
+    ──────────────────────────────────────────────────── -->
+    <section id="termine" class="section section-dark" aria-labelledby="termine-heading">
+      <div class="container">
+        <div class="section-header section-header-light">
+          <span class="section-label">Kostenfrei &amp; unverbindlich</span>
+          <h2 id="termine-heading">Erstberatung buchen</h2>
+          <p>
+            Vereinbaren Sie Ihr kostenloses Erstgespräch –
+            persönlich, telefonisch oder per Videocall.
+          </p>
+        </div>
+
+        <div class="calendly-placeholder reveal">
+          <!--
+            ╔══════════════════════════════════════════════════════╗
+            ║  CALENDLY EMBED PLATZHALTER                         ║
+            ║  Ersetzen Sie diesen Block durch Ihren              ║
+            ║  Calendly-Einbettungscode:                          ║
+            ║                                                      ║
+            ║  <div class="calendly-inline-widget"                ║
+            ║    data-url="https://calendly.com/IHR-NUTZERNAME"  ║
+            ║    style="min-width:320px;height:700px;">           ║
+            ║  </div>                                              ║
+            ║  <script src="https://assets.calendly.com/         ║
+            ║    assets/external/widget.js"></script>             ║
+            ╚══════════════════════════════════════════════════════╝
+          -->
+          <div class="calendly-placeholder-inner">
+            <svg width="52" height="52" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <rect x="3" y="4" width="18" height="18" rx="2"/>
+              <path d="M16 2v4M8 2v4M3 10h18"/>
+              <path d="M8 14h.01M12 14h.01M16 14h.01M8 18h.01M12 18h.01"/>
+            </svg>
+            <div>
+              <strong>Online-Terminbuchung</strong>
+              <p>Ihren Calendly-Buchungslink hier einbinden.</p>
+            </div>
+            <a href="#kontakt" class="btn btn-accent">Alternativ: Direkt kontaktieren</a>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ────────────────────────────────────────────────────
+         KONTAKT
+    ──────────────────────────────────────────────────── -->
+    <section id="kontakt" class="section" aria-labelledby="kontakt-heading">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-label">Lass uns reden</span>
+          <h2 id="kontakt-heading">Kontakt</h2>
+          <p>Du hast Fragen oder möchtest ein Projekt besprechen? Ich freue mich auf deine Nachricht.</p>
+        </div>
+
+        <div class="contact-grid">
+
+          <!-- Kontaktformular -->
+          <form
+            class="contact-form reveal"
+            id="contactForm"
+            novalidate
+            aria-label="Kontaktformular"
+          >
+            <div class="form-group">
+              <label for="name">Name <span aria-hidden="true">*</span></label>
+              <input
+                type="text"
+                id="name"
+                name="name"
+                required
+                autocomplete="name"
+                placeholder="Ihr vollständiger Name"
+                aria-describedby="name-error"
+                aria-required="true"
+              >
+              <span class="field-error" id="name-error" role="alert" aria-live="polite"></span>
+            </div>
+
+            <div class="form-group">
+              <label for="email">E-Mail <span aria-hidden="true">*</span></label>
+              <input
+                type="email"
+                id="email"
+                name="email"
+                required
+                autocomplete="email"
+                placeholder="ihre@email.de"
+                aria-describedby="email-error"
+                aria-required="true"
+              >
+              <span class="field-error" id="email-error" role="alert" aria-live="polite"></span>
+            </div>
+
+            <div class="form-group">
+              <label for="phone">Telefon <span style="font-weight:400;color:var(--color-text-muted)">(optional)</span></label>
+              <input
+                type="tel"
+                id="phone"
+                name="phone"
+                autocomplete="tel"
+                placeholder="+49 ..."
+              >
+            </div>
+
+            <div class="form-group">
+              <label for="subject">Betreff</label>
+              <select id="subject" name="subject" autocomplete="off">
+                <option value="">Bitte wählen…</option>
+                <option value="pv">Photovoltaikanlage</option>
+                <option value="wp">Wärmepumpe</option>
+                <option value="both">PV + Wärmepumpe</option>
+                <option value="other">Sonstiges</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="message">Nachricht <span aria-hidden="true">*</span></label>
+              <textarea
+                id="message"
+                name="message"
+                required
+                rows="5"
+                placeholder="Beschreiben Sie kurz Ihr Projekt oder Ihre Frage…"
+                aria-describedby="message-error"
+                aria-required="true"
+              ></textarea>
+              <span class="field-error" id="message-error" role="alert" aria-live="polite"></span>
+            </div>
+
+            <div class="form-group form-group-checkbox">
+              <input
+                type="checkbox"
+                id="datenschutz"
+                name="datenschutz"
+                required
+                aria-describedby="datenschutz-error"
+                aria-required="true"
+              >
+              <label for="datenschutz">
+                Ich habe die <a href="#datenschutz">Datenschutzerklärung</a> gelesen und stimme
+                der Verarbeitung meiner Daten zur Bearbeitung meiner Anfrage zu. <span aria-hidden="true">*</span>
+              </label>
+            </div>
+            <span class="field-error" id="datenschutz-error" role="alert" aria-live="polite"></span>
+
+            <!--
+              FORMULAR-ÜBERTRAGUNG (PLATZHALTER):
+              Option A – mailto (kein Server nötig, öffnet E-Mail-Programm):
+                Fügen Sie action="mailto:ihre@email.de" method="post" enctype="text/plain" zum <form>-Tag hinzu.
+
+              Option B – Formspree (kostenloser Dienst):
+                1. Konto auf formspree.io anlegen
+                2. action="https://formspree.io/f/IHR-FORMULAR-ID" zum <form>-Tag hinzufügen
+                3. Das JS-Handling in main.js entsprechend anpassen.
+            -->
+            <button type="submit" class="btn btn-primary btn-lg btn-submit" id="submitBtn">
+              <span class="btn-text">Nachricht senden</span>
+              <span class="btn-loading" aria-hidden="true">Wird gesendet…</span>
+            </button>
+
+            <div class="form-success" id="formSuccess" role="status" aria-live="polite">
+              Vielen Dank! Ihre Nachricht wurde gesendet. Ich melde mich innerhalb von 1–2 Werktagen.
+            </div>
+          </form>
+
+          <!-- Kontaktdaten -->
+          <aside class="contact-info reveal" aria-label="Direktkontakt">
+            <h3>Direktkontakt</h3>
+
+            <!-- Telefon -->
+            <div class="contact-item">
+              <div class="contact-item-icon" aria-hidden="true">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.82 11a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.77 0h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8 7.91a16 16 0 0 0 6.08 6.08l1.08-1.07a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/>
+                </svg>
+              </div>
+              <div class="contact-item-text">
+                <span>Telefon</span>
+                <!-- CI PLATZHALTER: Telefonnummer anpassen -->
+                <a href="tel:+490000000000">+49 000 000 0000</a>
+              </div>
+            </div>
+
+            <!-- E-Mail -->
+            <div class="contact-item">
+              <div class="contact-item-icon" aria-hidden="true">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <rect x="2" y="4" width="20" height="16" rx="2"/>
+                  <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/>
+                </svg>
+              </div>
+              <div class="contact-item-text">
+                <span>E-Mail</span>
+                <!-- CI PLATZHALTER: E-Mail-Adresse anpassen -->
+                <a href="mailto:info@pl-energie.de">info@pl-energie.de</a>
+              </div>
+            </div>
+
+            <!-- Region -->
+            <div class="contact-item">
+              <div class="contact-item-icon" aria-hidden="true">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M20 10c0 6-8 12-8 12S4 16 4 10a8 8 0 1 1 16 0z"/>
+                  <circle cx="12" cy="10" r="3"/>
+                </svg>
+              </div>
+              <div class="contact-item-text">
+                <span>Einsatzgebiet</span>
+                <!-- CI PLATZHALTER: Region anpassen -->
+                <span>Bayern &amp; Baden-Württemberg</span>
+              </div>
+            </div>
+
+            <!-- Erreichbarkeit -->
+            <div class="contact-hours">
+              <h4>Erreichbarkeit</h4>
+              <!-- CI PLATZHALTER: Zeiten anpassen -->
+              <p>Montag – Freitag: 08:00 – 18:00 Uhr</p>
+              <p>Samstag: nach Vereinbarung</p>
+            </div>
+          </aside>
+
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ═══════════════════════════════════════════════════════
+       FOOTER
+  ═══════════════════════════════════════════════════════ -->
+  <footer class="site-footer" role="contentinfo">
+    <div class="container footer-inner">
+
+      <div class="footer-brand">
+        <!-- CI: Positiv-Logo auf weißem Hintergrund → hier Negativ-Variante da Footer dunkel -->
+        <a href="#" class="nav-logo" aria-label="Patrick Leißner Energieberatung – zur Startseite">
+          <img src="assets/logo-placeholder.svg" alt="Patrick Leißner Energieberatung Logo" width="36" height="36">
+          <span class="nav-logo-text">Patrick Leißner</span>
+        </a>
+        <p>Frei durch eigene Energie.</p>
+      </div>
+
+      <nav class="footer-links" aria-label="Footer-Navigation">
+        <!-- CI PLATZHALTER: Impressum- und Datenschutz-Seiten verlinken -->
+        <a href="#impressum">Impressum</a>
+        <a href="#datenschutz">Datenschutz</a>
+        <a href="#" aria-label="Zurück zum Seitenanfang">Nach oben ↑</a>
+      </nav>
+
+    </div>
+
+    <div class="container">
+      <p class="footer-copyright">© 2025 Patrick Leißner. Alle Rechte vorbehalten.</p>
+    </div>
+  </footer>
+
+  <script src="main.js"></script>
+</body>
+</html>

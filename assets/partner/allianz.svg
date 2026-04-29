@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" fill="none">
+  <!-- PLACEHOLDER – replace with official Allianz logo -->
+  <rect width="120" height="120" rx="12" fill="#2E4F3C"/>
+  <text x="60" y="56" font-family="'Outfit', Verdana, sans-serif" font-size="22" font-weight="700" fill="#D0AB3B" text-anchor="middle">ALZ</text>
+  <text x="60" y="78" font-family="'Outfit', Verdana, sans-serif" font-size="9" font-weight="400" fill="rgba(241,240,233,0.6)" text-anchor="middle">Allianz</text>
+  <text x="60" y="90" font-family="'Outfit', Verdana, sans-serif" font-size="9" font-weight="400" fill="rgba(241,240,233,0.6)" text-anchor="middle">Versicherung</text>
+</svg>
