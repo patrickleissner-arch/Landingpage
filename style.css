@@ -984,12 +984,9 @@ p { max-width: 68ch; }
 }
 
 .ueber-mission,
+.ueber-vision,
 .ueber-arbeitsweise {
   flex-direction: row;
-}
-
-.ueber-vision {
-  flex-direction: row-reverse;
 }
 
 .ueber-pillar {
