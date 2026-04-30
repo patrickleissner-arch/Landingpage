@@ -916,13 +916,25 @@ p { max-width: 68ch; }
   margin-bottom: var(--space-4);
 }
 
-.ueber-subtitle {
+.ueber-intro {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-2);
+  margin-top: var(--space-4);
+}
+
+.ueber-intro-label {
   color: var(--color-text-secondary);
-  font-size: 1.0625rem;
+  font-size: 1rem;
   line-height: 1.65;
   text-align: center;
-  max-width: 40ch;
-  margin-inline: auto;
+}
+
+.ueber-pillar--hero {
+  text-align: center;
+  white-space: normal;
+  min-width: unset;
 }
 
 /* Desktop: 3-Spalten-Grid mit überlappender Foto-Positionierung */
