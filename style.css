@@ -925,10 +925,12 @@ p { max-width: 68ch; }
 }
 
 .ueber-intro-label {
-  color: var(--color-text-secondary);
-  font-size: 1rem;
-  line-height: 1.65;
+  color: var(--color-text-muted);
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.04em;
   text-align: center;
+  line-height: 1.4;
 }
 
 .ueber-pillar--hero {
