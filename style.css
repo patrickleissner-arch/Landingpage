@@ -558,6 +558,23 @@ p { max-width: 68ch; }
   margin-inline: auto;
 }
 
+.hero-headline2 {
+  color: var(--color-brand-primary);
+  font-size: clamp(1.5rem, 3vw, 2.25rem);
+  font-weight: 600;
+  line-height: 1.2;
+  max-width: 36ch;
+  margin-bottom: var(--space-3);
+}
+
+.hero-bold {
+  color: #ffffff;
+  font-size: clamp(1rem, 1.8vw, 1.125rem);
+  font-weight: 700;
+  max-width: 52ch;
+  margin-bottom: var(--space-4);
+}
+
 .hero-subline {
   color: rgba(255, 255, 255, 0.72);
   font-size: clamp(1rem, 1.8vw, 1.125rem);
