@@ -125,70 +125,55 @@
     <!-- ────────────────────────────────────────────────────
          LEISTUNGEN
     ──────────────────────────────────────────────────── -->
-    <section id="leistungen" class="section section-alt" aria-labelledby="leistungen-heading">
+    <section id="leistungen" class="section-leistungen" aria-labelledby="leistungen-heading">
       <div class="container">
-        <div class="section-header">
-          <span class="section-label">Was ich anbiete</span>
-          <h2 id="leistungen-heading">Meine Leistungen</h2>
-          <p>
-            Von der ersten Idee bis zur fertigen Planung – unabhängig von Herstellern
-            und Installateuren, immer auf deine Bedürfnisse zugeschnitten.
-          </p>
+        <div class="leistungen-header reveal">
+          <h2 id="leistungen-heading">Leistungen</h2>
+          <p>Individuelle Planung und Umsetzung von Photovoltaik und Wärmepumpen.</p>
         </div>
 
-        <div class="services-grid">
+        <div class="leistungen-grid">
 
-          <!-- Photovoltaik -->
-          <article class="service-card reveal" aria-label="Leistung: Photovoltaikanlage">
-            <div class="service-icon" aria-hidden="true">
-              <!-- Solar Panel Icon -->
-              <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
-                <rect x="2" y="3" width="20" height="14" rx="2"/>
-                <path d="M8 21h8M12 17v4"/>
-                <path d="M2 8h20M8 3v14M14 3v14"/>
-              </svg>
+          <!-- Karte 1: Beratung & Technik -->
+          <article class="leistung-card reveal" aria-label="Beratung und Technik">
+            <div class="leistung-img">
+              <img src="assets/Foto/leistung-pv.jpg" alt="Photovoltaikanlage auf Flachdach" loading="lazy" onerror="this.parentElement.classList.add('leistung-img--placeholder')">
             </div>
-            <h3>Photovoltaikanlage</h3>
-            <ul class="service-list" aria-label="Leistungsumfang Photovoltaik">
-              <li>Standort- und Dachflächenanalyse</li>
-              <li>Leistungsdimensionierung &amp; Ertragsimulation</li>
-              <li>Wirtschaftlichkeitsberechnung &amp; Amortisation</li>
-              <li>Förderantrag &amp; Netzanschlusskoordination</li>
-              <li>Vollständige Ausschreibungs­dokumentation</li>
-            </ul>
-            <a href="#kontakt" class="service-link">
-              Jetzt anfragen
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                <path d="M5 12h14M12 5l7 7-7 7"/>
-              </svg>
-            </a>
+            <div class="leistung-body">
+              <h3>Beratung &amp; Technik</h3>
+              <p>Strukturierte Betrachtung Ihrer Möglichkeiten im Bereich Photovoltaik und Wärmepumpe. Keine pauschalen Versprechen sondern individuelle Analyse.</p>
+            </div>
+            <div class="leistung-footer">
+              <a href="#kontakt" class="btn-leistung">mehr erfahren</a>
+            </div>
           </article>
 
-          <!-- Wärmepumpe -->
-          <article class="service-card reveal" aria-label="Leistung: Wärmepumpe">
-            <div class="service-icon" aria-hidden="true">
-              <!-- Heat Pump Icon -->
-              <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M12 22C6.477 22 2 17.523 2 12S6.477 2 12 2s10 4.477 10 10-4.477 10-10 10z"/>
-                <path d="M12 6v6l4 2"/>
-                <path d="M8 12a4 4 0 0 1 4-4"/>
-                <path d="M15.5 15.5A5.97 5.97 0 0 0 18 12"/>
-              </svg>
+          <!-- Karte 2: Koordination & Netzwerk -->
+          <article class="leistung-card reveal" aria-label="Koordination und Netzwerk">
+            <div class="leistung-img">
+              <img src="assets/Foto/leistung-wp.jpg" alt="Wärmepumpe an Hauswand" loading="lazy" onerror="this.parentElement.classList.add('leistung-img--placeholder')">
             </div>
-            <h3>Wärmepumpe</h3>
-            <ul class="service-list" aria-label="Leistungsumfang Wärmepumpe">
-              <li>Heizlastberechnung &amp; Bedarfsanalyse</li>
-              <li>Systemauswahl (Luft / Erde / Wasser-Wasser)</li>
-              <li>Hydraulisches Konzept &amp; Heizkreisplanung</li>
-              <li>Fördermittelberatung (BEG, BAFA)</li>
-              <li>Fachplanungsdokumentation &amp; Ausschreibung</li>
-            </ul>
-            <a href="#kontakt" class="service-link">
-              Jetzt anfragen
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                <path d="M5 12h14M12 5l7 7-7 7"/>
-              </svg>
-            </a>
+            <div class="leistung-body">
+              <h3>Koordination &amp; Netzwerk</h3>
+              <p>Abstimmung mit Fachpartnern und transparente Darstellung von Schnittstellen und Verantwortlichkeiten.</p>
+            </div>
+            <div class="leistung-footer">
+              <a href="#kontakt" class="btn-leistung">mehr erfahren</a>
+            </div>
+          </article>
+
+          <!-- Karte 3: Analyse & Vorsorge -->
+          <article class="leistung-card reveal" aria-label="Analyse und Vorsorge">
+            <div class="leistung-img">
+              <img src="assets/Foto/leistung-analyse.jpg" alt="Analyse und Planung am Tablet" loading="lazy" onerror="this.parentElement.classList.add('leistung-img--placeholder')">
+            </div>
+            <div class="leistung-body">
+              <h3>Analyse &amp; Vorsorge</h3>
+              <p>Bestandsaufnahme Ihrer Versorgungs- und Absicherungssituation im Rahmen der Allianz-Vermittlung. Risiken und Optimierungsmöglichkeiten erkennen.</p>
+            </div>
+            <div class="leistung-footer">
+              <a href="#kontakt" class="btn-leistung">mehr erfahren</a>
+            </div>
           </article>
 
         </div>
