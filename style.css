@@ -933,11 +933,6 @@ p { max-width: 68ch; }
   line-height: 1.4;
 }
 
-.ueber-pillar--hero {
-  text-align: center;
-  white-space: normal;
-  min-width: unset;
-}
 
 /* Desktop: 3-Spalten-Grid mit überlappender Foto-Positionierung */
 .ueber-layout {
@@ -1005,6 +1000,13 @@ p { max-width: 68ch; }
   white-space: nowrap;
   flex-shrink: 0;
   min-width: 8rem;
+}
+
+.ueber-pillar--hero {
+  text-align: center;
+  white-space: normal;
+  min-width: unset;
+  flex-shrink: unset;
 }
 
 .ueber-block p {
