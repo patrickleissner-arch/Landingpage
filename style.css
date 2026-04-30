@@ -65,7 +65,7 @@
 
   /* Layout */
   --container-max:   1200px;
-  --nav-height:      72px;
+  --nav-height:      90px;
   --border-radius:   0.75rem;
   --border-radius-sm: 0.5rem;
   --border-radius-lg: 1rem;
@@ -285,9 +285,9 @@ button {
 }
 
 .nav-logo img {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
+  height: 76px;
+  width: auto;
+  object-fit: contain;
 }
 
 .nav-logo-text {
