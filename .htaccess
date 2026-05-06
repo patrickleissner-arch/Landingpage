@@ -1,19 +1,21 @@
 Options -MultiViews
 RewriteEngine On
+RewriteBase /
 
-# Serve existing files directly (CSS, JS, images, .html)
-RewriteCond %{REQUEST_FILENAME} -f
+# Serve existing files and directories directly
+RewriteCond %{REQUEST_FILENAME} -f [OR]
+RewriteCond %{REQUEST_FILENAME} -d
 RewriteRule ^ - [L]
 
 # Clean URL → HTML file mapping
-RewriteRule ^energierechner/?$ energierechner.html [L]
-RewriteRule ^solarisator/?$ solarisator.html [L]
-RewriteRule ^impressum/?$ impressum.html [L]
-RewriteRule ^datenschutz/?$ datenschutz.html [L]
-RewriteRule ^termin/?$ termin.html [L]
-RewriteRule ^beratung-technik/?$ beratung-technik.html [L]
-RewriteRule ^koordination-netzwerk/?$ koordination-netzwerk.html [L]
-RewriteRule ^analyse-vorsorge/?$ analyse-vorsorge.html [L]
+RewriteRule ^impressum/?$              impressum.html [L]
+RewriteRule ^datenschutz/?$            datenschutz.html [L]
+RewriteRule ^termin/?$                 termin.html [L]
+RewriteRule ^beratung-technik/?$       beratung-technik.html [L]
+RewriteRule ^koordination-netzwerk/?$  koordination-netzwerk.html [L]
+RewriteRule ^analyse-vorsorge/?$       analyse-vorsorge.html [L]
+RewriteRule ^energierechner/?$         energierechner.html [L]
+RewriteRule ^solarisator/?$            solarisator.html [L]
 
-# Fallback: alle anderen Routen → index.html (SPA)
+# Fallback → index.html
 RewriteRule ^ index.html [L]
