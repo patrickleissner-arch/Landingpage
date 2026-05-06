@@ -872,6 +872,19 @@
   margin: var(--space-8) 0;
 }
 
+/* ── IT-Recht Kanzlei Iframe ────────────────────────────────── */
+.legal-iframe-wrapper {
+  margin-bottom: var(--space-10);
+}
+
+.legal-iframe-wrapper iframe {
+  display: block;
+  width: 100%;
+  min-height: 1400px;
+  border: none;
+  overflow: hidden;
+}
+
 .fairness-badge {
   display: flex;
   align-items: center;
