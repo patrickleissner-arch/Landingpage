@@ -435,6 +435,82 @@ button {
 .mobile-menu a:hover { color: #ffffff; background: rgba(255,255,255,0.08); }
 .mobile-menu a.btn { font-size: 1rem; margin-top: var(--space-4); }
 
+/* ── Nav Dropdown ──────────────────────────────────────────── */
+.nav-has-dropdown { position: relative; }
+
+.nav-has-dropdown > a::after {
+  content: '';
+  display: inline-block;
+  width: 0;
+  height: 0;
+  border-left: 3px solid transparent;
+  border-right: 3px solid transparent;
+  border-top: 4px solid currentColor;
+  margin-left: 5px;
+  vertical-align: middle;
+  opacity: 0.6;
+  transition: transform var(--transition-fast);
+}
+
+.nav-has-dropdown:hover > a::after,
+.nav-has-dropdown:focus-within > a::after {
+  transform: rotate(180deg);
+}
+
+.nav-dropdown {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 50%;
+  transform: translateX(-50%) translateY(-6px);
+  background: rgba(14, 28, 20, 0.97);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 10px;
+  padding: var(--space-1);
+  min-width: 215px;
+  list-style: none;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--transition-fast), transform var(--transition-fast);
+  z-index: 200;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.45);
+}
+
+.nav-has-dropdown:hover .nav-dropdown,
+.nav-has-dropdown:focus-within .nav-dropdown {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateX(-50%) translateY(0);
+}
+
+.nav-dropdown li { list-style: none; }
+
+.nav-dropdown a {
+  display: block;
+  padding: var(--space-2) var(--space-4);
+  color: rgba(241, 245, 249, 0.85);
+  font-size: 0.875rem;
+  font-weight: 500;
+  border-radius: 8px;
+  white-space: nowrap;
+  transition: color var(--transition-fast), background-color var(--transition-fast);
+}
+
+.nav-dropdown a:hover,
+.nav-dropdown a:focus-visible {
+  color: #ffffff;
+  background: rgba(255,255,255,0.1);
+}
+
+/* Mobile sub-nav (indented items under Leistungen) */
+.mobile-nav-sub {
+  font-size: 1rem !important;
+  padding-block: var(--space-2) !important;
+  padding-left: calc(var(--space-8) + var(--space-6)) !important;
+  opacity: 0.75;
+}
+
 /* ── Section Layout ───────────────────────────────────────── */
 .section {
   padding-block: var(--space-20);
@@ -1681,6 +1757,54 @@ p { max-width: 68ch; }
   border-top: 1px solid var(--color-border-dark);
   max-width: none;
 }
+
+/* ── Solarisator / Rechner Section ───────────────────────── */
+.section-rechner {
+  background: var(--color-surface-alt);
+  padding-block: var(--space-20);
+}
+
+.solarisator-frame-wrapper {
+  margin-top: var(--space-10);
+  margin-inline: auto;
+  max-width: 1024px;
+  border-radius: var(--border-radius-lg);
+  overflow: hidden;
+  box-shadow: 0 8px 48px rgba(46, 79, 60, 0.16);
+  border: 1px solid var(--color-border);
+  background: #ffffff;
+}
+
+.solarisator-frame-wrapper iframe {
+  display: block;
+  width: 100%;
+  height: 660px;
+  border: none;
+}
+
+@media (max-width: 768px) {
+  .solarisator-frame-wrapper iframe { height: 520px; }
+}
+
+@media (max-width: 480px) {
+  .solarisator-frame-wrapper iframe { height: 440px; }
+}
+
+.solarisator-source {
+  margin-top: var(--space-3);
+  text-align: center;
+  font-size: 0.75rem;
+  color: var(--color-text-muted);
+}
+
+.solarisator-source a {
+  color: var(--color-brand-primary);
+  text-decoration: underline;
+  font-weight: 500;
+  transition: color var(--transition-fast);
+}
+
+.solarisator-source a:hover { color: var(--color-brand-accent-dark); }
 
 /* ── Scroll Reveal Animations ─────────────────────────────── */
 .reveal {

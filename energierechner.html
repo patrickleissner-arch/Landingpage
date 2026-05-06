@@ -1,0 +1,3387 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Energiekosten-Rechner | Patrick Leißner</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+:root {
+    --pl-beige: #F1F0E9;
+    --pl-green: #2E4F3C;
+    --pl-white: #FFFFFF;
+    --pl-gold: #D0AB3B;
+    --pl-black: #1a1a1a;
+    --danger: #dc2626;
+    --danger-light: #fef2f2;
+    --success: #16a34a;
+    --success-light: #dcfce7;
+    --gray-100: #f3f4f6;
+    --gray-200: #e5e7eb;
+    --gray-300: #d1d5db;
+    --gray-400: #9ca3af;
+    --gray-500: #6b7280;
+    --gray-600: #4b5563;
+    --gray-700: #374151;
+    --shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
+    --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.1);
+    --radius: 12px;
+    --radius-lg: 16px;
+    --radius-xl: 24px;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+    font-family: 'Outfit', -apple-system, BlinkMacSystemFont, sans-serif;
+    background: var(--pl-beige);
+    min-height: 100vh;
+    color: var(--pl-black);
+    line-height: 1.6;
+}
+
+.app-container { max-width: 1400px; margin: 0 auto; padding: 16px; }
+
+/* Header */
+.app-header {
+    background: var(--pl-green);
+    color: var(--pl-white);
+    padding: 16px 24px;
+    border-radius: var(--radius-xl);
+    margin-bottom: 20px;
+    box-shadow: var(--shadow-lg);
+}
+
+.header-content {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 16px;
+}
+
+.header-brand { display: flex; align-items: center; gap: 16px; }
+.brand-logo { height: 50px; width: auto; }
+.brand-divider { width: 1px; height: 40px; background: rgba(255,255,255,0.3); }
+.brand-text { display: flex; flex-direction: column; }
+.brand-title { font-size: 1.3rem; font-weight: 800; }
+.brand-subtitle { font-size: 0.75rem; opacity: 0.9; }
+
+.header-contact { display: flex; gap: 20px; font-size: 0.8rem; }
+.contact-item { display: flex; align-items: center; gap: 6px; color: var(--pl-white); text-decoration: none; }
+.contact-item:hover { opacity: 0.8; }
+
+/* Alert */
+.alert-banner {
+    background: var(--pl-white);
+    border: 2px solid var(--danger);
+    border-radius: var(--radius-lg);
+    padding: 14px 20px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 20px;
+}
+.alert-icon { font-size: 1.5rem; }
+.alert-highlight { color: var(--danger); font-weight: 700; }
+
+/* Main Layout */
+.main-layout {
+    display: grid;
+    grid-template-columns: 450px 1fr;
+    gap: 20px;
+}
+@media (max-width: 1100px) { .main-layout { grid-template-columns: 1fr; } }
+
+/* Input Panel - Kundenfreundlich */
+.input-panel {
+    background: var(--pl-white);
+    border-radius: var(--radius-xl);
+    padding: 24px;
+    box-shadow: var(--shadow-lg);
+    height: fit-content;
+    position: sticky;
+    top: 16px;
+    border-top: 4px solid var(--pl-green);
+}
+@media (max-width: 1100px) { .input-panel { position: static; } }
+
+.panel-title {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: var(--pl-green);
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.panel-subtitle {
+    font-size: 0.85rem;
+    color: var(--gray-500);
+    margin-bottom: 24px;
+}
+
+/* Frage-Stil für Kunden */
+.question-group {
+    margin-bottom: 20px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid var(--pl-beige);
+}
+
+.question-group:last-of-type {
+    border-bottom: none;
+    margin-bottom: 16px;
+}
+
+.question-label {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--pl-black);
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.question-icon { font-size: 1.2rem; }
+
+.question-hint {
+    font-size: 0.75rem;
+    color: var(--gray-400);
+    margin-top: 6px;
+    font-style: italic;
+}
+
+/* PLZ Eingabe mit Region-Anzeige */
+.plz-row {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.plz-input {
+    width: 120px;
+    padding: 12px 14px;
+    border: 2px solid var(--gray-200);
+    border-radius: var(--radius);
+    font-size: 1.1rem;
+    font-weight: 700;
+    text-align: center;
+    letter-spacing: 2px;
+}
+
+.plz-input:focus { outline: none; border-color: var(--pl-green); }
+
+.region-display {
+    flex: 1;
+    padding: 10px 14px;
+    background: var(--pl-beige);
+    border-radius: var(--radius);
+    font-size: 0.85rem;
+    color: var(--pl-green);
+    font-weight: 500;
+}
+
+.region-display.found { background: var(--success-light); color: var(--success); }
+
+/* Einfache Select-Boxen */
+.simple-select {
+    width: 100%;
+    padding: 12px 14px;
+    border: 2px solid var(--gray-200);
+    border-radius: var(--radius);
+    font-size: 0.95rem;
+    font-weight: 500;
+    color: var(--pl-black);
+    background: var(--pl-white);
+    cursor: pointer;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%236b7280' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 14px center;
+}
+
+.simple-select:focus { outline: none; border-color: var(--pl-green); }
+
+/* Große Toggle Buttons */
+.big-toggle {
+    display: flex;
+    gap: 10px;
+}
+
+.big-toggle-btn {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    padding: 16px 12px;
+    border: 2px solid var(--gray-200);
+    border-radius: var(--radius);
+    background: var(--pl-white);
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.big-toggle-btn:hover { border-color: var(--pl-green); }
+
+.big-toggle-btn.active {
+    border-color: var(--pl-green);
+    background: var(--pl-green);
+    color: var(--pl-white);
+}
+
+.toggle-emoji { font-size: 1.8rem; }
+.toggle-text { font-size: 0.85rem; font-weight: 600; }
+
+/* Verbrauch Eingabe */
+.consumption-row {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.consumption-input {
+    flex: 1;
+    padding: 12px 14px;
+    border: 2px solid var(--gray-200);
+    border-radius: var(--radius);
+    font-size: 1.1rem;
+    font-weight: 700;
+}
+
+.consumption-input:focus { outline: none; border-color: var(--pl-green); }
+
+.consumption-unit {
+    padding: 12px 16px;
+    background: var(--pl-beige);
+    border-radius: var(--radius);
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--gray-600);
+    min-width: 70px;
+    text-align: center;
+}
+
+/* PV Auswahl - Große Kacheln */
+.pv-options {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+}
+
+.pv-option {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    padding: 14px 10px;
+    border: 2px solid var(--gray-200);
+    border-radius: var(--radius);
+    background: var(--pl-white);
+    cursor: pointer;
+    transition: all 0.2s;
+    text-align: center;
+}
+
+.pv-option:hover { border-color: var(--pl-gold); }
+
+.pv-option.active {
+    border-color: var(--pl-gold);
+    background: rgba(211, 175, 60, 0.1);
+}
+
+.pv-option.active.recommended {
+    border-color: var(--pl-green);
+    background: var(--success-light);
+}
+
+.pv-emoji { font-size: 1.5rem; }
+.pv-text { font-size: 0.8rem; font-weight: 600; color: var(--gray-700); }
+.pv-badge {
+    font-size: 0.6rem;
+    padding: 2px 6px;
+    background: var(--pl-gold);
+    color: var(--pl-white);
+    border-radius: 8px;
+    font-weight: 700;
+}
+
+/* Heizlast-Ergebnis Box */
+.heizlast-result {
+    background: linear-gradient(135deg, var(--pl-green) 0%, #162e25 100%);
+    border-radius: var(--radius-lg);
+    padding: 20px;
+    color: var(--pl-white);
+    margin-top: 20px;
+}
+
+.heizlast-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 14px;
+}
+
+.heizlast-title { font-size: 0.9rem; font-weight: 600; opacity: 0.9; }
+
+.heizlast-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+}
+
+.heizlast-item {
+    background: rgba(255,255,255,0.1);
+    border-radius: var(--radius);
+    padding: 12px;
+    text-align: center;
+}
+
+.heizlast-label { font-size: 0.7rem; opacity: 0.8; margin-bottom: 4px; }
+.heizlast-value { font-size: 1.3rem; font-weight: 800; }
+.heizlast-detail { font-size: 0.65rem; opacity: 0.7; margin-top: 2px; }
+
+.heizlast-item.highlight {
+    background: var(--pl-gold);
+    color: var(--pl-black);
+}
+
+.heizlast-item.highlight .heizlast-label { color: var(--pl-black); opacity: 0.8; }
+
+/* Status-Farben für Dämmbewertung */
+.heizlast-item.status-good {
+    background: linear-gradient(135deg, #2e7d32, #388e3c);
+    color: white;
+}
+.heizlast-item.status-warning {
+    background: linear-gradient(135deg, #f57c00, #ff9800);
+    color: white;
+}
+.heizlast-item.status-bad {
+    background: linear-gradient(135deg, #c62828, #d32f2f);
+    color: white;
+}
+.heizlast-item.status-good .heizlast-label,
+.heizlast-item.status-warning .heizlast-label,
+.heizlast-item.status-bad .heizlast-label {
+    opacity: 0.95;
+}
+
+.efficiency-bar {
+    margin-top: 14px;
+    background: rgba(255,255,255,0.2);
+    border-radius: 10px;
+    padding: 10px 14px;
+}
+
+.efficiency-label { font-size: 0.75rem; opacity: 0.9; margin-bottom: 6px; }
+
+.efficiency-track {
+    height: 8px;
+    background: rgba(255,255,255,0.3);
+    border-radius: 4px;
+    position: relative;
+    overflow: hidden;
+}
+
+.efficiency-fill {
+    height: 100%;
+    background: var(--pl-gold);
+    border-radius: 4px;
+    transition: width 0.5s ease;
+}
+
+.efficiency-text {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.65rem;
+    opacity: 0.7;
+    margin-top: 4px;
+}
+
+/* Experten Toggle */
+.expert-toggle {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 16px;
+    background: var(--gray-100);
+    border-radius: var(--radius);
+    cursor: pointer;
+    margin-top: 16px;
+    border: 1px solid var(--gray-200);
+}
+
+.expert-toggle:hover { background: var(--gray-200); }
+
+.expert-toggle-label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--gray-600);
+}
+
+.expert-toggle-icon { transition: transform 0.2s; }
+.expert-toggle.open .expert-toggle-icon { transform: rotate(180deg); }
+
+.expert-panel {
+    display: none;
+    background: var(--gray-100);
+    border-radius: var(--radius);
+    padding: 16px;
+    margin-top: 10px;
+}
+
+.expert-panel.open { display: block; }
+
+.expert-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px 0;
+    border-bottom: 1px solid var(--gray-200);
+}
+
+.expert-row:last-child { border-bottom: none; }
+
+.expert-label { font-size: 0.8rem; color: var(--gray-600); }
+.expert-value { font-size: 0.85rem; font-weight: 600; color: var(--pl-green); }
+
+.expert-slider-row {
+    margin-top: 12px;
+}
+
+.expert-slider-label {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.8rem;
+    color: var(--gray-600);
+    margin-bottom: 6px;
+}
+
+.expert-slider {
+    width: 100%;
+    -webkit-appearance: none;
+    height: 6px;
+    border-radius: 3px;
+    background: var(--gray-300);
+}
+
+.expert-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: var(--pl-green);
+    cursor: pointer;
+}
+
+/* Results Panel */
+.results-panel { display: flex; flex-direction: column; gap: 16px; }
+
+/* Hero Section */
+.hero-package {
+    background: var(--pl-green);
+    border-radius: var(--radius-xl);
+    padding: 24px;
+    color: var(--pl-white);
+    position: relative;
+    overflow: hidden;
+}
+
+.hero-package::before {
+    content: '☀️';
+    position: absolute;
+    top: -15px;
+    right: -15px;
+    font-size: 5rem;
+    opacity: 0.1;
+}
+
+.hero-header { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; }
+.hero-icon { font-size: 2rem; }
+.hero-title { font-size: 1.2rem; font-weight: 800; }
+.hero-subtitle { font-size: 0.85rem; opacity: 0.9; }
+
+.hero-stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 12px;
+    margin-bottom: 16px;
+}
+
+.hero-stat {
+    background: var(--pl-white);
+    border-radius: var(--radius);
+    padding: 14px;
+    text-align: center;
+}
+
+.hero-stat-label { font-size: 0.75rem; color: var(--gray-500); margin-bottom: 4px; }
+.hero-stat-value { font-size: 1.4rem; font-weight: 800; color: var(--pl-green); }
+.hero-stat-detail { font-size: 0.7rem; color: var(--gray-400); margin-top: 2px; }
+
+.hero-stat.highlight { border: 2px solid var(--pl-gold); }
+.hero-stat.highlight .hero-stat-value { color: var(--pl-gold); }
+
+.hero-benefits {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 10px;
+}
+
+.hero-benefit {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(255,255,255,0.15);
+    border-radius: var(--radius);
+    padding: 10px 12px;
+    font-size: 0.85rem;
+}
+
+/* Comparison */
+.comparison-section {
+    background: var(--pl-white);
+    border-radius: var(--radius-xl);
+    padding: 20px;
+    box-shadow: var(--shadow);
+}
+
+.comparison-title {
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--pl-green);
+    margin-bottom: 16px;
+}
+
+.comparison-table { width: 100%; border-collapse: collapse; }
+.comparison-table th, .comparison-table td {
+    padding: 12px 8px;
+    text-align: center;
+    border-bottom: 1px solid var(--pl-beige);
+}
+.comparison-table th { font-size: 0.8rem; font-weight: 700; background: var(--pl-beige); }
+.comparison-table th:first-child, .comparison-table td:first-child { text-align: left; font-weight: 600; }
+
+.th-fossil { background: var(--danger-light) !important; color: var(--danger) !important; }
+.th-wp { background: var(--success-light) !important; color: var(--success) !important; }
+.th-combo { background: var(--pl-beige) !important; color: var(--pl-green) !important; border: 2px solid var(--pl-green); }
+
+.td-fossil { color: var(--danger); font-weight: 700; }
+.td-wp { color: var(--success); font-weight: 700; }
+.td-combo { color: var(--pl-green); font-weight: 700; }
+
+.row-highlight { background: var(--pl-beige); }
+.best-badge {
+    display: inline-block;
+    background: var(--pl-gold);
+    color: var(--pl-white);
+    padding: 2px 6px;
+    border-radius: 8px;
+    font-size: 0.65rem;
+    font-weight: 700;
+    margin-left: 4px;
+}
+
+/* Chart */
+.chart-container {
+    background: var(--pl-white);
+    border-radius: var(--radius-xl);
+    padding: 20px;
+    box-shadow: var(--shadow);
+}
+
+.chart-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 14px;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.chart-title { font-size: 0.95rem; font-weight: 700; color: var(--pl-green); }
+.chart-legend { display: flex; gap: 14px; font-size: 0.75rem; flex-wrap: wrap; }
+.legend-item { display: flex; align-items: center; gap: 5px; }
+.legend-color { width: 12px; height: 12px; border-radius: 3px; }
+.legend-color.fossil { background: var(--danger); }
+.legend-color.wp { background: var(--success); }
+.legend-color.combo { background: var(--pl-green); }
+
+.chart-wrapper { height: 280px; }
+
+/* Pain Section */
+.pain-section {
+    background: var(--pl-white);
+    border: 2px solid var(--danger);
+    border-radius: var(--radius-xl);
+    padding: 20px;
+}
+
+.pain-header { display: flex; align-items: center; gap: 10px; margin-bottom: 16px; }
+.pain-title { font-size: 1rem; font-weight: 700; color: var(--danger); }
+
+.timeline {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    margin-bottom: 16px;
+    flex-wrap: wrap;
+}
+
+.timeline-item {
+    background: var(--pl-beige);
+    border-radius: var(--radius);
+    padding: 10px 14px;
+    text-align: center;
+    min-width: 85px;
+}
+
+.timeline-item.danger { background: var(--danger); color: var(--pl-white); transform: scale(1.05); }
+.timeline-year { font-weight: 700; font-size: 0.85rem; }
+.timeline-co2 { font-size: 0.65rem; opacity: 0.8; }
+.timeline-cost { font-weight: 800; font-size: 0.95rem; margin-top: 2px; }
+.timeline-arrow { color: var(--gray-400); }
+
+.pain-summary { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.pain-box { background: var(--pl-beige); border-radius: var(--radius); padding: 14px; text-align: center; }
+.pain-box.extreme { background: var(--danger); color: var(--pl-white); }
+.pain-label { font-size: 0.7rem; margin-bottom: 4px; opacity: 0.8; }
+.pain-value { font-size: 1.3rem; font-weight: 800; color: var(--danger); }
+.pain-box.extreme .pain-value { color: var(--pl-white); }
+
+/* CTA */
+.cta-section { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+@media (max-width: 600px) { .cta-section { grid-template-columns: 1fr; } }
+
+.cta-button {
+    padding: 16px 20px;
+    border: none;
+    border-radius: var(--radius-lg);
+    font-size: 0.95rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.cta-primary { background: var(--pl-green); color: var(--pl-white); box-shadow: var(--shadow-lg); }
+.cta-primary:hover { transform: translateY(-2px); }
+.cta-secondary { background: var(--pl-white); color: var(--pl-green); border: 2px solid var(--pl-green); }
+
+/* Footer */
+.app-footer {
+    background: var(--pl-green);
+    color: var(--pl-white);
+    border-radius: var(--radius-xl);
+    padding: 24px;
+    margin-top: 20px;
+}
+
+.footer-main {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 20px;
+    margin-bottom: 16px;
+}
+
+.footer-brand { display: flex; align-items: center; gap: 12px; }
+.footer-logo { height: 40px; }
+.footer-name { font-weight: 700; font-size: 1.1rem; }
+
+.footer-contact { display: flex; flex-wrap: wrap; gap: 20px; }
+.footer-contact-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--pl-white);
+    text-decoration: none;
+    font-size: 0.9rem;
+}
+
+.footer-divider { height: 1px; background: rgba(255,255,255,0.2); margin: 16px 0; }
+.footer-legal { font-size: 0.75rem; opacity: 0.8; text-align: center; }
+
+/* Responsive */
+@media (max-width: 768px) {
+    .header-contact { display: none; }
+    .pv-options { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (max-width: 500px) {
+    .heizlast-grid { grid-template-columns: 1fr; }
+    .pain-summary { grid-template-columns: 1fr; }
+}
+
+/* ===========================================
+   QUELLEN-PANEL STYLES
+   ========================================== */
+/* ==========================================
+   HISTORISCHE PREIS-HINWEISE (Slider)
+   ========================================== */
+
+.slider-hint {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-top: 6px;
+    padding: 6px 10px;
+    background: linear-gradient(90deg, rgba(211,175,60,0.08) 0%, transparent 100%);
+    border-left: 2px solid var(--pl-gold);
+    border-radius: 0 var(--radius) var(--radius) 0;
+    font-size: 0.72rem;
+    color: var(--gray-600);
+    line-height: 1.4;
+}
+
+.slider-hint-icon {
+    font-size: 0.9rem;
+    flex-shrink: 0;
+}
+
+.slider-hint strong {
+    color: var(--pl-green);
+    font-weight: 600;
+}
+
+.slider-hint-value {
+    background: var(--pl-gold);
+    color: var(--pl-green);
+    padding: 1px 6px;
+    border-radius: 8px;
+    font-weight: 700;
+    font-size: 0.7rem;
+    margin: 0 2px;
+}
+
+@media (max-width: 768px) {
+    .slider-hint {
+        font-size: 0.68rem;
+        padding: 5px 8px;
+    }
+}
+
+/* ==========================================
+   QUELLEN-PANEL STYLES
+   ========================================== */
+
+.sources-section {
+    margin-top: 32px;
+    background: var(--pl-white);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow);
+    overflow: hidden;
+}
+
+.sources-header {
+    background: var(--pl-green);
+    color: var(--pl-white);
+    padding: 16px 20px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    transition: background 0.2s;
+}
+
+.sources-header:hover {
+    background: #233d2f;
+}
+
+.sources-header-left {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.sources-header-icon {
+    font-size: 1.5rem;
+}
+
+.sources-header h3 {
+    margin: 0;
+    font-size: 1.1rem;
+    font-weight: 600;
+}
+
+.sources-header-badge {
+    background: var(--pl-gold);
+    color: var(--pl-green);
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 600;
+}
+
+.sources-toggle {
+    font-size: 1.2rem;
+    transition: transform 0.3s;
+}
+
+.sources-section.open .sources-toggle {
+    transform: rotate(180deg);
+}
+
+.sources-content {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.4s ease-out;
+}
+
+.sources-section.open .sources-content {
+    max-height: 3000px;
+    transition: max-height 0.6s ease-in;
+}
+
+.sources-inner {
+    padding: 20px;
+}
+
+/* Kategorie-Tabs */
+.sources-tabs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 20px;
+    padding-bottom: 16px;
+    border-bottom: 2px solid var(--pl-beige);
+}
+
+.sources-tab {
+    background: var(--pl-beige);
+    border: none;
+    padding: 8px 16px;
+    border-radius: 20px;
+    cursor: pointer;
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: var(--pl-black);
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.sources-tab:hover {
+    background: var(--pl-green);
+    color: var(--pl-white);
+}
+
+.sources-tab.active {
+    background: var(--pl-green);
+    color: var(--pl-white);
+}
+
+.sources-tab-icon {
+    font-size: 1rem;
+}
+
+/* Kategorie-Inhalt */
+.sources-category {
+    display: none;
+}
+
+.sources-category.active {
+    display: block;
+}
+
+.category-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 16px;
+}
+
+.category-icon {
+    font-size: 2rem;
+}
+
+.category-title h4 {
+    margin: 0;
+    color: var(--pl-green);
+    font-size: 1.1rem;
+}
+
+.category-title p {
+    margin: 4px 0 0 0;
+    color: var(--gray-500);
+    font-size: 0.85rem;
+}
+
+/* Quellen-Liste */
+.source-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.source-item {
+    background: var(--pl-beige);
+    border-radius: var(--radius);
+    padding: 16px;
+    border-left: 3px solid var(--pl-gold);
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.source-item:hover {
+    transform: translateX(4px);
+    box-shadow: var(--shadow);
+}
+
+.source-item-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 8px;
+}
+
+.source-item-title {
+    font-weight: 600;
+    color: var(--pl-green);
+    font-size: 0.95rem;
+    margin: 0;
+}
+
+.source-item-id {
+    background: var(--pl-green);
+    color: var(--pl-white);
+    padding: 2px 8px;
+    border-radius: 10px;
+    font-size: 0.7rem;
+    font-weight: 600;
+}
+
+.source-item-meta {
+    display: flex;
+    gap: 16px;
+    margin-bottom: 8px;
+    font-size: 0.8rem;
+    color: var(--gray-500);
+}
+
+.source-item-meta span {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.source-item-content {
+    font-size: 0.85rem;
+    color: var(--pl-black);
+    line-height: 1.5;
+    margin-bottom: 10px;
+}
+
+.source-item-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-bottom: 10px;
+}
+
+.source-tag {
+    background: var(--pl-white);
+    color: var(--pl-green);
+    padding: 3px 10px;
+    border-radius: 12px;
+    font-size: 0.75rem;
+    border: 1px solid var(--pl-green);
+}
+
+.source-item-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    color: var(--pl-green);
+    text-decoration: none;
+    font-size: 0.85rem;
+    font-weight: 500;
+    transition: color 0.2s;
+}
+
+.source-item-link:hover {
+    color: var(--pl-gold);
+    text-decoration: underline;
+}
+
+/* Zusammenfassung */
+.sources-summary {
+    background: linear-gradient(135deg, var(--pl-green) 0%, #233d2f 100%);
+    color: var(--pl-white);
+    padding: 20px;
+    border-radius: var(--radius);
+    margin-top: 20px;
+}
+
+.sources-summary h4 {
+    margin: 0 0 12px 0;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.sources-summary-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 16px;
+}
+
+.summary-stat {
+    text-align: center;
+    padding: 12px;
+    background: rgba(255,255,255,0.1);
+    border-radius: var(--radius);
+}
+
+.summary-stat-value {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--pl-gold);
+}
+
+.summary-stat-label {
+    font-size: 0.8rem;
+    opacity: 0.9;
+    margin-top: 4px;
+}
+
+/* Metadaten Footer */
+.sources-footer {
+    margin-top: 20px;
+    padding-top: 16px;
+    border-top: 1px solid var(--gray-200);
+    font-size: 0.8rem;
+    color: var(--gray-500);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+}
+
+.sources-footer-left {
+    display: flex;
+    gap: 16px;
+}
+
+.sources-footer span {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .sources-tabs {
+        justify-content: center;
+    }
+    
+    .sources-tab {
+        font-size: 0.8rem;
+        padding: 6px 12px;
+    }
+    
+    .source-item-header {
+        flex-direction: column;
+        gap: 8px;
+    }
+    
+    .sources-summary-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .sources-footer {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+}
+</style>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="subpage.css">
+</head>
+<body>
+<a href="#main" class="skip-link">Zum Hauptinhalt springen</a>
+
+  <header class="site-header scrolled" role="banner" id="site-header">
+    <nav class="nav-container" aria-label="Hauptnavigation">
+
+      <a href="/" class="nav-logo" aria-label="Patrick Leißner Energieberatung – zur Startseite">
+        <img src="assets/Logo/Initialien-Name-Positiv-frei.png" alt="Patrick Leißner Energieberatung Logo" height="96" loading="eager" style="width:auto">
+      </a>
+
+      <ul class="nav-links" role="list">
+        <li class="nav-has-dropdown">
+          <a href="/#leistungen">Leistungen</a>
+          <ul class="nav-dropdown" role="menu">
+            <li><a href="/#rechner" role="menuitem">Interaktiver Rechner</a></li>
+            <li><a href="/energierechner" role="menuitem">Energierechner</a></li>
+          </ul>
+        </li>
+        <li><a href="/#ueber-pl">Über mich</a></li>
+        <li><a href="/#termine">Termine</a></li>
+        <li><a href="/#kontakt">Kontakt</a></li>
+      </ul>
+
+      <a href="/#termine" class="btn btn-accent nav-cta">Termin buchen</a>
+
+      <button
+        class="hamburger"
+        aria-label="Menü öffnen"
+        aria-expanded="false"
+        aria-controls="mobile-menu"
+        id="hamburger-btn"
+      >
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </nav>
+
+    <div class="mobile-menu" id="mobile-menu" aria-hidden="true" role="dialog" aria-label="Hauptnavigation">
+      <ul role="list">
+        <li><a href="/#leistungen" class="mobile-nav-link">Leistungen</a></li>
+        <li><a href="/#rechner" class="mobile-nav-link mobile-nav-sub">Interaktiver Rechner</a></li>
+        <li><a href="/energierechner" class="mobile-nav-link mobile-nav-sub">Energierechner</a></li>
+        <li><a href="/#ueber-pl" class="mobile-nav-link">Über mich</a></li>
+        <li><a href="/#termine" class="mobile-nav-link">Termine</a></li>
+        <li><a href="/#kontakt" class="mobile-nav-link">Kontakt</a></li>
+        <li><a href="/#termine" class="btn btn-accent mobile-nav-link">Termin buchen</a></li>
+      </ul>
+    </div>
+  </header>
+
+  <main id="main">
+
+    <div class="app-container" style="padding-top: 100px;">
+
+        <!-- Alert -->
+        <div class="alert-banner">
+            <span class="alert-icon">⚠️</span>
+            <div>
+                <strong>Ab 2027: EU-Emissionshandel ETS II</strong> – CO₂-Preis steigt auf 
+                <span class="alert-highlight">100-200+ €/Tonne</span>. Jetzt handeln!
+            </div>
+        </div>
+
+        <!-- Main Layout -->
+        <div class="main-layout">
+            <!-- Input Panel - KUNDENFREUNDLICH -->
+            <div class="input-panel">
+                <div class="panel-title">📋 Ihre Angaben</div>
+                <div class="panel-subtitle">Beantworten Sie diese einfachen Fragen – wir berechnen Ihr Einsparpotenzial!</div>
+
+                <!-- 1. PLZ -->
+                <div class="question-group">
+                    <label class="question-label">
+                        <span class="question-icon">📍</span>
+                        Wo steht Ihr Haus?
+                    </label>
+                    <div class="plz-row">
+                        <input type="text" id="plz" class="plz-input" placeholder="PLZ" maxlength="5" value="55555">
+                        <div class="region-display" id="region-display">Region wird erkannt...</div>
+                    </div>
+                    <div class="question-hint">Die Postleitzahl hilft uns, die Klimadaten Ihrer Region zu berücksichtigen.</div>
+                </div>
+
+                <!-- 2. Baujahr -->
+                <div class="question-group">
+                    <label class="question-label">
+                        <span class="question-icon">🏠</span>
+                        Wann wurde Ihr Haus gebaut?
+                    </label>
+                    <select id="baujahr" class="simple-select">
+                        <option value="vor_1970">⚠️ Vor 1970 (Altbau – hohe Verluste!)</option>
+                        <option value="1970_1978">1970–1978 (erste Dämmstandards)</option>
+                        <option value="1979_1983">1979–1983 (nach Ölkrise)</option>
+                        <option value="1984_1994" selected>1984–1994 (durchschnittliche Dämmung)</option>
+                        <option value="1995_2001">1995–2001 (gute Dämmung)</option>
+                        <option value="2002_2015">2002–2015 (sehr gute Dämmung)</option>
+                        <option value="ab_2016">🏠 Ab 2016 (Neubau-Standard)</option>
+                        <option value="saniert_standard">Saniert (Fenster/Dach erneuert)</option>
+                        <option value="saniert_gut">✅ Komplett saniert (KfW-Niveau)</option>
+                    </select>
+                </div>
+
+                <!-- 3. Wohnfläche -->
+                <div class="question-group">
+                    <label class="question-label">
+                        <span class="question-icon">📐</span>
+                        Wie groß ist Ihr Haus?
+                    </label>
+                    <div class="consumption-row">
+                        <input type="number" id="area" class="consumption-input" value="150" min="50" max="500">
+                        <span class="consumption-unit">m²</span>
+                    </div>
+                    <div class="question-hint">Beheizte Wohnfläche (ohne Keller/Garage)</div>
+                </div>
+
+                <!-- 4. Heizungsart -->
+                <div class="question-group">
+                    <label class="question-label">
+                        <span class="question-icon">🔥</span>
+                        Womit heizen Sie aktuell?
+                    </label>
+                    <div class="big-toggle">
+                        <button class="big-toggle-btn active" id="btn-oil">
+                            <span class="toggle-emoji">🛢️</span>
+                            <span class="toggle-text">Heizöl</span>
+                        </button>
+                        <button class="big-toggle-btn" id="btn-gas">
+                            <span class="toggle-emoji">🔥</span>
+                            <span class="toggle-text">Erdgas</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- 5. Verbrauch -->
+                <div class="question-group">
+                    <label class="question-label">
+                        <span class="question-icon">📊</span>
+                        <span id="consumption-label">Wie viel Heizöl verbrauchen Sie pro Jahr?</span>
+                    </label>
+                    <div class="consumption-row">
+                        <input type="number" id="consumption" class="consumption-input" value="2500" min="0">
+                        <span class="consumption-unit" id="consumption-unit">Liter</span>
+                    </div>
+                    <div class="question-hint" id="consumption-hint">Steht auf Ihrer Jahresabrechnung oder Tankrechnung</div>
+                </div>
+
+                <!-- 6. Alter der Heizung -->
+                <div class="question-group">
+                    <label class="question-label">
+                        <span class="question-icon">⏰</span>
+                        Wie alt ist Ihre Heizung?
+                    </label>
+                    <select id="heizung-alter" class="simple-select">
+                        <option value="sehr_alt">Älter als 25 Jahre (vor 2000)</option>
+                        <option value="alt" selected>15-25 Jahre alt (2000-2010)</option>
+                        <option value="mittel">10-15 Jahre alt (2010-2015)</option>
+                        <option value="neu">Jünger als 10 Jahre (nach 2015)</option>
+                        <option value="brennwert">Brennwertgerät (modern)</option>
+                    </select>
+                    <div class="question-hint">Ältere Heizungen haben höhere Verluste – ein Umstieg lohnt sich besonders!</div>
+                </div>
+
+                <!-- 7. PV-Anlage -->
+                <div class="question-group">
+                    <label class="question-label">
+                        <span class="question-icon">☀️</span>
+                        Haben Sie eine Solaranlage (PV)?
+                    </label>
+                    <div class="pv-options">
+                        <div class="pv-option" data-pv="0">
+                            <span class="pv-emoji">❌</span>
+                            <span class="pv-text">Keine PV</span>
+                        </div>
+                        <div class="pv-option" data-pv="25">
+                            <span class="pv-emoji">☀️</span>
+                            <span class="pv-text">PV ohne Speicher</span>
+                        </div>
+                        <div class="pv-option active recommended" data-pv="55">
+                            <span class="pv-emoji">🔋</span>
+                            <span class="pv-text">PV + Speicher</span>
+                            <span class="pv-badge">EMPFOHLEN</span>
+                        </div>
+                        <div class="pv-option" data-pv="85">
+                            <span class="pv-emoji">⚡</span>
+                            <span class="pv-text">Großspeicher + 0ct-Tarif</span>
+                        </div>
+                    </div>
+                    <div class="pv-hint" style="font-size: 0.7rem; color: #666; margin-top: 8px; text-align: center;">
+                        💡 80 kWh Speicher lädt bei 0 ct Börsenpreis → Eigenversorgung im Expertenmodus bis 100%
+                    </div>
+                </div>
+
+                <!-- Heizlast-Ergebnis -->
+                <div class="heizlast-result">
+                    <div class="heizlast-header">
+                        <span>📈</span>
+                        <span class="heizlast-title">Ihre Gebäudeanalyse</span>
+                    </div>
+                    <div class="heizlast-grid">
+                        <div class="heizlast-item">
+                            <div class="heizlast-label">Geschätzte Heizlast</div>
+                            <div class="heizlast-value" id="heizlast-kw">12,0 kW</div>
+                            <div class="heizlast-detail">Wärmebedarf bei -12°C</div>
+                        </div>
+                        <div class="heizlast-item">
+                            <div class="heizlast-label">Heizlast pro m²</div>
+                            <div class="heizlast-value" id="heizlast-m2">80 W/m²</div>
+                            <div class="heizlast-detail">Erwartet lt. Baujahr: <span id="heizlast-erwartet">80</span> W/m²</div>
+                        </div>
+                        <div class="heizlast-item" id="heizlast-bewertung-box">
+                            <div class="heizlast-label">Dämmstatus (lt. Baujahr)</div>
+                            <div class="heizlast-value" id="heizlast-bewertung" style="font-size: 0.85rem;">Durchschnitt</div>
+                            <div class="heizlast-detail" id="heizlast-vergleich" style="font-size: 0.6rem; margin-top: 4px;">Verbrauchshinweis</div>
+                        </div>
+                        <div class="heizlast-item">
+                            <div class="heizlast-label">Wärmebedarf/Jahr</div>
+                            <div class="heizlast-value" id="waermebedarf">22.500 kWh</div>
+                            <div class="heizlast-detail">Nach Abzug Kesselverluste</div>
+                        </div>
+                        <div class="heizlast-item highlight">
+                            <div class="heizlast-label">Einsparung Kesselverluste</div>
+                            <div class="heizlast-value" id="einsparung-verluste">-15%</div>
+                            <div class="heizlast-detail">WP hat keine Abgasverluste</div>
+                        </div>
+                    </div>
+                    <div class="efficiency-bar">
+                        <div class="efficiency-label">Effizienz Ihrer aktuellen Heizung: <strong id="efficiency-percent">85%</strong></div>
+                        <div class="efficiency-track">
+                            <div class="efficiency-fill" id="efficiency-fill" style="width: 85%;"></div>
+                        </div>
+                        <div class="efficiency-text">
+                            <span>Schlecht (70%)</span>
+                            <span>Optimal (98%)</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Experten-Toggle -->
+                <div class="expert-toggle" id="expert-toggle">
+                    <div class="expert-toggle-label">
+                        <span>⚙️</span>
+                        <span>Technische Details anzeigen</span>
+                    </div>
+                    <span class="expert-toggle-icon">▼</span>
+                </div>
+
+                <div class="expert-panel" id="expert-panel">
+                    <div class="expert-row">
+                        <span class="expert-label">Klimaregion</span>
+                        <span class="expert-value" id="exp-region">Mittelrhein</span>
+                    </div>
+                    <div class="expert-row">
+                        <span class="expert-label">Norm-Außentemperatur</span>
+                        <span class="expert-value" id="exp-normtemp">-12 °C</span>
+                    </div>
+                    <div class="expert-row">
+                        <span class="expert-label">Vollbenutzungsstunden</span>
+                        <span class="expert-value" id="exp-vbh">1.800 h/a</span>
+                    </div>
+                    <div class="expert-row">
+                        <span class="expert-label">Kesselwirkungsgrad</span>
+                        <span class="expert-value" id="exp-eta">85%</span>
+                    </div>
+                    <div class="expert-row">
+                        <span class="expert-label">JAZ Wärmepumpe (geschätzt)</span>
+                        <span class="expert-value" id="exp-jaz">4,0</span>
+                    </div>
+                    <!-- Aktuelle Energiepreise -->
+                    <div class="expert-section-title" style="font-size: 0.8rem; font-weight: 700; color: var(--pl-green); margin: 16px 0 10px; padding-top: 12px; border-top: 1px solid rgba(0,0,0,0.1);">
+                        💰 Aktuelle Energiepreise
+                    </div>
+                    
+                    <div class="expert-slider-row" id="oil-price-row">
+                        <div class="expert-slider-label">
+                            <span>🛢️ Heizölpreis</span>
+                            <span id="exp-oil-price-display">95 ct/L</span>
+                        </div>
+                        <input type="range" id="exp-oil-price" class="expert-slider" min="60" max="150" step="1" value="95">
+                        <div class="slider-hint">
+                            <span class="slider-hint-icon">📊</span>
+                            <span>Aktuell (2026): <span class="slider-hint-value">90-100 ct/L</span> | Krise 2022: bis 130 ct/L</span>
+                        </div>
+                    </div>
+                    
+                    <div class="expert-slider-row" id="gas-price-row" style="display: none;">
+                        <div class="expert-slider-label">
+                            <span>🔥 Erdgaspreis</span>
+                            <span id="exp-gas-price-display">12 ct/kWh</span>
+                        </div>
+                        <input type="range" id="exp-gas-price" class="expert-slider" min="6" max="20" step="0.5" value="12">
+                        <div class="slider-hint">
+                            <span class="slider-hint-icon">📊</span>
+                            <span>Aktuell (2026): <span class="slider-hint-value">11-13 ct/kWh</span> | Vor Krise: 6-7 ct/kWh</span>
+                        </div>
+                    </div>
+                    
+                    <div class="expert-slider-row">
+                        <div class="expert-slider-label">
+                            <span>⚡ Allgemeinstrom (Haushalt)</span>
+                            <span id="exp-elec-price-display">32 ct/kWh</span>
+                        </div>
+                        <input type="range" id="exp-elec-price" class="expert-slider" min="20" max="50" step="1" value="32">
+                        <div class="slider-hint">
+                            <span class="slider-hint-icon">📊</span>
+                            <span>Aktuell (2026): <span class="slider-hint-value">30-40 ct/kWh</span></span>
+                        </div>
+                    </div>
+                    
+                    <div class="expert-slider-row">
+                        <div class="expert-slider-label">
+                            <span>🌡️ Wärmepumpen-Tarif (sep. Zähler)</span>
+                            <span id="exp-wp-tarif-display">22 ct/kWh</span>
+                        </div>
+                        <input type="range" id="exp-wp-tarif" class="expert-slider" min="15" max="35" step="1" value="22">
+                        <div class="slider-hint">
+                            <span class="slider-hint-icon">💡</span>
+                            <span>Typische WP-Tarife: <span class="slider-hint-value">18-25 ct/kWh</span> (sep. Zähler erforderlich)</span>
+                        </div>
+                    </div>
+                    
+                    <div class="expert-slider-row">
+                        <div class="expert-slider-label">
+                            <span>⚡ Reststrombezug (Netz)</span>
+                            <span id="exp-grid-price-display">5 ct/kWh</span>
+                        </div>
+                        <input type="range" id="exp-grid-price" class="expert-slider" min="0" max="25" step="1" value="5">
+                        <div class="slider-hint">
+                            <span class="slider-hint-icon">💰</span>
+                            <span>Dynamischer Tarif: <span class="slider-hint-value">0-10 ct/kWh</span> | Großspeicher lädt bei 0 ct Börsenpreis</span>
+                        </div>
+                    </div>
+                    
+                    <div class="expert-row" style="margin-top: 8px;">
+                        <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
+                            <input type="checkbox" id="use-wp-tarif" checked style="width: 18px; height: 18px; accent-color: var(--pl-green);">
+                            <span style="font-size: 0.85rem;">WP-Tarif für Wärmepumpe verwenden (separater Zähler)</span>
+                        </label>
+                    </div>
+                    
+                    <!-- Weitere Einstellungen -->
+                    <div class="expert-section-title" style="font-size: 0.8rem; font-weight: 700; color: var(--pl-green); margin: 16px 0 10px; padding-top: 12px; border-top: 1px solid rgba(0,0,0,0.1);">
+                        ⚙️ Weitere Einstellungen
+                    </div>
+                    
+                    <div class="expert-slider-row">
+                        <div class="expert-slider-label">
+                            <span>☀️ Eigenversorgungsanteil</span>
+                            <span id="exp-pv">55%</span>
+                        </div>
+                        <input type="range" id="exp-pv-slider" class="expert-slider" min="0" max="100" step="5" value="55">
+                        <div class="slider-hint">
+                            <span class="slider-hint-icon">🔋</span>
+                            <span>PV: <span class="slider-hint-value">20-30%</span> | + Speicher: <span class="slider-hint-value">50-70%</span> | + Großspeicher (0ct-Laden): <span class="slider-hint-value">bis 100%</span></span>
+                        </div>
+                    </div>
+                    
+                    <div class="expert-slider-row">
+                        <div class="expert-slider-label">
+                            <span>Betrachtungszeitraum</span>
+                            <span id="exp-years-display">20 Jahre</span>
+                        </div>
+                        <input type="range" id="exp-years" class="expert-slider" min="5" max="30" value="20">
+                    </div>
+                    
+                    <div class="expert-slider-row">
+                        <div class="expert-slider-label">
+                            <span>Strompreis-Steigerung/Jahr</span>
+                            <span id="exp-elec-display">6%</span>
+                        </div>
+                        <input type="range" id="exp-elec" class="expert-slider" min="0" max="10" step="0.5" value="6">
+                        <div class="slider-hint">
+                            <span class="slider-hint-icon">📊</span>
+                            <span>Historisch (2000–2025): <span class="slider-hint-value">~6% p.a.</span> (BDEW) – von 13,94 auf ~40 ct/kWh (+186% nominal)</span>
+                        </div>
+                    </div>
+                    
+                    <div class="expert-slider-row">
+                        <div class="expert-slider-label">
+                            <span>Brennstoff-Steigerung/Jahr</span>
+                            <span id="exp-fuel-display">4%</span>
+                        </div>
+                        <input type="range" id="exp-fuel" class="expert-slider" min="0" max="8" step="0.5" value="4">
+                        <div class="slider-hint">
+                            <span class="slider-hint-icon">📊</span>
+                            <span>Historisch (2000–2025): Öl <span class="slider-hint-value">~3,5%</span> (sehr volatil!), Gas <span class="slider-hint-value">~4,5%</span> p.a. (exkl. CO₂)</span>
+                        </div>
+                    </div>
+                    
+                    <!-- CO₂-Preis Sektion -->
+                    <div class="expert-section-title" style="font-size: 0.8rem; font-weight: 700; color: var(--danger); margin: 16px 0 10px; padding-top: 12px; border-top: 1px solid rgba(0,0,0,0.1);">
+                        🇲🇺 CO₂-Bepreisung (BEHG / ETS II)
+                    </div>
+                    
+                    <div class="expert-slider-row">
+                        <div class="expert-slider-label">
+                            <span>🇩🇪 CO₂-Preis 2026 (BEHG)</span>
+                            <span id="exp-co2-2026-display">60 €/t</span>
+                        </div>
+                        <input type="range" id="exp-co2-2026" class="expert-slider" min="50" max="80" step="5" value="60">
+                        <div class="slider-hint">
+                            <span class="slider-hint-icon">📜</span>
+                            <span>Nationales BEHG: 2025 = 55 €/t, 2026 = <span class="slider-hint-value">55-65 €/t</span></span>
+                        </div>
+                    </div>
+                    
+                    <div class="expert-slider-row">
+                        <div class="expert-slider-label">
+                            <span>🇪🇺 CO₂-Preis 2027 (ETS II Start)</span>
+                            <span id="exp-co2-2027-display">70 €/t</span>
+                        </div>
+                        <input type="range" id="exp-co2-2027" class="expert-slider" min="50" max="150" step="5" value="70">
+                        <div class="slider-hint">
+                            <span class="slider-hint-icon">⚠️</span>
+                            <span>EU-ETS II Start! Prognosen: <span class="slider-hint-value">65-100 €/t</span> (marktabhängig)</span>
+                        </div>
+                    </div>
+                    
+                    <div class="expert-slider-row">
+                        <div class="expert-slider-label">
+                            <span>📈 CO₂-Steigerung ab 2027</span>
+                            <span id="exp-co2-increase-display">15%</span>
+                        </div>
+                        <input type="range" id="exp-co2-increase" class="expert-slider" min="5" max="25" step="1" value="15">
+                        <div class="slider-hint">
+                            <span class="slider-hint-icon">🚨</span>
+                            <span>ETS II Prognose: <span class="slider-hint-value">100-150 €/t</span> bis 2030 | Bis 2035: <span class="slider-hint-value">200+ €/t</span> möglich</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Results Panel -->
+            <div class="results-panel">
+                <!-- Hero -->
+                <div class="hero-package">
+                    <div class="hero-header">
+                        <span class="hero-icon">🏆</span>
+                        <div>
+                            <div class="hero-title">IHRE LÖSUNG: Wärmepumpe + Photovoltaik</div>
+                            <div class="hero-subtitle">Maximale Ersparnis & Unabhängigkeit</div>
+                        </div>
+                    </div>
+                    <div class="hero-stats">
+                        <div class="hero-stat">
+                            <div class="hero-stat-label">Ersparnis 1. Jahr</div>
+                            <div class="hero-stat-value" id="combo-savings-y1">1.250 €</div>
+                            <div class="hero-stat-detail">vs. aktuelle Heizung</div>
+                        </div>
+                        <div class="hero-stat highlight">
+                            <div class="hero-stat-label">Ersparnis gesamt</div>
+                            <div class="hero-stat-value" id="combo-savings-total">42.000 €</div>
+                            <div class="hero-stat-detail">in <span id="combo-years">20</span> Jahren</div>
+                        </div>
+                        <div class="hero-stat">
+                            <div class="hero-stat-label">Effektiver Strompreis</div>
+                            <div class="hero-stat-value" id="combo-effective-price">0,22 €</div>
+                            <div class="hero-stat-detail" id="combo-tarif-detail">WP-Tarif + PV</div>
+                        </div>
+                        <div class="hero-stat">
+                            <div class="hero-stat-label">CO₂-Ersparnis</div>
+                            <div class="hero-stat-value" id="combo-co2-savings">133 t</div>
+                            <div class="hero-stat-detail">in <span id="combo-years2">20</span> Jahren</div>
+                        </div>
+                    </div>
+                    <div class="hero-benefits">
+                        <div class="hero-benefit">💰 Bis zu 50% günstiger heizen</div>
+                        <div class="hero-benefit">🛡️ Schutz vor CO₂-Preisexplosion</div>
+                        <div class="hero-benefit">🔌 Unabhängig vom Energiemarkt</div>
+                        <div class="hero-benefit">🌱 Klimaneutral heizen</div>
+                    </div>
+                </div>
+
+                <!-- Comparison -->
+                <div class="comparison-section">
+                    <div class="comparison-title">📊 Direktvergleich aller Optionen</div>
+                    <table class="comparison-table">
+                        <thead>
+                            <tr>
+                                <th></th>
+                                <th class="th-fossil">🛢️ Öl/Gas</th>
+                                <th class="th-wp">♻️ Wärmepumpe</th>
+                                <th class="th-combo">☀️ WP + PV</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Heizkosten 1. Jahr</td>
+                                <td class="td-fossil" id="tbl-fossil-y1">2.500 €</td>
+                                <td class="td-wp" id="tbl-wp-y1">2.000 €</td>
+                                <td class="td-combo" id="tbl-combo-y1">1.520 €</td>
+                            </tr>
+                            <tr style="background: #f8f9fa;">
+                                <td>💳 <strong>Monatlicher Abschlag</strong></td>
+                                <td class="td-fossil" id="tbl-fossil-month" style="font-weight: 700;">208 €</td>
+                                <td class="td-wp" id="tbl-wp-month" style="font-weight: 700;">167 €</td>
+                                <td class="td-combo" id="tbl-combo-month" style="font-weight: 700;">127 €</td>
+                            </tr>
+                            <tr>
+                                <td>Kosten pro m²/Jahr</td>
+                                <td class="td-fossil" id="tbl-fossil-sqm">16,67 €</td>
+                                <td class="td-wp" id="tbl-wp-sqm">13,33 €</td>
+                                <td class="td-combo" id="tbl-combo-sqm">10,13 €</td>
+                            </tr>
+                            <tr>
+                                <td>Kosten 2030</td>
+                                <td class="td-fossil" id="tbl-fossil-2030">3.850 €</td>
+                                <td class="td-wp" id="tbl-wp-2030">2.340 €</td>
+                                <td class="td-combo" id="tbl-combo-2030">1.780 €</td>
+                            </tr>
+                            <tr class="row-highlight">
+                                <td>Gesamt (<span id="tbl-years">20</span> Jahre)</td>
+                                <td class="td-fossil" id="tbl-fossil-total">75.000 €</td>
+                                <td class="td-wp" id="tbl-wp-total">58.500 €</td>
+                                <td class="td-combo" id="tbl-combo-total">46.000 € <span class="best-badge">BEST</span></td>
+                            </tr>
+                            <tr>
+                                <td>Ersparnis vs. Fossil</td>
+                                <td>–</td>
+                                <td class="td-wp" id="tbl-wp-savings">16.500 €</td>
+                                <td class="td-combo" id="tbl-combo-savings">29.000 €</td>
+                            </tr>
+                            <tr>
+                                <td>CO₂ pro Jahr</td>
+                                <td class="td-fossil" id="tbl-fossil-co2">6,65 t</td>
+                                <td class="td-wp">~0 t*</td>
+                                <td class="td-combo">0 t</td>
+                            </tr>
+                            <tr style="background: rgba(239, 68, 68, 0.08);">
+                                <td>davon CO₂-Kosten (20 J.)</td>
+                                <td class="td-fossil" id="tbl-fossil-co2-cost" style="color: #ef4444;">8.500 €</td>
+                                <td class="td-wp" style="color: #10b981;">0 €</td>
+                                <td class="td-combo" style="color: #10b981;">0 €</td>
+                            </tr>
+                            <tr style="background: rgba(239, 68, 68, 0.08);">
+                                <td>CO₂-Preis 2030</td>
+                                <td class="td-fossil" id="tbl-co2-price-2030" style="color: #ef4444;">~130 €/t</td>
+                                <td class="td-wp" colspan="2" style="color: #10b981; text-align: center;">✓ nicht betroffen</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div style="font-size: 0.7rem; color: var(--gray-400); margin-top: 10px;">*bei Ökostrom/PV</div>
+                </div>
+
+                <!-- Chart -->
+                <div class="chart-container">
+                    <div class="chart-header">
+                        <span class="chart-title">📈 Kostenentwicklung über <span id="chart-years">20</span> Jahre</span>
+                        <div class="chart-legend">
+                            <div class="legend-item"><div class="legend-color fossil"></div>Öl/Gas</div>
+                            <div class="legend-item"><div class="legend-color wp"></div>Wärmepumpe</div>
+                            <div class="legend-item"><div class="legend-color combo"></div>WP + PV</div>
+                        </div>
+                    </div>
+                    <div class="chart-wrapper">
+                        <canvas id="cost-chart"></canvas>
+                    </div>
+                </div>
+
+                <!-- Pain Section -->
+                <div class="pain-section">
+                    <div class="pain-header">
+                        <span style="font-size: 1.3rem;">💸</span>
+                        <span class="pain-title">Was passiert, wenn Sie NICHT handeln?</span>
+                    </div>
+                    <div class="timeline">
+                        <div class="timeline-item">
+                            <div class="timeline-year">2025</div>
+                            <div class="timeline-co2">55 €/t CO₂</div>
+                            <div class="timeline-cost" id="cost-2025">2.500 €</div>
+                        </div>
+                        <span class="timeline-arrow">→</span>
+                        <div class="timeline-item">
+                            <div class="timeline-year">2027</div>
+                            <div class="timeline-co2" id="co2-2027-label">~70 €/t</div>
+                            <div class="timeline-cost" id="cost-2027">2.900 €</div>
+                        </div>
+                        <span class="timeline-arrow">→</span>
+                        <div class="timeline-item danger">
+                            <div class="timeline-year">2030</div>
+                            <div class="timeline-co2" id="co2-2030-label">~130 €/t</div>
+                            <div class="timeline-cost" id="cost-2030">3.850 €</div>
+                        </div>
+                    </div>
+                    <div class="pain-summary">
+                        <div class="pain-box">
+                            <div class="pain-label">Mehrkosten bis 2030</div>
+                            <div class="pain-value" id="pain-extra">+1.350 €/Jahr</div>
+                        </div>
+                        <div class="pain-box extreme">
+                            <div class="pain-label">Ihre Ersparnis in <span id="pain-years">20</span> Jahren</div>
+                            <div class="pain-value" id="pain-total">29.000 €</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- CTA -->
+                <div class="cta-section">
+                    <a href="tel:+491734994994" class="cta-button cta-primary">
+                        📞 Jetzt Beratungstermin
+                    </a>
+                    <button class="cta-button cta-secondary">
+                        📋 Heizlastberechnung (DIN 12831)
+                    </button>
+                </div>
+            </div>
+        </div>
+
+
+        <!-- Quellen-Panel (Drag-Down) -->
+<!-- Quellen-Panel HTML -->
+<section class="sources-section" id="sourcesSection">
+    <div class="sources-header" onclick="toggleSources()">
+        <div class="sources-header-left">
+            <span class="sources-header-icon">📚</span>
+            <h3>Verwendete Quellen & Datengrundlagen</h3>
+        </div>
+        <div style="display: flex; align-items: center; gap: 12px;">
+            <span class="sources-header-badge">40 Quellen</span>
+            <span class="sources-toggle">▼</span>
+        </div>
+    </div>
+    
+    <div class="sources-content">
+        <div class="sources-inner">
+            
+            <!-- Zusammenfassung oben -->
+            <div class="sources-summary">
+                <h4>📊 Quellenübersicht</h4>
+                <div class="sources-summary-grid">
+                    <div class="summary-stat">
+                        <div class="summary-stat-value">40</div>
+                        <div class="summary-stat-label">Quellen gesamt</div>
+                    </div>
+                    <div class="summary-stat">
+                        <div class="summary-stat-value">8</div>
+                        <div class="summary-stat-label">Kategorien</div>
+                    </div>
+                    <div class="summary-stat">
+                        <div class="summary-stat-value">4</div>
+                        <div class="summary-stat-label">DIN-Normen</div>
+                    </div>
+                    <div class="summary-stat">
+                        <div class="summary-stat-value">2026</div>
+                        <div class="summary-stat-label">Stand</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Kategorie-Tabs -->
+            <div class="sources-tabs">
+                <button class="sources-tab active" onclick="showSourceCategory('wirkungsgrade')" data-category="wirkungsgrade">
+                    <span class="sources-tab-icon">🔥</span> Wirkungsgrade
+                </button>
+                <button class="sources-tab" onclick="showSourceCategory('heizlast')" data-category="heizlast">
+                    <span class="sources-tab-icon">📐</span> Heizlast
+                </button>
+                <button class="sources-tab" onclick="showSourceCategory('klimadaten')" data-category="klimadaten">
+                    <span class="sources-tab-icon">🌡️</span> Klimadaten
+                </button>
+                <button class="sources-tab" onclick="showSourceCategory('co2')" data-category="co2">
+                    <span class="sources-tab-icon">💨</span> CO₂-Preise
+                </button>
+                <button class="sources-tab" onclick="showSourceCategory('ets')" data-category="ets">
+                    <span class="sources-tab-icon">🇪🇺</span> ETS II
+                </button>
+                <button class="sources-tab" onclick="showSourceCategory('baujahr')" data-category="baujahr">
+                    <span class="sources-tab-icon">🏠</span> Baujahr/Dämmung
+                </button>
+                <button class="sources-tab" onclick="showSourceCategory('preise')" data-category="preise">
+                    <span class="sources-tab-icon">📈</span> Preisentwicklung
+                </button>
+                <button class="sources-tab" onclick="showSourceCategory('normen')" data-category="normen">
+                    <span class="sources-tab-icon">📋</span> Normen
+                </button>
+            </div>
+            
+            <!-- Kategorie: Wirkungsgrade -->
+            <div class="sources-category active" id="cat-wirkungsgrade">
+                <div class="category-header">
+                    <span class="category-icon">🔥</span>
+                    <div class="category-title">
+                        <h4>Wirkungsgrade & Kesseleffizienz</h4>
+                        <p>Quellen zur Bestimmung von Kesselwirkungsgraden, Nutzungsgraden und Abgasverlusten</p>
+                    </div>
+                </div>
+                <div class="source-list">
+                    <div class="source-item">
+                        <div class="source-item-header">
+                            <h5 class="source-item-title">Abgasverlust der Ölheizung bestimmen</h5>
+                            <span class="source-item-id">WG001</span>
+                        </div>
+                        <div class="source-item-meta">
+                            <span>📰 Heizung.de</span>
+                            <span>📅 2024</span>
+                        </div>
+                        <p class="source-item-content">Feuerungstechnischer Wirkungsgrad; Berechnung über CO₂- oder O₂-Messung; Abgasverluste = 100% - Wirkungsgrad</p>
+                        <div class="source-item-tags">
+                            <span class="source-tag">Kesselwirkungsgrad-Tabelle</span>
+                            <span class="source-tag">Abgasverlust-Berechnung</span>
+                        </div>
+                        <a href="https://www.heizung.de/oelheizung/wissen/den-abgasverlust-der-oelheizung-bestimmen.html" target="_blank" class="source-item-link">
+                            🔗 Quelle öffnen
+                        </a>
+                    </div>
+                    
+                    <div class="source-item">
+                        <div class="source-item-header">
+                            <h5 class="source-item-title">Gasbrennwertheizung - Funktion und Kosten</h5>
+                            <span class="source-item-id">WG003</span>
+                        </div>
+                        <div class="source-item-meta">
+                            <span>📰 Heizung.de</span>
+                            <span>📅 2024</span>
+                        </div>
+                        <p class="source-item-content">Heizwert vs. Brennwert; Kondensationswärme; Wirkungsgrade >100% bei Brennwertbezug erklärt</p>
+                        <div class="source-item-tags">
+                            <span class="source-tag">Brennwert/Heizwert</span>
+                            <span class="source-tag">Brennwertkessel</span>
+                        </div>
+                        <a href="https://www.heizung.de/gasheizung/wissen/gasbrennwertheizung-funktion-und-kosten-im-ueberblick.html" target="_blank" class="source-item-link">
+                            🔗 Quelle öffnen
+                        </a>
+                    </div>
+                    
+                    <div class="source-item">
+                        <div class="source-item-header">
+                            <h5 class="source-item-title">Welche Heizung ist die beste?</h5>
+                            <span class="source-item-id">WG004</span>
+                        </div>
+                        <div class="source-item-meta">
+                            <span>📰 Thermondo</span>
+                            <span>📅 2024</span>
+                        </div>
+                        <p class="source-item-content">Wirkungsgrad-Vergleich verschiedener Heizsysteme: Wärmepumpen 300-500%; Gasbrennwert 90-99%; Ölbrennwert 85-95%</p>
+                        <div class="source-item-tags">
+                            <span class="source-tag">Systemvergleich</span>
+                            <span class="source-tag">Wirkungsgrad-Referenz</span>
+                        </div>
+                        <a href="https://www.thermondo.de/info/rat/vergleich/welche-heizung-ist-die-beste/" target="_blank" class="source-item-link">
+                            🔗 Quelle öffnen
+                        </a>
+                    </div>
+                    
+                    <div class="source-item">
+                        <div class="source-item-header">
+                            <h5 class="source-item-title">Wirkungs- und Nutzungsgrade von Kesseln</h5>
+                            <span class="source-item-id">WG005</span>
+                        </div>
+                        <div class="source-item-meta">
+                            <span>📰 Baunetz Wissen / Buderus</span>
+                            <span>📅 2024</span>
+                        </div>
+                        <p class="source-item-content">Norm-Nutzungsgrade: NT-Kessel ca. 94% (Heizwert); Brennwertkessel ca. 96% (Brennwert-Basis)</p>
+                        <div class="source-item-tags">
+                            <span class="source-tag">Norm-Nutzungsgrad</span>
+                            <span class="source-tag">Kesseltyp-Effizienz</span>
+                        </div>
+                        <a href="https://www.baunetzwissen.de/heizung/fachwissen/heizkessel/wirkungs-und-nutzungsgrade-von-heizkesseln-160757" target="_blank" class="source-item-link">
+                            🔗 Quelle öffnen
+                        </a>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Kategorie: Heizlast -->
+            <div class="sources-category" id="cat-heizlast">
+                <div class="category-header">
+                    <span class="category-icon">📐</span>
+                    <div class="category-title">
+                        <h4>Heizlastberechnung & DIN EN 12831</h4>
+                        <p>Normative Grundlagen und Berechnungsverfahren für die Gebäude-Heizlast</p>
+                    </div>
+                </div>
+                <div class="source-list">
+                    <div class="source-item">
+                        <div class="source-item-header">
+                            <h5 class="source-item-title">Gebäudeheizlast berechnen - Anleitung</h5>
+                            <span class="source-item-id">HL002</span>
+                        </div>
+                        <div class="source-item-meta">
+                            <span>📰 MZ Energieberater</span>
+                            <span>📅 2023</span>
+                        </div>
+                        <p class="source-item-content">Vollbenutzungsstunden-Verfahren; Schritt-für-Schritt-Anleitung; Beispielrechnung mit 30.000 kWh Gasverbrauch → 11,6 kW Heizlast</p>
+                        <div class="source-item-tags">
+                            <span class="source-tag">Vollbenutzungsstunden</span>
+                            <span class="source-tag">Praxisbeispiel</span>
+                        </div>
+                        <a href="https://www.mz-energieberater.de/gebaeudeheizlast-berechnen/" target="_blank" class="source-item-link">
+                            🔗 Quelle öffnen
+                        </a>
+                    </div>
+                    
+                    <div class="source-item">
+                        <div class="source-item-header">
+                            <h5 class="source-item-title">BWP Heizlastrechner</h5>
+                            <span class="source-item-id">HL003</span>
+                        </div>
+                        <div class="source-item-meta">
+                            <span>📰 Bundesverband Wärmepumpe</span>
+                            <span>📅 2025</span>
+                        </div>
+                        <p class="source-item-content">Online-Tool zur Heizlast-Berechnung; PLZ-basierte Klimadaten nach DIN/TS 12831-1</p>
+                        <div class="source-item-tags">
+                            <span class="source-tag">Online-Tool</span>
+                            <span class="source-tag">Validierung</span>
+                        </div>
+                        <a href="https://www.waermepumpe.de/werkzeuge/heizlastrechner/" target="_blank" class="source-item-link">
+                            🔗 Quelle öffnen
+                        </a>
+                    </div>
+                    
+                    <div class="source-item">
+                        <div class="source-item-header">
+                            <h5 class="source-item-title">Heizleistung berechnen - Formeln und Beispiele</h5>
+                            <span class="source-item-id">HL005</span>
+                        </div>
+                        <div class="source-item-meta">
+                            <span>📰 Energie-Experten.org</span>
+                            <span>📅 2024</span>
+                        </div>
+                        <p class="source-item-content">Heizleistung vs. Heizwärmebedarf; Berechnungsgrundlagen nach DIN EN 12831; Beiblatt 2 Verfahren</p>
+                        <div class="source-item-tags">
+                            <span class="source-tag">Formeln</span>
+                            <span class="source-tag">DIN EN 12831</span>
+                        </div>
+                        <a href="https://www.energie-experten.org/heizung/heizungstechnik/heizungsanlage/heizleistung" target="_blank" class="source-item-link">
+                            🔗 Quelle öffnen
+                        </a>
+                    </div>
+                    
+                    <div class="source-item">
+                        <div class="source-item-header">
+                            <h5 class="source-item-title">DIN EN 12831 - Verfahren zur Norm-Heizlast</h5>
+                            <span class="source-item-id">HL006</span>
+                        </div>
+                        <div class="source-item-meta">
+                            <span>📰 BOSY-Online</span>
+                            <span>📅 2024</span>
+                        </div>
+                        <p class="source-item-content">Detaillierte Erläuterung der Norm; Transmissions- und Lüftungswärmeverluste; Aufheizzuschläge</p>
+                        <div class="source-item-tags">
+                            <span class="source-tag">Norm-Details</span>
+                            <span class="source-tag">Technische Grundlagen</span>
+                        </div>
+                        <a href="http://www.bosy-online.de/heizlastberechnung_nach_din_en_12831.htm" target="_blank" class="source-item-link">
+                            🔗 Quelle öffnen
+                        </a>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Kategorie: Klimadaten -->
+            <div class="sources-category" id="cat-klimadaten">
+                <div class="category-header">
+                    <span class="category-icon">🌡️</span>
+                    <div class="category-title">
+                        <h4>Klimadaten & Vollbenutzungsstunden</h4>
+                        <p>Postleitzahl-basierte Klimadaten und regionale Vollbenutzungsstunden nach DIN/TS 12831-1</p>
+                    </div>
+                </div>
+                <div class="source-list">
+                    <div class="source-item">
+                        <div class="source-item-header">
+                            <h5 class="source-item-title">BWP Klimakarte</h5>
+                            <span class="source-item-id">KD001</span>
+                        </div>
+                        <div class="source-item-meta">
+                            <span>📰 Bundesverband Wärmepumpe</span>
+                            <span>📅 2025</span>
+                        </div>
+                        <p class="source-item-content">Postleitzahlgenaue Daten zu Jahresmittel- und Norm-Außentemperaturen; DIN/TS 12831-1 konform; Daten vom Deutschen Wetterdienst (2006-2023)</p>
+                        <div class="source-item-tags">
+                            <span class="source-tag">PLZ-Lookup</span>
+                            <span class="source-tag">Norm-Außentemperatur</span>
+                            <span class="source-tag">Vollbenutzungsstunden</span>
+                        </div>
+                        <a href="https://www.waermepumpe.de/werkzeuge/klimakarte/" target="_blank" class="source-item-link">
+                            🔗 Quelle öffnen
+                        </a>
+                    </div>
+                    
+                    <div class="source-item">
+                        <div class="source-item-header">
+                            <h5 class="source-item-title">DIN/TS 12831-1:2020-04</h5>
+                            <span class="source-item-id">KD002</span>
+                        </div>
+                        <div class="source-item-meta">
+                            <span>📰 Deutsches Institut für Normung</span>
+                            <span>📅 April 2020</span>
+                        </div>
+                        <p class="source-item-content">Nationale Ergänzung zur Heizlastberechnung; Klimazonen Deutschland; Norm-Außentemperaturen</p>
+                        <div class="source-item-tags">
+                            <span class="source-tag">Normative Grundlage</span>
+                            <span class="source-tag">Klimazonen</span>
+                        </div>
+                        <a href="https://www.beuth.de/de/technische-regel/din-ts-12831-1/318631944" target="_blank" class="source-item-link">
+                            🔗 Quelle öffnen
+                        </a>
+                    </div>
+                    
+                    <div class="source-item">
+                        <div class="source-item-header">
+                            <h5 class="source-item-title">Klimazonen Deutschland</h5>
+                            <span class="source-item-id">KD003</span>
+                        </div>
+                        <div class="source-item-meta">
+                            <span>📰 BOSY-Online</span>
+                            <span>📅 2024</span>
+                        </div>
+                        <p class="source-item-content">Übersicht der Klimazonen; Regionale Vollbenutzungsstunden (Nord: 2.000-2.200h, Mitte: 1.800-2.000h, Süd: 1.600-1.800h)</p>
+                        <div class="source-item-tags">
+                            <span class="source-tag">Klimazonen-Mapping</span>
+                            <span class="source-tag">Regionale Unterschiede</span>
+                        </div>
+                        <a href="http://www.bosy-online.de/Klimazonen.htm" target="_blank" class="source-item-link">
+                            🔗 Quelle öffnen
+                        </a>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Kategorie: CO₂-Preise -->
+            <div class="sources-category" id="cat-co2">
+                <div class="category-header">
+                    <span class="category-icon">💨</span>
+                    <div class="category-title">
+                        <h4>CO₂-Bepreisung nach BEHG</h4>
+                        <p>Nationale CO₂-Bepreisung nach dem Brennstoffemissionshandelsgesetz</p>
+                    </div>
+                </div>
+                <div class="source-list">
+                    <div class="source-item">
+                        <div class="source-item-header">
+                            <h5 class="source-item-title">CO₂-Preis macht Heizkosten teurer</h5>
+                            <span class="source-item-id">CO001</span>
+                        </div>
+                        <div class="source-item-meta">
+                            <span>📰 Verbraucherzentrale</span>
+                            <span>📅 2025</span>
+                        </div>
+                        <p class="source-item-content">Auswirkungen des CO₂-Preises auf Heizkosten; Preisentwicklung 2021-2026; Rechenbeispiele für Haushalte</p>
+                        <div class="source-item-tags">
+                            <span class="source-tag">CO₂-Preis-Staffelung</span>
+                            <span class="source-tag">Verbraucherauswirkungen</span>
+                        </div>
+                        <a href="https://www.verbraucherzentrale.de/wissen/energie/heizen-und-warmwasser/so-viel-teurer-macht-der-co2preis-ihre-heizkosten-43806" target="_blank" class="source-item-link">
+                            🔗 Quelle öffnen
+                        </a>
+                    </div>
+                    
+                    <div class="source-item">
+                        <div class="source-item-header">
+                            <h5 class="source-item-title">Entlastungen für Verbraucher ab 2026</h5>
+                            <span class="source-item-id">CO002</span>
+                        </div>
+                        <div class="source-item-meta">
+                            <span>📰 Bundesumweltministerium</span>
+                            <span>📅 2025</span>
+                        </div>
+                        <p class="source-item-content">Offizielle Mitteilung zu Entlastungsmaßnahmen bei steigendem CO₂-Preis; BEHG-Anpassungen</p>
+                        <div class="source-item-tags">
+                            <span class="source-tag">Offizielle Quelle</span>
+                            <span class="source-tag">Entlastungsmaßnahmen</span>
+                        </div>
+                        <a href="https://www.bundesumweltministerium.de/pressemitteilung/ab-2026-entlastungen-fuer-verbraucherinnen-und-verbraucher-trotz-steigendem-co2-preis" target="_blank" class="source-item-link">
+                            🔗 Quelle öffnen
+                        </a>
+                    </div>
+                    
+                    <div class="source-item">
+                        <div class="source-item-header">
+                            <h5 class="source-item-title">CO₂-Steuer - Alles was Sie wissen müssen</h5>
+                            <span class="source-item-id">CO004</span>
+                        </div>
+                        <div class="source-item-meta">
+                            <span>📰 Finanztip</span>
+                            <span>📅 2025</span>
+                        </div>
+                        <p class="source-item-content">Verbraucherfreundliche Erklärung der CO₂-Bepreisung; Rechenbeispiele; Preisentwicklung bis 2026</p>
+                        <div class="source-item-tags">
+                            <span class="source-tag">Verständliche Erklärung</span>
+                            <span class="source-tag">Beispielrechnungen</span>
+                        </div>
+                        <a href="https://www.finanztip.de/co2-steuer/" target="_blank" class="source-item-link">
+                            🔗 Quelle öffnen
+                        </a>
+                    </div>
+                    
+                    <div class="source-item">
+                        <div class="source-item-header">
+                            <h5 class="source-item-title">CO₂-Preis bei Öl und Gas</h5>
+                            <span class="source-item-id">CO006</span>
+                        </div>
+                        <div class="source-item-meta">
+                            <span>📰 ADAC</span>
+                            <span>📅 2025</span>
+                        </div>
+                        <p class="source-item-content">Konkrete Auswirkungen auf Heizöl- und Gaspreise; CO₂-Aufschlag pro Liter/kWh</p>
+                        <div class="source-item-tags">
+                            <span class="source-tag">Preisauswirkungen</span>
+                            <span class="source-tag">Heizöl/Gas</span>
+                        </div>
+                        <a href="https://www.adac.de/rund-ums-haus/energie/spartipps/co2-preis-oel-gas/" target="_blank" class="source-item-link">
+                            🔗 Quelle öffnen
+                        </a>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Kategorie: ETS II -->
+            <div class="sources-category" id="cat-ets">
+                <div class="category-header">
+                    <span class="category-icon">🇪🇺</span>
+                    <div class="category-title">
+                        <h4>EU-Emissionshandel ETS II (ab 2027)</h4>
+                        <p>Europäischer Emissionshandel für Gebäude und Verkehr ab Januar 2027</p>
+                    </div>
+                </div>
+                <div class="source-list">
+                    <div class="source-item">
+                        <div class="source-item-header">
+                            <h5 class="source-item-title">Wie teuer wird der Emissionshandel im Verkehr?</h5>
+                            <span class="source-item-id">ETS001</span>
+                        </div>
+                        <div class="source-item-meta">
+                            <span>📰 Tagesschau</span>
+                            <span>📅 2025</span>
+                        </div>
+                        <p class="source-item-content">Start ETS2 am 01.01.2027; Erwartete Preissteigerungen für Verbraucher; Auswirkungen auf Heiz- und Kraftstoffpreise</p>
+                        <div class="source-item-tags">
+                            <span class="source-tag">ETS II Start</span>
+                            <span class="source-tag">Medienquelle</span>
+                        </div>
+                        <a href="https://www.tagesschau.de/wirtschaft/emissionshandel-im-verkehr-100.html" target="_blank" class="source-item-link">
+                            🔗 Quelle öffnen
+                        </a>
+                    </div>
+                    
+                    <div class="source-item">
+                        <div class="source-item-header">
+                            <h5 class="source-item-title">Welchen Preis hat der neue Emissionshandel?</h5>
+                            <span class="source-item-id">ETS002</span>
+                        </div>
+                        <div class="source-item-meta">
+                            <span>📰 Klimareporter</span>
+                            <span>📅 2025</span>
+                        </div>
+                        <p class="source-item-content">Preisprognosen für ETS II: 65-100 €/t erwartet; Vergleich mit nationalem CO₂-Preis (BEHG)</p>
+                        <div class="source-item-tags">
+                            <span class="source-tag">Preisprognosen</span>
+                            <span class="source-tag">Experteneinschätzung</span>
+                        </div>
+                        <a href="https://www.klimareporter.de/finanzen-wirtschaft/welchen-preis-hat-der-neue-emissionshandel" target="_blank" class="source-item-link">
+                            🔗 Quelle öffnen
+                        </a>
+                    </div>
+                    
+                    <div class="source-item">
+                        <div class="source-item-header">
+                            <h5 class="source-item-title">Der Europäische Emissionshandel</h5>
+                            <span class="source-item-id">ETS005</span>
+                        </div>
+                        <div class="source-item-meta">
+                            <span>📰 Umweltbundesamt</span>
+                            <span>📅 2024</span>
+                        </div>
+                        <p class="source-item-content">Offizielle Daten zum EU-ETS; Emissionsentwicklung; Grundlagen zum neuen ETS II für Gebäude/Verkehr</p>
+                        <div class="source-item-tags">
+                            <span class="source-tag">Offizielle Quelle</span>
+                            <span class="source-tag">Emissionsdaten</span>
+                        </div>
+                        <a href="https://www.umweltbundesamt.de/daten/klima/der-europaeische-emissionshandel" target="_blank" class="source-item-link">
+                            🔗 Quelle öffnen
+                        </a>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Kategorie: Baujahr/Dämmung -->
+            <div class="sources-category" id="cat-baujahr">
+                <div class="category-header">
+                    <span class="category-icon">🏠</span>
+                    <div class="category-title">
+                        <h4>Spezifische Heizlast nach Baujahr/Dämmstandard</h4>
+                        <p>Richtwerte für die spezifische Heizlast (W/m²) nach Gebäudealter und Dämmstandard</p>
+                    </div>
+                </div>
+                <div class="source-list">
+                    <div class="source-item">
+                        <div class="source-item-header">
+                            <h5 class="source-item-title">Stiebel Eltron Heizlastrechner</h5>
+                            <span class="source-item-id">HB001</span>
+                        </div>
+                        <div class="source-item-meta">
+                            <span>📰 Stiebel Eltron</span>
+                            <span>📅 2025</span>
+                        </div>
+                        <p class="source-item-content">Überschlägige Heizlast-Berechnung; Mittlere spezifische Heizlast ca. 55 W/m² als Referenz</p>
+                        <div class="source-item-tags">
+                            <span class="source-tag">Richtwert-Tool</span>
+                            <span class="source-tag">Validierung</span>
+                        </div>
+                        <a href="https://www.stiebel-eltron.de/toolbox/heizlast" target="_blank" class="source-item-link">
+                            🔗 Quelle öffnen
+                        </a>
+                    </div>
+                    
+                    <div class="source-item">
+                        <div class="source-item-header">
+                            <h5 class="source-item-title">Raumweise Heizlastberechnung nach DIN EN 12831</h5>
+                            <span class="source-item-id">HB002</span>
+                        </div>
+                        <div class="source-item-meta">
+                            <span>📰 Immovance</span>
+                            <span>📅 2024</span>
+                        </div>
+                        <p class="source-item-content">Praxisbeispiele: 150 m² Baujahr 1985: 12-15 kW Heizlast; Neubau 1995-2001: ca. 50-70 W/m²</p>
+                        <div class="source-item-tags">
+                            <span class="source-tag">Baujahr-Zuordnung</span>
+                            <span class="source-tag">Praxisbeispiele</span>
+                        </div>
+                        <a href="https://immovance.de/raumweise-heizlastberechnung-din-en-12831/" target="_blank" class="source-item-link">
+                            🔗 Quelle öffnen
+                        </a>
+                    </div>
+                    
+                    <div class="source-item">
+                        <div class="source-item-header">
+                            <h5 class="source-item-title">Heizlastberechnung nach DIN EN 12831</h5>
+                            <span class="source-item-id">HB003</span>
+                        </div>
+                        <div class="source-item-meta">
+                            <span>📰 Syon</span>
+                            <span>📅 2025</span>
+                        </div>
+                        <p class="source-item-content">Unsaniertes Gebäude ca. 100 W/m²; Neubau/saniert ca. 30-50 W/m²; Passivhaus ca. 10-15 W/m²</p>
+                        <div class="source-item-tags">
+                            <span class="source-tag">Dämmstandard-Referenz</span>
+                            <span class="source-tag">W/m²-Werte</span>
+                        </div>
+                        <a href="https://syon.de/heizlastberechnung-nach-din-en-12831/" target="_blank" class="source-item-link">
+                            🔗 Quelle öffnen
+                        </a>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Kategorie: Preisentwicklung (NEU) -->
+            <div class="sources-category" id="cat-preise">
+                <div class="category-header">
+                    <span class="category-icon">📈</span>
+                    <div class="category-title">
+                        <h4>Historische Preisentwicklung seit Euro-Einführung (2000–2026)</h4>
+                        <p>Offizielle Daten zur Entwicklung von Strom-, Heizöl- und Erdgaspreisen in Deutschland</p>
+                    </div>
+                </div>
+                <div class="source-list">
+                    <div class="source-item">
+                        <div class="source-item-header">
+                            <h5 class="source-item-title">BDEW-Strompreisanalyse</h5>
+                            <span class="source-item-id">PE001</span>
+                        </div>
+                        <div class="source-item-meta">
+                            <span>📰 BDEW</span>
+                            <span>📅 Oktober 2025</span>
+                        </div>
+                        <p class="source-item-content">Strompreisentwicklung für Haushalte: 2000: 13,94 ct/kWh → 2025: ~40 ct/kWh. <strong>Nominale Steigerung: ~186% (~6% p.a.)</strong>. Der Strompreis steigt deutlich schneller als die Inflation – der Kaufkraftverlust des Euro kommt noch hinzu.</p>
+                        <div class="source-item-tags">
+                            <span class="source-tag">Strompreis</span>
+                            <span class="source-tag">Haushalte</span>
+                            <span class="source-tag">Historisch</span>
+                        </div>
+                        <a href="https://www.bdew.de/service/daten-und-grafiken/bdew-strompreisanalyse/" target="_blank" class="source-item-link">
+                            🔗 Quelle öffnen
+                        </a>
+                    </div>
+                    
+                    <div class="source-item">
+                        <div class="source-item-header">
+                            <h5 class="source-item-title">Wikipedia: Strompreis (BDEW-Daten)</h5>
+                            <span class="source-item-id">PE002</span>
+                        </div>
+                        <div class="source-item-meta">
+                            <span>📰 Wikipedia/BDEW</span>
+                            <span>📅 2025</span>
+                        </div>
+                        <p class="source-item-content">Detaillierte Tabelle der Strompreisentwicklung 1998–2024 mit Aufschlüsselung nach Kostenbestandteilen. Steigerung 2000-2021: durchschnittlich 6,1% p.a.</p>
+                        <div class="source-item-tags">
+                            <span class="source-tag">Historische Daten</span>
+                            <span class="source-tag">Preiszusammensetzung</span>
+                        </div>
+                        <a href="https://de.wikipedia.org/wiki/Strompreis" target="_blank" class="source-item-link">
+                            🔗 Quelle öffnen
+                        </a>
+                    </div>
+                    
+                    <div class="source-item">
+                        <div class="source-item-header">
+                            <h5 class="source-item-title">Heizölpreis-Entwicklung (2000–2026)</h5>
+                            <span class="source-item-id">PE003</span>
+                        </div>
+                        <div class="source-item-meta">
+                            <span>📰 HeizOel24 / Tecson</span>
+                            <span>📅 2025</span>
+                        </div>
+                        <p class="source-item-content">Heizölpreise 2000: ~40 ct/L → 2025: ~94 ct/L. <strong>Nominale Steigerung: ~135% (~3,5% p.a.)</strong> ⚠️ Extrem volatil! Spanne 35–132 ct/L. 2016: nur 50 ct/L, 2022: bis 132 ct/L.</p>
+                        <div class="source-item-tags">
+                            <span class="source-tag">Heizölpreis</span>
+                            <span class="source-tag">Volatilität</span>
+                            <span class="source-tag">20-Jahres-Chart</span>
+                        </div>
+                        <a href="https://www.heizoel24.de/charts/heizoel" target="_blank" class="source-item-link">
+                            🔗 Quelle öffnen
+                        </a>
+                    </div>
+                    
+                    <div class="source-item">
+                        <div class="source-item-header">
+                            <h5 class="source-item-title">BDEW-Gaspreisanalyse</h5>
+                            <span class="source-item-id">PE004</span>
+                        </div>
+                        <div class="source-item-meta">
+                            <span>📰 BDEW</span>
+                            <span>📅 2025</span>
+                        </div>
+                        <p class="source-item-content">Gaspreise Haushalte: 2005: ~4 ct/kWh → 2025: 12,07 ct/kWh. <strong>Nominale Steigerung: ~200% (~4,5% p.a.)</strong> Bis 2021 stabil bei 6-7 ct/kWh, dann Energiekrise. CO₂-Preis kommt hinzu.</p>
+                        <div class="source-item-tags">
+                            <span class="source-tag">Gaspreis</span>
+                            <span class="source-tag">Haushalte</span>
+                        </div>
+                        <a href="https://www.bdew.de/service/daten-und-grafiken/bdew-gaspreisanalyse/" target="_blank" class="source-item-link">
+                            🔗 Quelle öffnen
+                        </a>
+                    </div>
+                    
+                    <div class="source-item">
+                        <div class="source-item-header">
+                            <h5 class="source-item-title">Destatis: Preisindizes Erdgas und Heizöl</h5>
+                            <span class="source-item-id">PE005</span>
+                        </div>
+                        <div class="source-item-meta">
+                            <span>📰 Statistisches Bundesamt</span>
+                            <span>📅 2025</span>
+                        </div>
+                        <p class="source-item-content">Offizielle Preisindizes für Erdgas und Heizöl; Lange Reihen ab 1976; Basis für Inflationsberechnungen</p>
+                        <div class="source-item-tags">
+                            <span class="source-tag">Offizielle Statistik</span>
+                            <span class="source-tag">Preisindizes</span>
+                        </div>
+                        <a href="https://www.destatis.de/DE/Themen/Wirtschaft/Preise/_Grafik/_Interaktiv/preisindizes-erdgas-heizoel.html" target="_blank" class="source-item-link">
+                            🔗 Quelle öffnen
+                        </a>
+                    </div>
+                    
+                    <div class="source-item">
+                        <div class="source-item-header">
+                            <h5 class="source-item-title">Tecson: Historische Ölpreise</h5>
+                            <span class="source-item-id">PE006</span>
+                        </div>
+                        <div class="source-item-meta">
+                            <span>📰 Tecson</span>
+                            <span>📅 2025</span>
+                        </div>
+                        <p class="source-item-content">Jahresdurchschnittspreise: 2024: 78,9 USD/Barrel Rohöl / 101,7 ct/L Heizöl; 2025: 67,5 USD/B / 91,6 ct/L</p>
+                        <div class="source-item-tags">
+                            <span class="source-tag">Rohölpreis</span>
+                            <span class="source-tag">Jahresdurchschnitt</span>
+                        </div>
+                        <a href="https://www.tecson.de/de/historische-oelpreise.html" target="_blank" class="source-item-link">
+                            🔗 Quelle öffnen
+                        </a>
+                    </div>
+                    
+                    <div class="source-item">
+                        <div class="source-item-header">
+                            <h5 class="source-item-title">Statista: Heizölpreis Deutschland (1960–2025)</h5>
+                            <span class="source-item-id">PE007</span>
+                        </div>
+                        <div class="source-item-meta">
+                            <span>📰 Statista</span>
+                            <span>📅 2025</span>
+                        </div>
+                        <p class="source-item-content">Langfristige Datenreihe: 1965: 11,3 ct/L; 2000: 40,8 ct/L; 2022: 132,4 ct/L (Krise!); 2025: 94,1 ct/L. Kaufkraft des Euro seit 2000 deutlich gesunken.</p>
+                        <div class="source-item-tags">
+                            <span class="source-tag">Langzeit-Statistik</span>
+                            <span class="source-tag">Verbraucherpreis</span>
+                        </div>
+                        <a href="https://de.statista.com/statistik/daten/studie/2633/umfrage/entwicklung-des-verbraucherpreises-fuer-leichtes-heizoel-seit-1960/" target="_blank" class="source-item-link">
+                            🔗 Quelle öffnen
+                        </a>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Kategorie: Normen -->
+            <div class="sources-category" id="cat-normen">
+                <div class="category-header">
+                    <span class="category-icon">📋</span>
+                    <div class="category-title">
+                        <h4>Normen & Technische Regelwerke</h4>
+                        <p>Relevante DIN-Normen und technische Regelwerke</p>
+                    </div>
+                </div>
+                <div class="source-list">
+                    <div class="source-item">
+                        <div class="source-item-header">
+                            <h5 class="source-item-title">DIN EN 12831-1:2017</h5>
+                            <span class="source-item-id">NM001</span>
+                        </div>
+                        <div class="source-item-meta">
+                            <span>📰 DIN</span>
+                            <span>📅 September 2017</span>
+                        </div>
+                        <p class="source-item-content">Energetische Bewertung von Gebäuden – Verfahren zur Berechnung der Norm-Heizlast – Teil 1: Raumheizlast</p>
+                        <div class="source-item-tags">
+                            <span class="source-tag">Normative Grundlage</span>
+                            <span class="source-tag">Heizlast</span>
+                        </div>
+                        <a href="https://www.beuth.de/de/norm/din-en-12831-1/277219541" target="_blank" class="source-item-link">
+                            🔗 Quelle öffnen
+                        </a>
+                    </div>
+                    
+                    <div class="source-item">
+                        <div class="source-item-header">
+                            <h5 class="source-item-title">DIN/TS 12831-1:2020-04</h5>
+                            <span class="source-item-id">NM002</span>
+                        </div>
+                        <div class="source-item-meta">
+                            <span>📰 DIN</span>
+                            <span>📅 April 2020</span>
+                        </div>
+                        <p class="source-item-content">Nationaler Anhang NA; Klimadaten für Deutschland; Norm-Außentemperaturen</p>
+                        <div class="source-item-tags">
+                            <span class="source-tag">Nationaler Anhang</span>
+                            <span class="source-tag">Klimadaten</span>
+                        </div>
+                        <a href="https://www.beuth.de/de/technische-regel/din-ts-12831-1/318631944" target="_blank" class="source-item-link">
+                            🔗 Quelle öffnen
+                        </a>
+                    </div>
+                    
+                    <div class="source-item">
+                        <div class="source-item-header">
+                            <h5 class="source-item-title">BEHG - Brennstoffemissionshandelsgesetz</h5>
+                            <span class="source-item-id">NM003</span>
+                        </div>
+                        <div class="source-item-meta">
+                            <span>📰 Bundesgesetzblatt</span>
+                            <span>📅 2019 (zuletzt geändert 2024)</span>
+                        </div>
+                        <p class="source-item-content">Rechtsgrundlage für die nationale CO₂-Bepreisung von Brennstoffen</p>
+                        <div class="source-item-tags">
+                            <span class="source-tag">Rechtliche Grundlage</span>
+                            <span class="source-tag">CO₂-Preis</span>
+                        </div>
+                        <a href="https://www.gesetze-im-internet.de/behg/" target="_blank" class="source-item-link">
+                            🔗 Quelle öffnen
+                        </a>
+                    </div>
+                    
+                    <div class="source-item">
+                        <div class="source-item-header">
+                            <h5 class="source-item-title">GEG - Gebäudeenergiegesetz 2024</h5>
+                            <span class="source-item-id">NM004</span>
+                        </div>
+                        <div class="source-item-meta">
+                            <span>📰 Bundesgesetzblatt</span>
+                            <span>📅 2024</span>
+                        </div>
+                        <p class="source-item-content">Anforderungen an die energetische Qualität von Gebäuden; 65%-EE-Pflicht</p>
+                        <div class="source-item-tags">
+                            <span class="source-tag">Energetische Anforderungen</span>
+                            <span class="source-tag">Heizungsgesetz</span>
+                        </div>
+                        <a href="https://www.geg-info.de/geg_2024/index.htm" target="_blank" class="source-item-link">
+                            🔗 Quelle öffnen
+                        </a>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Footer mit Metadaten -->
+            <div class="sources-footer">
+                <div class="sources-footer-left">
+                    <span>📅 Stand: Januar 2026</span>
+                    <span>✏️ Version 1.0</span>
+                </div>
+                <span>ℹ️ Diese Quellen dienen als Grundlage für die Berechnungslogik und Standardwerte des Rechners.</span>
+            </div>
+            
+        </div>
+    </div>
+</section>
+
+<script>
+// Quellen-Panel Toggle
+function toggleSources() {
+    const section = document.getElementById('sourcesSection');
+    section.classList.toggle('open');
+}
+
+// Kategorie-Wechsel
+function showSourceCategory(category) {
+    // Alle Kategorien ausblenden
+    document.querySelectorAll('.sources-category').forEach(cat => {
+        cat.classList.remove('active');
+    });
+    
+    // Alle Tabs deaktivieren
+    document.querySelectorAll('.sources-tab').forEach(tab => {
+        tab.classList.remove('active');
+    });
+    
+    // Gewählte Kategorie anzeigen
+    const catElement = document.getElementById('cat-' + category);
+    if (catElement) {
+        catElement.classList.add('active');
+    }
+    
+    // Gewählten Tab aktivieren
+    const tabElement = document.querySelector(`.sources-tab[data-category="${category}"]`);
+    if (tabElement) {
+        tabElement.classList.add('active');
+    }
+}
+</script>
+
+    </div>
+
+  </main>
+
+  <footer class="site-footer" role="contentinfo">
+    <div class="container footer-inner">
+
+      <div class="footer-brand">
+        <a href="/" class="nav-logo" aria-label="Patrick Leißner Energieberatung – zur Startseite">
+          <img src="assets/Logo/Initialien-Gold-frei.png" alt="Patrick Leißner Energieberatung Logo" width="36" height="36" loading="lazy">
+          <span class="nav-logo-text">Patrick Leißner</span>
+        </a>
+        <p>Frei durch eigene Energie.</p>
+      </div>
+
+      <nav class="footer-links" aria-label="Footer-Navigation">
+        <a href="/#impressum">Impressum</a>
+        <a href="/#datenschutz">Datenschutz</a>
+        <a href="#" aria-label="Zurück zum Seitenanfang">Nach oben ↑</a>
+      </nav>
+
+    </div>
+    <div class="container">
+      <p class="footer-copyright">© 2025 Patrick Leißner. Alle Rechte vorbehalten.</p>
+    </div>
+  </footer>
+
+  <script src="main.js"></script>
+    <script>
+// ========================================
+// ENERGIEKOSTEN-RECHNER V8 - KUNDENFREUNDLICH
+// Patrick Leißner | CI: Beige #F1F0E9, Grün #245145, Gold #D3AF3C
+// ========================================
+
+// === PLZ-KLIMADATEN (vereinfacht) ===
+// Vollständige PLZ-Datenbank nach DIN EN 12831 (Norm-Außentemperaturen)
+// Quellen: BWP-Klimakarte, DIN/TS 12831-1, Wikipedia Postleitregionen
+const PLZ_DATEN = {
+    // === PLZ 0xxxx: Ostdeutschland (Sachsen, Brandenburg, Sachsen-Anhalt, Thüringen) ===
+    "01": { region: "Dresden/Meißen", normTemp: -14, vbh: 1850 },
+    "02": { region: "Görlitz/Bautzen", normTemp: -16, vbh: 1950 },
+    "03": { region: "Cottbus/Lausitz", normTemp: -14, vbh: 1850 },
+    "04": { region: "Leipzig", normTemp: -14, vbh: 1800 },
+    "06": { region: "Halle/Dessau", normTemp: -14, vbh: 1850 },
+    "07": { region: "Gera/Jena", normTemp: -14, vbh: 1880 },
+    "08": { region: "Zwickau/Plauen", normTemp: -16, vbh: 1950 },
+    "09": { region: "Chemnitz/Erzgebirge", normTemp: -16, vbh: 1950 },
+    
+    // === PLZ 1xxxx: Berlin und Brandenburg ===
+    "10": { region: "Berlin Mitte", normTemp: -14, vbh: 1750 },
+    "11": { region: "Berlin", normTemp: -14, vbh: 1750 },
+    "12": { region: "Berlin Süd", normTemp: -14, vbh: 1750 },
+    "13": { region: "Berlin Nord", normTemp: -14, vbh: 1750 },
+    "14": { region: "Potsdam/Brandenburg", normTemp: -14, vbh: 1800 },
+    "15": { region: "Frankfurt (Oder)", normTemp: -14, vbh: 1850 },
+    "16": { region: "Oranienburg/Eberswalde", normTemp: -14, vbh: 1850 },
+    "17": { region: "Neubrandenburg/Greifswald", normTemp: -14, vbh: 1900 },
+    "18": { region: "Rostock/Stralsund", normTemp: -10, vbh: 2000 },
+    "19": { region: "Schwerin/Ludwigslust", normTemp: -10, vbh: 1950 },
+    
+    // === PLZ 2xxxx: Hamburg, Schleswig-Holstein, Bremen, Niedersachsen Nord ===
+    "20": { region: "Hamburg Mitte", normTemp: -10, vbh: 1900 },
+    "21": { region: "Hamburg Süd/Lüneburg", normTemp: -10, vbh: 1900 },
+    "22": { region: "Hamburg Nord/West", normTemp: -10, vbh: 1900 },
+    "23": { region: "Lübeck/Wismar", normTemp: -10, vbh: 1950 },
+    "24": { region: "Kiel/Flensburg", normTemp: -12, vbh: 2050 },
+    "25": { region: "Westküste/Sylt", normTemp: -8, vbh: 2100 },
+    "26": { region: "Oldenburg/Emden", normTemp: -10, vbh: 1950 },
+    "27": { region: "Bremerhaven/Cuxhaven", normTemp: -10, vbh: 2000 },
+    "28": { region: "Bremen", normTemp: -10, vbh: 1900 },
+    "29": { region: "Celle/Uelzen", normTemp: -12, vbh: 1880 },
+    
+    // === PLZ 3xxxx: Niedersachsen, NRW Ost, Hessen Nord ===
+    "30": { region: "Hannover", normTemp: -12, vbh: 1850 },
+    "31": { region: "Hameln/Hildesheim", normTemp: -12, vbh: 1880 },
+    "32": { region: "Herford/Minden", normTemp: -12, vbh: 1880 },
+    "33": { region: "Bielefeld/Paderborn", normTemp: -12, vbh: 1880 },
+    "34": { region: "Kassel", normTemp: -12, vbh: 1900 },
+    "35": { region: "Gießen/Marburg", normTemp: -12, vbh: 1850 },
+    "36": { region: "Fulda/Bad Hersfeld", normTemp: -14, vbh: 1950 },
+    "37": { region: "Göttingen/Eschwege", normTemp: -12, vbh: 1900 },
+    "38": { region: "Braunschweig/Wolfsburg", normTemp: -12, vbh: 1850 },
+    "39": { region: "Magdeburg/Stendal", normTemp: -14, vbh: 1900 },
+    
+    // === PLZ 4xxxx: NRW Ruhrgebiet und Münsterland ===
+    "40": { region: "Düsseldorf", normTemp: -10, vbh: 1700 },
+    "41": { region: "Mönchengladbach/Neuss", normTemp: -10, vbh: 1700 },
+    "42": { region: "Wuppertal/Solingen", normTemp: -10, vbh: 1750 },
+    "44": { region: "Dortmund/Bochum", normTemp: -12, vbh: 1780 },
+    "45": { region: "Essen/Gelsenkirchen", normTemp: -10, vbh: 1750 },
+    "46": { region: "Oberhausen/Wesel", normTemp: -10, vbh: 1750 },
+    "47": { region: "Duisburg/Krefeld", normTemp: -10, vbh: 1720 },
+    "48": { region: "Münster/Coesfeld", normTemp: -10, vbh: 1780 },
+    "49": { region: "Osnabrück/Lingen", normTemp: -10, vbh: 1800 },
+    
+    // === PLZ 5xxxx: NRW West, Rheinland-Pfalz Nord ===
+    "50": { region: "Köln", normTemp: -10, vbh: 1700 },
+    "51": { region: "Köln Ost/Leverkusen", normTemp: -10, vbh: 1700 },
+    "52": { region: "Aachen/Düren", normTemp: -10, vbh: 1750 },
+    "53": { region: "Bonn/Siegburg", normTemp: -10, vbh: 1720 },
+    "54": { region: "Trier/Bitburg", normTemp: -12, vbh: 1850 },
+    "55": { region: "Mainz/Bad Kreuznach", normTemp: -10, vbh: 1720 },
+    "56": { region: "Koblenz/Neuwied", normTemp: -12, vbh: 1780 },
+    "57": { region: "Siegen/Olpe", normTemp: -12, vbh: 1880 },
+    "58": { region: "Hagen/Iserlohn", normTemp: -12, vbh: 1800 },
+    "59": { region: "Hamm/Arnsberg", normTemp: -12, vbh: 1820 },
+    
+    // === PLZ 6xxxx: Rhein-Main, Hessen, Saarland, Pfalz ===
+    "60": { region: "Frankfurt am Main", normTemp: -10, vbh: 1700 },
+    "61": { region: "Bad Homburg/Friedberg", normTemp: -10, vbh: 1720 },
+    "63": { region: "Aschaffenburg/Hanau", normTemp: -10, vbh: 1720 },
+    "64": { region: "Darmstadt", normTemp: -10, vbh: 1720 },
+    "65": { region: "Wiesbaden/Limburg", normTemp: -10, vbh: 1720 },
+    "66": { region: "Saarbrücken/Homburg", normTemp: -12, vbh: 1800 },
+    "67": { region: "Ludwigshafen/Kaiserslautern", normTemp: -10, vbh: 1680 },
+    "68": { region: "Mannheim", normTemp: -10, vbh: 1680 },
+    "69": { region: "Heidelberg", normTemp: -10, vbh: 1700 },
+    
+    // === PLZ 7xxxx: Baden-Württemberg ===
+    "70": { region: "Stuttgart", normTemp: -12, vbh: 1750 },
+    "71": { region: "Stuttgart Umland/Ludwigsburg", normTemp: -12, vbh: 1750 },
+    "72": { region: "Tübingen/Reutlingen", normTemp: -12, vbh: 1800 },
+    "73": { region: "Göppingen/Esslingen", normTemp: -12, vbh: 1780 },
+    "74": { region: "Heilbronn/Schwäbisch Hall", normTemp: -12, vbh: 1750 },
+    "75": { region: "Pforzheim/Calw", normTemp: -12, vbh: 1780 },
+    "76": { region: "Karlsruhe/Baden-Baden", normTemp: -10, vbh: 1700 },
+    "77": { region: "Offenburg/Lahr", normTemp: -12, vbh: 1750 },
+    "78": { region: "Villingen-Schwenningen/Konstanz", normTemp: -14, vbh: 1900 },
+    "79": { region: "Freiburg/Lörrach", normTemp: -12, vbh: 1720 },
+    
+    // === PLZ 8xxxx: Bayern Süd ===
+    "80": { region: "München", normTemp: -14, vbh: 1850 },
+    "81": { region: "München Süd/Ost", normTemp: -14, vbh: 1850 },
+    "82": { region: "Garmisch/Starnberg", normTemp: -16, vbh: 2000 },
+    "83": { region: "Rosenheim/Traunstein", normTemp: -14, vbh: 1900 },
+    "84": { region: "Landshut/Dingolfing", normTemp: -14, vbh: 1880 },
+    "85": { region: "Ingolstadt/Freising", normTemp: -14, vbh: 1880 },
+    "86": { region: "Augsburg/Donauwörth", normTemp: -14, vbh: 1880 },
+    "87": { region: "Kempten/Allgäu", normTemp: -18, vbh: 2100 },
+    "88": { region: "Friedrichshafen/Ravensburg", normTemp: -14, vbh: 1900 },
+    "89": { region: "Ulm/Heidenheim", normTemp: -14, vbh: 1880 },
+    
+    // === PLZ 9xxxx: Bayern Nord, Thüringen ===
+    "90": { region: "Nürnberg/Fürth", normTemp: -14, vbh: 1880 },
+    "91": { region: "Erlangen/Ansbach", normTemp: -14, vbh: 1880 },
+    "92": { region: "Amberg/Weiden", normTemp: -16, vbh: 1950 },
+    "93": { region: "Regensburg/Cham", normTemp: -14, vbh: 1900 },
+    "94": { region: "Passau/Straubing", normTemp: -14, vbh: 1900 },
+    "95": { region: "Hof/Bayreuth", normTemp: -18, vbh: 2050 },
+    "96": { region: "Bamberg/Coburg", normTemp: -14, vbh: 1900 },
+    "97": { region: "Würzburg/Schweinfurt", normTemp: -12, vbh: 1800 },
+    "98": { region: "Suhl/Ilmenau (Thür. Wald)", normTemp: -16, vbh: 2000 },
+    "99": { region: "Erfurt/Weimar", normTemp: -14, vbh: 1920 }
+};
+
+// === BAUJAHR -> DÄMMSTANDARD & WIRKUNGSGRADE ===
+const BAUJAHR_DATEN = {
+    "vor_1970":       { heizlastM2: 150, eta: 0.70, jazBasis: 3.5, label: "⚠️ Altbau – hohe Verluste" },
+    "1970_1978":      { heizlastM2: 120, eta: 0.75, jazBasis: 3.6, label: "Erste Dämmstandards" },
+    "1979_1983":      { heizlastM2: 100, eta: 0.80, jazBasis: 3.7, label: "Nach Ölkrise" },
+    "1984_1994":      { heizlastM2: 80,  eta: 0.83, jazBasis: 3.8, label: "Durchschnittliche Dämmung" },
+    "1995_2001":      { heizlastM2: 60,  eta: 0.88, jazBasis: 4.0, label: "Gute Dämmung" },
+    "2002_2015":      { heizlastM2: 45,  eta: 0.90, jazBasis: 4.2, label: "Sehr gute Dämmung" },
+    "ab_2016":        { heizlastM2: 30,  eta: 0.92, jazBasis: 4.5, label: "🏠 Neubau-Standard" },
+    "saniert_standard": { heizlastM2: 70, eta: 0.85, jazBasis: 3.9, label: "Teilsaniert" },
+    "saniert_gut":    { heizlastM2: 45,  eta: 0.90, jazBasis: 4.2, label: "✅ Komplettsaniert" }
+};
+
+// === HEIZUNGSALTER -> KESSELWIRKUNGSGRAD ===
+const HEIZUNG_ALTER = {
+    "sehr_alt": { eta: 0.70, label: "Älter als 25 Jahre" },
+    "alt":      { eta: 0.80, label: "15-25 Jahre" },
+    "mittel":   { eta: 0.85, label: "10-15 Jahre" },
+    "neu":      { eta: 0.90, label: "Jünger als 10 Jahre" },
+    "brennwert":{ eta: 0.95, label: "Brennwertgerät" }
+};
+
+// === KONSTANTEN ===
+const EF = { oil: 0.266, gas: 0.20088 }; // kg CO2/kWh
+const OIL_KWH = 10; // 1 Liter = 10 kWh
+const PV_PREIS = 0.08; // €/kWh Eigenproduktion
+const CO2_2025 = 55; // €/t
+
+// === STATE ===
+let S = {
+    plz: "55555",
+    baujahr: "1984_1994",
+    area: 150,
+    fuelType: "oil",
+    consumption: 2500,
+    heizungAlter: "alt",
+    pvShare: 55,
+    years: 20,
+    // Aktuelle Energiepreise (interaktiv)
+    oilPrice: 0.95,      // €/Liter (= 9,5 ct/kWh bei 10 kWh/L)
+    gasPrice: 0.12,      // €/kWh
+    elecPrice: 0.32,     // €/kWh (Allgemeinstrom)
+    wpTarif: 0.22,       // €/kWh (Wärmepumpen-Tarif für WP allein)
+    gridPrice: 0.05,     // €/kWh (Reststrombezug mit Batterie+PV)
+    useWpTarif: true,    // WP-Tarif verwenden?
+    elecIncrease: 6,
+    fuelIncrease: 4,
+    co2_2026: 60,      // €/t (BEHG national)
+    co2_2027: 70,      // €/t (ETS II Start!)
+    co2Increase: 15,   // % p.a. ab 2027 (ETS II Steigerung)
+    // Berechnete Werte
+    klimaRegion: "Deutschland",
+    normTemp: -12,
+    vbh: 1800,
+    eta: 0.85,
+    jaz: 4.0,
+    heizlastM2: 80
+};
+
+const $ = id => document.getElementById(id);
+let chart = null;
+
+// === INIT ===
+document.addEventListener('DOMContentLoaded', () => {
+    // PLZ
+    $('plz').oninput = e => {
+        S.plz = e.target.value;
+        updateKlima();
+        calc();
+    };
+    
+    // Baujahr
+    $('baujahr').onchange = e => {
+        S.baujahr = e.target.value;
+        updateFromBaujahr();
+        calc();
+    };
+    
+    // Fläche
+    $('area').oninput = e => {
+        S.area = +e.target.value || 100;
+        calc();
+    };
+    
+    // Heizungsart
+    $('btn-oil').onclick = () => setFuel('oil');
+    $('btn-gas').onclick = () => setFuel('gas');
+    
+    // Verbrauch
+    $('consumption').oninput = e => {
+        S.consumption = +e.target.value || 0;
+        calc();
+    };
+    
+    // Heizungsalter
+    $('heizung-alter').onchange = e => {
+        S.heizungAlter = e.target.value;
+        updateFromHeizungAlter();
+        calc();
+    };
+    
+    // PV-Optionen (Kacheln)
+    document.querySelectorAll('.pv-option').forEach(opt => {
+        opt.onclick = () => {
+            document.querySelectorAll('.pv-option').forEach(o => o.classList.remove('active'));
+            opt.classList.add('active');
+            S.pvShare = +opt.dataset.pv;
+            // Slider synchronisieren
+            $('exp-pv-slider').value = S.pvShare;
+            $('exp-pv').textContent = S.pvShare + '%';
+            calc();
+        };
+    });
+    
+    // Experten-Panel
+    $('expert-toggle').onclick = () => {
+        $('expert-toggle').classList.toggle('open');
+        $('expert-panel').classList.toggle('open');
+    };
+    
+    // Experten-Slider
+    $('exp-years').oninput = e => {
+        S.years = +e.target.value;
+        $('exp-years-display').textContent = S.years + ' Jahre';
+        calc();
+    };
+    
+    $('exp-elec').oninput = e => {
+        S.elecIncrease = +e.target.value;
+        $('exp-elec-display').textContent = S.elecIncrease + '%';
+        calc();
+    };
+    
+    $('exp-fuel').oninput = e => {
+        S.fuelIncrease = +e.target.value;
+        $('exp-fuel-display').textContent = S.fuelIncrease + '%';
+        calc();
+    };
+    
+    // PV-Eigenverbrauch Slider
+    $('exp-pv-slider').oninput = e => {
+        S.pvShare = +e.target.value;
+        $('exp-pv').textContent = S.pvShare + '%';
+        // PV-Kacheln synchronisieren (nächste passende auswählen)
+        document.querySelectorAll('.pv-option').forEach(o => o.classList.remove('active'));
+        const pvOptions = [0, 25, 55, 85];
+        const closest = pvOptions.reduce((a, b) => Math.abs(b - S.pvShare) < Math.abs(a - S.pvShare) ? b : a);
+        const matchingOption = document.querySelector(`.pv-option[data-pv="${closest}"]`);
+        if (matchingOption) matchingOption.classList.add('active');
+        calc();
+    };
+    
+    // === AKTUELLE ENERGIEPREISE ===
+    // Heizölpreis Slider
+    $('exp-oil-price').oninput = e => {
+        S.oilPrice = +e.target.value / 100; // ct -> €
+        $('exp-oil-price-display').textContent = e.target.value + ' ct/L';
+        calc();
+    };
+    
+    // Gaspreis Slider
+    $('exp-gas-price').oninput = e => {
+        S.gasPrice = +e.target.value / 100; // ct -> €
+        $('exp-gas-price-display').textContent = e.target.value + ' ct/kWh';
+        calc();
+    };
+    
+    // Strompreis Slider (Allgemeinstrom)
+    $('exp-elec-price').oninput = e => {
+        S.elecPrice = +e.target.value / 100; // ct -> €
+        $('exp-elec-price-display').textContent = e.target.value + ' ct/kWh';
+        calc();
+    };
+    
+    // Wärmepumpen-Tarif Slider (für WP allein)
+    $('exp-wp-tarif').oninput = e => {
+        S.wpTarif = +e.target.value / 100; // ct -> €
+        $('exp-wp-tarif-display').textContent = e.target.value + ' ct/kWh';
+        calc();
+    };
+    
+    // Reststrombezug mit Batterie Slider (für WP+PV Kombination)
+    $('exp-grid-price').oninput = e => {
+        S.gridPrice = +e.target.value / 100; // ct -> €
+        $('exp-grid-price-display').textContent = e.target.value + ' ct/kWh';
+        calc();
+    };
+    
+    // WP-Tarif Checkbox
+    $('use-wp-tarif').onchange = e => {
+        S.useWpTarif = e.target.checked;
+        calc();
+    };
+    
+    // === CO₂-PREIS SLIDER ===
+    // CO₂-Preis 2026 (BEHG)
+    $('exp-co2-2026').oninput = e => {
+        S.co2_2026 = +e.target.value;
+        $('exp-co2-2026-display').textContent = e.target.value + ' €/t';
+        calc();
+    };
+    
+    // CO₂-Preis 2027 (ETS II Start)
+    $('exp-co2-2027').oninput = e => {
+        S.co2_2027 = +e.target.value;
+        $('exp-co2-2027-display').textContent = e.target.value + ' €/t';
+        updateCO2Timeline();
+        calc();
+    };
+    
+    // CO₂-Steigerung ab 2027
+    $('exp-co2-increase').oninput = e => {
+        S.co2Increase = +e.target.value;
+        $('exp-co2-increase-display').textContent = e.target.value + '%';
+        updateCO2Timeline();
+        calc();
+    };
+    
+    // Initial
+    updateKlima();
+    updateFromBaujahr();
+    updateFromHeizungAlter();
+    updateCO2Timeline();
+    calc();
+});
+
+// === PLZ -> KLIMADATEN ===
+// === CO₂-TIMELINE AKTUALISIEREN ===
+function updateCO2Timeline() {
+    // CO₂-Preise für Timeline berechnen
+    const co2_2027 = S.co2_2027;
+    const co2_2030 = Math.round(S.co2_2027 * Math.pow(1 + S.co2Increase / 100, 3));
+    
+    // Timeline-Labels aktualisieren
+    if ($('co2-2027-label')) $('co2-2027-label').textContent = `~${co2_2027} €/t`;
+    if ($('co2-2030-label')) $('co2-2030-label').textContent = `~${co2_2030} €/t`;
+}
+
+function updateKlima() {
+    const prefix = S.plz.substring(0, 2);
+    const data = PLZ_DATEN[prefix];
+    
+    if (data) {
+        S.klimaRegion = data.region;
+        S.normTemp = data.normTemp;
+        S.vbh = data.vbh;
+        $('region-display').textContent = `✓ ${data.region}`;
+        $('region-display').classList.add('found');
+    } else {
+        S.klimaRegion = "Deutschland (Mittel)";
+        S.normTemp = -12;
+        S.vbh = 1800;
+        $('region-display').textContent = `📍 ${S.klimaRegion}`;
+        $('region-display').classList.remove('found');
+    }
+    
+    // VBH korrigieren nach Baujahr (bessere Dämmung = niedrigere Heizgrenze)
+    const bjData = BAUJAHR_DATEN[S.baujahr];
+    if (bjData.heizlastM2 <= 60) S.vbh = Math.round(S.vbh * 0.85);
+    else if (bjData.heizlastM2 <= 45) S.vbh = Math.round(S.vbh * 0.75);
+    
+    // Experten-Anzeige
+    $('exp-region').textContent = S.klimaRegion;
+    $('exp-normtemp').textContent = S.normTemp + ' °C';
+    $('exp-vbh').textContent = S.vbh.toLocaleString('de-DE') + ' h/a';
+}
+
+// === BAUJAHR -> PARAMETER ===
+function updateFromBaujahr() {
+    const data = BAUJAHR_DATEN[S.baujahr];
+    S.heizlastM2 = data.heizlastM2;
+    S.jaz = data.jazBasis;
+    
+    // Klimakorrektur aktualisieren
+    updateKlima();
+    
+    $('exp-jaz').textContent = S.jaz.toFixed(1);
+}
+
+// === HEIZUNGSALTER -> WIRKUNGSGRAD ===
+function updateFromHeizungAlter() {
+    const data = HEIZUNG_ALTER[S.heizungAlter];
+    S.eta = data.eta;
+    
+    $('exp-eta').textContent = Math.round(S.eta * 100) + '%';
+}
+
+// === BRENNSTOFF-WECHSEL ===
+function setFuel(type) {
+    S.fuelType = type;
+    $('btn-oil').classList.toggle('active', type === 'oil');
+    $('btn-gas').classList.toggle('active', type === 'gas');
+    
+    // Preis-Slider umschalten
+    const oilRow = $('oil-price-row');
+    const gasRow = $('gas-price-row');
+    if (oilRow) oilRow.style.display = (type === 'oil') ? 'block' : 'none';
+    if (gasRow) gasRow.style.display = (type === 'gas') ? 'block' : 'none';
+    
+    if (type === 'oil') {
+        $('consumption-label').textContent = 'Wie viel Heizöl verbrauchen Sie pro Jahr?';
+        $('consumption-unit').textContent = 'Liter';
+        $('consumption-hint').textContent = 'Steht auf Ihrer Jahresabrechnung oder Tankrechnung';
+        S.consumption = 2500;
+    } else {
+        $('consumption-label').textContent = 'Wie viel Gas verbrauchen Sie pro Jahr?';
+        $('consumption-unit').textContent = 'kWh';
+        $('consumption-hint').textContent = 'Steht auf Ihrer Gas-Jahresabrechnung';
+        S.consumption = 25000;
+    }
+    
+    $('consumption').value = S.consumption;
+    calc();
+}
+
+// === BERECHNUNGSFUNKTIONEN ===
+function getFuelPriceKwh() {
+    // Interaktive Preise aus Expertenmodus
+    if (S.fuelType === 'oil') {
+        // Heizöl: ct/L -> €/kWh (1 Liter = 10 kWh)
+        return S.oilPrice / OIL_KWH; // z.B. 0.95 €/L ÷ 10 = 0.095 €/kWh
+    } else {
+        // Gas: direkt in €/kWh
+        return S.gasPrice; // z.B. 0.12 €/kWh
+    }
+}
+
+function co2Price(year) {
+    // BEHG (national): 2025 = 55 €/t, 2026 = einstellbar
+    if (year <= 2025) return CO2_2025;
+    if (year === 2026) return S.co2_2026;
+    
+    // ETS II (EU): Ab 2027 - SPRUNG auf ETS II Niveau, dann Steigerung
+    // 2027 ist das erste ETS II Jahr mit erwartetem Preissprung!
+    const etsStartPrice = S.co2_2027; // ETS II Startpreis 2027
+    const yearsSinceEts = year - 2027;
+    return etsStartPrice * Math.pow(1 + S.co2Increase / 100, yearsSinceEts);
+}
+
+function co2CostKwh(year) {
+    return EF[S.fuelType] * co2Price(year) / 1000;
+}
+
+function fuelPriceT(t) {
+    const priceKwh = getFuelPriceKwh();
+    const co2Now = co2CostKwh(2025);
+    const base = Math.max(0.01, priceKwh - co2Now);
+    return base * Math.pow(1 + S.fuelIncrease / 100, t) + co2CostKwh(2025 + t);
+}
+
+// Strompreis für Allgemeinstrom (Haushalt)
+function elecPriceT(t) {
+    return S.elecPrice * Math.pow(1 + S.elecIncrease / 100, t);
+}
+
+// Strompreis für Wärmepumpe ALLEIN (WP-Tarif oder Allgemeinstrom)
+// OHNE Batterie - daher kann der Preis nicht auf 0 ct gehen!
+function wpElecPriceT(t) {
+    const basePrice = S.useWpTarif ? S.wpTarif : S.elecPrice;
+    return basePrice * Math.pow(1 + S.elecIncrease / 100, t);
+}
+
+// Reststrombezug für WP+PV+Batterie Kombination
+// MIT Batterie + dynamischem Tarif kann der Restbezug auf 0 ct gehen!
+function gridPriceT(t) {
+    return S.gridPrice * Math.pow(1 + S.elecIncrease / 100, t);
+}
+
+// Effektiver Strompreis für WP+PV Kombination (mit Batterie/Großspeicher)
+function effectiveElecPrice(t) {
+    // Eigenversorgungsanteil: Strom aus PV/Speicher (nicht zum WP-Tarif)
+    const eigenversorgung = S.pvShare / 100;
+    
+    // Restbezug: Anteil der noch aus dem Netz bezogen werden muss
+    const restbezug = 1 - eigenversorgung;
+    
+    // Kosten für Eigenversorgung:
+    // - Bei Großspeicher + 0ct-Tarif: Speicher lädt bei gridPrice (kann 0 ct sein!)
+    // - Die gesamte Eigenversorgung kommt zum gridPrice (PV + Speicher + 0ct-Laden)
+    const kostenEigenversorgung = S.gridPrice; // 0 ct möglich bei 0ct-Tarif!
+    
+    // Kosten für Restbezug: Normaler Netzbezug zum gridPrice (mit Steigerung)
+    const kostenRestbezug = gridPriceT(t);
+    
+    // Effektiver Preis = Eigenversorgung + Restbezug
+    // Bei 100% Eigenversorgung (pvShare=100) und gridPrice=0: 
+    //   = 0 * 0 + 0 * 1.0 = 0 ct/kWh ✓
+    return kostenRestbezug * restbezug + kostenEigenversorgung * eigenversorgung;
+}
+
+// === HAUPTBERECHNUNG ===
+function calc() {
+    // Brennstoff -> kWh
+    const E_fossil = S.fuelType === 'oil' ? S.consumption * OIL_KWH : S.consumption;
+    
+    // Nutzwärme (nach Kesselverlusten)
+    const Q_heat = E_fossil * S.eta;
+    
+    // Heizlast aus Verbrauch (tatsächlich)
+    const heizlastKW = Q_heat / S.vbh;
+    const heizlastM2 = (heizlastKW * 1000) / S.area;
+    
+    // Erwartete Heizlast aus Baujahr-Tabelle
+    const heizlastErwartet = S.heizlastM2;
+    const heizlastTabelleKW = (heizlastErwartet * S.area) / 1000;
+    
+    // Abweichung: Ist der Verbrauch höher/niedriger als fürs Baujahr typisch?
+    const abweichungProzent = Math.round((heizlastM2 / heizlastErwartet - 1) * 100);
+    
+    // Dämmstatus NUR aus Baujahr (konservativ für WP-Auslegung)
+    let bewertung = "";
+    let bewertungClass = "";
+    
+    // Baujahr-basierte Bewertung (GEG-orientiert)
+    if (heizlastErwartet >= 120) {
+        // Altbau vor 1970
+        bewertung = "⚠️ Altbau – hohe Wärmeverluste";
+        bewertungClass = "warning";
+    } else if (heizlastErwartet >= 100) {
+        // 1970-1978
+        bewertung = "🟡 Älteres Haus – mäßige Dämmung";
+        bewertungClass = "warning";
+    } else if (heizlastErwartet >= 80) {
+        // 1979-1994
+        bewertung = "🟡 Durchschnittliche Dämmung";
+        bewertungClass = "average";
+    } else if (heizlastErwartet >= 50) {
+        // 1995-2015: Niedrigenergie/EnEV
+        bewertung = "🟢 Gute Dämmung";
+        bewertungClass = "good";
+    } else {
+        // Ab 2016: GEG-Neubau
+        bewertung = "🟢 Sehr gute Dämmung (GEG)";
+        bewertungClass = "excellent";
+    }
+    
+    // Verbrauchshinweis (separat, subtil positiv wenn unter Richtwert)
+    let verbrauchsHinweis = "";
+    if (abweichungProzent <= -15) {
+        // Deutlich unter Erwartung – positiv!
+        verbrauchsHinweis = `✅ Ihr Verbrauch liegt ${Math.abs(abweichungProzent)}% unter dem Baujahr-Richtwert`;
+    } else if (abweichungProzent <= -5) {
+        // Leicht unter Erwartung
+        verbrauchsHinweis = `Verbrauch ${Math.abs(abweichungProzent)}% unter Richtwert`;
+    } else if (abweichungProzent >= 15) {
+        // Deutlich über Erwartung – Hinweis
+        verbrauchsHinweis = `Verbrauch ${abweichungProzent}% über Richtwert`;
+    } else {
+        // Im erwarteten Bereich
+        verbrauchsHinweis = "Verbrauch entspricht Baujahr";
+    }
+    
+    // Einsparung durch Wegfall Kesselverluste
+    const verlustProzent = Math.round((1 - S.eta) * 100);
+    
+    // WP-Strombedarf
+    const E_WP = Q_heat / S.jaz;
+    const E_PV = E_WP * (S.pvShare / 100);
+    const E_Grid = E_WP - E_PV;
+    
+    // Heizlast-Box aktualisieren
+    $('heizlast-kw').textContent = heizlastKW.toFixed(1) + ' kW';
+    $('heizlast-m2').textContent = Math.round(heizlastM2) + ' W/m²';
+    $('heizlast-erwartet').textContent = heizlastErwartet;
+    $('heizlast-bewertung').textContent = bewertung;
+    
+    // Verbrauchshinweis anzeigen (subtil, positiv wenn unter Richtwert)
+    $('heizlast-vergleich').textContent = verbrauchsHinweis;
+    
+    // Farbe der Bewertungsbox je nach Status
+    const bewertungBox = $('heizlast-bewertung-box');
+    bewertungBox.classList.remove('status-good', 'status-warning', 'status-bad');
+    if (bewertungClass === 'good' || bewertungClass === 'excellent') {
+        bewertungBox.classList.add('status-good');
+    } else if (bewertungClass === 'warning' || bewertungClass === 'average') {
+        bewertungBox.classList.add('status-warning');
+    } else if (bewertungClass === 'bad') {
+        bewertungBox.classList.add('status-bad');
+    }
+    
+    $('waermebedarf').textContent = fn(Q_heat) + ' kWh';
+    $('einsparung-verluste').textContent = '-' + verlustProzent + '%';
+    $('efficiency-percent').textContent = Math.round(S.eta * 100) + '%';
+    $('efficiency-fill').style.width = ((S.eta - 0.70) / 0.28 * 100) + '%';
+    
+    // Experten-Anzeige
+    $('exp-pv').textContent = S.pvShare + '%';
+    
+    // Kosten berechnen
+    const fossilCosts = [], wpCosts = [], comboCosts = [];
+    let totalFossil = 0, totalWP = 0, totalCombo = 0;
+    
+    for (let t = 0; t < S.years; t++) {
+        const cFossil = E_fossil * fuelPriceT(t);
+        const cWP = E_WP * wpElecPriceT(t); // WP-Tarif wenn aktiviert
+        const cCombo = E_WP * effectiveElecPrice(t);
+        
+        fossilCosts.push(cFossil);
+        wpCosts.push(cWP);
+        comboCosts.push(cCombo);
+        
+        totalFossil += cFossil;
+        totalWP += cWP;
+        totalCombo += cCombo;
+    }
+    
+    const fossil_y1 = fossilCosts[0];
+    const wp_y1 = wpCosts[0];
+    const combo_y1 = comboCosts[0];
+    
+    const fossil_2030 = fossilCosts[5] || fossil_y1;
+    const wp_2030 = wpCosts[5] || wp_y1;
+    const combo_2030 = comboCosts[5] || combo_y1;
+    
+    const wpSavings = totalFossil - totalWP;
+    const comboSavings = totalFossil - totalCombo;
+    const comboSavingsY1 = fossil_y1 - combo_y1;
+    
+    const co2Annual = E_fossil * EF[S.fuelType] / 1000;
+    const co2Total = co2Annual * S.years;
+    
+    const effPrice = effectiveElecPrice(0);
+    
+    // Hero
+    $('combo-savings-y1').textContent = fn(comboSavingsY1) + ' €';
+    $('combo-savings-total').textContent = fn(comboSavings) + ' €';
+    $('combo-years').textContent = S.years;
+    $('combo-years2').textContent = S.years;
+    $('combo-effective-price').textContent = f2(effPrice) + ' €';
+    // Tarif-Detail anzeigen
+    let tarifText;
+    if (S.pvShare > 0) {
+        // WP + PV Kombination (mit Batterie)
+        if (S.pvShare >= 95) {
+            tarifText = 'Großspeicher + 0ct-Tarif (nahezu autark)';
+        } else if (S.gridPrice === 0) {
+            tarifText = 'PV + Batterie (autark) über Sondertarif';
+        } else {
+            tarifText = `PV mit ${Math.round(S.gridPrice*100)} ct/kWh Restbezug`;
+        }
+    } else {
+        // WP allein (ohne PV/Batterie)
+        tarifText = S.useWpTarif ? `WP-Tarif (${Math.round(S.wpTarif*100)} ct/kWh)` : 'Allgemeinstrom';
+    }
+    $('combo-tarif-detail').textContent = tarifText;
+    $('combo-co2-savings').textContent = co2Total.toFixed(0) + ' t';
+    
+    // Tabelle
+    $('tbl-fossil-y1').textContent = fn(fossil_y1) + ' €';
+    $('tbl-wp-y1').textContent = fn(wp_y1) + ' €';
+    $('tbl-combo-y1').textContent = fn(combo_y1) + ' €';
+    
+    // Monatliche Abschläge (Jahreskosten / 12)
+    $('tbl-fossil-month').textContent = fn(Math.round(fossil_y1 / 12)) + ' €';
+    $('tbl-wp-month').textContent = fn(Math.round(wp_y1 / 12)) + ' €';
+    $('tbl-combo-month').textContent = fn(Math.round(combo_y1 / 12)) + ' €';
+    
+    $('tbl-fossil-sqm').textContent = fn(fossil_y1 / S.area, 2) + ' €';
+    $('tbl-wp-sqm').textContent = fn(wp_y1 / S.area, 2) + ' €';
+    $('tbl-combo-sqm').textContent = fn(combo_y1 / S.area, 2) + ' €';
+    
+    $('tbl-fossil-2030').textContent = fn(fossil_2030) + ' €';
+    $('tbl-wp-2030').textContent = fn(wp_2030) + ' €';
+    $('tbl-combo-2030').textContent = fn(combo_2030) + ' €';
+    
+    $('tbl-years').textContent = S.years;
+    $('tbl-fossil-total').textContent = fn(totalFossil) + ' €';
+    $('tbl-wp-total').textContent = fn(totalWP) + ' €';
+    $('tbl-combo-total').innerHTML = fn(totalCombo) + ' € <span class="best-badge">BEST</span>';
+    
+    $('tbl-wp-savings').textContent = fn(wpSavings) + ' €';
+    $('tbl-combo-savings').textContent = fn(comboSavings) + ' €';
+    
+    $('tbl-fossil-co2').textContent = co2Annual.toFixed(2).replace('.', ',') + ' t';
+    
+    // CO₂-Kosten berechnen (separat von Brennstoffkosten)
+    let totalCO2Cost = 0;
+    for (let t = 0; t < S.years; t++) {
+        totalCO2Cost += E_fossil * co2CostKwh(2025 + t);
+    }
+    $('tbl-fossil-co2-cost').textContent = fn(totalCO2Cost) + ' €';
+    $('tbl-co2-price-2030').textContent = '~' + Math.round(co2Price(2030)) + ' €/t';
+    
+    $('chart-years').textContent = S.years;
+    
+    // Pain
+    const cost2025 = fossil_y1;
+    const cost2027 = fossilCosts[2] || cost2025;
+    const cost2030 = fossilCosts[5] || cost2027;
+    
+    $('cost-2025').textContent = fn(cost2025) + ' €';
+    $('co2-2027-label').textContent = `~${Math.round(co2Price(2027))} €/t`;
+    $('cost-2027').textContent = fn(cost2027) + ' €';
+    $('co2-2030-label').textContent = `~${Math.round(co2Price(2030))} €/t`;
+    $('cost-2030').textContent = fn(cost2030) + ' €';
+    
+    $('pain-extra').textContent = '+' + fn(cost2030 - cost2025) + ' €';
+    $('pain-years').textContent = S.years;
+    $('pain-total').textContent = fn(comboSavings) + ' €';
+    
+    updateChart(fossilCosts, wpCosts, comboCosts);
+}
+
+// === CHART ===
+function updateChart(fossil, wp, combo) {
+    const canvas = $('cost-chart');
+    if (!canvas) return; // Sicherheitsprüfung
+    
+    const ctx = canvas.getContext('2d');
+    const labels = [];
+    for (let i = 0; i < S.years; i++) labels.push((2025 + i).toString());
+    
+    // Chart komplett zerstören und Canvas zurücksetzen
+    if (chart) {
+        chart.destroy();
+        chart = null;
+    }
+    
+    chart = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels,
+            datasets: [
+                {
+                    label: 'Öl/Gas',
+                    data: fossil,
+                    borderColor: '#dc2626',
+                    backgroundColor: 'rgba(220, 38, 38, 0.1)',
+                    borderWidth: 3,
+                    fill: true,
+                    tension: 0.3
+                },
+                {
+                    label: 'Wärmepumpe',
+                    data: wp,
+                    borderColor: '#16a34a',
+                    backgroundColor: 'rgba(22, 163, 74, 0.1)',
+                    borderWidth: 3,
+                    fill: true,
+                    tension: 0.3
+                },
+                {
+                    label: 'WP + PV',
+                    data: combo,
+                    borderColor: '#2E4F3C',
+                    backgroundColor: 'rgba(46, 79, 60, 0.15)',
+                    borderWidth: 4,
+                    fill: true,
+                    tension: 0.3
+                }
+            ]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            animation: { duration: 300 },
+            interaction: { intersect: false, mode: 'index' },
+            plugins: {
+                legend: { display: false },
+                tooltip: { callbacks: { label: ctx => `${ctx.dataset.label}: ${fn(ctx.raw)} €` } }
+            },
+            scales: {
+                y: {
+                    beginAtZero: false,
+                    ticks: { callback: v => fn(v) + ' €' },
+                    grid: { color: 'rgba(0,0,0,0.05)' }
+                },
+                x: {
+                    grid: { display: false },
+                    ticks: { maxTicksLimit: 10 }
+                }
+            }
+        }
+    });
+}
+
+// === HILFSFUNKTIONEN ===
+function fn(n, d = 0) {
+    return n.toLocaleString('de-DE', { minimumFractionDigits: d, maximumFractionDigits: d });
+}
+
+function f2(n) {
+    return n.toFixed(2).replace('.', ',');
+}
+    </script>
+</body>
+</html>

@@ -1,0 +1,753 @@
+/* ============================================================
+   Patrick Leißner – Unter-Seiten Stylesheet
+   Ergänzt style.css für Beratung, Koordination, Analyse
+   ============================================================ */
+
+/* ── Sub-page Hero ─────────────────────────────────────────── */
+.sp-hero {
+  min-height: 62vh;
+  background: var(--color-surface-dark);
+  position: relative;
+  display: flex;
+  align-items: flex-end;
+  padding-top: var(--nav-height);
+  overflow: hidden;
+}
+
+.sp-hero-bg {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center;
+  opacity: 0.32;
+  transition: transform 8s ease-out;
+}
+
+.sp-hero-bg.parallax-ready { transform: scale(1.04); }
+
+.sp-hero-content {
+  position: relative;
+  z-index: 1;
+  padding-block: var(--space-20) var(--space-16);
+  max-width: 740px;
+}
+
+.sp-hero-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--color-brand-accent);
+  margin-bottom: var(--space-5);
+}
+
+.sp-hero-eyebrow::before {
+  content: '';
+  display: block;
+  width: 24px;
+  height: 2px;
+  background: var(--color-brand-accent);
+  border-radius: 1px;
+}
+
+.sp-hero h1 {
+  font-size: clamp(2.25rem, 5vw, 3.75rem);
+  font-weight: 700;
+  color: #ffffff;
+  line-height: 1.08;
+  margin-bottom: var(--space-6);
+}
+
+.sp-hero p {
+  font-size: 1.0625rem;
+  color: rgba(255, 255, 255, 0.78);
+  line-height: 1.7;
+  margin-bottom: var(--space-8);
+  max-width: 58ch;
+}
+
+.sp-hero-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-4);
+  align-items: center;
+}
+
+/* Breadcrumb */
+.sp-breadcrumb {
+  position: absolute;
+  top: calc(var(--nav-height) + var(--space-4));
+  left: 0;
+  right: 0;
+  z-index: 2;
+}
+
+.sp-breadcrumb-inner {
+  max-width: var(--container-max);
+  margin-inline: auto;
+  padding-inline: var(--space-5);
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-size: 0.8125rem;
+  color: rgba(255, 255, 255, 0.45);
+}
+
+@media (min-width: 640px) {
+  .sp-breadcrumb-inner { padding-inline: var(--space-8); }
+}
+
+.sp-breadcrumb-inner a {
+  color: rgba(255, 255, 255, 0.45);
+  transition: color var(--transition-fast);
+}
+.sp-breadcrumb-inner a:hover { color: rgba(255, 255, 255, 0.85); }
+
+.sp-breadcrumb-inner .sp-bc-sep {
+  opacity: 0.4;
+}
+
+.sp-breadcrumb-inner .sp-bc-current {
+  color: rgba(255, 255, 255, 0.75);
+}
+
+/* ── Section Base ──────────────────────────────────────────── */
+.sp-section {
+  padding-block: var(--space-20);
+}
+
+.sp-section--beige {
+  background: var(--color-surface-alt);
+}
+
+.sp-section--dark {
+  background: var(--color-surface-dark);
+}
+
+.sp-section-header {
+  text-align: center;
+  max-width: 640px;
+  margin-inline: auto;
+  margin-bottom: var(--space-12);
+}
+
+.sp-section-header .sp-eyebrow {
+  display: inline-block;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--color-brand-accent);
+  margin-bottom: var(--space-3);
+}
+
+.sp-section-header h2 {
+  font-size: clamp(1.75rem, 3.5vw, 2.75rem);
+  font-weight: 700;
+  color: var(--color-brand-primary);
+  line-height: 1.15;
+  margin-bottom: var(--space-4);
+}
+
+.sp-section-header p {
+  font-size: 1rem;
+  color: var(--color-text-secondary);
+  line-height: 1.7;
+}
+
+.sp-section--dark .sp-section-header h2 {
+  color: #ffffff;
+}
+
+.sp-section--dark .sp-section-header p {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+/* ── 2-Column Feature Grid ─────────────────────────────────── */
+.sp-features-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-5);
+}
+
+@media (min-width: 640px) {
+  .sp-features-grid { grid-template-columns: 1fr 1fr; }
+}
+
+.sp-feature-box {
+  background: var(--color-surface);
+  border: 1.5px solid var(--color-border);
+  border-radius: var(--border-radius-lg);
+  padding: var(--space-8);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  transition: box-shadow var(--transition-base), transform var(--transition-base), border-color var(--transition-base);
+}
+
+.sp-feature-box:hover {
+  box-shadow: 0 8px 36px var(--color-shadow-lg);
+  transform: translateY(-3px);
+  border-color: rgba(46, 79, 60, 0.25);
+}
+
+.sp-feature-icon {
+  width: 52px;
+  height: 52px;
+  background: rgba(46, 79, 60, 0.08);
+  border-radius: var(--border-radius);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-brand-primary);
+  flex-shrink: 0;
+}
+
+.sp-feature-box h3 {
+  font-size: 1.0625rem;
+  font-weight: 700;
+  color: var(--color-brand-primary);
+  line-height: 1.3;
+}
+
+.sp-feature-box p {
+  font-size: 0.9375rem;
+  color: var(--color-text-secondary);
+  line-height: 1.65;
+  flex: 1;
+}
+
+/* ── 3-Column Benefits ─────────────────────────────────────── */
+.sp-benefits-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-10);
+}
+
+@media (min-width: 768px) {
+  .sp-benefits-grid { grid-template-columns: repeat(3, 1fr); }
+}
+
+.sp-benefit-item {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-4);
+}
+
+.sp-benefit-icon {
+  width: 68px;
+  height: 68px;
+  background: var(--color-brand-primary);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #ffffff;
+  flex-shrink: 0;
+}
+
+.sp-benefit-item h3 {
+  font-size: 1.0625rem;
+  font-weight: 700;
+  color: var(--color-text-primary);
+}
+
+.sp-benefit-item p {
+  font-size: 0.9375rem;
+  color: var(--color-text-secondary);
+  line-height: 1.65;
+  max-width: 26ch;
+}
+
+/* ── Process Steps ─────────────────────────────────────────── */
+.sp-process {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-10);
+  position: relative;
+}
+
+@media (min-width: 768px) {
+  .sp-process {
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--space-8);
+  }
+
+  .sp-process::before {
+    content: '';
+    position: absolute;
+    top: 24px;
+    left: calc(50% / 3 + 24px);
+    right: calc(50% / 3 + 24px);
+    height: 2px;
+    background: linear-gradient(90deg, var(--color-brand-accent), rgba(208, 171, 59, 0.3));
+    z-index: 0;
+  }
+}
+
+.sp-process-step {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  z-index: 1;
+}
+
+.sp-process-num {
+  width: 48px;
+  height: 48px;
+  background: var(--color-brand-accent);
+  color: #0f172a;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 1.125rem;
+  flex-shrink: 0;
+  box-shadow: 0 4px 16px rgba(208, 171, 59, 0.35);
+}
+
+.sp-process-step h3 {
+  font-size: 1.0625rem;
+  font-weight: 700;
+  color: var(--color-brand-primary);
+  line-height: 1.3;
+}
+
+.sp-process-step p {
+  font-size: 0.9375rem;
+  color: var(--color-text-secondary);
+  line-height: 1.65;
+}
+
+/* ── CTA Band ──────────────────────────────────────────────── */
+.sp-cta-band {
+  background: var(--color-brand-primary);
+  padding-block: var(--space-20);
+  position: relative;
+  overflow: hidden;
+}
+
+.sp-cta-band-bg {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center;
+  opacity: 0.12;
+}
+
+.sp-cta-band-inner {
+  position: relative;
+  z-index: 1;
+  text-align: center;
+  max-width: 580px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-6);
+}
+
+.sp-cta-band h2 {
+  font-size: clamp(1.75rem, 3.5vw, 2.5rem);
+  font-weight: 700;
+  color: #ffffff;
+  line-height: 1.2;
+}
+
+.sp-cta-band p {
+  font-size: 1.0625rem;
+  color: rgba(255, 255, 255, 0.78);
+  line-height: 1.65;
+}
+
+/* ── FAQ ───────────────────────────────────────────────────── */
+.sp-faq-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  max-width: 800px;
+  margin-inline: auto;
+}
+
+.sp-faq-item {
+  border: 1.5px solid var(--color-border);
+  border-radius: var(--border-radius);
+  overflow: hidden;
+  background: var(--color-surface);
+}
+
+.sp-faq-trigger {
+  width: 100%;
+  text-align: left;
+  padding: var(--space-5) var(--space-6);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+  background: transparent;
+  font-family: var(--font-body);
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: var(--color-text-primary);
+  cursor: pointer;
+  transition: background var(--transition-fast), color var(--transition-fast);
+}
+
+.sp-faq-trigger:hover {
+  background: rgba(46, 79, 60, 0.04);
+}
+
+.sp-faq-trigger[aria-expanded="true"] {
+  color: var(--color-brand-primary);
+  background: rgba(46, 79, 60, 0.06);
+}
+
+.sp-faq-icon {
+  flex-shrink: 0;
+  width: 20px;
+  height: 20px;
+  transition: transform var(--transition-base);
+}
+
+.sp-faq-trigger[aria-expanded="true"] .sp-faq-icon {
+  transform: rotate(180deg);
+}
+
+.sp-faq-panel {
+  height: 0;
+  overflow: hidden;
+  transition: height var(--transition-base);
+}
+
+.sp-faq-panel-inner {
+  padding: var(--space-5) var(--space-6);
+  border-top: 1px solid var(--color-border);
+  background: #fafaf8;
+}
+
+.sp-faq-panel-inner p {
+  font-size: 0.9375rem;
+  color: var(--color-text-secondary);
+  line-height: 1.7;
+}
+
+/* ── Testimonial Band ──────────────────────────────────────── */
+.sp-testimonial {
+  background: var(--color-surface-dark);
+  padding-block: var(--space-20);
+  text-align: center;
+}
+
+.sp-testimonial-inner {
+  max-width: 680px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-6);
+}
+
+.sp-testimonial-quote-mark {
+  color: var(--color-brand-accent);
+  opacity: 0.5;
+  line-height: 1;
+  font-size: 5rem;
+  font-weight: 700;
+  margin-bottom: calc(-1 * var(--space-4));
+  font-family: serif;
+}
+
+.sp-testimonial blockquote {
+  font-size: clamp(1.0625rem, 2vw, 1.25rem);
+  font-weight: 400;
+  color: rgba(255, 255, 255, 0.88);
+  line-height: 1.75;
+  font-style: italic;
+}
+
+.sp-testimonial cite {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-1);
+  font-style: normal;
+}
+
+.sp-testimonial cite strong {
+  font-size: 0.9375rem;
+  font-weight: 700;
+  color: var(--color-brand-accent);
+}
+
+.sp-testimonial cite span {
+  font-size: 0.8125rem;
+  color: rgba(255, 255, 255, 0.45);
+}
+
+/* ── Two Column Layout ─────────────────────────────────────── */
+.sp-two-col {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-12);
+}
+
+@media (min-width: 768px) {
+  .sp-two-col { grid-template-columns: 1fr 1fr; }
+}
+
+.sp-col-label {
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--color-brand-accent);
+  margin-bottom: var(--space-5);
+  display: block;
+}
+
+/* ── Icon List ─────────────────────────────────────────────── */
+.sp-icon-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+}
+
+.sp-icon-list-item {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-4);
+}
+
+.sp-icon-list-icon {
+  width: 44px;
+  height: 44px;
+  background: rgba(46, 79, 60, 0.08);
+  border-radius: var(--border-radius-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-brand-primary);
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.sp-icon-list-text h4 {
+  font-size: 0.9375rem;
+  font-weight: 700;
+  color: var(--color-text-primary);
+  margin-bottom: var(--space-1);
+  line-height: 1.3;
+}
+
+.sp-icon-list-text p {
+  font-size: 0.875rem;
+  color: var(--color-text-secondary);
+  line-height: 1.6;
+}
+
+/* ── Check List ────────────────────────────────────────────── */
+.sp-check-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.sp-check-list li {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-3);
+  font-size: 0.9375rem;
+  color: var(--color-text-secondary);
+  line-height: 1.6;
+}
+
+.sp-check-list li .sp-check-dot {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: rgba(46, 79, 60, 0.1);
+  flex-shrink: 0;
+  margin-top: 1px;
+  color: var(--color-brand-primary);
+}
+
+/* ── Contact Mini ──────────────────────────────────────────── */
+.sp-contact-mini {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-8);
+}
+
+@media (min-width: 768px) {
+  .sp-contact-mini { grid-template-columns: 1fr 1fr; }
+}
+
+.sp-contact-card {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: var(--border-radius-lg);
+  padding: var(--space-8);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.sp-contact-card h3 {
+  font-size: 1.0625rem;
+  font-weight: 700;
+  color: #ffffff;
+}
+
+.sp-contact-card p {
+  font-size: 0.9375rem;
+  color: rgba(255, 255, 255, 0.65);
+  line-height: 1.6;
+}
+
+.sp-contact-card a {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  color: var(--color-brand-accent);
+  font-weight: 600;
+  font-size: 0.9375rem;
+  margin-top: auto;
+  transition: gap var(--transition-fast);
+}
+
+.sp-contact-card a:hover { gap: var(--space-3); }
+
+/* ── Back Link ─────────────────────────────────────────────── */
+.sp-back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--color-brand-primary);
+  margin-bottom: var(--space-16);
+  transition: gap var(--transition-fast), color var(--transition-fast);
+}
+
+.sp-back-link:hover {
+  gap: var(--space-3);
+  color: var(--color-brand-accent-dark);
+}
+
+/* ── Stats Bar ─────────────────────────────────────────────── */
+.sp-stats {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--space-6);
+  padding: var(--space-10) var(--space-8);
+  background: var(--color-surface);
+  border-radius: var(--border-radius-lg);
+  box-shadow: 0 4px 24px var(--color-shadow);
+  margin-top: var(--space-12);
+}
+
+@media (min-width: 640px) {
+  .sp-stats { grid-template-columns: repeat(4, 1fr); }
+}
+
+.sp-stat-item {
+  text-align: center;
+}
+
+.sp-stat-number {
+  font-size: clamp(1.75rem, 4vw, 2.5rem);
+  font-weight: 700;
+  color: var(--color-brand-primary);
+  line-height: 1;
+  margin-bottom: var(--space-2);
+}
+
+.sp-stat-label {
+  font-size: 0.8125rem;
+  color: var(--color-text-muted);
+  font-weight: 500;
+  line-height: 1.4;
+}
+
+/* ── Section Modifiers ─────────────────────────────────────── */
+.sp-section--compact {
+  padding-block: var(--space-10);
+}
+
+.sp-section--snug {
+  padding-block: var(--space-12);
+}
+
+/* ── Dark section: heading colour overrides via context ─────── */
+.sp-section--dark .sp-section-header .sp-eyebrow {
+  color: var(--color-brand-accent);
+}
+
+/* ── Two-column modifier: vertically centred, wider gap ─────── */
+.sp-two-col--centered {
+  align-items: center;
+  gap: var(--space-16);
+}
+
+/* ── Intro text block ──────────────────────────────────────── */
+.sp-intro-text h2 {
+  font-size: clamp(1.5rem, 3vw, 2.25rem);
+  font-weight: 700;
+  color: var(--color-brand-primary);
+  line-height: 1.2;
+  margin-bottom: var(--space-5);
+}
+
+.sp-intro-text p {
+  font-size: 1rem;
+  color: var(--color-text-secondary);
+  line-height: 1.7;
+  margin-bottom: var(--space-4);
+}
+
+.sp-intro-text p:last-child {
+  margin-bottom: 0;
+}
+
+/* ── Info card (quote / highlight box) ─────────────────────── */
+.sp-info-card {
+  background: var(--color-surface);
+  border-radius: var(--border-radius-lg);
+  padding: var(--space-8);
+  border: 1.5px solid var(--color-border);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+}
+
+.sp-info-card-label {
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--color-brand-accent);
+}
+
+.sp-info-card-quote {
+  font-size: 1.0625rem;
+  font-weight: 600;
+  color: var(--color-text-primary);
+  line-height: 1.45;
+}
+
+.sp-info-card-body {
+  font-size: 0.9rem;
+  color: var(--color-text-secondary);
+  line-height: 1.65;
+}
