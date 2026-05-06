@@ -43,4 +43,7 @@
     <priority>0.6</priority>
   </url>
 
+  <!-- Impressum und Datenschutz werden von Suchmaschinen durch noindex ausgeschlossen -->
+  <!-- und daher bewusst nicht in der Sitemap gelistet -->
+
 </urlset>

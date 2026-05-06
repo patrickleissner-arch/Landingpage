@@ -22,6 +22,12 @@ app.get('/energierechner', (req, res) => {
 app.get('/solarisator', (req, res) => {
   res.sendFile(path.join(__dirname, 'solarisator.html'));
 });
+app.get('/impressum', (req, res) => {
+  res.sendFile(path.join(__dirname, 'impressum.html'));
+});
+app.get('/datenschutz', (req, res) => {
+  res.sendFile(path.join(__dirname, 'datenschutz.html'));
+});
 
 app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, 'index.html'));
