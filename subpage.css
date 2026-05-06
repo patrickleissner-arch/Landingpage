@@ -921,6 +921,13 @@
 
 .fairness-badge-text a:hover { text-decoration: underline; }
 
+.legal-timestamp {
+  font-size: 0.75rem;
+  color: var(--color-text-muted);
+  margin-top: var(--space-8);
+  text-align: right;
+}
+
 /* ── Termin Page ────────────────────────────────────────────── */
 .termin-header-section {
   padding: var(--space-20) 0 var(--space-12);
