@@ -1746,6 +1746,7 @@ p { max-width: 68ch; }
 }
 
 .footer-brand .nav-logo { text-decoration: none; }
+.footer-brand .nav-logo img { height: 36px; width: auto; }
 .footer-brand .nav-logo-text { font-size: 1.125rem; }
 
 .footer-brand p {
