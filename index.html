@@ -18,6 +18,70 @@
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
   <link rel="stylesheet" href="style.css">
+
+  <!-- Schema.org Structured Data -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "LocalBusiness",
+        "@id": "https://pl-energie.de/#business",
+        "name": "Patrick Leißner Energieberatung",
+        "description": "Individuelle Planung von Photovoltaikanlagen und Wärmepumpen in Bayern und Baden-Württemberg. Kostenlose Erstberatung, herstellerunabhängig.",
+        "url": "https://pl-energie.de",
+        "email": "info@pl-energie.de",
+        "areaServed": ["Bayern", "Baden-Württemberg"],
+        "serviceType": ["Photovoltaik-Beratung", "Wärmepumpen-Beratung", "Energieberatung"],
+        "priceRange": "Kostenlose Erstberatung",
+        "founder": { "@id": "https://pl-energie.de/#person" },
+        "hasOfferCatalog": {
+          "@type": "OfferCatalog",
+          "name": "Leistungen",
+          "itemListElement": [
+            {
+              "@type": "Offer",
+              "itemOffered": {
+                "@type": "Service",
+                "name": "Beratung & Technik",
+                "description": "Standortanalyse, Wirtschaftlichkeitsrechnung und Umsetzungsbegleitung für PV-Anlagen und Wärmepumpen.",
+                "url": "https://pl-energie.de/beratung-technik"
+              }
+            },
+            {
+              "@type": "Offer",
+              "itemOffered": {
+                "@type": "Service",
+                "name": "Koordination & Netzwerk",
+                "description": "Abstimmung mit Fachpartnern und transparente Darstellung von Schnittstellen und Verantwortlichkeiten.",
+                "url": "https://pl-energie.de/koordination-netzwerk"
+              }
+            },
+            {
+              "@type": "Offer",
+              "itemOffered": {
+                "@type": "Service",
+                "name": "Analyse & Vorsorge",
+                "description": "Bestandsaufnahme der Versorgungs- und Absicherungssituation im Rahmen der Allianz-Vermittlung.",
+                "url": "https://pl-energie.de/analyse-vorsorge"
+              }
+            }
+          ]
+        }
+      },
+      {
+        "@type": "Person",
+        "@id": "https://pl-energie.de/#person",
+        "name": "Patrick Leißner",
+        "jobTitle": "Energieberater",
+        "description": "Unabhängiger Energieberater für Photovoltaik und Wärmepumpen in Bayern und Baden-Württemberg.",
+        "email": "info@pl-energie.de",
+        "url": "https://pl-energie.de",
+        "worksFor": { "@id": "https://pl-energie.de/#business" }
+      }
+    ]
+  }
+  </script>
 </head>
 <body>
 
