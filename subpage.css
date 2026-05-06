@@ -3,6 +3,43 @@
    Ergänzt style.css für Beratung, Koordination, Analyse
    ============================================================ */
 
+/* ── Zurück-Button ─────────────────────────────────────────── */
+.sp-back-bar {
+  background: var(--pl-beige, #F1F0E9);
+  border-bottom: 1px solid rgba(0,0,0,0.06);
+  padding: var(--space-2) 0;
+}
+
+.sp-back-bar .container {
+  display: flex;
+  align-items: center;
+}
+
+.sp-back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--color-brand-primary);
+  opacity: 0.8;
+  transition: opacity var(--transition-fast), gap var(--transition-fast);
+}
+
+.sp-back-link::before {
+  content: '←';
+  font-size: 1em;
+  transition: transform var(--transition-fast);
+}
+
+.sp-back-link:hover {
+  opacity: 1;
+}
+
+.sp-back-link:hover::before {
+  transform: translateX(-3px);
+}
+
 /* ── Sub-page Hero ─────────────────────────────────────────── */
 .sp-hero {
   min-height: 62vh;
