@@ -3,8 +3,14 @@
    CI: Styleguide aeppeal design ed01|2025
    ============================================================ */
 
-/* ── Google Fonts (CI: Outfit ist die alleinige Hausschrift) ── */
-@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap');
+/* ── Outfit Variable Font – selbst gehostet (kein Google-CDN) ── */
+@font-face {
+  font-family: 'Outfit';
+  src: url('assets/Typographie/Outfit-VariableFont_wght.ttf') format('truetype');
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
 
 /* ── Animated Gradient Border – @property registration ──────── */
 @property --gradient-angle {

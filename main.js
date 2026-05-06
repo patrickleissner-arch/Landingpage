@@ -244,30 +244,24 @@ function initContactForm() {
     submitBtn.classList.add('is-loading');
     submitBtn.disabled = true;
 
-    /*
-      FORMULAR-ÜBERTRAGUNG (PLATZHALTER):
-      ─────────────────────────────────────────────────────────
-      Option A – Formspree (empfohlen für statische Sites):
-        Ersetzen Sie die URL unten und löschen Sie den
-        simulierten setTimeout-Block.
-
-      const data = new FormData(form);
-      const res  = await fetch('https://formspree.io/f/IHR-FORM-ID', {
-        method: 'POST',
-        body: data,
-        headers: { 'Accept': 'application/json' }
+    let success = false;
+    try {
+      const payload = {
+        name:    form.querySelector('[name="name"]').value.trim(),
+        email:   form.querySelector('[name="email"]').value.trim(),
+        phone:   form.querySelector('[name="phone"]').value.trim(),
+        subject: form.querySelector('[name="subject"]').value,
+        message: form.querySelector('[name="message"]').value.trim(),
+      };
+      const res = await fetch('/api/contact', {
+        method:  'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body:    JSON.stringify(payload),
       });
-      const success = res.ok;
-
-      Option B – mailto fallback (öffnet E-Mail-Client):
-        Fügen Sie action="mailto:..." zum <form>-Tag hinzu
-        und rufen Sie form.submit() auf.
-      ─────────────────────────────────────────────────────────
-    */
-
-    // Simulated async send (remove & replace with real fetch above)
-    await new Promise(resolve => setTimeout(resolve, 1200));
-    const success = true;
+      success = res.ok;
+    } catch (_) {
+      success = false;
+    }
 
     submitBtn.classList.remove('is-loading');
 
