@@ -808,17 +808,9 @@ p { max-width: 68ch; }
   text-align: center;
 }
 
-.btn-leistung--secondary {
-  border-color: rgba(46, 79, 60, 0.4);
-  color: var(--color-brand-primary);
-  opacity: 0.75;
-}
-
 .btn-leistung--secondary:hover {
-  border-color: var(--color-brand-primary);
   background: var(--color-brand-primary);
   color: #ffffff;
-  opacity: 1;
 }
 
 /* ── Services Section (legacy – nicht mehr verwendet) ─────── */
