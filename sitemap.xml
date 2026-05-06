@@ -43,6 +43,13 @@
     <priority>0.6</priority>
   </url>
 
+  <url>
+    <loc>https://patrickleissner.de/termin</loc>
+    <lastmod>2026-05-06</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+
   <!-- Impressum und Datenschutz werden von Suchmaschinen durch noindex ausgeschlossen -->
   <!-- und daher bewusst nicht in der Sitemap gelistet -->
 

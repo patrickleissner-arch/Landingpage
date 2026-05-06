@@ -28,6 +28,9 @@ app.get('/impressum', (req, res) => {
 app.get('/datenschutz', (req, res) => {
   res.sendFile(path.join(__dirname, 'datenschutz.html'));
 });
+app.get('/termin', (req, res) => {
+  res.sendFile(path.join(__dirname, 'termin.html'));
+});
 
 app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, 'index.html'));
