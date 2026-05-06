@@ -712,7 +712,11 @@ p { max-width: 68ch; }
 }
 
 @media (min-width: 768px) {
-  .leistungen-grid { grid-template-columns: repeat(3, 1fr); }
+  .leistungen-grid { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (min-width: 1100px) {
+  .leistungen-grid { grid-template-columns: repeat(4, 1fr); }
 }
 
 .leistung-card {
@@ -790,6 +794,25 @@ p { max-width: 68ch; }
 .btn-leistung:hover {
   background: var(--color-brand-primary);
   color: #ffffff;
+}
+
+.leistung-footer--multi {
+  flex-direction: column;
+  gap: var(--space-2);
+  align-items: center;
+}
+
+.btn-leistung--secondary {
+  border-color: rgba(46, 79, 60, 0.4);
+  color: var(--color-brand-primary);
+  opacity: 0.75;
+}
+
+.btn-leistung--secondary:hover {
+  border-color: var(--color-brand-primary);
+  background: var(--color-brand-primary);
+  color: #ffffff;
+  opacity: 1;
 }
 
 /* ── Services Section (legacy – nicht mehr verwendet) ─────── */
