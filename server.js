@@ -19,6 +19,9 @@ app.get('/analyse-vorsorge', (req, res) => {
 app.get('/energierechner', (req, res) => {
   res.sendFile(path.join(__dirname, 'energierechner.html'));
 });
+app.get('/solarisator', (req, res) => {
+  res.sendFile(path.join(__dirname, 'solarisator.html'));
+});
 
 app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, 'index.html'));

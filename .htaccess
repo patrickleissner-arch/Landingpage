@@ -7,6 +7,7 @@ RewriteRule ^ - [L]
 
 # Clean URL → HTML file mapping
 RewriteRule ^energierechner/?$ energierechner.html [L]
+RewriteRule ^solarisator/?$ solarisator.html [L]
 RewriteRule ^beratung-technik/?$ beratung-technik.html [L]
 RewriteRule ^koordination-netzwerk/?$ koordination-netzwerk.html [L]
 RewriteRule ^analyse-vorsorge/?$ analyse-vorsorge.html [L]
