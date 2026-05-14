@@ -336,6 +336,15 @@ button {
 .nav-cta {
   margin-left: auto;
   display: none;
+  transition:
+    opacity var(--transition-base),
+    visibility var(--transition-base);
+}
+
+.nav-cta.nav-cta--hidden {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
 }
 
 @media (min-width: 1024px) {
@@ -441,81 +450,6 @@ button {
 .mobile-menu a:hover { color: #ffffff; background: rgba(255,255,255,0.08); }
 .mobile-menu a.btn { font-size: 1rem; margin-top: var(--space-4); }
 
-/* ── Nav Dropdown ──────────────────────────────────────────── */
-.nav-has-dropdown { position: relative; }
-
-.nav-has-dropdown > a::after {
-  content: '';
-  display: inline-block;
-  width: 0;
-  height: 0;
-  border-left: 3px solid transparent;
-  border-right: 3px solid transparent;
-  border-top: 4px solid currentColor;
-  margin-left: 5px;
-  vertical-align: middle;
-  opacity: 0.6;
-  transition: transform var(--transition-fast);
-}
-
-.nav-has-dropdown:hover > a::after,
-.nav-has-dropdown:focus-within > a::after {
-  transform: rotate(180deg);
-}
-
-.nav-dropdown {
-  position: absolute;
-  top: calc(100% + 8px);
-  left: 50%;
-  transform: translateX(-50%) translateY(-6px);
-  background: rgba(14, 28, 20, 0.97);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border: 1px solid rgba(255,255,255,0.08);
-  border-radius: 10px;
-  padding: var(--space-1);
-  min-width: 215px;
-  list-style: none;
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity var(--transition-fast), transform var(--transition-fast);
-  z-index: 200;
-  box-shadow: 0 8px 32px rgba(0,0,0,0.45);
-}
-
-.nav-has-dropdown:hover .nav-dropdown,
-.nav-has-dropdown:focus-within .nav-dropdown {
-  opacity: 1;
-  pointer-events: auto;
-  transform: translateX(-50%) translateY(0);
-}
-
-.nav-dropdown li { list-style: none; }
-
-.nav-dropdown a {
-  display: block;
-  padding: var(--space-2) var(--space-4);
-  color: rgba(241, 245, 249, 0.85);
-  font-size: 0.875rem;
-  font-weight: 500;
-  border-radius: 8px;
-  white-space: nowrap;
-  transition: color var(--transition-fast), background-color var(--transition-fast);
-}
-
-.nav-dropdown a:hover,
-.nav-dropdown a:focus-visible {
-  color: #ffffff;
-  background: rgba(255,255,255,0.1);
-}
-
-/* Mobile sub-nav (indented items under Leistungen) */
-.mobile-nav-sub {
-  font-size: 1rem !important;
-  padding-block: var(--space-2) !important;
-  padding-left: calc(var(--space-8) + var(--space-6)) !important;
-  opacity: 0.75;
-}
 
 /* ── Section Layout ───────────────────────────────────────── */
 .section {
@@ -653,7 +587,7 @@ p { max-width: 68ch; }
   color: #ffffff;
   font-size: clamp(1rem, 1.8vw, 1.125rem);
   font-weight: 700;
-  max-width: 52ch;
+  max-width: 72ch;
   margin-bottom: var(--space-4);
 }
 
@@ -661,7 +595,7 @@ p { max-width: 68ch; }
   color: rgba(255, 255, 255, 0.72);
   font-size: clamp(1rem, 1.8vw, 1.125rem);
   font-weight: 300;
-  max-width: 52ch;
+  max-width: 72ch;
   line-height: 1.78;
   margin-inline: auto;
 }
@@ -1147,7 +1081,7 @@ p { max-width: 68ch; }
 
   .ueber-vision { flex-direction: column; }
 
-  .ueber-pillar { font-size: 1.75rem; }
+  .ueber-pillar { font-size: 1.75rem; order: -1; }
 }
 
 /* Tablet */
@@ -1247,7 +1181,7 @@ p { max-width: 68ch; }
 .orbital-node {
   position: absolute;
   left: 50%; top: 50%;
-  cursor: pointer;
+  cursor: default;
   transition: opacity var(--transition-base);
 }
 
@@ -1276,14 +1210,15 @@ p { max-width: 68ch; }
   background-clip: padding-box, border-box;
   background-origin: padding-box, border-box;
   animation: gradient-rotate 3s linear infinite;
+  overflow: hidden;
   backdrop-filter: blur(10px);
   box-shadow: 0 4px 18px rgba(46, 79, 60, 0.10);
   transition: scale 0.25s ease, box-shadow 0.25s ease;
 }
 
 .orbital-node-badge img {
-  width: 42px;
-  height: 42px;
+  width: 50px;
+  height: 50px;
   object-fit: contain;
   border-radius: 50%;
   pointer-events: none;
@@ -1458,43 +1393,38 @@ p { max-width: 68ch; }
 #termine h2, #termine .section-label { color: var(--color-text-on-dark); }
 #termine .section-header p { color: var(--color-text-on-dark-muted); }
 
-.calendly-placeholder {
-  border: 2px dashed rgba(241, 245, 249, 0.2);
-  border-radius: var(--border-radius-lg);
-  background: rgba(255,255,255,0.04);
-  min-height: 400px;
+.termine-features {
   display: flex;
-  align-items: center;
   justify-content: center;
+  gap: var(--space-10);
+  flex-wrap: wrap;
+  margin-bottom: var(--space-12);
 }
 
-.calendly-placeholder-inner {
+.termine-feature {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  color: var(--color-text-on-dark-muted);
+  font-size: 0.9375rem;
+}
+
+.termine-feature svg {
+  color: var(--color-brand-accent);
+  flex-shrink: 0;
+}
+
+.termine-cta {
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: var(--space-4);
-  padding: var(--space-16);
-  text-align: center;
+}
+
+.termine-hint {
+  font-size: 0.875rem;
   color: var(--color-text-on-dark-muted);
-}
-
-.calendly-placeholder-inner svg {
-  color: rgba(208, 171, 59, 0.6);
-  margin-bottom: var(--space-2);
-}
-
-.calendly-placeholder-inner strong {
-  display: block;
-  font-size: 1.125rem;
-  color: var(--color-text-on-dark);
-  font-family: var(--font-body);
-  font-weight: 700;
-  margin-bottom: var(--space-1);
-}
-
-.calendly-placeholder-inner p:last-of-type {
-  font-size: 0.9375rem;
-  margin-bottom: var(--space-2);
+  margin: 0;
 }
 
 /* ── Contact Section ──────────────────────────────────────── */

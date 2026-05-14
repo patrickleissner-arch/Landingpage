@@ -9,6 +9,16 @@
   <meta property="og:title" content="Patrick Leißner – Energieberatung | Photovoltaik &amp; Wärmepumpe">
   <meta property="og:description" content="Frei durch eigene Energie. Individuelle Planung von PV-Anlagen und Wärmepumpen – persönlich, ehrlich, unabhängig.">
   <meta property="og:type" content="website">
+  <meta property="og:url" content="https://patrickleissner.de/">
+  <meta property="og:image" content="https://patrickleissner.de/assets/og-image.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Patrick Leißner – Energieberatung | Photovoltaik &amp; Wärmepumpe">
+  <meta name="twitter:description" content="Frei durch eigene Energie. Individuelle Planung von PV-Anlagen und Wärmepumpen – persönlich, ehrlich, unabhängig.">
+  <meta name="twitter:image" content="https://patrickleissner.de/assets/og-image.jpg">
+  <link rel="canonical" href="https://patrickleissner.de/">
+  <meta name="robots" content="index, follow">
 
   <title>Patrick Leißner – Energieberatung | Photovoltaik &amp; Wärmepumpe</title>
 
@@ -22,7 +32,7 @@
     "@context": "https://schema.org",
     "@graph": [
       {
-        "@type": "LocalBusiness",
+        "@type": ["LocalBusiness", "ProfessionalService"],
         "@id": "https://patrickleissner.de/#business",
         "name": "Patrick Leißner Energieberatung",
         "description": "Individuelle Planung von Photovoltaikanlagen und Wärmepumpen. Kostenlose Erstberatung, herstellerunabhängig. Sachkunde nach §34d GewO (IHK).",
@@ -37,6 +47,12 @@
           "addressCountry": "DE"
         },
         "areaServed": "DE",
+        "openingHours": ["Mo-Fr 08:00-18:00"],
+        "geo": {
+          "@type": "GeoCoordinates",
+          "latitude": 51.6242,
+          "longitude": 12.3105
+        },
         "serviceType": ["Photovoltaik-Beratung", "Wärmepumpen-Beratung", "Energieberatung", "Versicherungsvermittlung", "Altersvorsorge"],
         "priceRange": "Kostenlose Erstberatung",
         "founder": { "@id": "https://patrickleissner.de/#person" },
@@ -83,7 +99,50 @@
         "telephone": "+4901734994994",
         "email": "p@atrickleissner.de",
         "url": "https://patrickleissner.de",
-        "worksFor": { "@id": "https://patrickleissner.de/#business" }
+        "worksFor": { "@id": "https://patrickleissner.de/#business" },
+        "sameAs": [
+          "https://www.linkedin.com/in/patrickleissner",
+          "https://www.instagram.com/patrickleissner.de",
+          "https://www.facebook.com/patrickleissner.de",
+          "GOOGLE_BUSINESS_URL_HIER_EINTRAGEN"
+        ]
+      },
+      {
+        "@type": "FAQPage",
+        "mainEntity": [
+          {
+            "@type": "Question",
+            "name": "Was kostet eine Erstberatung?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Die Erstberatung ist kostenlos und völlig unverbindlich."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Welche Fördermittel gibt es für Photovoltaik?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "PV-Anlagen können über den KfW-Kredit 270 zinsgünstig finanziert werden. Zusätzlich gibt es regionale Förderprogramme der Bundesländer sowie die Einspeisevergütung nach EEG."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Für welche Region berätst du?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Der Beratungsschwerpunkt liegt in der Region Bitterfeld-Wolfen und Umgebung (Sachsen-Anhalt). Beratungen sind deutschlandweit möglich."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Lohnt sich eine Wärmepumpe für mein Haus?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Eine Wärmepumpe lohnt sich besonders bei gut gedämmten Gebäuden und einer Vorlauftemperatur unter 55 °C. In einem kostenlosen Erstgespräch analysiere ich deine individuelle Situation und zeige dir, welche Lösung optimal für dich ist."
+            }
+          }
+        ]
       }
     ]
   }
@@ -108,13 +167,7 @@
 
       <!-- Desktop Nav Links -->
       <ul class="nav-links" role="list">
-        <li class="nav-has-dropdown">
-          <a href="#leistungen" data-nav>Leistungen</a>
-          <ul class="nav-dropdown" role="menu">
-            <li><a href="/solarisator" role="menuitem">Interaktiver Rechner</a></li>
-            <li><a href="/energierechner" role="menuitem">Energierechner</a></li>
-          </ul>
-        </li>
+        <li><a href="#leistungen" data-nav>Leistungen</a></li>
         <li><a href="#ueber-pl" data-nav>Über mich</a></li>
         <li><a href="#termine" data-nav>Termine</a></li>
         <li><a href="#kontakt" data-nav>Kontakt</a></li>
@@ -141,8 +194,6 @@
     <div class="mobile-menu" id="mobile-menu" aria-hidden="true" role="dialog" aria-label="Hauptnavigation">
       <ul role="list">
         <li><a href="#leistungen" class="mobile-nav-link">Leistungen</a></li>
-        <li><a href="/solarisator" class="mobile-nav-link mobile-nav-sub">Interaktiver Rechner</a></li>
-        <li><a href="/energierechner" class="mobile-nav-link mobile-nav-sub">Energierechner</a></li>
         <li><a href="#ueber-pl" class="mobile-nav-link">Über mich</a></li>
         <li><a href="#termine" class="mobile-nav-link">Termine</a></li>
         <li><a href="#kontakt" class="mobile-nav-link">Kontakt</a></li>
@@ -172,25 +223,20 @@
         </h1>
 
         <p class="hero-headline2 animate-fade-up" style="--delay: 2">
-          Deine Energie. Deine Freiheit.
+          Deine Energie. Deine Freiheit. Deine Sicherheit.
         </p>
 
         <p class="hero-bold animate-fade-up" style="--delay: 2">
-          Mit Photovoltaik und Wärmepumpen in die Unabhängigkeit.
+          Mit Photovoltaik und Wärmepumpen in die Unabhängigkeit – und mit ganzheitlicher Beratung zu mehr Schutz, Planbarkeit und einem guten Gefühl für die Zukunft.
         </p>
 
         <p class="hero-subline animate-fade-up" style="--delay: 3">
-          Steigende Energiepreise, unsichere Versorgung, Klimakrise: Es ist Zeit, selbst die Kontrolle zu übernehmen.
-          Mit einer individuell geplanten PV-Anlage und Wärmepumpe machst du dein Zuhause zum Kraftwerk.
-          Ich begleite dich auf dem Weg zur echten <strong>Energiewende</strong> –
-          persönlich, ehrlich und mit technischem Know-how.
-          Für mehr Sicherheit, Planbarkeit und ein gutes Gefühl.
+          Steigende Energiepreise, unsichere Versorgung und der Wunsch nach mehr Kontrolle machen eines klar: Wer heute entscheidet, sollte weiterdenken.
+          Mit einer individuell geplanten PV-Anlage und Wärmepumpe machst du dein Zuhause fit für morgen.
+          Ich begleite dich dabei persönlich, ehrlich und mit technischem Know-how – und unterstütze dich zusätzlich bei wichtigen Fragen rund um Sicherheit, Vorsorge und den passenden Schutz.
+          Für mehr Unabhängigkeit. Für mehr Planbarkeit. Für ein Zuhause mit Zukunft.
         </p>
 
-        <div class="hero-actions animate-fade-up" style="--delay: 3">
-          <a href="/termin" class="btn btn-accent btn-lg">Jetzt Termin vereinbaren</a>
-          <a href="#leistungen" class="btn btn-ghost btn-lg">Meine Leistungen</a>
-        </div>
       </div>
 
       <div class="scroll-indicator" aria-hidden="true">
@@ -218,7 +264,7 @@
             </div>
             <div class="leistung-body">
               <h3>Beratung &amp; Technik</h3>
-              <p>Strukturierte Betrachtung Ihrer Möglichkeiten im Bereich Photovoltaik und Wärmepumpe. Keine pauschalen Versprechen sondern individuelle Analyse.</p>
+              <p>Strukturierte Betrachtung deiner Möglichkeiten im Bereich Photovoltaik und Wärmepumpe. Keine pauschalen Versprechen sondern individuelle Analyse.</p>
             </div>
             <div class="leistung-footer">
               <a href="/beratung-technik" class="btn-leistung">mehr erfahren</a>
@@ -246,7 +292,7 @@
             </div>
             <div class="leistung-body">
               <h3>Analyse &amp; Vorsorge</h3>
-              <p>Bestandsaufnahme Ihrer Versorgungs- und Absicherungssituation im Rahmen der Allianz-Vermittlung. Risiken und Optimierungsmöglichkeiten erkennen.</p>
+              <p>Bestandsaufnahme deiner Versorgungs- und Absicherungssituation im Rahmen der Allianz-Vermittlung. Risiken und Optimierungsmöglichkeiten erkennen.</p>
             </div>
             <div class="leistung-footer">
               <a href="/analyse-vorsorge" class="btn-leistung">mehr erfahren</a>
@@ -260,7 +306,7 @@
             </div>
             <div class="leistung-body">
               <h3>Interaktive Rechner</h3>
-              <p>Ermitteln Sie Ihren PV-Eigenverbrauch mit dem Unabhängigkeitsrechner der HTW Berlin oder analysieren Sie Ihre Energiekosten mit dem Energierechner.</p>
+              <p>Ermittle deinen PV-Eigenverbrauch mit dem Unabhängigkeitsrechner der HTW Berlin oder analysiere deine Energiekosten mit dem Energierechner.</p>
             </div>
             <div class="leistung-footer leistung-footer--multi">
               <a href="/solarisator" class="btn-leistung btn-leistung--full">Unabhängig berechnen</a>
@@ -307,14 +353,14 @@
 
           <!-- Vision -->
           <div class="ueber-block ueber-vision reveal">
-            <p>Energieunabhängigkeit für jeden Haushalt. Ich ermögliche Menschen, ihr Zuhause in eine unabhängige, wertsteigernde und sichere Energiequelle zu verwandeln – für mehr Freiheit, Stabilität und Nachhaltigkeit.</p>
+            <p>Energieunabhängigkeit für jeden Haushalt. Ich ermögliche es Menschen, ihr Zuhause in eine unabhängige, wertsteigernde und sichere Energiequelle zu verwandeln – für mehr Freiheit, Stabilität und Nachhaltigkeit.</p>
             <h3 class="ueber-pillar">Vision</h3>
           </div>
 
           <!-- Arbeitsweise -->
           <div class="ueber-block ueber-arbeitsweise reveal">
             <h3 class="ueber-pillar">Arbeitsweise</h3>
-            <p>Bevor ich Empfehlungen ausspreche, nehme ich mir die Zeit, Ihre individuelle Situation genau zu erfassen. Das bedeutet: Zuhören, Fragen stellen und gemeinsam die relevanten Faktoren identifizieren. Nur so entstehen Lösungen, die zu Ihnen passen.</p>
+            <p>Bevor ich Empfehlungen ausspreche, nehme ich mir die Zeit, deine individuelle Situation genau zu erfassen. Das bedeutet: Zuhören, Fragen stellen und gemeinsam die relevanten Faktoren identifizieren. Nur so entstehen Lösungen, die zu dir passen.</p>
           </div>
 
         </div>
@@ -330,9 +376,11 @@
       <div class="container partner-content">
         <div class="section-header reveal">
           <span class="section-label">Vertrauen &amp; Qualität</span>
-          <h2 id="partner-heading">Starke Partner</h2>
-          <p>Als unabhängiger Berater arbeite ich mit führenden Herstellern zusammen –
-          damit du stets die beste Technik bekommst.</p>
+          <h2 id="partner-heading">Starke Partner für gute Entscheidungen</h2>
+          <p>Wenn es um dein Zuhause geht, zählen Vertrauen, Qualität und ein sicheres Gefühl.
+          Deshalb arbeite ich mit erfahrenen Herstellern und verlässlichen Partnern zusammen,
+          die für moderne Energielösungen, hohe Standards und langfristige Zuverlässigkeit stehen.
+          So entsteht aus guter Technik eine Lösung, die heute passt und morgen trägt.</p>
         </div>
 
         <!-- Orbital Timeline – wird per JS befüllt und animiert -->
@@ -361,39 +409,37 @@
           <span class="section-label">Kostenfrei &amp; unverbindlich</span>
           <h2 id="termine-heading">Erstberatung buchen</h2>
           <p>
-            Vereinbaren Sie Ihr kostenloses Erstgespräch –
+            Vereinbare dein kostenloses Erstgespräch –
             persönlich, telefonisch oder per Videocall.
           </p>
         </div>
 
-        <div class="calendly-placeholder reveal">
-          <!--
-            ╔══════════════════════════════════════════════════════╗
-            ║  CALENDLY EMBED PLATZHALTER                         ║
-            ║  Ersetzen Sie diesen Block durch Ihren              ║
-            ║  Calendly-Einbettungscode:                          ║
-            ║                                                      ║
-            ║  <div class="calendly-inline-widget"                ║
-            ║    data-url="https://calendly.com/IHR-NUTZERNAME"  ║
-            ║    style="min-width:320px;height:700px;">           ║
-            ║  </div>                                              ║
-            ║  <script src="https://assets.calendly.com/         ║
-            ║    assets/external/widget.js"></script>             ║
-            ╚══════════════════════════════════════════════════════╝
-          -->
-          <div class="calendly-placeholder-inner">
-            <svg width="52" height="52" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-              <rect x="3" y="4" width="18" height="18" rx="2"/>
-              <path d="M16 2v4M8 2v4M3 10h18"/>
-              <path d="M8 14h.01M12 14h.01M16 14h.01M8 18h.01M12 18h.01"/>
-            </svg>
-            <div>
-              <strong>Online-Terminbuchung</strong>
-              <p>Ihren Calendly-Buchungslink hier einbinden.</p>
-            </div>
-            <a href="#kontakt" class="btn btn-accent">Alternativ: Direkt kontaktieren</a>
+        <div class="termine-features reveal">
+          <div class="termine-feature">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+            <span>30 Minuten, kein Stress</span>
+          </div>
+          <div class="termine-feature">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.61 3.41 2 2 0 0 1 3.6 1.22h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.81a16 16 0 0 0 6.29 6.29l.95-.95a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+            <span>Online, telefonisch oder vor Ort</span>
+          </div>
+          <div class="termine-feature">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+            <span>Kostenfrei &amp; unverbindlich</span>
           </div>
         </div>
+
+        <div class="termine-cta reveal">
+          <a href="https://zeeg.me/patrickleissnerde"
+             class="btn btn-accent btn-lg"
+             onclick="Zeeg.initPopupWidget({url:'https://zeeg.me/patrickleissnerde'}); return false;"
+             aria-label="Termin bei Zeeg buchen">
+            Termin buchen
+          </a>
+          <p class="termine-hint">Buchungsfenster öffnet sich direkt hier – kein Account nötig.</p>
+        </div>
+
+        <script type="text/javascript" src="https://assets.zeeg.me/embed.min.js" async></script>
 
       </div>
     </section>
@@ -477,7 +523,7 @@
                 name="message"
                 required
                 rows="5"
-                placeholder="Beschreiben Sie kurz Ihr Projekt oder Ihre Frage…"
+                placeholder="Beschreibe kurz dein Projekt oder deine Frage…"
                 aria-describedby="message-error"
                 aria-required="true"
               ></textarea>
@@ -503,20 +549,25 @@
             <!--
               FORMULAR-ÜBERTRAGUNG (PLATZHALTER):
               Option A – mailto (kein Server nötig, öffnet E-Mail-Programm):
-                Fügen Sie action="mailto:ihre@email.de" method="post" enctype="text/plain" zum <form>-Tag hinzu.
+                Füge action="mailto:deine@email.de" method="post" enctype="text/plain" zum <form>-Tag hinzu.
 
               Option B – Formspree (kostenloser Dienst):
                 1. Konto auf formspree.io anlegen
                 2. action="https://formspree.io/f/IHR-FORMULAR-ID" zum <form>-Tag hinzufügen
                 3. Das JS-Handling in main.js entsprechend anpassen.
             -->
+            <!-- Honeypot: unsichtbar für Menschen, Bots füllen es aus -->
+            <input type="text" name="hp_website" id="hp-website"
+                   autocomplete="off" tabindex="-1" aria-hidden="true"
+                   style="position:absolute;left:-9999px;opacity:0;pointer-events:none;">
+
             <button type="submit" class="btn btn-primary btn-lg btn-submit" id="submitBtn">
               <span class="btn-text">Nachricht senden</span>
               <span class="btn-loading" aria-hidden="true">Wird gesendet…</span>
             </button>
 
             <div class="form-success" id="formSuccess" role="status" aria-live="polite">
-              Vielen Dank! Ihre Nachricht wurde gesendet. Ich melde mich innerhalb von 1–2 Werktagen.
+              Vielen Dank! Deine Nachricht wurde gesendet. Ich melde mich innerhalb von 1–2 Werktagen.
             </div>
           </form>
 
@@ -561,7 +612,11 @@
               </div>
               <div class="contact-item-text">
                 <span>Büro</span>
-                <span>Dessauer Allee 52<br>06766 Bitterfeld-Wolfen</span>
+                <a href="https://maps.google.com/?q=Dessauer+Allee+52,+06766+Bitterfeld-Wolfen"
+                   id="addressNavLink" target="_blank" rel="noopener noreferrer"
+                   aria-label="Route zur Büroadresse planen">
+                  Dessauer Allee 52<br>06766 Bitterfeld-Wolfen
+                </a>
               </div>
             </div>
 

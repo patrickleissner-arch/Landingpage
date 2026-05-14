@@ -65,6 +65,19 @@ function initStickyNav() {
   if (hero) observer.observe(hero);
 }
 
+/* ── Nav CTA: hide when Termine section is visible ────────── */
+function initNavCtaVisibility() {
+  const navCta = qs('.nav-cta');
+  const termine = qs('#termine');
+  if (!navCta || !termine) return;
+
+  const observer = new IntersectionObserver(
+    ([entry]) => navCta.classList.toggle('nav-cta--hidden', entry.isIntersecting),
+    { threshold: 0.15 }
+  );
+  observer.observe(termine);
+}
+
 /* ── Active Nav Link Tracking ─────────────────────────────── */
 function initActiveNav() {
   const navLinks = qsa('[data-nav]');
@@ -155,7 +168,7 @@ function initContactForm() {
       el: () => qs('#name'),
       errEl: () => qs('#name-error'),
       validate(val) {
-        if (!val.trim()) return 'Bitte geben Sie Ihren Namen ein.';
+        if (!val.trim()) return 'Bitte gib deinen Namen ein.';
         if (val.trim().length < 2) return 'Name muss mindestens 2 Zeichen haben.';
         return '';
       }
@@ -164,8 +177,8 @@ function initContactForm() {
       el: () => qs('#email'),
       errEl: () => qs('#email-error'),
       validate(val) {
-        if (!val.trim()) return 'Bitte geben Sie Ihre E-Mail-Adresse ein.';
-        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val)) return 'Bitte geben Sie eine gültige E-Mail-Adresse ein.';
+        if (!val.trim()) return 'Bitte gib deine E-Mail-Adresse ein.';
+        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val)) return 'Bitte gib eine gültige E-Mail-Adresse ein.';
         return '';
       }
     },
@@ -173,8 +186,8 @@ function initContactForm() {
       el: () => qs('#message'),
       errEl: () => qs('#message-error'),
       validate(val) {
-        if (!val.trim()) return 'Bitte geben Sie eine Nachricht ein.';
-        if (val.trim().length < 10) return 'Bitte beschreiben Sie Ihr Anliegen etwas ausführlicher.';
+        if (!val.trim()) return 'Bitte gib eine Nachricht ein.';
+        if (val.trim().length < 10) return 'Bitte beschreibe dein Anliegen etwas ausführlicher.';
         return '';
       }
     },
@@ -182,7 +195,7 @@ function initContactForm() {
       el: () => qs('#datenschutz'),
       errEl: () => qs('#datenschutz-error'),
       validate(val, el) {
-        if (!el.checked) return 'Bitte stimmen Sie der Datenschutzerklärung zu.';
+        if (!el.checked) return 'Bitte stimme der Datenschutzerklärung zu.';
         return '';
       }
     }
@@ -247,33 +260,44 @@ function initContactForm() {
     let success = false;
     try {
       const payload = {
-        name:    form.querySelector('[name="name"]').value.trim(),
-        email:   form.querySelector('[name="email"]').value.trim(),
-        phone:   form.querySelector('[name="phone"]').value.trim(),
-        subject: form.querySelector('[name="subject"]').value,
-        message: form.querySelector('[name="message"]').value.trim(),
+        name:       form.querySelector('[name="name"]').value.trim(),
+        email:      form.querySelector('[name="email"]').value.trim(),
+        phone:      form.querySelector('[name="phone"]').value.trim(),
+        subject:    form.querySelector('[name="subject"]').value,
+        message:    form.querySelector('[name="message"]').value.trim(),
+        hp_website: form.querySelector('[name="hp_website"]').value,
       };
-      const res = await fetch('/api/contact', {
+      const res  = await fetch('/api/contact', {
         method:  'POST',
         headers: { 'Content-Type': 'application/json' },
         body:    JSON.stringify(payload),
       });
-      success = res.ok;
-    } catch (_) {
+      const data = await res.json().catch(() => ({}));
+      success = res.ok && data.status === 'pending';
+      if (res.status === 429) {
+        throw new Error('rate_limit');
+      }
+    } catch (err) {
       success = false;
+      if (err.message === 'rate_limit') {
+        submitBtn.classList.remove('is-loading');
+        submitBtn.disabled = false;
+        alert('Du hast zu viele Anfragen gesendet. Bitte warte einige Minuten.');
+        return;
+      }
     }
 
     submitBtn.classList.remove('is-loading');
 
     if (success) {
       submitBtn.style.display = 'none';
+      successMsg.textContent = 'Wir haben dir eine Bestätigungs-E-Mail gesendet. Bitte klicke auf den Link darin, um deine Anfrage abzuschicken.';
       successMsg.classList.add('is-visible');
       form.reset();
       Object.keys(validators).forEach(f => clearError(f));
     } else {
       submitBtn.disabled = false;
-      // Show generic error (customize as needed)
-      alert('Es ist ein Fehler aufgetreten. Bitte versuchen Sie es erneut oder kontaktieren Sie uns direkt per E-Mail.');
+      alert('Es ist ein Fehler aufgetreten. Bitte versuche es erneut oder kontaktiere uns direkt per E-Mail.');
     }
   });
 }
@@ -424,17 +448,16 @@ function initOrbitalTimeline() {
   if (!wrapper) return;
 
   const partners = [
-    { id: 1, short: 'DWW', name: 'DWW Deutsche Wärmepumpen Werke', category: 'Wärmepumpen', desc: 'Spezialist für hocheffiziente Wärmepumpensysteme – made in Germany, für Neubau und Sanierung.', url: 'https://www.deutsche-waermepumpen-werke.de', logo: 'assets/partner/dww.svg' },
-    { id: 2, short: 'EZS', name: 'EZS Energiezentrum-Services', category: 'Energieberatung', desc: 'Ganzheitliche Energieberatung und Serviceleistungen rund um erneuerbare Energieanlagen.', url: 'https://www.energiezentrum-services.de', logo: 'assets/partner/ezs.svg' },
-    { id: 3, short: 'ALZ', name: 'Allianz Versicherung', category: 'Versicherung', desc: 'Maßgeschneiderte Versicherungslösungen für PV-Anlagen, Wärmepumpen und Energiespeicher.', url: 'https://www.allianz.de', logo: 'assets/partner/allianz.svg' },
-    { id: 4, short: 'HEK', name: 'HEK Hanseatische Krankenversicherung', category: 'Krankenversicherung', desc: 'Attraktive Krankenkassenleistungen für Selbstständige und Handelsvertreter im Energiebereich.', url: 'https://www.hek.de', logo: 'assets/partner/hek.svg' },
-    { id: 5, short: 'WÜS', name: 'Wüstenrot', category: 'Finanzierung', desc: 'Förderoptimierende Finanzierungslösungen und Bausparverträge für energetische Maßnahmen.', url: 'https://www.wuestenrot.de', logo: 'assets/partner/wuestenrot.svg' },
-    { id: 6, short: 'CLO', name: 'Cloover', category: 'Cleantech', desc: 'Digitale Plattform für die Finanzierung und Verwaltung erneuerbarer Energieprojekte.', url: 'https://www.cloover.com', logo: 'assets/partner/cloover.svg' },
+    { id: 1, name: 'DWW Deutsche Wärmepumpen Werke', logo: 'assets/partner/DWW_Logo.png' },
+    { id: 2, name: 'EZS Energiezentrum-Services',    logo: 'assets/partner/neu_ezs.svg' },
+    { id: 3, name: 'Allianz Versicherung',           logo: 'assets/partner/neu_allianz.svg' },
+    { id: 4, name: 'HEK Hanseatische Krankenversicherung', logo: 'assets/partner/neu_hek.png' },
+    { id: 5, name: 'Wüstenrot',                      logo: 'assets/partner/Logo_Wüstenrot.png' },
+    { id: 6, name: 'Clover',                         logo: 'assets/partner/Clover_Logo.png' },
+    { id: 7, name: 'Viessmann',                      logo: 'assets/partner/neu_Viessmann.png' },
   ];
 
   let rotationAngle = 0;
-  let autoRotate = true;
-  let activeId = null;
   let animId = null;
   const nodeEls = [];
 
@@ -449,62 +472,16 @@ function initOrbitalTimeline() {
     node.className = 'orbital-node';
     node.setAttribute('data-id', String(p.id));
     node.innerHTML = `
-      <div class="orbital-node-badge" role="button" tabindex="0" aria-label="${p.name}">
-        <img src="${p.logo}" alt="${p.name}" width="42" height="42"
+      <div class="orbital-node-badge" aria-label="${p.name}">
+        <img src="${p.logo}" alt="${p.name}" width="50" height="50"
              onerror="this.style.opacity='.35'">
-      </div>
-      <div class="orbital-node-popup" role="tooltip" aria-label="${p.name} – Link">
-        <span class="orbital-node-popup-name">${p.name}</span>
-        <a href="${p.url}" target="_blank" rel="noopener noreferrer"
-           class="orbital-popup-link">
-          Besuchen
-          <svg xmlns="http://www.w3.org/2000/svg" width="11" height="11"
-               viewBox="0 0 24 24" fill="none" stroke="currentColor"
-               stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"
-               aria-hidden="true">
-            <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>
-            <polyline points="15 3 21 3 21 9"/>
-            <line x1="10" y1="14" x2="21" y2="3"/>
-          </svg>
-        </a>
       </div>`;
     wrapper.appendChild(node);
-
-    const badge = node.querySelector('.orbital-node-badge');
-    badge.addEventListener('click', e => {
-      e.stopPropagation();
-      activeId === p.id ? deactivate() : activate(p.id);
-    });
-    badge.addEventListener('keydown', e => {
-      if (e.key === 'Enter' || e.key === ' ') {
-        e.preventDefault();
-        activeId === p.id ? deactivate() : activate(p.id);
-      }
-    });
-
     nodeEls.push({ el: node, partner: p });
   });
 
-  function activate(id) {
-    activeId = id;
-    autoRotate = false;
-    nodeEls.forEach(({ el, partner }) =>
-      el.classList.toggle('is-active', partner.id === id));
-  }
-
-  function deactivate() {
-    activeId = null;
-    autoRotate = true;
-    nodeEls.forEach(({ el }) => el.classList.remove('is-active'));
-  }
-
-  // Klick außerhalb schließt Popup
-  document.addEventListener('click', e => {
-    if (!wrapper.contains(e.target)) deactivate();
-  });
-
   function animate() {
-    if (autoRotate) rotationAngle = (rotationAngle + 0.3) % 360;
+    rotationAngle = (rotationAngle + 0.3) % 360;
 
     const total = partners.length;
     const radius = getRadius();
@@ -515,14 +492,11 @@ function initOrbitalTimeline() {
       const x = radius * Math.cos(rad);
       const y = radius * Math.sin(rad);
       const depth = Math.sin(rad);
-      const opacity = el.classList.contains('is-active') ? 1 :
-        Math.max(0.45, 0.45 + 0.55 * ((1 + depth) / 2));
-      const zIdx = el.classList.contains('is-active') ? 50 :
-        Math.round(10 + 5 * depth);
+      const opacity = Math.max(0.45, 0.45 + 0.55 * ((1 + depth) / 2));
 
       el.style.transform = `translate(calc(-50% + ${x}px), calc(-50% + ${y}px))`;
       el.style.opacity = opacity;
-      el.style.zIndex = zIdx;
+      el.style.zIndex = Math.round(10 + 5 * depth);
     });
 
     animId = requestAnimationFrame(animate);
@@ -564,10 +538,50 @@ function initSpotlightCards() {
   });
 }
 
+/* ── Address Navigation Link (iOS → Apple Maps, others → Google Maps) ── */
+function initAddressLink() {
+  const link = document.getElementById('addressNavLink');
+  if (link && /iPad|iPhone|iPod/.test(navigator.userAgent)) {
+    link.href = 'maps://maps.apple.com/?daddr=Dessauer+Allee+52,+06766+Bitterfeld-Wolfen';
+  }
+}
+
+/* ── Confirmed/Expired Banner after Double Opt-in redirect ─── */
+function initConfirmationBanner() {
+  const params = new URLSearchParams(window.location.search);
+  const status = params.get('confirmed');
+  if (!status) return;
+
+  const kontakt = document.getElementById('kontakt');
+  if (!kontakt) return;
+
+  const banner = document.createElement('div');
+  banner.setAttribute('role', 'status');
+  banner.setAttribute('aria-live', 'polite');
+
+  if (status === 'true') {
+    banner.style.cssText = 'background:#d1fae5;color:#065f46;border:1px solid #6ee7b7;border-radius:8px;padding:14px 18px;margin-bottom:20px;font-weight:500';
+    banner.textContent = '✓ Deine Anfrage wurde erfolgreich übermittelt. Ich melde mich innerhalb von 1–2 Werktagen.';
+  } else if (status === 'expired') {
+    banner.style.cssText = 'background:#fef9c3;color:#854d0e;border:1px solid #fde047;border-radius:8px;padding:14px 18px;margin-bottom:20px;font-weight:500';
+    banner.textContent = 'Dein Bestätigungslink ist abgelaufen. Bitte sende das Formular erneut.';
+  } else {
+    banner.style.cssText = 'background:#fee2e2;color:#991b1b;border:1px solid #fca5a5;border-radius:8px;padding:14px 18px;margin-bottom:20px;font-weight:500';
+    banner.textContent = 'Es ist ein Fehler aufgetreten. Bitte versuche es erneut oder kontaktiere uns direkt.';
+  }
+
+  const container = kontakt.querySelector('.container');
+  if (container) container.prepend(banner);
+
+  // URL bereinigen ohne Seitenneuladen
+  history.replaceState(null, '', window.location.pathname);
+}
+
 /* ── Init ─────────────────────────────────────────────────── */
 function init() {
   initMobileNav();
   initStickyNav();
+  initNavCtaVisibility();
   initActiveNav();
   initScrollReveal();
   initSmoothScroll();
@@ -575,6 +589,8 @@ function init() {
   initShaderHero();
   initSpotlightCards();
   initPartnerSection();
+  initAddressLink();
+  initConfirmationBanner();
 }
 
 if (document.readyState === 'loading') {
