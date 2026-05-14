@@ -577,11 +577,63 @@ function initConfirmationBanner() {
   history.replaceState(null, '', window.location.pathname);
 }
 
+/* ── Zeeg Modal ───────────────────────────────────────────── */
+function initZeegModal() {
+  const modal   = qs('#zeeg-modal');
+  const openBtn = qs('#zeeg-open-btn');
+  const closeBtn = qs('#zeeg-modal-close');
+  const overlay  = qs('#zeeg-modal-overlay');
+  if (!modal || !openBtn) return;
+
+  let zeegLoaded = false;
+
+  function loadZeegScript() {
+    if (zeegLoaded) return;
+    zeegLoaded = true;
+    const s = document.createElement('script');
+    s.type = 'text/javascript';
+    s.src = 'https://assets.zeeg.me/embed.min.js';
+    s.setAttribute('data-user', 'patrickleissnerde');
+    s.setAttribute('data-redirect-parent', 'true');
+    s.setAttribute('data-background-color', 'F1F0E9');
+    s.setAttribute('data-background-opacity', '50');
+    s.setAttribute('data-primary-color', '2E4F3C');
+    s.setAttribute('data-hide-details', '1');
+    s.async = true;
+    document.body.appendChild(s);
+  }
+
+  function openModal() {
+    modal.hidden = false;
+    document.body.style.overflow = 'hidden';
+    loadZeegScript();
+    closeBtn.focus();
+  }
+
+  function closeModal() {
+    modal.hidden = true;
+    document.body.style.overflow = '';
+    openBtn.focus();
+  }
+
+  openBtn.addEventListener('click', openModal);
+  closeBtn.addEventListener('click', closeModal);
+  overlay.addEventListener('click', closeModal);
+  document.addEventListener('keydown', e => { if (e.key === 'Escape' && !modal.hidden) closeModal(); });
+
+  // Header-CTA öffnet ebenfalls das Modal
+  const navCta = qs('.nav-cta');
+  if (navCta) {
+    navCta.addEventListener('click', e => { e.preventDefault(); openModal(); });
+  }
+}
+
 /* ── Init ─────────────────────────────────────────────────── */
 function init() {
   initMobileNav();
   initStickyNav();
   initNavCtaVisibility();
+  initZeegModal();
   initActiveNav();
   initScrollReveal();
   initSmoothScroll();

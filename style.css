@@ -1427,6 +1427,61 @@ p { max-width: 68ch; }
   margin: 0;
 }
 
+/* ── Zeeg Modal ───────────────────────────────────────────── */
+.zeeg-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-4);
+}
+
+.zeeg-modal[hidden] { display: none; }
+
+.zeeg-modal-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.65);
+  backdrop-filter: blur(4px);
+}
+
+.zeeg-modal-panel {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 680px;
+  max-height: 90vh;
+  overflow-y: auto;
+  border-radius: var(--border-radius-lg);
+  box-shadow: 0 24px 64px rgba(0, 0, 0, 0.4);
+}
+
+.zeeg-modal-close {
+  position: fixed;
+  top: var(--space-4);
+  right: var(--space-4);
+  z-index: 10000;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: #fff;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #1a1a1a;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.25);
+  transition: background var(--transition-base), transform var(--transition-fast);
+}
+
+.zeeg-modal-close:hover {
+  background: #f0f0f0;
+  transform: scale(1.05);
+}
+
 /* ── Contact Section ──────────────────────────────────────── */
 .contact-grid {
   display: grid;
