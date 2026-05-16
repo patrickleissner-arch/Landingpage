@@ -721,7 +721,7 @@ p { max-width: 68ch; }
   flex: 1;
 }
 
-.leistung-body h4 {
+.leistung-body h3 {
   color: var(--color-brand-primary);
   font-size: 1.125rem;
   font-weight: 700;
