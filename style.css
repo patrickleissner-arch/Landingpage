@@ -659,6 +659,27 @@ p { max-width: 68ch; }
   .leistungen-grid { grid-template-columns: repeat(4, 1fr); }
 }
 
+.leistungen-gruppe {
+  display: contents;
+}
+
+.leistungen-rubrik-label {
+  grid-column: 1 / -1;
+  font-size: 0.8125rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--color-brand-accent);
+  padding-top: var(--space-8);
+  border-top: 1px solid var(--color-border);
+  margin-bottom: 0;
+}
+
+.leistungen-gruppe:first-child .leistungen-rubrik-label {
+  padding-top: 0;
+  border-top: none;
+}
+
 .leistung-card {
   background: var(--color-surface);
   border-radius: var(--border-radius-lg);
@@ -700,7 +721,7 @@ p { max-width: 68ch; }
   flex: 1;
 }
 
-.leistung-body h3 {
+.leistung-body h4 {
   color: var(--color-brand-primary);
   font-size: 1.125rem;
   font-weight: 700;
