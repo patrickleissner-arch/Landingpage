@@ -69,10 +69,10 @@
   height: 100%;
   object-fit: cover;
   object-position: center;
-  opacity: 0.45;
+  opacity: 0.22;
 }
 
-.sp-hero--video  { background: #1a2e1e; }
+.sp-hero--video,
 .sp-hero--canvas { background: #0e1c14; }
 
 .sp-back-bar--canvas {
