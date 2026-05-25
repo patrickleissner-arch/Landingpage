@@ -83,7 +83,7 @@ app.post('/api/contact', async (req, res) => {
       from:    `"Patrick Leißner Energieberatung" <${process.env.SMTP_USER}>`,
       to:      email,
       subject: 'Bitte bestätigen Sie Ihre Anfrage – Patrick Leißner Energieberatung',
-      text: `Hallo ${name},\n\nvielen Dank für Ihre Anfrage. Bitte bestätigen Sie diese durch Klick auf den folgenden Link:\n\n${confirmUrl}\n\nDer Link ist 24 Stunden gültig. Danach werden alle eingegebenen Daten automatisch gelöscht.\n\nRechtsgrundlage der Verarbeitung: Art. 6 Abs. 1 lit. b DSGVO (Vertragsanbahnung). Verantwortlicher: Patrick Leißner, p@atrickleissner.de.\n\nFalls Sie keine Anfrage gestellt haben, ignorieren Sie diese E-Mail bitte – es wurden keine Daten weitergegeben.\n\nMit freundlichen Grüßen\nPatrick Leißner`,
+      text: `Hallo ${name},\n\nvielen Dank für Ihre Anfrage. Bitte bestätigen Sie diese durch Klick auf den folgenden Link:\n\n${confirmUrl}\n\nDer Link ist 24 Stunden gültig. Danach werden alle eingegebenen Daten automatisch gelöscht.\n\nRechtsgrundlage der Verarbeitung: Art. 6 Abs. 1 lit. b DSGVO (Vertragsanbahnung). Verantwortlicher: Patrick Leißner, p@patrickleissner.de.\n\nFalls Sie keine Anfrage gestellt haben, ignorieren Sie diese E-Mail bitte – es wurden keine Daten weitergegeben.\n\nMit freundlichen Grüßen\nPatrick Leißner`,
       html: `
         <div style="font-family:sans-serif;font-size:15px;color:#222;max-width:600px;line-height:1.6">
           <p>Hallo ${name},</p>
@@ -97,7 +97,7 @@ app.post('/api/contact', async (req, res) => {
           <p style="color:#666;font-size:13px">Der Link ist <strong>24 Stunden gültig</strong>. Danach werden alle eingegebenen Daten automatisch gelöscht.</p>
           <hr style="border:none;border-top:1px solid #eee;margin:20px 0">
           <p style="color:#888;font-size:12px">
-            Rechtsgrundlage: Art. 6 Abs. 1 lit. b DSGVO. Verantwortlicher: Patrick Leißner, p@atrickleissner.de.<br>
+            Rechtsgrundlage: Art. 6 Abs. 1 lit. b DSGVO. Verantwortlicher: Patrick Leißner, p@patrickleissner.de.<br>
             Falls Sie keine Anfrage gestellt haben, ignorieren Sie diese E-Mail – es wurden keine Daten weitergegeben.
           </p>
         </div>
@@ -133,7 +133,7 @@ app.get('/api/confirm', async (req, res) => {
     await transporter.sendMail({
       from:    `"Kontaktformular patrickleissner.de" <${process.env.SMTP_USER}>`,
       replyTo: `"${name}" <${email}>`,
-      to:      process.env.MAIL_TO || 'p@atrickleissner.de',
+      to:      process.env.MAIL_TO || 'p@patrickleissner.de',
       subject: `Bestätigte Anfrage: ${subjectLabel} – ${name}`,
       text:    `Name: ${name}\nE-Mail: ${email}\nTelefon: ${phone || '–'}\nBetreff: ${subjectLabel}\n\n${message}`,
       html: `
