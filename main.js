@@ -623,12 +623,34 @@ function initZeegModal() {
   }
 }
 
+/* ── Zeeg Inline Consent (Two-Click, /termin) ─────────────── */
+function initZeegInlineConsent() {
+  const consent = qs('#zeeg-consent');
+  const btn     = qs('#zeeg-consent-btn');
+  const widget  = qs('#zeeg-embed-p902');
+  if (!consent || !btn || !widget) return;
+
+  btn.addEventListener('click', () => {
+    // Zeeg-Script erst nach ausdruecklicher Einwilligung laden
+    const s = document.createElement('script');
+    s.type = 'text/javascript';
+    s.src = 'https://assets.zeeg.me/embed.min.js';
+    s.setAttribute('data-user', 'p902');
+    s.async = true;
+    document.body.appendChild(s);
+
+    widget.hidden = false;
+    consent.hidden = true;
+  });
+}
+
 /* ── Init ─────────────────────────────────────────────────── */
 function init() {
   initMobileNav();
   initStickyNav();
   initNavCtaVisibility();
   initZeegModal();
+  initZeegInlineConsent();
   initActiveNav();
   initScrollReveal();
   initSmoothScroll();

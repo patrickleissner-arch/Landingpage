@@ -106,10 +106,16 @@
     <!-- ── Zeeg Buchungskalender ── -->
     <section class="termin-booking-section">
       <div class="container">
-        <!-- Zeeg inline embed begins -->
-        <div class="zeeg-inline-widget" id="zeeg-embed-p902" style="width: auto; height: auto"></div>
-        <script type="text/javascript" src="https://assets.zeeg.me/embed.min.js" data-user="p902" async></script>
-        <!-- Zeeg inline embed ends -->
+        <!-- Zeeg Consent-Gate (Two-Click) begins -->
+        <div class="zeeg-consent" id="zeeg-consent">
+          <svg class="zeeg-consent-icon" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+          <h3>Buchungskalender laden</h3>
+          <p>Für die Online-Terminbuchung nutze ich den Dienst <strong>Zeeg</strong>. Wenn du den Kalender lädst, werden Verbindungsdaten (u.a. deine IP-Adresse) an Zeeg übermittelt. Die Server stehen in Frankfurt am Main (Deutschland). Mehr dazu in der <a href="/datenschutz">Datenschutzerklärung</a>.</p>
+          <button type="button" class="btn btn-accent" id="zeeg-consent-btn">Buchungskalender laden</button>
+        </div>
+        <!-- Zeeg inline embed (laedt erst nach Einwilligung) -->
+        <div class="zeeg-inline-widget" id="zeeg-embed-p902" style="width:100%" hidden></div>
+        <!-- Zeeg Consent-Gate ends -->
       </div>
     </section>
 
