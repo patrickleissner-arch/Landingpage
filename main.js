@@ -593,12 +593,7 @@ function initZeegModal() {
     const s = document.createElement('script');
     s.type = 'text/javascript';
     s.src = 'https://assets.zeeg.me/embed.min.js';
-    s.setAttribute('data-user', 'patrickleissnerde');
-    s.setAttribute('data-redirect-parent', 'true');
-    s.setAttribute('data-background-color', 'F1F0E9');
-    s.setAttribute('data-background-opacity', '50');
-    s.setAttribute('data-primary-color', '2E4F3C');
-    s.setAttribute('data-hide-details', '1');
+    s.setAttribute('data-user', 'p902');
     s.async = true;
     document.body.appendChild(s);
   }
