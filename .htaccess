@@ -1,4 +1,14 @@
 Options -MultiViews
+
+# Schutz: interne Entwickler-Dateien nicht oeffentlich ausliefern (403)
+# Frontend-Dateien (main.js, chart.umd.js, .css, Bilder, sitemap.xml, robots.txt) bleiben erreichbar.
+<FilesMatch "\.(md|json|mjs|env|example|gitignore|gitattributes)$">
+    Require all denied
+</FilesMatch>
+<Files "server.js">
+    Require all denied
+</Files>
+
 RewriteEngine On
 RewriteBase /
 
