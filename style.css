@@ -1482,9 +1482,16 @@ p { max-width: 68ch; }
 .zeeg-modal-panel .zeeg-inline-widget,
 .zeeg-modal-panel .zeeg-inline-widget iframe {
   width: 100%;
-  min-height: 720px;
+  min-height: 560px;
   border: none;
   display: block;
+}
+
+@media (min-width: 768px) {
+  .zeeg-modal-panel .zeeg-inline-widget,
+  .zeeg-modal-panel .zeeg-inline-widget iframe {
+    min-height: 720px;
+  }
 }
 
 .zeeg-modal-close {
