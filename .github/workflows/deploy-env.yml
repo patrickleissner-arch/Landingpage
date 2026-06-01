@@ -16,13 +16,17 @@ jobs:
           SMTP_USER: ${{ secrets.SMTP_USER }}
           SMTP_PASS: ${{ secrets.SMTP_PASS }}
           MAIL_TO: ${{ secrets.MAIL_TO }}
-          APP_PATH: ${{ secrets.SSH_APP_PATH }}
         with:
           host: ${{ secrets.SSH_HOST }}
+          port: ${{ secrets.SSH_PORT }}
           username: ${{ secrets.SSH_USER }}
           password: ${{ secrets.SSH_PASS }}
-          envs: SMTP_HOST,SMTP_PORT,SMTP_USER,SMTP_PASS,MAIL_TO,APP_PATH
+          envs: SMTP_HOST,SMTP_PORT,SMTP_USER,SMTP_PASS,MAIL_TO
           script: |
+            APP_PATH=$(find /home -name "server.js" -not -path "*/node_modules/*" 2>/dev/null | head -1 | xargs -I{} dirname {})
+            if [ -z "$APP_PATH" ]; then
+              echo "FEHLER: server.js nicht gefunden"; exit 1
+            fi
             printf 'SMTP_HOST=%s\nSMTP_PORT=%s\nSMTP_USER=%s\nSMTP_PASS=%s\nMAIL_TO=%s\n' \
               "$SMTP_HOST" "$SMTP_PORT" "$SMTP_USER" "$SMTP_PASS" "$MAIL_TO" \
               > "$APP_PATH/.env"
