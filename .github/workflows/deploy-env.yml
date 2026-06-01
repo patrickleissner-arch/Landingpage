@@ -1,0 +1,29 @@
+name: Inject .env on Hostinger
+
+on:
+  push:
+    branches: [master]
+
+jobs:
+  inject-env:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Write .env via SSH
+        uses: appleboy/ssh-action@v1.0.3
+        env:
+          SMTP_HOST: ${{ secrets.SMTP_HOST }}
+          SMTP_PORT: ${{ secrets.SMTP_PORT }}
+          SMTP_USER: ${{ secrets.SMTP_USER }}
+          SMTP_PASS: ${{ secrets.SMTP_PASS }}
+          MAIL_TO: ${{ secrets.MAIL_TO }}
+          APP_PATH: ${{ secrets.SSH_APP_PATH }}
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          password: ${{ secrets.SSH_PASS }}
+          envs: SMTP_HOST,SMTP_PORT,SMTP_USER,SMTP_PASS,MAIL_TO,APP_PATH
+          script: |
+            printf 'SMTP_HOST=%s\nSMTP_PORT=%s\nSMTP_USER=%s\nSMTP_PASS=%s\nMAIL_TO=%s\n' \
+              "$SMTP_HOST" "$SMTP_PORT" "$SMTP_USER" "$SMTP_PASS" "$MAIL_TO" \
+              > "$APP_PATH/.env"
+            echo ".env geschrieben nach $APP_PATH"
