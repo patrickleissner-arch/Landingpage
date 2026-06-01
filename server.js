@@ -23,6 +23,26 @@ setInterval(() => {
   }
 }, 30 * 60 * 1000);
 
+// ── SMTP Diagnostics (temporär – nach Fix entfernen) ────────────
+const DIAG_TOKEN = process.env.DIAG_TOKEN || 'diag-fallback-token';
+app.get('/api/smtp-diag', async (req, res) => {
+  if (req.query.token !== DIAG_TOKEN) return res.status(403).json({ error: 'forbidden' });
+  const cfg = {
+    SMTP_HOST: process.env.SMTP_HOST || '(nicht gesetzt)',
+    SMTP_PORT: process.env.SMTP_PORT || '(nicht gesetzt)',
+    SMTP_USER: process.env.SMTP_USER || '(nicht gesetzt)',
+    SMTP_PASS: process.env.SMTP_PASS ? '***gesetzt***' : '(nicht gesetzt)',
+    MAIL_TO:   process.env.MAIL_TO   || '(nicht gesetzt)',
+  };
+  try {
+    const t = createTransporter();
+    await t.verify();
+    res.json({ ok: true, config: cfg, smtp: 'Verbindung OK' });
+  } catch (err) {
+    res.json({ ok: false, config: cfg, smtp_error: err.message });
+  }
+});
+
 // ── Contact form ─────────────────────────────────────────────────
 const SUBJECT_LABELS = {
   pv:    'Photovoltaikanlage',
