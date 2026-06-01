@@ -76,7 +76,8 @@ Jeder Push deployt sofort live. Vor jedem Push:
 
 **Sofort umsetzbar:**
 - [ ] Datenschutz §5 (Zeeg-Abschnitt): AVV-Block aus HTML-Kommentar einkommentieren, sobald Patrick den Zeeg-AVV bestätigt hat
-- [ ] Verwaiste Datei `impressum - Kopie.html` löschen
+- [x] Verwaiste Datei `impressum - Kopie.html` — war nie im Repo, erledigt
+- [x] Kontaktformular SMTP — `.env` fehlte auf Server; GitHub Actions Workflow (`.github/workflows/deploy-env.yml`) schreibt sie jetzt bei jedem Push automatisch via SSH. Bestätigt 2026-06-01.
 
 ---
 
