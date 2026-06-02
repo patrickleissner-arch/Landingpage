@@ -641,6 +641,13 @@ function initZeegInlineConsent() {
 
     widget.hidden = false;
     consent.hidden = true;
+    window.scrollTo({ top: 0, behavior: 'instant' });
+
+    ['.termin-header-section', '.sp-back-bar', '.termin-alt-section', '#site-header', '.site-footer']
+      .forEach(sel => {
+        const el = document.querySelector(sel);
+        if (el) el.hidden = true;
+      });
   });
 }
 
