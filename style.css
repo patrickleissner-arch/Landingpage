@@ -687,6 +687,9 @@ p { max-width: 68ch; }
   display: flex;
   flex-direction: column;
   transition: box-shadow var(--transition-base), transform var(--transition-base);
+  text-decoration: none;
+  color: inherit;
+  cursor: pointer;
 }
 
 .leistung-card:hover {
