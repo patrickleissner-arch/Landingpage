@@ -1832,6 +1832,14 @@ p { max-width: 68ch; }
   max-width: none;
 }
 
+.footer-operator {
+  width: 100%;
+  text-align: center;
+  font-size: 0.72rem;
+  color: rgba(255,255,255,.22);
+  margin-top: .2rem;
+}
+
 /* ── Solarisator / Rechner Section ───────────────────────── */
 .section-rechner {
   background: var(--color-surface-alt);
