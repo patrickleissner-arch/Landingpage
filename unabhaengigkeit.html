@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Interaktiver Unabhängigkeitsrechner der HTW Berlin – ermitteln Sie, wie viel Strom Ihre PV-Anlage erzeugen und wie viel Sie selbst nutzen können.">
+  <meta name="description" content="Interaktiver Unabhängigkeitsrechner der HTW Berlin – ermittle, wie viel Strom deine PV-Anlage erzeugen könnte und wie viel du selbst nutzen kannst.">
 
   <meta property="og:title" content="Interaktiver Rechner – Patrick Leißner Energieberatung">
   <meta property="og:description" content="PV-Unabhängigkeitsrechner der HTW Berlin: kostenlos, interaktiv, individuell.">
@@ -27,13 +27,7 @@
       </a>
 
       <ul class="nav-links" role="list">
-        <li class="nav-has-dropdown">
-          <a href="/#leistungen">Leistungen</a>
-          <ul class="nav-dropdown" role="menu">
-            <li><a href="/solarisator" role="menuitem">Interaktiver Rechner</a></li>
-            <li><a href="/energierechner" role="menuitem">Energierechner</a></li>
-          </ul>
-        </li>
+        <li><a href="/#leistungen">Leistungen</a></li>
         <li><a href="/#ueber-pl">Über mich</a></li>
         <li><a href="/termin">Termine</a></li>
         <li><a href="/#kontakt">Kontakt</a></li>
@@ -57,8 +51,6 @@
     <div class="mobile-menu" id="mobile-menu" aria-hidden="true" role="dialog" aria-label="Hauptnavigation">
       <ul role="list">
         <li><a href="/#leistungen" class="mobile-nav-link">Leistungen</a></li>
-        <li><a href="/solarisator" class="mobile-nav-link mobile-nav-sub">Interaktiver Rechner</a></li>
-        <li><a href="/energierechner" class="mobile-nav-link mobile-nav-sub">Energierechner</a></li>
         <li><a href="/#ueber-pl" class="mobile-nav-link">Über mich</a></li>
         <li><a href="/termin" class="mobile-nav-link">Termine</a></li>
         <li><a href="/#kontakt" class="mobile-nav-link">Kontakt</a></li>
@@ -73,15 +65,36 @@
     </div>
   </div>
 
-  <main id="main">
-    <section class="section-rechner" aria-labelledby="solarisator-heading">
-      <div class="container">
-        <div class="section-header reveal">
-          <span class="section-label">Interaktiver Rechner</span>
-          <h1 id="solarisator-heading">Wie unabhängig könnten Sie sein?</h1>
-          <p>Ermitteln Sie, wie viel Strom eine PV-Anlage auf Ihrem Dach erzeugen und wie viel davon Sie selbst nutzen könnten. Der Solarisator wurde von der HTW Berlin entwickelt und steht kostenlos zur Verfügung.</p>
-        </div>
+  <div class="rechner-tabs-bar" role="navigation" aria-label="Rechner-Auswahl">
+    <div class="rechner-tabs-inner">
+      <a href="/unabhaengigkeit" class="rechner-tab active">
+        <span class="rechner-tab-name">Unabhängigkeit</span>
+        <span class="rechner-tab-sub">Wie viel Strom erzeugt meine PV?</span>
+      </a>
+      <a href="/heizkosten" class="rechner-tab">
+        <span class="rechner-tab-name">Heizkosten</span>
+        <span class="rechner-tab-sub">Was spare ich beim Heizen?</span>
+      </a>
+      <a href="/nutzen" class="rechner-tab">
+        <span class="rechner-tab-name">Nutzen</span>
+        <span class="rechner-tab-sub">Lohnt sich der Umstieg?</span>
+      </a>
+    </div>
+  </div>
 
+  <main id="main">
+
+    <section class="sp-hero" aria-label="Solarisator – PV-Unabhängigkeitsrechner">
+      <div class="sp-hero-bg" style="background-image: url('assets/Foto/leistung-pv.jpg')" aria-hidden="true"></div>
+      <div class="container sp-hero-content">
+        <p class="sp-hero-eyebrow">Interaktiver Rechner</p>
+        <h1>Wie unabhängig<br>könntest du sein?</h1>
+        <p>Ermittle, wie viel Strom eine PV-Anlage auf deinem Dach erzeugen könnte und wie viel davon du selbst nutzen könntest. Der Solarisator wurde von der HTW Berlin entwickelt und steht kostenlos zur Verfügung.</p>
+      </div>
+    </section>
+
+    <section class="section-rechner">
+      <div class="container">
         <div class="solarisator-frame-wrapper reveal">
           <iframe
             src="https://solar.htw-berlin.de/solarisator/"
@@ -97,8 +110,15 @@
         <p class="solarisator-source">
           Bereitgestellt von der <a href="https://solar.htw-berlin.de" target="_blank" rel="noopener noreferrer">HTW Berlin – Hochschule für Technik und Wirtschaft</a>
         </p>
+
+        <div class="ec-cta-card" style="margin-top: 2rem;">
+          <h2>Bereit für den nächsten Schritt?</h2>
+          <p>Der Rechner zeigt das Potenzial – ich berechne, was sich für Ihr Dach konkret lohnt und was es kostet.</p>
+          <a href="/termin" class="btn-calc-cta">Kostenloses Erstgespräch vereinbaren</a>
+        </div>
       </div>
-    </section>
+    </section><!-- /section-rechner -->
+
   </main>
 
   <footer class="site-footer" role="contentinfo">

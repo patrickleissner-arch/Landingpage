@@ -1,0 +1,2169 @@
+﻿<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Energiekosten-Rechner von Patrick Leißner – gib deine echten Verbrauchswerte ein und sieh, was PV und Wärmepumpe wirklich für dich bedeuten.">
+    <title>Mein Energierechner | Patrick Leißner</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.9/dist/chart.umd.min.js" defer></script>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="subpage.css">
+    <style>
+/* ============================================================
+   ENERGIERECHNER WIZARD — CI Patrick Leißner
+   #2E4F3C · #D0AB3B · #F1F0E9 · Outfit
+   ============================================================ */
+
+/* === CI-Variablen (lokal definiert, unabhängig von style.css) === */
+:root {
+    --pl-green:  #2E4F3C;
+    --pl-gold:   #D0AB3B;
+    --pl-beige:  #F1F0E9;
+    --pl-black:  #1a1a1a;
+    --radius:    0.5rem;
+    --radius-lg: 0.75rem;
+    --shadow:    0 2px 12px rgba(46,79,60,0.10);
+    --gray-100:  #f3f4f6;
+    --gray-200:  #e5e7eb;
+    --gray-300:  #d1d5db;
+    --gray-400:  #9ca3af;
+    --gray-500:  #6b7280;
+    --gray-600:  #4b5563;
+    --danger:    #dc2626;
+}
+
+/* --- Wizard Wrap --- */
+.wizard-wrap {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 48px 5% 110px;
+}
+
+/* --- Top Progress Line --- */
+.er-top-bar {
+    width: 100%;
+    height: 3px;
+    background: var(--gray-200);
+}
+.er-top-fill {
+    height: 3px;
+    background: var(--pl-gold);
+    transition: width 0.4s ease;
+}
+.step-counter {
+    font-size: 0.72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--gray-400);
+    padding: 12px 0 0;
+    margin: 0 0 32px;
+}
+
+/* --- Mehrere Dachflächen --- */
+.roof-surface {
+    border: 1px solid var(--gray-200);
+    border-radius: var(--radius-lg);
+    padding: 20px;
+    margin-bottom: 16px;
+    background: var(--gray-100);
+}
+.roof-surface-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 16px;
+}
+.roof-surface-header .er-select { flex: 1; margin: 0; }
+.surface-delete {
+    flex-shrink: 0;
+    width: 32px; height: 32px;
+    border: 1px solid var(--gray-300);
+    background: #fff;
+    color: var(--gray-500);
+    border-radius: var(--radius);
+    font-size: 1.1rem;
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+}
+.surface-delete:hover { border-color: var(--danger); color: var(--danger); }
+.btn-add-surface {
+    width: 100%;
+    padding: 12px;
+    border: 2px dashed var(--gray-300);
+    border-radius: var(--radius-lg);
+    background: #fff;
+    color: var(--pl-green);
+    font-weight: 700;
+    font-size: 0.9rem;
+    cursor: pointer;
+    margin-top: 4px;
+}
+.btn-add-surface:hover { border-color: var(--pl-green); background: var(--pl-beige); }
+
+/* --- Finanzierungs-Preview --- */
+.rate-preview {
+    font-size: 0.88rem;
+    font-weight: 700;
+    color: var(--pl-green);
+    background: var(--pl-beige);
+    border-radius: var(--radius);
+    padding: 8px 12px;
+    margin-top: 8px;
+}
+
+/* --- Sticky Nav Bar --- */
+.wizard-nav-bar {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: #fff;
+    border-top: 1px solid var(--gray-200);
+    box-shadow: 0 -4px 20px rgba(0,0,0,0.08);
+    padding: 12px 5%;
+    padding-bottom: calc(12px + env(safe-area-inset-bottom));
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    z-index: 200;
+}
+.wizard-nav-bar.hidden { display: none; }
+.nav-center {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+}
+.nav-step-label {
+    font-size: 0.7rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.09em;
+    color: var(--gray-400);
+    white-space: nowrap;
+}
+.nav-progress-mini {
+    width: 100%;
+    max-width: 160px;
+    height: 3px;
+    background: var(--gray-200);
+    border-radius: 2px;
+    overflow: hidden;
+}
+.nav-progress-fill {
+    height: 3px;
+    background: var(--pl-gold);
+    transition: width 0.4s ease;
+}
+#nav-btn-back { display: none; }
+@media (max-width: 400px) { .nav-center { display: none; } }
+
+/* --- Wizard Step --- */
+.wizard-step { display: none; }
+.wizard-step.active {
+    display: block;
+    animation: erSlideIn 0.28s ease forwards;
+}
+@keyframes erSlideIn {
+    from { opacity: 0; transform: translateX(18px); }
+    to   { opacity: 1; transform: translateX(0); }
+}
+
+.step-heading { margin-bottom: 6px; }
+.step-heading h2 {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: var(--pl-green);
+    margin-bottom: 4px;
+}
+.step-hint {
+    font-size: 0.875rem;
+    color: var(--gray-500);
+    font-style: italic;
+    margin-bottom: 28px;
+    line-height: 1.6;
+}
+
+/* --- Field Groups --- */
+.field-group { margin-bottom: 26px; }
+
+.field-label {
+    display: block;
+    font-size: 0.875rem;
+    font-weight: 700;
+    color: var(--pl-green);
+    margin-bottom: 8px;
+}
+.field-opt {
+    font-size: 0.78rem;
+    font-weight: 400;
+    color: var(--gray-400);
+}
+.field-sublabel {
+    display: block;
+    font-size: 0.8rem;
+    color: var(--gray-500);
+    margin-bottom: 8px;
+    margin-top: -3px;
+}
+.field-error {
+    font-size: 0.8rem;
+    color: var(--danger);
+    margin-top: 6px;
+    display: none;
+}
+.field-error.visible { display: block; }
+
+/* --- Text / Number Inputs --- */
+.er-input {
+    width: 100%;
+    padding: 12px 16px;
+    border: 2px solid var(--gray-200);
+    border-radius: var(--radius);
+    font-family: inherit;
+    font-size: 1rem;
+    color: var(--pl-black);
+    background: #fff;
+    transition: border-color 0.18s, box-shadow 0.18s;
+    -webkit-appearance: none;
+}
+.er-input:focus {
+    outline: none;
+    border-color: var(--pl-green);
+    box-shadow: 0 0 0 3px rgba(46,79,60,0.1);
+}
+.er-input.has-error { border-color: var(--danger); }
+.er-input.valid     { border-color: var(--pl-gold); }
+
+.input-row { display: flex; gap: 10px; align-items: flex-start; }
+.input-row .er-input { flex: 1; }
+.input-unit {
+    padding: 12px 14px;
+    background: var(--gray-100);
+    border: 2px solid var(--gray-200);
+    border-radius: var(--radius);
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: var(--gray-600);
+    white-space: nowrap;
+    line-height: 1.5;
+    flex-shrink: 0;
+}
+
+/* PLZ feedback */
+.plz-feedback {
+    margin-top: 8px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    min-height: 20px;
+    transition: color 0.2s;
+    color: transparent;
+}
+.plz-feedback.found { color: var(--pl-green); }
+.plz-feedback.error { color: var(--danger); }
+
+/* Select */
+.er-select {
+    width: 100%;
+    padding: 12px 40px 12px 16px;
+    border: 2px solid var(--gray-200);
+    border-radius: var(--radius);
+    font-family: inherit;
+    font-size: 1rem;
+    color: var(--pl-black);
+    background: #fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%236b7280' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E") no-repeat right 14px center;
+    -webkit-appearance: none;
+    cursor: pointer;
+    transition: border-color 0.18s;
+}
+.er-select:focus {
+    outline: none;
+    border-color: var(--pl-green);
+    box-shadow: 0 0 0 3px rgba(46,79,60,0.1);
+}
+
+/* --- Card Buttons --- */
+.card-grid {
+    display: grid;
+    gap: 10px;
+    grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+}
+.card-grid.cols-2 { grid-template-columns: repeat(2, 1fr); }
+.card-grid.cols-3 { grid-template-columns: repeat(3, 1fr); }
+.card-grid.cols-4 { grid-template-columns: repeat(4, 1fr); }
+.card-grid.cols-5 { grid-template-columns: repeat(5, 1fr); }
+@media (max-width: 600px) {
+    .card-grid.cols-4 { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 500px) {
+    .card-grid.cols-5 { grid-template-columns: repeat(3, 1fr); }
+    .card-grid.cols-3 { grid-template-columns: repeat(2, 1fr); }
+}
+
+.card-btn {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 3px;
+    padding: 14px 10px;
+    min-height: 56px;
+    border: 2px solid var(--gray-300);
+    border-radius: var(--radius);
+    background: var(--pl-beige);
+    font-family: inherit;
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--pl-green);
+    cursor: pointer;
+    text-align: center;
+    line-height: 1.3;
+    transition: all 0.16s ease;
+}
+.card-btn:hover {
+    border-color: var(--pl-green);
+    color: var(--pl-green);
+    background: rgba(46,79,60,0.10);
+}
+.card-btn.selected {
+    border-color: var(--pl-green);
+    background: var(--pl-green);
+    color: #fff;
+}
+.card-btn.multi.selected {
+    border-color: var(--pl-gold);
+    background: rgba(208,171,59,0.13);
+    color: var(--pl-green);
+}
+.card-btn:focus-visible {
+    outline: 3px solid var(--pl-gold);
+    outline-offset: 2px;
+}
+.card-btn .btn-sub {
+    font-size: 0.7rem;
+    font-weight: 400;
+    opacity: 0.8;
+}
+
+/* --- Toggle Mode --- */
+.toggle-mode {
+    display: flex;
+    border: 2px solid var(--gray-200);
+    border-radius: var(--radius);
+    overflow: hidden;
+    margin-bottom: 12px;
+}
+.toggle-mode button {
+    flex: 1;
+    padding: 9px 12px;
+    border: none;
+    background: #fff;
+    font-family: inherit;
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: var(--gray-500);
+    cursor: pointer;
+    transition: all 0.15s;
+}
+.toggle-mode button.active {
+    background: var(--pl-green);
+    color: #fff;
+}
+
+/* --- Navigation Buttons --- */
+.step-nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 36px;
+    gap: 12px;
+}
+.btn-back {
+    padding: 12px 24px;
+    border: 2px solid var(--gray-300);
+    border-radius: var(--radius);
+    background: transparent;
+    font-family: inherit;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--gray-600);
+    cursor: pointer;
+    transition: all 0.16s;
+}
+.btn-back:hover { border-color: var(--pl-green); color: var(--pl-green); }
+.btn-next {
+    padding: 13px 32px;
+    border: none;
+    border-radius: var(--radius);
+    background: var(--pl-green);
+    color: #fff;
+    font-family: inherit;
+    font-size: 0.95rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.16s;
+    margin-left: auto;
+}
+.btn-next:hover { background: #1d3424; transform: translateY(-1px); }
+.btn-calc {
+    padding: 15px 40px;
+    border: none;
+    border-radius: var(--radius);
+    background: var(--pl-gold);
+    color: var(--pl-green);
+    font-family: inherit;
+    font-size: 1rem;
+    font-weight: 800;
+    cursor: pointer;
+    letter-spacing: 0.02em;
+    transition: all 0.2s;
+    margin-left: auto;
+}
+.btn-calc:hover {
+    background: #b8942c;
+    color: #fff;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(208,171,59,0.3);
+}
+
+/* --- Result Section --- */
+.result-section { display: none; }
+.result-section.visible {
+    display: block;
+    animation: erSlideIn 0.35s ease forwards;
+}
+
+/* Result Hero */
+.result-hero {
+    background: var(--pl-green);
+    border-radius: var(--radius-xl);
+    overflow: hidden;
+    margin-bottom: 20px;
+}
+.result-hero-head {
+    padding: 22px 26px 16px;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+.result-hero-head h2 {
+    color: #fff;
+    font-size: 1.25rem;
+    font-weight: 800;
+    margin-bottom: 3px;
+}
+.result-hero-head p {
+    color: rgba(255,255,255,0.65);
+    font-size: 0.8rem;
+}
+.result-compare {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+}
+@media (max-width: 480px) { .result-compare { grid-template-columns: 1fr; } }
+.compare-col { padding: 22px 26px; }
+.compare-col.heute { border-right: 1px solid rgba(255,255,255,0.1); }
+@media (max-width: 480px) {
+    .compare-col.heute { border-right: none; border-bottom: 1px solid rgba(255,255,255,0.1); }
+}
+.compare-label {
+    font-size: 0.65rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: rgba(255,255,255,0.55);
+    margin-bottom: 8px;
+}
+.compare-amount {
+    font-size: 2.2rem;
+    font-weight: 800;
+    color: #fff;
+    line-height: 1;
+}
+.compare-col.neu .compare-amount { color: var(--pl-gold); }
+.compare-sub {
+    font-size: 0.75rem;
+    color: rgba(255,255,255,0.55);
+    margin-top: 6px;
+}
+.result-delta {
+    padding: 14px 26px;
+    background: rgba(208,171,59,0.14);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+.delta-badge {
+    background: var(--pl-gold);
+    color: var(--pl-green);
+    font-weight: 800;
+    font-size: 1rem;
+    padding: 4px 14px;
+    border-radius: 20px;
+    white-space: nowrap;
+}
+.delta-text {
+    color: rgba(255,255,255,0.8);
+    font-size: 0.85rem;
+}
+
+/* KPI Grid */
+.kpi-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    margin-bottom: 20px;
+}
+@media (max-width: 580px) { .kpi-grid { grid-template-columns: 1fr; } }
+.kpi-card {
+    background: #fff;
+    border: 1px solid var(--gray-200);
+    border-radius: var(--radius-lg);
+    padding: 18px;
+}
+.kpi-label {
+    font-size: 0.68rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--gray-500);
+    margin-bottom: 6px;
+}
+.kpi-value {
+    font-size: 1.4rem;
+    font-weight: 800;
+    color: var(--pl-green);
+    line-height: 1.1;
+}
+.kpi-sub {
+    font-size: 0.75rem;
+    color: var(--gray-500);
+    margin-top: 5px;
+    line-height: 1.4;
+}
+
+/* Chart */
+.chart-card {
+    background: #fff;
+    border: 1px solid var(--gray-200);
+    border-radius: var(--radius-lg);
+    padding: 22px;
+    margin-bottom: 20px;
+}
+.chart-title {
+    font-size: 0.88rem;
+    font-weight: 700;
+    color: var(--pl-green);
+    margin-bottom: 3px;
+}
+.chart-subtitle {
+    font-size: 0.75rem;
+    color: var(--gray-500);
+    margin-bottom: 14px;
+}
+.chart-legend {
+    display: flex;
+    gap: 18px;
+    flex-wrap: wrap;
+    margin-bottom: 14px;
+}
+.legend-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.75rem;
+    color: var(--gray-600);
+}
+.legend-dot {
+    width: 10px; height: 10px;
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+#cost-chart { display:block; width:100% !important; height:100% !important; }
+
+/* Notice */
+.result-notice {
+    background: var(--pl-beige);
+    border-left: 3px solid var(--pl-gold);
+    border-radius: 0 var(--radius) var(--radius) 0;
+    padding: 14px 18px;
+    font-size: 0.82rem;
+    color: var(--gray-600);
+    margin-bottom: 20px;
+    line-height: 1.65;
+}
+.result-notice strong { color: var(--pl-green); }
+
+/* CTA Block */
+.result-cta {
+    background: var(--pl-green);
+    border-radius: var(--radius-xl);
+    padding: 32px 26px;
+    text-align: center;
+    margin-bottom: 32px;
+}
+.result-cta h3 {
+    color: #fff;
+    font-size: 1.2rem;
+    font-weight: 800;
+    margin-bottom: 8px;
+}
+.result-cta p {
+    color: rgba(255,255,255,0.72);
+    font-size: 0.88rem;
+    margin-bottom: 22px;
+    line-height: 1.6;
+}
+.btn-booking {
+    display: inline-block;
+    padding: 15px 36px;
+    background: var(--pl-gold);
+    color: var(--pl-green);
+    font-family: inherit;
+    font-size: 0.95rem;
+    font-weight: 800;
+    border: none;
+    border-radius: var(--radius);
+    cursor: pointer;
+    text-decoration: none;
+    transition: all 0.2s;
+}
+.btn-booking:hover {
+    background: #e0bd40;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(0,0,0,0.18);
+}
+.btn-new-calc {
+    display: block;
+    margin-top: 14px;
+    font-size: 0.8rem;
+    color: rgba(255,255,255,0.5);
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-family: inherit;
+    text-decoration: underline;
+}
+.btn-new-calc:hover { color: rgba(255,255,255,0.8); }
+
+/* Bilanz-Zeile im Hero */
+.bilanz-row {
+    padding: 14px 26px;
+    background: rgba(255,255,255,0.06);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    border-top: 1px solid rgba(255,255,255,0.08);
+}
+.bilanz-label, .bilanz-suffix { font-size: 0.75rem; color: rgba(255,255,255,0.6); }
+.bilanz-amount { font-size: 1.3rem; font-weight: 800; color: var(--pl-gold); }
+
+/* Persönlicher Fazit-Text */
+.result-narrative {
+    background: var(--pl-beige);
+    border-left: 3px solid var(--pl-green);
+    border-radius: var(--radius-lg);
+    padding: 18px 22px;
+    margin-bottom: 20px;
+    font-size: 0.88rem;
+    color: var(--gray-600);
+    line-height: 1.7;
+}
+
+/* Lead Gate */
+.lead-gate {
+    background: var(--pl-green);
+    border-radius: var(--radius-xl);
+    padding: 32px 26px;
+    margin-bottom: 32px;
+}
+.lead-gate-head h3 { color: #fff; font-size: 1.15rem; font-weight: 800; margin-bottom: 6px; }
+.lead-gate-head p  { color: rgba(255,255,255,0.72); font-size: 0.85rem; margin-bottom: 22px; line-height: 1.6; }
+.lead-field-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 12px;
+}
+@media (max-width: 480px) { .lead-field-row { grid-template-columns: 1fr; } }
+.lead-field-row--half { grid-template-columns: 1fr; max-width: 50%; }
+@media (max-width: 480px) { .lead-field-row--half { max-width: 100%; } }
+.result-back-bar { padding: 12px 0 4px; }
+.btn-result-back { background: none; border: none; color: var(--gray-500); font-size: 0.82rem; cursor: pointer; padding: 6px 0; letter-spacing: 0.01em; }
+.btn-result-back:hover { color: var(--pl-green); }
+.lead-gate .er-input {
+    background: rgba(255,255,255,0.1);
+    border-color: rgba(255,255,255,0.25);
+    color: #fff;
+}
+.lead-gate .er-input::placeholder { color: rgba(255,255,255,0.45); }
+.lead-gate .er-input:focus { border-color: var(--pl-gold); background: rgba(255,255,255,0.15); }
+.lead-gate .field-label { color: rgba(255,255,255,0.8); }
+.consent-label {
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+    color: rgba(255,255,255,0.65);
+    font-size: 0.78rem;
+    line-height: 1.55;
+    margin-bottom: 18px;
+    cursor: pointer;
+}
+.consent-label input[type="checkbox"] { flex-shrink: 0; margin-top: 2px; accent-color: var(--pl-gold); }
+.consent-label a { color: var(--pl-gold); }
+.lead-success { text-align: center; color: #fff; }
+.lead-success-icon { font-size: 2.5rem; margin-bottom: 8px; }
+.lead-success strong { display: block; font-size: 1.2rem; margin-bottom: 6px; }
+.lead-success p { color: rgba(255,255,255,0.7); font-size: 0.85rem; margin-bottom: 20px; }
+.btn-booking-outline {
+    background: transparent;
+    border: 2px solid rgba(255,255,255,0.4);
+    color: #fff;
+}
+.btn-booking-outline:hover { border-color: #fff; background: rgba(255,255,255,0.08); }
+
+/* Print-Header (nur sichtbar beim Drucken) */
+.print-header {
+    display: none;
+    text-align: center;
+    padding: 0 0 20px;
+    border-bottom: 2px solid var(--pl-green);
+    margin-bottom: 20px;
+}
+.print-header-name { font-size: 1.1rem; font-weight: 800; color: var(--pl-green); }
+.print-header-sub  { font-size: 0.8rem; color: var(--gray-500); }
+
+/* Print CSS */
+@media print {
+    .wizard-nav-bar, .wizard-step, .er-top-bar, .step-counter,
+    .lead-gate, .btn-new-calc, .sources-wrap, .site-header, footer,
+    .result-notice, .result-back-bar { display: none !important; }
+    .result-section { display: block !important; }
+    .result-hero { border-radius: 0; }
+    #cost-chart { height: 300px !important; }
+    body { font-size: 12pt; }
+    .print-header { display: block !important; }
+}
+
+/* Sources */
+.sources-wrap { border-top: 1px solid var(--gray-200); }
+.sources-toggle {
+    width: 100%;
+    padding: 12px 16px;
+    background: transparent;
+    border: none;
+    font-family: inherit;
+    font-size: 0.77rem;
+    color: var(--gray-400);
+    cursor: pointer;
+    text-align: left;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: color 0.15s;
+}
+.sources-toggle:hover { color: var(--gray-600); }
+.sources-chevron { transition: transform 0.2s; font-style: normal; }
+.sources-toggle[aria-expanded="true"] .sources-chevron { transform: rotate(180deg); }
+.sources-body {
+    display: none;
+    padding: 4px 16px 20px;
+    font-size: 0.77rem;
+    color: var(--gray-500);
+    line-height: 1.7;
+}
+.sources-body.open { display: block; }
+.sources-body h4 {
+    font-size: 0.72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    color: var(--gray-600);
+    margin: 14px 0 4px;
+}
+.sources-body h4:first-child { margin-top: 0; }
+.sources-body a { color: var(--pl-green); }
+.sources-meta {
+    margin-top: 14px;
+    font-size: 0.7rem;
+    color: var(--gray-400);
+}
+    </style>
+</head>
+<body>
+<a href="#main" class="skip-link">Zum Hauptinhalt springen</a>
+
+  <header class="site-header scrolled" role="banner" id="site-header">
+    <nav class="nav-container" aria-label="Hauptnavigation">
+      <a href="/" class="nav-logo" aria-label="Patrick Leißner Energieberatung – zur Startseite">
+        <img src="assets/Logo/Initialien-Name-Positiv-frei.png" alt="Patrick Leißner Energieberatung Logo" height="96" loading="eager" style="width:auto">
+      </a>
+      <ul class="nav-links" role="list">
+        <li><a href="/#leistungen">Leistungen</a></li>
+        <li><a href="/#ueber-pl">Über mich</a></li>
+        <li><a href="/termin">Termine</a></li>
+        <li><a href="/#kontakt">Kontakt</a></li>
+      </ul>
+      <a href="/termin" class="btn btn-accent nav-cta">Termin buchen</a>
+      <button class="hamburger" aria-label="Menü öffnen" aria-expanded="false" aria-controls="mobile-menu" id="hamburger-btn">
+        <span></span><span></span><span></span>
+      </button>
+    </nav>
+    <div class="mobile-menu" id="mobile-menu" aria-hidden="true" role="dialog" aria-label="Hauptnavigation">
+      <ul role="list">
+        <li><a href="/#leistungen" class="mobile-nav-link">Leistungen</a></li>
+        <li><a href="/#ueber-pl" class="mobile-nav-link">Über mich</a></li>
+        <li><a href="/termin" class="mobile-nav-link">Termine</a></li>
+        <li><a href="/#kontakt" class="mobile-nav-link">Kontakt</a></li>
+        <li><a href="/termin" class="btn btn-accent mobile-nav-link">Termin buchen</a></li>
+      </ul>
+    </div>
+  </header>
+
+  <div class="sp-back-bar">
+    <div class="container">
+      <a href="/" class="sp-back-link">Zurück zur Startseite</a>
+    </div>
+  </div>
+
+  <div class="rechner-tabs-bar" role="navigation" aria-label="Rechner-Auswahl">
+    <div class="rechner-tabs-inner">
+      <a href="/unabhaengigkeit" class="rechner-tab">
+        <span class="rechner-tab-name">Unabhängigkeit</span>
+        <span class="rechner-tab-sub">Wie viel Strom erzeugt meine PV?</span>
+      </a>
+      <a href="/heizkosten" class="rechner-tab">
+        <span class="rechner-tab-name">Heizkosten</span>
+        <span class="rechner-tab-sub">Was spare ich beim Heizen?</span>
+      </a>
+      <a href="/nutzen" class="rechner-tab active">
+        <span class="rechner-tab-name">Nutzen</span>
+        <span class="rechner-tab-sub">Lohnt sich der Umstieg?</span>
+      </a>
+    </div>
+  </div>
+
+  <main id="main">
+
+    <!-- Wizard -->
+    <div class="wizard-wrap">
+
+      <!-- Fortschrittsanzeige -->
+      <div class="er-top-bar" aria-hidden="true">
+        <div class="er-top-fill" id="er-top-fill" style="width:20%"></div>
+      </div>
+      <p class="step-counter" id="step-counter" aria-live="polite">Schritt 1 von 5 — Dein Gebäude</p>
+
+      <!-- SCHRITT 1: Gebäude -->
+      <section class="wizard-step active" id="step-1" aria-labelledby="h-step1">
+        <div class="step-heading">
+          <h2 id="h-step1">Dein Gebäude</h2>
+          <p class="step-hint">Gebäudetyp und Baujahr bestimmen den Wärmebedarf – und wie gut eine Wärmepumpe passt.</p>
+        </div>
+
+        <div class="field-group">
+          <span class="field-label" id="lbl-gebaeude">Gebäudetyp</span>
+          <div class="card-grid cols-4" role="group" aria-labelledby="lbl-gebaeude">
+            <button type="button" class="card-btn selected" data-group="gebaeude" data-value="efh">Einfamilienhaus</button>
+            <button type="button" class="card-btn" data-group="gebaeude" data-value="dhh">Doppelhaushälfte</button>
+            <button type="button" class="card-btn" data-group="gebaeude" data-value="rh">Reihenhaus</button>
+            <button type="button" class="card-btn" data-group="gebaeude" data-value="mfh">Mehrfamilienhaus</button>
+          </div>
+        </div>
+
+        <div class="field-group">
+          <label class="field-label" for="inp-baujahr">Baujahr</label>
+          <span class="field-sublabel">Steht im Grundbuchauszug oder Energieausweis</span>
+          <select id="inp-baujahr" class="er-select">
+            <option value="">Bitte wählen …</option>
+            <option value="vor_1960">Vor 1960</option>
+            <option value="1960_1979">1960 – 1979</option>
+            <option value="1980_1994">1980 – 1994</option>
+            <option value="1995_2009">1995 – 2009</option>
+            <option value="ab_2010">Ab 2010</option>
+          </select>
+          <div class="field-error" id="err-baujahr">Bitte wähle ein Baujahr.</div>
+        </div>
+
+        <div class="field-group">
+          <label class="field-label" for="inp-area">Beheizte Wohnfläche</label>
+          <span class="field-sublabel">Nur tatsächlich beheizte Fläche – ohne Keller oder Garage</span>
+          <div class="input-row">
+            <input type="number" id="inp-area" class="er-input" placeholder="z. B. 150" min="40" max="800" inputmode="numeric">
+            <span class="input-unit">m²</span>
+          </div>
+          <div class="field-error" id="err-area">Bitte gib eine Fläche zwischen 40 und 800 m² ein.</div>
+        </div>
+
+        <div class="field-group">
+          <label class="field-label" for="inp-plz">Postleitzahl</label>
+          <input type="text" id="inp-plz" class="er-input" placeholder="z. B. 06766" maxlength="5" inputmode="numeric" autocomplete="postal-code">
+          <div class="plz-feedback" id="plz-feedback" aria-live="polite"> </div>
+          <div class="field-error" id="err-plz">Bitte gib deine 5-stellige Postleitzahl ein.</div>
+        </div>
+
+      </section>
+
+      <!-- SCHRITT 2: Heizung -->
+      <section class="wizard-step" id="step-2" aria-labelledby="h-step2">
+        <div class="step-heading">
+          <h2 id="h-step2">Deine aktuelle Heizung</h2>
+          <p class="step-hint">Heizöl und Gas – das ist das Geld, das jeden Monat weg ist. Lass es uns genau anschauen.</p>
+        </div>
+
+        <div class="field-group">
+          <span class="field-label" id="lbl-fuel">Womit heizt du?</span>
+          <div class="card-grid" role="group" aria-labelledby="lbl-fuel">
+            <button type="button" class="card-btn selected" data-group="fuelType" data-value="oil">Heizöl</button>
+            <button type="button" class="card-btn" data-group="fuelType" data-value="gas">Erdgas</button>
+            <button type="button" class="card-btn" data-group="fuelType" data-value="pellets">Pellets</button>
+            <button type="button" class="card-btn" data-group="fuelType" data-value="fernwaerme">Fernwärme</button>
+            <button type="button" class="card-btn" data-group="fuelType" data-value="strom">Strom<span class="btn-sub">Direktheizung</span></button>
+          </div>
+        </div>
+
+        <div class="field-group">
+          <label class="field-label" for="inp-consumption" id="lbl-consumption">Jahresverbrauch Heizung</label>
+          <span class="field-sublabel" id="consumption-hint">Steht auf deiner Heizöl-Tankrechnung</span>
+          <div class="input-row">
+            <input type="number" id="inp-consumption" class="er-input" placeholder="z. B. 2500" min="1" max="999999" inputmode="numeric">
+            <span class="input-unit" id="consumption-unit">Liter</span>
+          </div>
+          <div class="field-error" id="err-consumption">Bitte gib deinen Jahresverbrauch ein.</div>
+        </div>
+
+        <div class="field-group" id="grp-fuelprice">
+          <label class="field-label" for="inp-fuelprice">Was zahlst du aktuell?</label>
+          <span class="field-sublabel">Steht auf deiner letzten Rechnung oder Abrechnung</span>
+          <div class="input-row">
+            <input type="number" id="inp-fuelprice" class="er-input" placeholder="z. B. 0.95"
+                   min="0" max="9999" step="0.01" inputmode="decimal">
+            <span class="input-unit" id="fuelprice-unit">€/Liter</span>
+          </div>
+        </div>
+
+        <div class="field-group">
+          <label class="field-label" for="inp-heizalter">Alter der Heizungsanlage</label>
+          <select id="inp-heizalter" class="er-select">
+            <option value="">Bitte wählen …</option>
+            <option value="sehr_alt">Älter als 25 Jahre</option>
+            <option value="alt">15 – 25 Jahre</option>
+            <option value="mittel">10 – 15 Jahre</option>
+            <option value="neu">Jünger als 10 Jahre</option>
+            <option value="brennwert">Brennwertgerät</option>
+          </select>
+          <div class="field-error" id="err-heizalter">Bitte wähle das Alter deiner Heizung.</div>
+        </div>
+
+        <div class="field-group">
+          <label class="field-label" for="inp-heizabschlag">
+            Monatlicher Heizkosten-Abschlag <span class="field-opt">(optional)</span>
+          </label>
+          <span class="field-sublabel">Dein Abschlag an den Versorger – hilft als Plausibilitätsprüfung</span>
+          <div class="input-row">
+            <input type="number" id="inp-heizabschlag" class="er-input" placeholder="z. B. 180" min="0" max="2000" inputmode="numeric">
+            <span class="input-unit">€/Monat</span>
+          </div>
+        </div>
+
+      </section>
+
+      <!-- SCHRITT 3: Strom -->
+      <section class="wizard-step" id="step-3" aria-labelledby="h-step3">
+        <div class="step-heading">
+          <h2 id="h-step3">Dein Stromverbrauch</h2>
+          <p class="step-hint">Mit einer Wärmepumpe verschiebt sich der Bedarf von Brennstoff auf Strom – daher ist dein Ausgangswert wichtig.</p>
+        </div>
+
+        <div class="field-group">
+          <span class="field-label">Wie möchtest du eingeben?</span>
+          <div class="toggle-mode" role="group" aria-label="Eingabemodus Strom">
+            <button type="button" class="active" id="tog-kwh" onclick="setElecMode('kwh')">kWh/Jahr</button>
+            <button type="button" id="tog-abschlag" onclick="setElecMode('abschlag')">Monatlicher Abschlag</button>
+          </div>
+          <div id="grp-kwh">
+            <div class="input-row">
+              <input type="number" id="inp-elec-kwh" class="er-input" placeholder="z. B. 4000" min="500" max="50000" inputmode="numeric">
+              <span class="input-unit">kWh/Jahr</span>
+            </div>
+            <div class="field-error" id="err-elec">Bitte gib deinen Jahresstromverbrauch ein (500–50.000 kWh).</div>
+          </div>
+          <div id="grp-abschlag" style="display:none">
+            <div class="input-row">
+              <input type="number" id="inp-elec-abschlag" class="er-input" placeholder="z. B. 110" min="10" max="2000" inputmode="numeric">
+              <span class="input-unit">€/Monat</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="field-group">
+          <label class="field-label" for="inp-elecprice">Dein Strompreis</label>
+          <span class="field-sublabel">Steht auf deiner Stromrechnung – aktueller Schnitt ca. 32 ct/kWh</span>
+          <div class="input-row">
+            <input type="number" id="inp-elecprice" class="er-input" value="32" min="15" max="60" step="0.5" inputmode="decimal">
+            <span class="input-unit">ct/kWh</span>
+          </div>
+        </div>
+
+        <div class="field-group">
+          <span class="field-label" id="lbl-eauto">E-Auto vorhanden oder geplant?</span>
+          <div class="card-grid cols-2" role="group" aria-labelledby="lbl-eauto">
+            <button type="button" class="card-btn selected" data-group="eauto" data-value="nein">Nein</button>
+            <button type="button" class="card-btn" data-group="eauto" data-value="ja">Ja / geplant</button>
+          </div>
+        </div>
+
+      </section>
+
+      <!-- SCHRITT 4: Dach -->
+      <section class="wizard-step" id="step-4" aria-labelledby="h-step4">
+        <div class="step-heading">
+          <h2 id="h-step4">Dein Dach</h2>
+          <p class="step-hint">Mehrere Flächen möglich — Hauptdach, Gegenseite, Garage, Carport oder Fassade. Eine grobe Schätzung reicht; ich vermesse vor Ort mit LiDAR auf den Zentimeter genau.</p>
+        </div>
+
+        <div id="surfaces-container"></div>
+
+        <button type="button" class="btn-add-surface" id="btn-add-surface">+ Weitere Fläche hinzufügen</button>
+        <div class="field-error" id="err-surfaces">Bitte gib mindestens eine Fläche mit mehr als 5 m² ein.</div>
+
+      </section>
+
+      <!-- SCHRITT 5: Ziele -->
+      <section class="wizard-step" id="step-5" aria-labelledby="h-step5">
+        <div class="step-heading">
+          <h2 id="h-step5">Deine Ziele</h2>
+          <p class="step-hint">Was soll der Rechner für dich durchleuchten? Mehrfachauswahl möglich.</p>
+        </div>
+
+        <div class="field-group">
+          <span class="field-label" id="lbl-interesse">Worum geht es dir?</span>
+          <div class="card-grid cols-2" role="group" aria-labelledby="lbl-interesse">
+            <button type="button" class="card-btn multi selected" data-group="interesse" data-value="pv">Photovoltaik</button>
+            <button type="button" class="card-btn multi selected" data-group="interesse" data-value="wp">Wärmepumpe</button>
+            <button type="button" class="card-btn multi" data-group="interesse" data-value="speicher">Batteriespeicher</button>
+            <button type="button" class="card-btn multi" data-group="interesse" data-value="versicherung">Versicherungscheck</button>
+          </div>
+        </div>
+
+        <div class="field-group">
+          <span class="field-label" id="lbl-finanz">Finanzierung</span>
+          <div class="card-grid cols-3" role="group" aria-labelledby="lbl-finanz">
+            <button type="button" class="card-btn" data-group="finanzierung" data-value="eigen">Eigenkapital</button>
+            <button type="button" class="card-btn selected" data-group="finanzierung" data-value="finanz">Finanzierung</button>
+            <button type="button" class="card-btn" data-group="finanzierung" data-value="offen">Noch offen</button>
+          </div>
+        </div>
+
+        <div id="grp-finanzierung-detail" style="display:none">
+
+          <div class="field-group">
+            <label class="field-label" for="inp-kreditbetrag">Finanzierungssumme</label>
+            <span class="field-sublabel">Dein geplanter Kreditbetrag – leer lassen für die geschätzte Investitionssumme</span>
+            <div class="input-row">
+              <input type="number" id="inp-kreditbetrag" class="er-input"
+                     placeholder="z. B. 50000" min="0" max="999999" inputmode="numeric">
+              <span class="input-unit">€</span>
+            </div>
+            <p class="rate-preview" id="rate-preview" style="display:none"></p>
+          </div>
+
+          <div class="field-group">
+            <label class="field-label" for="inp-zinssatz">Zinssatz (Effektivzins)</label>
+            <span class="field-sublabel">0 % bei Sonderaktion möglich – typisch 3–6 % · steht im Kreditangebot</span>
+            <div class="input-row">
+              <input type="number" id="inp-zinssatz" class="er-input" value="3.5"
+                     min="0" max="9" step="0.1" inputmode="decimal">
+              <span class="input-unit">% p.a.</span>
+            </div>
+          </div>
+
+          <div class="field-group">
+            <label class="field-label" for="inp-laufzeit">Laufzeit</label>
+            <select id="inp-laufzeit" class="er-select">
+              <option value="10">10 Jahre</option>
+              <option value="15">15 Jahre</option>
+              <option value="20" selected>20 Jahre</option>
+              <option value="25">25 Jahre</option>
+              <option value="30">30 Jahre</option>
+            </select>
+          </div>
+
+          <div class="field-group">
+            <label class="field-label" for="inp-zinsfestschreibung">Zinsfestschreibung</label>
+            <span class="field-sublabel">Nach Ablauf kann sich der Anschlusszins ändern</span>
+            <select id="inp-zinsfestschreibung" class="er-select">
+              <option value="10">10 Jahre</option>
+              <option value="15">15 Jahre</option>
+              <option value="20" selected>20 Jahre (gesamte Laufzeit)</option>
+              <option value="25">25 Jahre</option>
+            </select>
+          </div>
+
+          <div class="field-group">
+            <label class="field-label" for="inp-sondertilgung">
+              Sondertilgung <span class="field-opt">(optional)</span>
+            </label>
+            <span class="field-sublabel">Z. B. BEG-Förderung oder KfW-Zuschuss, der nach Bewilligung zurückfließt</span>
+            <div class="input-row">
+              <input type="number" id="inp-sondertilgung" class="er-input"
+                     placeholder="z. B. 7500" min="0" max="999999" inputmode="numeric">
+              <span class="input-unit">€</span>
+            </div>
+          </div>
+
+          <div class="field-group">
+            <span class="field-label" id="lbl-zinsfrei">Sonderkonditionen</span>
+            <div class="card-grid cols-2" role="group" aria-labelledby="lbl-zinsfrei">
+              <button type="button" class="card-btn selected" data-group="zinsfreiJahr1" data-value="nein">Standard</button>
+              <button type="button" class="card-btn" data-group="zinsfreiJahr1" data-value="ja">1. Jahr 0 % Zinsen</button>
+            </div>
+          </div>
+
+        </div>
+
+        <div class="field-group">
+          <span class="field-label" id="lbl-zeit">Zeithorizont</span>
+          <div class="card-grid cols-3" role="group" aria-labelledby="lbl-zeit">
+            <button type="button" class="card-btn" data-group="zeithorizont" data-value="sofort">So bald wie möglich</button>
+            <button type="button" class="card-btn selected" data-group="zeithorizont" data-value="bald">In 1–2 Jahren</button>
+            <button type="button" class="card-btn" data-group="zeithorizont" data-value="info">Ich informiere mich</button>
+          </div>
+        </div>
+
+      </section>
+
+      <!-- ERGEBNIS -->
+      <section class="result-section" id="result-section" aria-labelledby="h-result">
+
+        <div class="print-header">
+          <div class="print-header-name">Patrick Leißner · Energieberatung</div>
+          <div class="print-header-sub">patrickleissner.de · +49 173 4994994 · Unverbindliche Ersteinschätzung</div>
+        </div>
+
+        <div class="result-back-bar">
+          <button type="button" class="btn-result-back" onclick="goTo(5)">&#8592; Angaben korrigieren</button>
+        </div>
+
+        <div class="result-hero">
+          <div class="result-hero-head">
+            <h2 id="h-result">Deine Ersteinschätzung</h2>
+            <p>Für dein Gebäude in <strong id="res-location" style="color:var(--pl-gold)">deiner Region</strong></p>
+          </div>
+          <div class="result-compare">
+            <div class="compare-col heute">
+              <div class="compare-label">Heute gibst du weg</div>
+              <div class="compare-amount" id="res-heute">–</div>
+              <div class="compare-sub">pro Monat (Heizung + Strom)</div>
+            </div>
+            <div class="compare-col neu">
+              <div class="compare-label">Stattdessen in dein Eigentum</div>
+              <div class="compare-amount" id="res-neu">–</div>
+              <div class="compare-sub" id="res-neu-sub">pro Monat (inkl. Finanzierung)</div>
+            </div>
+          </div>
+          <div class="result-delta">
+            <div class="delta-badge" id="res-delta">–</div>
+            <div class="delta-text" id="res-delta-text">monatliche Differenz</div>
+          </div>
+          <div class="bilanz-row">
+            <span class="bilanz-label">In 20 Jahren schätzungsweise</span>
+            <span class="bilanz-amount" id="res-bilanz20">–</span>
+            <span class="bilanz-suffix">weniger ans Netz</span>
+          </div>
+        </div>
+
+        <div class="kpi-grid">
+          <div class="kpi-card">
+            <div class="kpi-label">PV-Jahresertrag (geschätzt)</div>
+            <div class="kpi-value" id="kpi-pv">–</div>
+            <div class="kpi-sub" id="kpi-pv-sub">–</div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-label">Heizkosten neu</div>
+            <div class="kpi-value" id="kpi-heiz">–</div>
+            <div class="kpi-sub" id="kpi-heiz-sub">–</div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-label">CO₂-Einsparung</div>
+            <div class="kpi-value" id="kpi-co2">–</div>
+            <div class="kpi-sub">pro Jahr gegenüber heute</div>
+          </div>
+        </div>
+
+        <div class="result-narrative" id="res-narrative"></div>
+
+        <div class="chart-card">
+          <div class="chart-title">Kumulierte Gesamtausgaben über 20 Jahre</div>
+          <div class="chart-subtitle">Was du insgesamt zahlst — der Abstand zwischen den Linien ist dein Vorteil</div>
+          <div class="chart-legend">
+            <div class="legend-item"><div class="legend-dot" style="background:#dc2626"></div> Öl / Gas heute</div>
+            <div class="legend-item"><div class="legend-dot" style="background:#2E4F3C"></div> PV + Wärmepumpe</div>
+          </div>
+          <div style="position:relative;height:260px">
+            <canvas id="cost-chart" role="img" aria-label="20-Jahres-Kostenvergleich"></canvas>
+          </div>
+        </div>
+
+        <div class="result-notice">
+          <strong>Unverbindliche Schätzung ohne Gewähr</strong> – basierend auf deinen Angaben und Durchschnittswerten (DIN EN 12831, PVGIS, BDEW, BEHG). Keine zugesicherte Ersparnis.
+          Für eine verbindliche Planung komme ich kostenlos zu dir und messe alles vor Ort.
+        </div>
+
+        <div class="lead-gate" id="lead-gate">
+          <div class="lead-gate-head">
+            <h3>Analyse als PDF per E-Mail erhalten</h3>
+            <p>Ich sende dir deine unverbindliche Ersteinschätzung kostenlos zu — damit du sie in Ruhe lesen oder ausdrucken kannst.</p>
+          </div>
+          <div class="lead-gate-form" id="lead-gate-form">
+            <div class="lead-field-row">
+              <div class="field-group">
+                <label class="field-label" for="lg-vorname">Vorname *</label>
+                <input type="text" id="lg-vorname" class="er-input" placeholder="Vorname" autocomplete="given-name">
+              </div>
+              <div class="field-group">
+                <label class="field-label" for="lg-nachname">Nachname *</label>
+                <input type="text" id="lg-nachname" class="er-input" placeholder="Nachname" autocomplete="family-name">
+              </div>
+            </div>
+            <div class="lead-field-row">
+              <div class="field-group">
+                <label class="field-label" for="lg-email">E-Mail *</label>
+                <input type="email" id="lg-email" class="er-input" placeholder="deine@email.de" autocomplete="email">
+              </div>
+              <div class="field-group">
+                <label class="field-label" for="lg-phone">Telefon (optional)</label>
+                <input type="tel" id="lg-phone" class="er-input" placeholder="+49 …" autocomplete="tel">
+              </div>
+            </div>
+            <div class="lead-field-row lead-field-row--half">
+              <div class="field-group">
+                <label class="field-label" for="lg-plz">Postleitzahl *</label>
+                <input type="text" id="lg-plz" class="er-input" placeholder="z. B. 06786" inputmode="numeric" maxlength="5">
+              </div>
+            </div>
+            <label class="consent-label">
+              <input type="checkbox" id="lg-consent-analyse" required>
+              <span><strong>Analyse zusenden *</strong> – Patrick Leißner darf mir meine Ergebnisse per E-Mail zusenden. <a href="/datenschutz" target="_blank">Datenschutzerklärung</a></span>
+            </label>
+            <label class="consent-label" style="margin-top:8px">
+              <input type="checkbox" id="lg-consent-kontakt">
+              <span>Patrick darf mich auch zur persönlichen Beratung kontaktieren / mir relevante Informationen zusenden (optional, jederzeit widerrufbar).</span>
+            </label>
+            <div class="field-error" id="lg-error" style="display:none">Bitte Vorname, Nachname, E-Mail, PLZ und die Analyse-Zustimmung ausfüllen.</div>
+            <input type="text" name="hp_website" id="hp_website" style="display:none;visibility:hidden" tabindex="-1" autocomplete="off">
+            <button type="button" class="btn-booking" id="lg-submit-btn" onclick="submitLead()">
+              Analyse zusenden &amp; PDF freischalten
+            </button>
+          </div>
+          <div class="lead-success" id="lead-success" style="display:none">
+            <div class="lead-success-icon">✓</div>
+            <strong>Fast geschafft — bitte bestätige deine E-Mail!</strong>
+            <p>Wir haben dir eine Bestätigungsmail geschickt. Klicke auf den Link darin, um deine Analyse zu erhalten. (Spam-Ordner prüfen falls nötig.)</p>
+            <button type="button" class="btn-booking" onclick="window.print()">Jetzt drucken / als PDF speichern</button>
+            <a href="/termin" class="btn-booking btn-booking-outline" style="margin-top:12px;display:inline-block">Kostenlosen Beratungstermin buchen</a>
+          </div>
+        </div>
+
+        <button type="button" class="btn-new-calc" onclick="resetWizard()" style="display:block;text-align:center;margin:0 auto 32px">Neue Berechnung starten</button>
+
+        <div class="sources-wrap">
+          <button type="button" class="sources-toggle" id="sources-btn" onclick="toggleSources()" aria-expanded="false" aria-controls="sources-body">
+            <span class="sources-chevron" aria-hidden="true">▾</span>
+            Berechnungsgrundlagen &amp; Quellen
+          </button>
+          <div class="sources-body" id="sources-body">
+            <h4>Klimadaten &amp; Heizlast</h4>
+            DIN EN 12831-1:2017 – Norm-Heizlast &nbsp;·&nbsp; DIN/TS 12831-1:2020 – Klimadaten Deutschland &nbsp;·&nbsp; DWD – Norm-Außentemperaturen nach Klimaregion
+            <h4>PV-Ertrag</h4>
+            <a href="https://re.jrc.ec.europa.eu/pvg_tools/" target="_blank" rel="noopener">PVGIS (EU-Kommission)</a> – Globalstrahlung &amp; Ertragskennzahlen &nbsp;·&nbsp; DGS – Ertragsberechnung Photovoltaik
+            <h4>Energiepreise</h4>
+            BDEW – Haushaltsenergiepreise 2025/26 &nbsp;·&nbsp; BAFA – Förderdaten Wärmepumpen
+            <h4>Wärmepumpen &amp; JAZ</h4>
+            Fraunhofer ISE – Feldstudie Wärmepumpen in Bestandsgebäuden &nbsp;·&nbsp; BDH – JAZ-Kennzahlen nach Gebäudetyp
+            <h4>CO₂-Bepreisung</h4>
+            BEHG 2019/2024 – Nationale CO₂-Bepreisung &nbsp;·&nbsp; ETS II (EU ab 2027) &nbsp;·&nbsp; UBA – Emissionsfaktoren Brennstoffe &amp; Strom
+            <h4>Verbrauchskennwerte</h4>
+            GEG 2024 – Energieanforderungen nach Baujahr &nbsp;·&nbsp; BDEW – Jahresverbrauch Privathaushalte
+            <p class="sources-meta">Stand: Januar 2026 &nbsp;·&nbsp; Alle Werte dienen der Orientierung. Verbindliche Berechnungen nach DIN erfordern eine Vor-Ort-Analyse durch einen zertifizierten Energieberater.</p>
+          </div>
+        </div>
+
+      </section>
+    </div><!-- .wizard-wrap -->
+  </main>
+
+  <!-- Sticky Wizard Navigation -->
+  <div class="wizard-nav-bar" id="wizard-nav">
+    <button type="button" class="btn-back" id="nav-btn-back" onclick="navBack()">← Zurück</button>
+    <div class="nav-center">
+      <span class="nav-step-label" id="nav-step-label">Schritt 1 von 5</span>
+      <div class="nav-progress-mini">
+        <div class="nav-progress-fill" id="nav-progress-fill" style="width:20%"></div>
+      </div>
+    </div>
+    <button type="button" class="btn-next" id="nav-btn-next" onclick="navNext()">Weiter →</button>
+  </div>
+
+  <footer class="site-footer" role="contentinfo">
+    <div class="container footer-inner">
+      <div class="footer-brand">
+        <a href="/" class="nav-logo" aria-label="Patrick Leißner Energieberatung – zur Startseite">
+          <img src="assets/Logo/Initialien-Gold-frei.png" alt="Patrick Leißner Energieberatung Logo" width="36" height="36" loading="lazy">
+          <span class="nav-logo-text">Patrick Leißner</span>
+        </a>
+        <p>Frei durch eigene Energie.</p>
+      </div>
+      <nav class="footer-links" aria-label="Footer-Navigation">
+        <a href="/impressum.html">Impressum</a>
+        <a href="/datenschutz.html">Datenschutz</a>
+        <a href="#" aria-label="Zurück zum Seitenanfang">Nach oben ↑</a>
+      </nav>
+    </div>
+    <div class="container">
+      <p class="footer-copyright">© 2025 Patrick Leißner. Alle Rechte vorbehalten.</p>
+    </div>
+  </footer>
+
+  <script src="main.js"></script>
+  <script>
+// ============================================================
+//  ENERGIERECHNER V9 — Wizard-Edition
+//  Patrick Leißner · patrickleissner.de
+// ============================================================
+
+// === PLZ → KLIMAREGION nach DIN EN 12831 ===
+const PLZ_DATEN = {
+    "01":{ region:"Dresden/Meißen",              normTemp:-14, vbh:1850 },
+    "02":{ region:"Görlitz/Bautzen",             normTemp:-16, vbh:1950 },
+    "03":{ region:"Cottbus/Lausitz",             normTemp:-14, vbh:1850 },
+    "04":{ region:"Leipzig",                     normTemp:-14, vbh:1800 },
+    "06":{ region:"Halle/Dessau",                normTemp:-14, vbh:1850 },
+    "07":{ region:"Gera/Jena",                   normTemp:-14, vbh:1880 },
+    "08":{ region:"Zwickau/Plauen",              normTemp:-16, vbh:1950 },
+    "09":{ region:"Chemnitz/Erzgebirge",         normTemp:-16, vbh:1950 },
+    "10":{ region:"Berlin Mitte",                normTemp:-14, vbh:1750 },
+    "11":{ region:"Berlin",                      normTemp:-14, vbh:1750 },
+    "12":{ region:"Berlin Süd",                  normTemp:-14, vbh:1750 },
+    "13":{ region:"Berlin Nord",                 normTemp:-14, vbh:1750 },
+    "14":{ region:"Potsdam/Brandenburg",         normTemp:-14, vbh:1800 },
+    "15":{ region:"Frankfurt (Oder)",            normTemp:-14, vbh:1850 },
+    "16":{ region:"Oranienburg/Eberswalde",      normTemp:-14, vbh:1850 },
+    "17":{ region:"Neubrandenburg/Greifswald",   normTemp:-14, vbh:1900 },
+    "18":{ region:"Rostock/Stralsund",           normTemp:-10, vbh:2000 },
+    "19":{ region:"Schwerin/Ludwigslust",        normTemp:-10, vbh:1950 },
+    "20":{ region:"Hamburg Mitte",               normTemp:-10, vbh:1900 },
+    "21":{ region:"Hamburg Süd/Lüneburg",        normTemp:-10, vbh:1900 },
+    "22":{ region:"Hamburg Nord/West",           normTemp:-10, vbh:1900 },
+    "23":{ region:"Lübeck/Wismar",               normTemp:-10, vbh:1950 },
+    "24":{ region:"Kiel/Flensburg",              normTemp:-12, vbh:2050 },
+    "25":{ region:"Westküste/Sylt",              normTemp:-8,  vbh:2100 },
+    "26":{ region:"Oldenburg/Emden",             normTemp:-10, vbh:1950 },
+    "27":{ region:"Bremerhaven/Cuxhaven",        normTemp:-10, vbh:2000 },
+    "28":{ region:"Bremen",                      normTemp:-10, vbh:1900 },
+    "29":{ region:"Celle/Uelzen",                normTemp:-12, vbh:1880 },
+    "30":{ region:"Hannover",                    normTemp:-12, vbh:1850 },
+    "31":{ region:"Hameln/Hildesheim",           normTemp:-12, vbh:1880 },
+    "32":{ region:"Herford/Minden",              normTemp:-12, vbh:1880 },
+    "33":{ region:"Bielefeld/Paderborn",         normTemp:-12, vbh:1880 },
+    "34":{ region:"Kassel",                      normTemp:-12, vbh:1900 },
+    "35":{ region:"Gießen/Marburg",              normTemp:-12, vbh:1850 },
+    "36":{ region:"Fulda/Bad Hersfeld",          normTemp:-14, vbh:1950 },
+    "37":{ region:"Göttingen/Eschwege",          normTemp:-12, vbh:1900 },
+    "38":{ region:"Braunschweig/Wolfsburg",      normTemp:-12, vbh:1850 },
+    "39":{ region:"Magdeburg/Stendal",           normTemp:-14, vbh:1900 },
+    "40":{ region:"Düsseldorf",                  normTemp:-10, vbh:1700 },
+    "41":{ region:"Mönchengladbach/Neuss",       normTemp:-10, vbh:1700 },
+    "42":{ region:"Wuppertal/Solingen",          normTemp:-10, vbh:1750 },
+    "44":{ region:"Dortmund/Bochum",             normTemp:-12, vbh:1780 },
+    "45":{ region:"Essen/Gelsenkirchen",         normTemp:-10, vbh:1750 },
+    "46":{ region:"Oberhausen/Wesel",            normTemp:-10, vbh:1750 },
+    "47":{ region:"Duisburg/Krefeld",            normTemp:-10, vbh:1720 },
+    "48":{ region:"Münster/Coesfeld",            normTemp:-10, vbh:1780 },
+    "49":{ region:"Osnabrück/Lingen",            normTemp:-10, vbh:1800 },
+    "50":{ region:"Köln",                        normTemp:-10, vbh:1700 },
+    "51":{ region:"Köln Ost/Leverkusen",         normTemp:-10, vbh:1700 },
+    "52":{ region:"Aachen/Düren",                normTemp:-10, vbh:1750 },
+    "53":{ region:"Bonn/Siegburg",               normTemp:-10, vbh:1720 },
+    "54":{ region:"Trier/Bitburg",               normTemp:-12, vbh:1850 },
+    "55":{ region:"Mainz/Bad Kreuznach",         normTemp:-10, vbh:1720 },
+    "56":{ region:"Koblenz/Neuwied",             normTemp:-12, vbh:1780 },
+    "57":{ region:"Siegen/Olpe",                 normTemp:-12, vbh:1880 },
+    "58":{ region:"Hagen/Iserlohn",              normTemp:-12, vbh:1800 },
+    "59":{ region:"Hamm/Arnsberg",               normTemp:-12, vbh:1820 },
+    "60":{ region:"Frankfurt am Main",           normTemp:-10, vbh:1700 },
+    "61":{ region:"Bad Homburg/Friedberg",       normTemp:-10, vbh:1720 },
+    "63":{ region:"Aschaffenburg/Hanau",         normTemp:-10, vbh:1720 },
+    "64":{ region:"Darmstadt",                   normTemp:-10, vbh:1720 },
+    "65":{ region:"Wiesbaden/Limburg",           normTemp:-10, vbh:1720 },
+    "66":{ region:"Saarbrücken/Homburg",         normTemp:-12, vbh:1800 },
+    "67":{ region:"Ludwigshafen/Kaiserslautern", normTemp:-10, vbh:1680 },
+    "68":{ region:"Mannheim",                    normTemp:-10, vbh:1680 },
+    "69":{ region:"Heidelberg",                  normTemp:-10, vbh:1700 },
+    "70":{ region:"Stuttgart",                   normTemp:-12, vbh:1750 },
+    "71":{ region:"Stuttgart/Ludwigsburg",       normTemp:-12, vbh:1750 },
+    "72":{ region:"Tübingen/Reutlingen",         normTemp:-12, vbh:1800 },
+    "73":{ region:"Göppingen/Esslingen",         normTemp:-12, vbh:1780 },
+    "74":{ region:"Heilbronn/Schwäbisch Hall",   normTemp:-12, vbh:1750 },
+    "75":{ region:"Pforzheim/Calw",              normTemp:-12, vbh:1780 },
+    "76":{ region:"Karlsruhe/Baden-Baden",       normTemp:-10, vbh:1700 },
+    "77":{ region:"Offenburg/Lahr",              normTemp:-12, vbh:1750 },
+    "78":{ region:"Villingen-Schwenningen",      normTemp:-14, vbh:1900 },
+    "79":{ region:"Freiburg/Lörrach",            normTemp:-12, vbh:1720 },
+    "80":{ region:"München",                     normTemp:-14, vbh:1850 },
+    "81":{ region:"München Süd/Ost",             normTemp:-14, vbh:1850 },
+    "82":{ region:"Garmisch/Starnberg",          normTemp:-16, vbh:2000 },
+    "83":{ region:"Rosenheim/Traunstein",        normTemp:-14, vbh:1900 },
+    "84":{ region:"Landshut/Dingolfing",         normTemp:-14, vbh:1880 },
+    "85":{ region:"Ingolstadt/Freising",         normTemp:-14, vbh:1880 },
+    "86":{ region:"Augsburg/Donauwörth",         normTemp:-14, vbh:1880 },
+    "87":{ region:"Kempten/Allgäu",              normTemp:-18, vbh:2100 },
+    "88":{ region:"Friedrichshafen/Ravensburg",  normTemp:-14, vbh:1900 },
+    "89":{ region:"Ulm/Heidenheim",              normTemp:-14, vbh:1880 },
+    "90":{ region:"Nürnberg/Fürth",             normTemp:-14, vbh:1880 },
+    "91":{ region:"Erlangen/Ansbach",            normTemp:-14, vbh:1880 },
+    "92":{ region:"Amberg/Weiden",               normTemp:-16, vbh:1950 },
+    "93":{ region:"Regensburg/Cham",             normTemp:-14, vbh:1900 },
+    "94":{ region:"Passau/Straubing",            normTemp:-14, vbh:1900 },
+    "95":{ region:"Hof/Bayreuth",                normTemp:-18, vbh:2050 },
+    "96":{ region:"Bamberg/Coburg",              normTemp:-14, vbh:1900 },
+    "97":{ region:"Würzburg/Schweinfurt",        normTemp:-12, vbh:1800 },
+    "98":{ region:"Suhl/Ilmenau",                normTemp:-16, vbh:2000 },
+    "99":{ region:"Erfurt/Weimar",               normTemp:-14, vbh:1920 }
+};
+
+// === BAUJAHR → KENNWERTE ===
+const BAUJAHR_DATEN = {
+    "vor_1960":  { heizlastM2:150, jaz:3.5, label:"Altbau vor 1960" },
+    "1960_1979": { heizlastM2:120, jaz:3.6, label:"1960–1979" },
+    "1980_1994": { heizlastM2:90,  jaz:3.8, label:"1980–1994" },
+    "1995_2009": { heizlastM2:55,  jaz:4.0, label:"1995–2009" },
+    "ab_2010":   { heizlastM2:35,  jaz:4.3, label:"ab 2010" }
+};
+
+// === HEIZUNGSALTER → KESSELWIRKUNGSGRAD ===
+const HEIZUNG_ETA = {
+    "sehr_alt":0.70, "alt":0.80, "mittel":0.85, "neu":0.90, "brennwert":0.95
+};
+
+// === BRENNSTOFF-KONFIGURATION ===
+const FUEL = {
+    oil:        { kwhPU:10,  ef:0.266, unit:"Liter", hint:"Steht auf deiner Heizöl-Tankrechnung",        dflt:2500,  ppu:0.95,  dispUnit:"€/Liter", dispDflt:"0.95", dispDiv:1   },
+    gas:        { kwhPU:1,   ef:0.201, unit:"kWh",   hint:"Steht auf deiner Gas-Jahresabrechnung",       dflt:25000, ppu:0.12,  dispUnit:"ct/kWh",  dispDflt:"12",   dispDiv:100 },
+    pellets:    { kwhPU:4.8, ef:0.025, unit:"kg",    hint:"Jahresverbrauch laut Lieferschein",           dflt:5000,  ppu:0.065, dispUnit:"ct/kg",   dispDflt:"6.5",  dispDiv:100 },
+    fernwaerme: { kwhPU:1,   ef:0.08,  unit:"kWh",   hint:"Steht auf deiner Fernwärme-Jahresrechnung",  dflt:20000, ppu:0.13,  dispUnit:"ct/kWh",  dispDflt:"13",   dispDiv:100 },
+    strom:      { kwhPU:1,   ef:0.39,  unit:"kWh",   hint:"Jahresverbrauch Heizstrom lt. Stromrechnung",dflt:8000,  ppu:0.32,  dispUnit:null,      dispDflt:null,   dispDiv:1   }
+};
+
+// === BERECHUNGS-KONSTANTEN ===
+const ORIENT = { S:1.00, SW:0.96, SO:0.96, W:0.85, O:0.82, N:0.55, NW:0.65, NO:0.65 };
+const TILT   = { flach:0.87, mittel:1.00, steil:0.91, vertikal:0.70 };
+const SHADE  = { keine:1.00, gering:0.92, stark:0.78 };
+const BASE_YIELD    = 950;   // kWh/kWp/Jahr DE-Mittel (PVGIS)
+const KWP_PER_M2    = 0.16;  // kWp/m² (Standardmodul ~400W)
+const PV_PRICE_KWP  = 1450;  // €/kWp inkl. Montage (2025)
+const WP_BASE       = 8000;  // € Grundinvestition Wärmepumpe
+const WP_PER_M2     = 35;    // €/m² Wohnfläche
+const LOAN_RATE     = 0.035; // Finanzierungszins p.a.
+const LOAN_YEARS    = 20;
+const SELF_CONS     = 0.60;  // Eigenverbrauchsquote (mit Speicher)
+const ELEC_INC      = 0.06;  // Strompreisanstieg p.a.
+const FUEL_INC      = 0.04;  // Brennstoffpreisanstieg p.a.
+const CO2_2025      = 55;    // €/t (BEHG)
+const CO2_2027      = 70;    // €/t (ETS II Start)
+const CO2_INC       = 0.15;  // CO₂-Preissteigerung p.a. ab 2027
+const YEARS         = 20;
+
+// === DACHFLÄCHEN ===
+const SURFACE_LABELS = [
+    'Hauptdach','Dachseite Süd','Dachseite Nord','Dachseite Ost','Dachseite West',
+    'Garage / Carport','Fassade Süd','Fassade Ost','Fassade West','Sonstige Fläche'
+];
+const ORIENT_OPTS = ['O','SO','S','SW','W','N'];
+const TILT_OPTS   = [['flach','≤ 15°'],['mittel','20–35°'],['steil','≥ 40°'],['vertikal','Fassade']];
+const SHADE_OPTS  = ['keine','gering','stark'];
+
+function renderSurfaces() {
+    const c = $('surfaces-container');
+    c.innerHTML = '';
+    W.surfaces.forEach((s, idx) => {
+        const canDel = W.surfaces.length > 1;
+        const el = document.createElement('div');
+        el.className = 'roof-surface';
+        el.innerHTML = `
+<div class="roof-surface-header">
+  <select class="er-select surface-label-sel" data-surf-label="${idx}">
+    ${SURFACE_LABELS.map(l => `<option value="${l}"${l===s.label?' selected':''}>${l}</option>`).join('')}
+  </select>
+  ${canDel ? `<button type="button" class="surface-delete" data-surf-del="${idx}" aria-label="Fläche entfernen">×</button>` : ''}
+</div>
+<div class="field-group">
+  <label class="field-label">Nutzbare Fläche</label>
+  <div class="input-row">
+    <input type="number" class="er-input" data-surf-area="${idx}"
+           value="${s.area||''}" placeholder="z. B. 40" min="1" max="500" inputmode="numeric">
+    <span class="input-unit">m²</span>
+  </div>
+</div>
+<div class="field-group">
+  <span class="field-label">Ausrichtung</span>
+  <div class="card-grid cols-3">
+    ${ORIENT_OPTS.map(v =>
+      `<button type="button" class="card-btn${v===s.orientation?' selected':''}" data-surf-idx="${idx}" data-surf-prop="orientation" data-surf-val="${v}">${v}</button>`
+    ).join('')}
+  </div>
+</div>
+<div class="field-group">
+  <span class="field-label">Neigung</span>
+  <div class="card-grid cols-2">
+    ${TILT_OPTS.map(([v,sub]) =>
+      `<button type="button" class="card-btn${v===s.tilt?' selected':''}" data-surf-idx="${idx}" data-surf-prop="tilt" data-surf-val="${v}">${v}<span class="btn-sub">${sub}</span></button>`
+    ).join('')}
+  </div>
+</div>
+<div class="field-group">
+  <span class="field-label">Verschattung</span>
+  <div class="card-grid cols-3">
+    ${SHADE_OPTS.map(v =>
+      `<button type="button" class="card-btn${v===s.shading?' selected':''}" data-surf-idx="${idx}" data-surf-prop="shading" data-surf-val="${v}">${v}</button>`
+    ).join('')}
+  </div>
+</div>`;
+        c.appendChild(el);
+    });
+}
+
+function addSurface() {
+    W.surfaces.push({ label:'Weitere Fläche', area:0, orientation:'S', tilt:'mittel', shading:'keine' });
+    renderSurfaces();
+}
+
+function removeSurface(idx) {
+    if (W.surfaces.length <= 1) return;
+    W.surfaces.splice(idx, 1);
+    renderSurfaces();
+}
+
+// === WIZARD STATE ===
+const W = {
+    step: 1,
+    gebaeude:"efh", baujahr:"", area:0, plz:"", plzData:null,
+    fuelType:"oil", fuelPrice:null, consumption:0, heizAlter:"alt", heizAbschlag:null,
+    elecMode:"kwh", elecKwh:0, elecAbschlag:0, elecPrice:0.32,
+    eauto:"nein",
+    surfaces:[{ label:'Hauptdach', area:0, orientation:'S', tilt:'mittel', shading:'keine' }],
+    interesse:["pv","wp"], finanzierung:"finanz",
+    zinssatz:3.5, laufzeit:20, zinsfestschreibung:20, sondertilgung:0, zinsfreiJahr1:'nein', kreditbetrag:0,
+    zeithorizont:"bald"
+};
+
+const $ = id => document.getElementById(id);
+let costChart = null;
+
+// === CARD BUTTONS ===
+document.addEventListener('DOMContentLoaded', () => {
+    // Single-select
+    document.querySelectorAll('.card-btn:not(.multi)').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const g = btn.dataset.group;
+            document.querySelectorAll(`.card-btn[data-group="${g}"]:not(.multi)`)
+                    .forEach(b => b.classList.remove('selected'));
+            btn.classList.add('selected');
+            W[g] = btn.dataset.value;
+            if (g === 'fuelType') updateFuelUI();
+            if (g === 'finanzierung') updateFinanzUI();
+            if (g === 'zinsfreiJahr1') updateRatePreview();
+        });
+        btn.addEventListener('keydown', e => {
+            if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); btn.click(); }
+        });
+    });
+    // Multi-select
+    document.querySelectorAll('.card-btn.multi').forEach(btn => {
+        btn.addEventListener('click', () => {
+            btn.classList.toggle('selected');
+            const v = btn.dataset.value;
+            if (btn.classList.contains('selected')) {
+                if (!W.interesse.includes(v)) W.interesse.push(v);
+            } else {
+                W.interesse = W.interesse.filter(x => x !== v);
+            }
+        });
+        btn.addEventListener('keydown', e => {
+            if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); btn.click(); }
+        });
+    });
+
+    // PLZ live lookup
+    $('inp-plz').addEventListener('input', e => {
+        const raw = e.target.value.replace(/\D/g, '').slice(0, 5);
+        e.target.value = raw;
+        W.plz = raw;
+        const fb = $('plz-feedback');
+        if (raw.length === 5) {
+            const d = PLZ_DATEN[raw.substring(0, 2)];
+            if (d) {
+                fb.textContent = '✓ ' + d.region;
+                fb.className = 'plz-feedback found';
+                W.plzData = d;
+                $('inp-plz').classList.replace('has-error', 'valid') || $('inp-plz').classList.add('valid');
+            } else {
+                fb.textContent = 'PLZ nicht bekannt – Standardwerte werden verwendet';
+                fb.className = 'plz-feedback error';
+                W.plzData = null;
+                $('inp-plz').classList.replace('valid', 'has-error') || $('inp-plz').classList.add('has-error');
+            }
+        } else {
+            fb.textContent = ' ';
+            fb.className = 'plz-feedback';
+            W.plzData = null;
+            $('inp-plz').classList.remove('valid', 'has-error');
+        }
+    });
+
+    // Finanzierungsparameter
+    $('inp-kreditbetrag').addEventListener('input', e => {
+        W.kreditbetrag = Math.max(0, parseFloat(e.target.value) || 0);
+        updateRatePreview();
+    });
+    $('inp-zinssatz').addEventListener('input', e => {
+        W.zinssatz = Math.max(0, Math.min(9, parseFloat(e.target.value) || 0));
+        updateRatePreview();
+    });
+    $('inp-laufzeit').addEventListener('change', e => {
+        W.laufzeit = parseInt(e.target.value) || 20;
+        updateRatePreview();
+    });
+    $('inp-zinsfestschreibung').addEventListener('change', e => {
+        W.zinsfestschreibung = parseInt(e.target.value) || 20;
+    });
+    $('inp-sondertilgung').addEventListener('input', e => {
+        W.sondertilgung = Math.max(0, parseFloat(e.target.value) || 0);
+        updateRatePreview();
+    });
+
+    // Brennstoffpreis
+    $('inp-fuelprice').addEventListener('input', e => {
+        const v = parseFloat(e.target.value);
+        W.fuelPrice = isNaN(v) || v <= 0 ? null : v;
+    });
+
+    // Dachflächen: Event-Delegation
+    const sc = $('surfaces-container');
+    sc.addEventListener('click', e => {
+        const del = e.target.closest('[data-surf-del]');
+        if (del) { removeSurface(parseInt(del.dataset.surfDel)); return; }
+        const btn = e.target.closest('[data-surf-prop]');
+        if (!btn) return;
+        const idx  = parseInt(btn.dataset.surfIdx);
+        const prop = btn.dataset.surfProp;
+        const val  = btn.dataset.surfVal;
+        btn.closest('.card-grid').querySelectorAll('.card-btn')
+           .forEach(b => b.classList.remove('selected'));
+        btn.classList.add('selected');
+        W.surfaces[idx][prop] = val;
+    });
+    sc.addEventListener('input', e => {
+        const inp = e.target.closest('[data-surf-area]');
+        if (!inp) return;
+        W.surfaces[parseInt(inp.dataset.surfArea)].area = parseFloat(inp.value) || 0;
+    });
+    sc.addEventListener('change', e => {
+        const sel = e.target.closest('[data-surf-label]');
+        if (!sel) return;
+        W.surfaces[parseInt(sel.dataset.surfLabel)].label = sel.value;
+    });
+    $('btn-add-surface').addEventListener('click', addSurface);
+
+    // Initiales Render
+    renderSurfaces();
+
+    // iOS: sticky bar über virtueller Tastatur halten
+    if (window.visualViewport) {
+        window.visualViewport.addEventListener('resize', () => {
+            const nav = $('wizard-nav');
+            if (!nav) return;
+            const offset = window.innerHeight - window.visualViewport.height - window.visualViewport.offsetTop;
+            nav.style.transform = offset > 50 ? `translateY(-${offset}px)` : '';
+        });
+    }
+});
+
+// === FUEL UI ===
+function updateFuelUI() {
+    const cfg = FUEL[W.fuelType];
+    $('consumption-unit').textContent = cfg.unit;
+    $('consumption-hint').textContent = cfg.hint;
+    $('inp-consumption').placeholder = 'z. B. ' + cfg.dflt;
+    const grp = $('grp-fuelprice');
+    if (cfg.dispUnit) {
+        grp.style.display = '';
+        $('fuelprice-unit').textContent = cfg.dispUnit;
+        $('inp-fuelprice').placeholder = cfg.dispDflt;
+        $('inp-fuelprice').value = '';
+        W.fuelPrice = null;
+    } else {
+        grp.style.display = 'none';
+        W.fuelPrice = null;
+    }
+}
+
+// === FINANZIERUNG UI ===
+function updateFinanzUI() {
+    $('grp-finanzierung-detail').style.display =
+        W.finanzierung === 'finanz' ? '' : 'none';
+}
+
+// === STROM-MODUS ===
+function setElecMode(mode) {
+    W.elecMode = mode;
+    $('tog-kwh').classList.toggle('active', mode === 'kwh');
+    $('tog-abschlag').classList.toggle('active', mode === 'abschlag');
+    $('grp-kwh').style.display      = mode === 'kwh'      ? '' : 'none';
+    $('grp-abschlag').style.display = mode === 'abschlag' ? '' : 'none';
+}
+
+// === NAVIGATION ===
+function nextStep(from) {
+    if (!validateStep(from)) return;
+    collectStep(from);
+    goToStep(from + 1);
+}
+function prevStep(from) { goToStep(from - 1); }
+function navNext() { if (W.step < 5) nextStep(W.step); else startCalc(); }
+function navBack() { if (W.step > 1) prevStep(W.step); }
+
+function goToStep(n) {
+    W.step = n;
+    document.querySelectorAll('.wizard-step').forEach(s => s.classList.remove('active'));
+    $('result-section').classList.remove('visible');
+    const el = $('step-' + n);
+    if (el) el.classList.add('active');
+    updateProgress(n);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+const STEP_LABELS = ['Dein Gebäude','Deine Heizung','Dein Strom','Dein Dach','Deine Ziele'];
+
+function updateProgress(n) {
+    const pct = Math.min(n / 5 * 100, 100);
+
+    const fill = $('er-top-fill');
+    if (fill) fill.style.width = pct + '%';
+
+    const counter = $('step-counter');
+    if (counter) counter.textContent = n <= 5
+        ? 'Schritt ' + n + ' von 5 — ' + STEP_LABELS[n - 1]
+        : '';
+
+    const navFill = $('nav-progress-fill');
+    if (navFill) navFill.style.width = pct + '%';
+
+    const navLabel = $('nav-step-label');
+    if (navLabel && n <= 5) navLabel.textContent = 'Schritt ' + n + ' von 5';
+
+    const btnBack = $('nav-btn-back');
+    if (btnBack) btnBack.style.display = (n > 1 && n <= 5) ? 'block' : 'none';
+
+    const btnNext = $('nav-btn-next');
+    if (btnNext) {
+        if (n === 5) {
+            btnNext.textContent = 'Analyse starten';
+            btnNext.className = 'btn-calc';
+        } else {
+            btnNext.textContent = 'Weiter →';
+            btnNext.className = 'btn-next';
+        }
+    }
+
+    const nav = $('wizard-nav');
+    if (nav) nav.classList.toggle('hidden', n > 5);
+}
+
+// === VALIDATION ===
+function showErr(id, show) {
+    const el = $(id);
+    if (el) el.classList.toggle('visible', show);
+}
+
+function validateStep(n) {
+    let ok = true;
+
+    if (n === 1) {
+        const bj = $('inp-baujahr').value;
+        showErr('err-baujahr', !bj);
+        if (!bj) ok = false;
+
+        const a = parseFloat($('inp-area').value);
+        const aOk = a >= 40 && a <= 800;
+        showErr('err-area', !aOk);
+        $('inp-area').classList.toggle('has-error', !aOk);
+        if (!aOk) ok = false;
+
+        const p = $('inp-plz').value;
+        showErr('err-plz', p.length !== 5);
+        if (p.length !== 5) ok = false;
+    }
+    if (n === 2) {
+        const c = parseFloat($('inp-consumption').value);
+        showErr('err-consumption', !(c > 0));
+        if (!(c > 0)) ok = false;
+        const ha = $('inp-heizalter').value;
+        showErr('err-heizalter', !ha);
+        if (!ha) ok = false;
+    }
+    if (n === 3) {
+        if (W.elecMode === 'kwh') {
+            const e = parseFloat($('inp-elec-kwh').value);
+            const eOk = e >= 500 && e <= 50000;
+            showErr('err-elec', !eOk);
+            if (!eOk) ok = false;
+        }
+    }
+    if (n === 4) {
+        const hasArea = W.surfaces.some(s => s.area >= 5);
+        showErr('err-surfaces', !hasArea);
+        if (!hasArea) ok = false;
+    }
+    return ok;
+}
+
+// === COLLECT ===
+function collectStep(n) {
+    if (n === 1) {
+        W.baujahr = $('inp-baujahr').value;
+        W.area    = parseFloat($('inp-area').value);
+        W.plz     = $('inp-plz').value;
+    }
+    if (n === 2) {
+        W.consumption = parseFloat($('inp-consumption').value);
+        W.heizAlter   = $('inp-heizalter').value;
+        const ab = $('inp-heizabschlag').value;
+        W.heizAbschlag = ab ? parseFloat(ab) : null;
+    }
+    if (n === 3) {
+        W.elecPrice = parseFloat($('inp-elecprice').value) / 100;
+        if (W.elecMode === 'kwh') {
+            W.elecKwh = parseFloat($('inp-elec-kwh').value);
+        } else {
+            const ab = parseFloat($('inp-elec-abschlag').value) || 0;
+            W.elecKwh = (ab * 12) / W.elecPrice;
+        }
+    }
+    // n === 4: W.surfaces wird live via Event-Delegation aktualisiert
+}
+
+// === ANNUITÄT (monatliche Compoundierung / Zinseszins) ===
+function calcMonthlyRate(K, zinssatz, laufzeit, sondertilgung, zinsfreiJahr1) {
+    const net = Math.max(0, K - (sondertilgung || 0));
+    if (net <= 0) return 0;
+    const rm = (zinssatz / 100) / 12;
+    const nm = laufzeit * 12;
+    if (zinsfreiJahr1 === 'ja' && rm > 0) {
+        const tilgM1     = net / nm;
+        const restNach12 = net - 12 * tilgM1;
+        const nm2 = nm - 12;
+        const rate2 = nm2 > 0
+            ? restNach12 * (rm * Math.pow(1+rm, nm2)) / (Math.pow(1+rm, nm2) - 1)
+            : 0;
+        return (tilgM1 * 12 + rate2 * nm2) / nm;
+    } else if (rm === 0) {
+        return net / nm;
+    } else {
+        return net * (rm * Math.pow(1+rm, nm)) / (Math.pow(1+rm, nm) - 1);
+    }
+}
+
+function calcZinsfreiRates(K, zinssatz, laufzeit, sondertilgung) {
+    const net = Math.max(0, K - (sondertilgung || 0));
+    if (net <= 0) return null;
+    const rm  = (zinssatz / 100) / 12;
+    const nm  = laufzeit * 12;
+    const nm2 = nm - 12;
+    const tilgM1 = net / nm;
+    const rest   = net - 12 * tilgM1;
+    const rate2  = nm2 > 0
+        ? rest * (rm * Math.pow(1+rm, nm2)) / (Math.pow(1+rm, nm2) - 1)
+        : 0;
+    return { rate1: tilgM1, rate2 };
+}
+
+function updateRatePreview() {
+    const K  = W.kreditbetrag > 0 ? W.kreditbetrag : 0;
+    const el = $('rate-preview');
+    if (!el) return;
+    if (K <= 0 || W.finanzierung !== 'finanz') { el.style.display = 'none'; return; }
+    if (W.zinsfreiJahr1 === 'ja' && W.zinssatz > 0) {
+        const rates = calcZinsfreiRates(K, W.zinssatz, W.laufzeit, W.sondertilgung);
+        if (!rates) { el.style.display = 'none'; return; }
+        el.textContent = '1. Jahr: ca. ' + fmt(Math.round(rates.rate1)) + ' €/Mon. (0 % Zinsen)'
+            + ' · ab Jahr 2: ca. ' + fmt(Math.round(rates.rate2)) + ' €/Mon. (' + W.zinssatz + ' % p.a.)';
+    } else {
+        const m = calcMonthlyRate(K, W.zinssatz, W.laufzeit, W.sondertilgung, 'nein');
+        el.textContent = 'Monatliche Rate: ca. ' + fmt(Math.round(m)) + ' €'
+            + (W.zinssatz === 0 ? ' (zinslos, reine Tilgung)' : ' · ' + W.zinssatz + ' % p.a. · ' + W.laufzeit + ' J.');
+    }
+    el.style.display = '';
+}
+
+// === HAUPTBERECHNUNG ===
+function startCalc() {
+    if (!validateStep(5)) return;
+    collectStep(4);
+
+    const bj  = BAUJAHR_DATEN[W.baujahr] || BAUJAHR_DATEN['1980_1994'];
+    const eta = HEIZUNG_ETA[W.heizAlter] || 0.82;
+    const fc  = FUEL[W.fuelType] || FUEL.oil;
+    const plz = W.plzData || { region:'Deutschland', vbh:1800 };
+
+    let vbh = plz.vbh;
+    if (bj.heizlastM2 <= 55) vbh = Math.round(vbh * 0.85);
+
+    // Energiebilanz Heizung
+    const E_fossil = W.consumption * fc.kwhPU;   // kWh Brennstoffeinsatz
+    const Q_heat   = E_fossil * eta;              // kWh Nutzwärme
+    const E_WP     = Q_heat / bj.jaz;            // kWh Strom für Wärmepumpe
+
+    // PV — Summe aller Dachflächen
+    let kWp = 0, pvYield = 0;
+    for (const s of W.surfaces) {
+        if (!(s.area > 0)) continue;
+        const skWp = s.area * KWP_PER_M2;
+        kWp     += skWp;
+        pvYield += skWp * BASE_YIELD
+                 * (ORIENT[s.orientation] || 1)
+                 * (TILT[s.tilt] || 1)
+                 * (SHADE[s.shading] || 1);
+    }
+
+    const totalDemand = E_WP + W.elecKwh;
+    const pvSelbst    = Math.min(pvYield * SELF_CONS, totalDemand);
+
+    // Kosten heute
+    const ppu = W.fuelPrice !== null ? W.fuelPrice / fc.dispDiv : fc.ppu;
+    const fuelPriceKwh = ppu / fc.kwhPU;
+    const fossilJahr   = E_fossil * fuelPriceKwh;
+    const elecJahr     = W.elecKwh * W.elecPrice;
+    const heuteJahr    = fossilJahr + elecJahr;
+
+    // Kosten neu (WP + PV)
+    const netElec   = Math.max(0, totalDemand - pvSelbst);
+    const newElecJahr = netElec * W.elecPrice;
+
+    // Investition & Annuität (monatliche Compoundierung / Zinseszins)
+    const invest      = kWp * PV_PRICE_KWP + WP_BASE + W.area * WP_PER_M2;
+    const creditBase  = W.kreditbetrag > 0 ? W.kreditbetrag : invest;
+    let monthlyRate = 0;
+    if (W.finanzierung === 'finanz') {
+        monthlyRate = calcMonthlyRate(creditBase, W.zinssatz, W.laufzeit, W.sondertilgung, W.zinsfreiJahr1);
+    }
+    const annuity = monthlyRate * 12;
+    const neuJahr = newElecJahr + annuity;
+
+    // CO₂
+    const co2Jetzt  = E_fossil * fc.ef / 1000; // t/Jahr
+
+    // 20-Jahres-Projektion
+    const fossilArr = [], neuArr = [];
+    for (let t = 0; t < YEARS; t++) {
+        const co2P   = t < 2 ? CO2_2025 + t * 5
+                             : CO2_2027 * Math.pow(1 + CO2_INC, t - 2);
+        const co2Add = E_fossil * fc.ef * co2P / 1e6;
+        const cFoss  = (E_fossil * fuelPriceKwh * Math.pow(1 + FUEL_INC, t))
+                     + (elecJahr * Math.pow(1 + ELEC_INC, t))
+                     + co2Add;
+        const cNeu   = netElec * W.elecPrice * Math.pow(1 + ELEC_INC, t) + annuity;
+        fossilArr.push(Math.round(cFoss));
+        neuArr.push(Math.round(cNeu));
+    }
+
+    // === ERGEBNIS RENDERN ===
+    const heuteM = Math.round(heuteJahr / 12);
+    const neuM   = Math.round(neuJahr   / 12);
+    const delta  = heuteM - neuM;
+
+    $('res-location').textContent = plz.region;
+    $('res-heute').textContent    = fmt(heuteM) + ' €';
+    $('res-neu').textContent      = fmt(neuM)   + ' €';
+    $('res-neu-sub').textContent  = W.finanzierung === 'eigen'
+        ? 'pro Monat (Energiekosten, ohne Tilgung)'
+        : W.finanzierung === 'offen'
+        ? 'pro Monat (Energiekosten, Finanzierung noch offen)'
+        : 'pro Monat (inkl. Finanzierung ' + W.zinssatz + ' %, ' + W.laufzeit + ' J.)';
+    $('res-delta').textContent    = (delta >= 0 ? '− ' : '+ ') + fmt(Math.abs(delta)) + ' €/Monat';
+    $('res-delta-text').textContent = delta >= 0
+        ? 'monatliche Einsparung gegenüber heute'
+        : 'monatlicher Mehraufwand bei Finanzierung';
+
+    $('kpi-pv').textContent     = fmt(Math.round(pvYield)) + ' kWh';
+    $('kpi-pv-sub').textContent = Math.round(kWp * 10) / 10 + ' kWp · '
+                                + Math.round(pvSelbst / (pvYield || 1) * 100) + '% Eigenverbrauch';
+    $('kpi-heiz').textContent   = fmt(Math.round(newElecJahr)) + ' €/Jahr';
+    $('kpi-heiz-sub').textContent = 'Vorher: ' + fmt(Math.round(fossilJahr)) + ' €/Jahr'
+                                  + (fossilJahr > 0 ? ' (−' + Math.round((1 - newElecJahr / fossilJahr) * 100) + '%)' : '');
+    $('kpi-co2').textContent    = co2Jetzt.toFixed(1).replace('.', ',') + ' t';
+
+    // 20-Jahres-Bilanz
+    const bilanz20 = fossilArr.reduce((a,b) => a+b, 0) - neuArr.reduce((a,b) => a+b, 0);
+    $('res-bilanz20').textContent = fmt(Math.round(bilanz20)) + ' €';
+
+    // Persönlicher Fazit-Text
+    const fuelLabel = { oil:'Heizöl', gas:'Erdgas', pellets:'Holzpellets', fernwaerme:'Fernwärme', strom:'Heizstrom' }[W.fuelType] || 'fossiler Energie';
+    const narrativeText = W.finanzierung === 'eigen'
+        ? `Du heizt aktuell mit ${fuelLabel} und gibst dafür laut dieser Schätzung ${fmt(heuteM)} €/Monat aus — Geld, das jeden Monat weg ist. Mit PV + Wärmepumpe würdest du stattdessen ${fmt(neuM)} €/Monat aufwenden und dir eine Anlage aufbauen, die dir dauerhaft gehört.`
+        : `Du heizt aktuell mit ${fuelLabel} und gibst dafür laut dieser Schätzung ${fmt(heuteM)} €/Monat aus — Geld, das jeden Monat weg ist. Mit PV + Wärmepumpe und einer Finanzierung würdest du laut dieser Schätzung ${fmt(neuM)} €/Monat zahlen — und damit in dein eigenes Eigentum investieren statt in das des Energieversorgers.`;
+    $('res-narrative').textContent = narrativeText;
+
+    // PLZ im Lead-Formular vorausfüllen
+    const lgPlz = $('lg-plz');
+    if (lgPlz && W.plz) lgPlz.value = W.plz;
+
+    // Sektion anzeigen, Chart nach Render
+    document.querySelectorAll('.wizard-step').forEach(s => s.classList.remove('active'));
+    $('result-section').classList.add('visible');
+    updateProgress(6);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+
+    // Kumulierter Chart
+    const fossilCum = [], neuCum = [];
+    let fSum = 0, nSum = 0;
+    for (let t = 0; t < YEARS; t++) {
+        fSum += fossilArr[t]; fossilCum.push(Math.round(fSum));
+        nSum += neuArr[t];    neuCum.push(Math.round(nSum));
+    }
+    setTimeout(() => renderChart(fossilCum, neuCum), 60);
+}
+
+// === CHART ===
+function renderChart(fossil, neu) {
+    const canvas = $('cost-chart');
+    if (!canvas || typeof Chart === 'undefined') return;
+    if (costChart) { costChart.destroy(); costChart = null; }
+    const labels = Array.from({ length: YEARS }, (_, i) => String(2025 + i));
+    costChart = new Chart(canvas.getContext('2d'), {
+        type: 'line',
+        data: {
+            labels,
+            datasets: [
+                { label:'Öl/Gas', data:fossil, borderColor:'#dc2626', backgroundColor:'rgba(220,38,38,0.08)', borderWidth:2.5, fill:false, tension:0.3, pointRadius:0, pointHoverRadius:4 },
+                { label:'PV + Wärmepumpe', data:neu, borderColor:'#2E4F3C', backgroundColor:'rgba(46,79,60,0.08)', borderWidth:2.5, fill:false, tension:0.3, pointRadius:0, pointHoverRadius:4 }
+            ]
+        },
+        options: {
+            responsive:true, maintainAspectRatio:false,
+            animation:{ duration:400 },
+            interaction:{ intersect:false, mode:'index' },
+            plugins:{
+                legend:{ display:false },
+                tooltip:{ callbacks:{ label: ctx => ctx.dataset.label + ': ' + fmt(ctx.raw) + ' €' } }
+            },
+            scales:{
+                y:{ beginAtZero:false, ticks:{ callback: v => (v >= 1000 ? Math.round(v/1000) + '.000 €' : v + ' €') }, grid:{ color:'rgba(0,0,0,0.04)' } },
+                x:{ grid:{ display:false }, ticks:{ maxTicksLimit:10 } }
+            }
+        }
+    });
+}
+
+// === QUELLEN-TOGGLE ===
+function toggleSources() {
+    const btn  = $('sources-btn');
+    const body = $('sources-body');
+    const open = body.classList.toggle('open');
+    btn.setAttribute('aria-expanded', String(open));
+}
+
+// === LEAD-GATE ===
+async function submitLead() {
+    const vorname        = $('lg-vorname').value.trim();
+    const nachname       = $('lg-nachname').value.trim();
+    const email          = $('lg-email').value.trim();
+    const phone          = $('lg-phone').value.trim();
+    const plz            = $('lg-plz').value.trim();
+    const consentAnalyse = $('lg-consent-analyse').checked;
+    const consentKontakt = $('lg-consent-kontakt').checked;
+    const hp             = $('hp_website') ? $('hp_website').value : '';
+
+    if (!vorname || !nachname || !email || !plz || !consentAnalyse || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+        $('lg-error').textContent = 'Bitte Vorname, Nachname, E-Mail, PLZ und die Analyse-Zustimmung ausfüllen.';
+        $('lg-error').style.display = '';
+        return;
+    }
+    $('lg-error').style.display = 'none';
+
+    const btn = $('lg-submit-btn');
+    btn.disabled = true;
+    btn.textContent = 'Wird gesendet …';
+
+    const rechnerdaten = {
+        heute: $('res-heute').textContent,
+        neu:   $('res-neu').textContent,
+        delta: $('res-delta').textContent,
+        bil20: $('res-bilanz20').textContent,
+        narr:  $('res-narrative').textContent,
+        fuel:  W.fuelType || '',
+        unit:  (FUEL[W.fuelType] || {}).unit || '',
+    };
+
+    try {
+        const resp = await fetch('/api/lead', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ hp_website: hp, vorname, nachname, email, phone, plz,
+                                   rechnerdaten, consentAnalyse, consentKontakt }),
+        });
+        const data = await resp.json();
+        if (!data.ok) throw new Error(data.error || 'Unbekannter Fehler');
+        $('lead-gate-form').style.display = 'none';
+        $('lead-success').style.display   = '';
+    } catch (e) {
+        btn.disabled = false;
+        btn.textContent = 'Analyse zusenden & PDF freischalten';
+        $('lg-error').textContent = e.message || 'Versand fehlgeschlagen – bitte erneut versuchen.';
+        $('lg-error').style.display = '';
+    }
+}
+
+// === RESET ===
+function resetWizard() {
+    W.step = 1;
+    W.kreditbetrag = 0;
+    W.surfaces = [{ label:'Hauptdach', area:0, orientation:'S', tilt:'mittel', shading:'keine' }];
+    renderSurfaces();
+    const kbInp = $('inp-kreditbetrag');
+    if (kbInp) kbInp.value = '';
+    const rp = $('rate-preview');
+    if (rp) rp.style.display = 'none';
+    // Lead-Gate zurücksetzen
+    const lgForm = $('lead-gate-form');
+    const lgSucc = $('lead-success');
+    if (lgForm) lgForm.style.display = '';
+    if (lgSucc) lgSucc.style.display = 'none';
+    ['lg-vorname','lg-nachname','lg-email','lg-phone','lg-plz'].forEach(id => { const el = $(id); if(el) el.value=''; });
+    ['lg-consent-analyse','lg-consent-kontakt'].forEach(id => { const el = $(id); if(el) el.checked = false; });
+    const lgErr = $('lg-error');
+    if (lgErr) { lgErr.style.display = 'none'; lgErr.textContent = 'Bitte Vorname, Nachname, E-Mail, PLZ und die Analyse-Zustimmung ausfüllen.'; }
+    const lgBtn = $('lg-submit-btn');
+    if (lgBtn) { lgBtn.disabled = false; lgBtn.textContent = 'Analyse zusenden & PDF freischalten'; }
+    document.querySelectorAll('.wizard-step').forEach(s => s.classList.remove('active'));
+    $('result-section').classList.remove('visible');
+    $('step-1').classList.add('active');
+    updateProgress(1);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// === FORMAT ===
+function fmt(n) { return Math.round(n).toLocaleString('de-DE'); }
+
+// Nach DOI-Bestätigung: Lead-Gate direkt auf Success zeigen
+if (new URLSearchParams(location.search).get('confirmed') === 'true') {
+    const lgForm = $('lead-gate-form');
+    const lgSucc = $('lead-success');
+    if (lgForm) lgForm.style.display = 'none';
+    if (lgSucc) lgSucc.style.display = '';
+}
+  </script>
+</body>
+</html>

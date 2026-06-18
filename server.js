@@ -3,6 +3,7 @@ const express    = require('express');
 const path       = require('path');
 const nodemailer = require('nodemailer');
 const crypto     = require('crypto');
+const https      = require('https');
 
 const app  = express();
 const PORT = process.env.PORT || 3000;
@@ -37,6 +38,29 @@ function createTransporter() {
     port:   Number(process.env.SMTP_PORT) || 587,
     secure: false,
     auth: { user: process.env.SMTP_USER, pass: process.env.SMTP_PASS },
+  });
+}
+
+function brevoPost(apiPath, body) {
+  return new Promise((resolve, reject) => {
+    const data = JSON.stringify(body);
+    const req = https.request({
+      hostname: 'api.brevo.com',
+      path: apiPath,
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'api-key': process.env.BREVO_API_KEY,
+        'Content-Length': Buffer.byteLength(data),
+      },
+    }, (res) => {
+      let buf = '';
+      res.on('data', c => buf += c);
+      res.on('end', () => resolve({ status: res.statusCode, body: buf }));
+    });
+    req.on('error', reject);
+    req.write(data);
+    req.end();
   });
 }
 
@@ -154,12 +178,184 @@ app.get('/api/confirm', async (req, res) => {
   }
 });
 
+// ── Lead-Gate (Energierechner nutzen.html) ───────────────────────
+app.post('/api/lead', async (req, res) => {
+  if (req.body.hp_website) return res.status(400).json({ ok: false, error: 'Bot detected.' });
+
+  const ip = req.ip, now = Date.now(), WINDOW = 10 * 60 * 1000, MAX = 3;
+  const hits = (rateLimitMap.get(ip) || []).filter(t => now - t < WINDOW);
+  if (hits.length >= MAX) return res.status(429).json({ ok: false, error: 'Zu viele Anfragen.' });
+  hits.push(now); rateLimitMap.set(ip, hits);
+
+  const { vorname, nachname, email, phone, plz, rechnerdaten, consentAnalyse, consentKontakt } = req.body;
+
+  if (!vorname || !nachname || !email || !plz || !consentAnalyse) {
+    return res.status(400).json({ ok: false, error: 'Pflichtfelder fehlen.' });
+  }
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    return res.status(400).json({ ok: false, error: 'Ungültige E-Mail-Adresse.' });
+  }
+
+  const token = crypto.randomUUID();
+  pendingMap.set(token, {
+    payload: {
+      vorname, nachname, email,
+      phone: String(phone || '').replace(/</g, '&lt;').replace(/>/g, '&gt;'),
+      plz:   String(plz).replace(/</g, '&lt;').replace(/>/g, '&gt;'),
+      rechnerdaten,
+      consentKontakt: consentKontakt === true || consentKontakt === 'true',
+    },
+    expiresAt: now + 24 * 60 * 60 * 1000,
+  });
+
+  const confirmUrl = `https://patrickleissner.de/api/lead-confirm?token=${token}`;
+
+  try {
+    const transporter = createTransporter();
+    await transporter.sendMail({
+      from:    `"Patrick Leißner Energieberatung" <${process.env.SMTP_USER}>`,
+      to:      email,
+      subject: 'Bitte bestätige deine E-Mail – Patrick Leißner Energieberatung',
+      text: `Hallo ${vorname},\n\nbitte bestätige deine E-Mail-Adresse durch Klick auf diesen Link:\n\n${confirmUrl}\n\nDer Link ist 24 Stunden gültig. Danach werden alle eingegebenen Daten automatisch gelöscht.\n\nRechtsgrundlage: Art. 6 Abs. 1 lit. b DSGVO. Falls du keine Anfrage gestellt hast, ignoriere diese E-Mail.\n\nPatrick Leißner`,
+      html: `<div style="font-family:sans-serif;font-size:15px;color:#222;max-width:600px;line-height:1.6">
+        <p>Hallo ${vorname},</p>
+        <p>bitte bestätige deine E-Mail-Adresse, damit wir dir deine unverbindliche Analyse zusenden können:</p>
+        <p style="margin:24px 0"><a href="${confirmUrl}" style="background:#2E4F3C;color:#fff;padding:12px 24px;border-radius:6px;text-decoration:none;font-weight:600">E-Mail bestätigen</a></p>
+        <p style="color:#666;font-size:13px">Der Link ist <strong>24 Stunden gültig</strong>. Danach werden alle Daten automatisch gelöscht.</p>
+        <hr style="border:none;border-top:1px solid #eee;margin:20px 0">
+        <p style="color:#888;font-size:12px">Rechtsgrundlage: Art. 6 Abs. 1 lit. b DSGVO. Falls du keine Anfrage gestellt hast, ignoriere diese E-Mail – es wurden keine Daten weitergegeben.</p>
+      </div>`,
+    });
+    res.json({ ok: true, status: 'pending' });
+  } catch (err) {
+    console.error('Lead DOI error:', err.message);
+    pendingMap.delete(token);
+    res.status(500).json({ ok: false, error: 'E-Mail konnte nicht gesendet werden.' });
+  }
+});
+
+app.get('/api/lead-confirm', async (req, res) => {
+  const { token } = req.query;
+  const entry = token && pendingMap.get(token);
+
+  if (!entry || entry.expiresAt < Date.now()) {
+    pendingMap.delete(token);
+    return res.redirect('/nutzen?confirmed=expired');
+  }
+
+  const { vorname, nachname, email, phone, plz, rechnerdaten, consentKontakt } = entry.payload;
+  pendingMap.delete(token);
+  const name = `${vorname} ${nachname}`;
+
+  const safe = s => String(s || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+  const r     = rechnerdaten || {};
+  const heute = safe(r.heute || '–');
+  const neu   = safe(r.neu   || '–');
+  const delta = safe(r.delta || '–');
+  const bil20 = safe(r.bil20 || '–');
+  const narr  = safe(r.narr  || '');
+  const fuel  = safe(r.fuel  || '–');
+  const DISCLAIMER = 'Unverbindliche Schätzung ohne Gewähr, basierend auf deinen Angaben und Durchschnittswerten. Keine zugesicherte Ersparnis.';
+
+  // (a) Analyse-Mail an Nutzer via Brevo
+  try {
+    const senderEmail = process.env.BREVO_SENDER || 'info@patrickleissner.de';
+    await brevoPost('/v3/smtp/email', {
+      sender:      { name: 'Patrick Leißner', email: senderEmail },
+      replyTo:     { name: 'Patrick Leißner', email: senderEmail },
+      to:          [{ email, name }],
+      subject:     'Deine unverbindliche Ersteinschätzung – Patrick Leißner Energieberatung',
+      htmlContent: `<!DOCTYPE html><html lang="de"><body style="font-family:Arial,sans-serif;max-width:600px;margin:0 auto;color:#1a1a1a">
+<div style="background:#2E4F3C;padding:28px 32px;border-radius:12px 12px 0 0">
+  <p style="color:#D0AB3B;font-weight:800;font-size:1.1rem;margin:0">Patrick Leißner · Energieberatung</p>
+  <p style="color:rgba(255,255,255,0.6);margin:4px 0 0;font-size:0.85rem">Deine unverbindliche Ersteinschätzung</p>
+</div>
+<div style="background:#fff;padding:28px 32px;border:1px solid #e5e7eb;border-top:none">
+  <p>Hallo ${safe(vorname)},</p>
+  <p>hier ist deine unverbindliche Ersteinschätzung auf Basis deiner Angaben.</p>
+  <table style="width:100%;border-collapse:collapse;margin:20px 0">
+    <tr>
+      <td style="background:#f3f4f6;padding:16px;text-align:center;border-radius:8px 0 0 8px">
+        <div style="font-size:0.7rem;text-transform:uppercase;letter-spacing:.08em;color:#6b7280;margin-bottom:6px">Heute gibst du weg</div>
+        <div style="font-size:1.8rem;font-weight:800;color:#1a1a1a">${heute}</div>
+        <div style="font-size:0.75rem;color:#6b7280;margin-top:4px">pro Monat</div>
+      </td>
+      <td style="background:#2E4F3C;padding:16px;text-align:center;border-radius:0 8px 8px 0">
+        <div style="font-size:0.7rem;text-transform:uppercase;letter-spacing:.08em;color:rgba(255,255,255,.6);margin-bottom:6px">Stattdessen in dein Eigentum</div>
+        <div style="font-size:1.8rem;font-weight:800;color:#D0AB3B">${neu}</div>
+        <div style="font-size:0.75rem;color:rgba(255,255,255,.6);margin-top:4px">pro Monat</div>
+      </td>
+    </tr>
+  </table>
+  <div style="background:#fef9e7;border-radius:8px;padding:14px 18px;margin-bottom:20px;text-align:center">
+    <span style="font-size:1rem;font-weight:800;color:#2E4F3C">${delta}</span>
+    &nbsp;·&nbsp;
+    <span style="color:#6b7280;font-size:0.85rem">In 20 Jahren schätzungsweise <strong style="color:#2E4F3C">${bil20}</strong> weniger ans Netz</span>
+  </div>
+  <p style="color:#4b5563;font-size:0.9rem;line-height:1.7;border-left:3px solid #2E4F3C;padding-left:14px;margin:0 0 20px">${narr}</p>
+  <hr style="border:none;border-top:1px solid #e5e7eb;margin:24px 0">
+  <p style="font-size:0.78rem;color:#9ca3af;line-height:1.6;margin:0">${DISCLAIMER}</p>
+</div>
+<div style="background:#f3f4f6;padding:18px 32px;border-radius:0 0 12px 12px;text-align:center">
+  <p style="font-weight:800;color:#2E4F3C;margin:0 0 4px">Patrick Leißner</p>
+  <p style="font-size:0.8rem;color:#6b7280;margin:0">patrickleissner.de &nbsp;·&nbsp; <a href="https://patrickleissner.de/termin" style="color:#2E4F3C">Termin buchen</a></p>
+</div>
+</body></html>`,
+    });
+  } catch (err) {
+    console.error('Lead analyse-mail error:', err.message);
+  }
+
+  // (b) Benachrichtigung an MAIL_TO via SMTP
+  try {
+    const transporter = createTransporter();
+    await transporter.sendMail({
+      from:    `"Lead patrickleissner.de" <${process.env.SMTP_USER}>`,
+      replyTo: `"${safe(name)}" <${email}>`,
+      to:      process.env.MAIL_TO || 'p@patrickleissner.de',
+      subject: `Neuer bestätigter Lead: ${safe(name)} – Energierechner`,
+      html: `<table style="font-family:sans-serif;font-size:15px;color:#222;max-width:600px">
+        <tr><td><strong>Name:</strong></td><td>${safe(name)}</td></tr>
+        <tr><td><strong>E-Mail:</strong></td><td><a href="mailto:${email}">${email}</a></td></tr>
+        <tr><td><strong>Telefon:</strong></td><td>${phone || '–'}</td></tr>
+        <tr><td><strong>PLZ:</strong></td><td>${plz}</td></tr>
+        <tr><td><strong>Heizung:</strong></td><td>${fuel}</td></tr>
+        <tr><td><strong>Heute/Neu:</strong></td><td>${heute} → ${neu}/Monat</td></tr>
+        <tr><td><strong>20-J.-Vorteil:</strong></td><td>${bil20}</td></tr>
+        <tr><td><strong>Kontakt-Consent:</strong></td><td>${consentKontakt ? 'Ja' : 'Nein'}</td></tr>
+      </table>`,
+    });
+  } catch (err) {
+    console.error('Lead notify error:', err.message);
+  }
+
+  // (c) CRM: nur wenn consentKontakt
+  if (consentKontakt && process.env.BREVO_LIST_ID) {
+    try {
+      await brevoPost('/v3/contacts', {
+        email,
+        attributes: { VORNAME: safe(vorname), NACHNAME: safe(nachname), SMS: safe(phone) || undefined },
+        listIds: [Number(process.env.BREVO_LIST_ID)],
+        updateEnabled: false,
+      });
+    } catch (err) {
+      console.error('Brevo CRM error:', err.message);
+    }
+  }
+
+  res.redirect('/nutzen?confirmed=true');
+});
+
 // ── Clean URLs ───────────────────────────────────────────────────
 app.get('/beratung-technik',    (req, res) => res.sendFile(path.join(__dirname, 'beratung-technik.html')));
 app.get('/koordination-netzwerk', (req, res) => res.sendFile(path.join(__dirname, 'koordination-netzwerk.html')));
 app.get('/analyse-vorsorge',    (req, res) => res.sendFile(path.join(__dirname, 'analyse-vorsorge.html')));
-app.get('/energierechner',      (req, res) => res.sendFile(path.join(__dirname, 'energierechner.html')));
-app.get('/solarisator',          (req, res) => res.sendFile(path.join(__dirname, 'solarisator.html')));
+app.get('/unabhaengigkeit',      (req, res) => res.sendFile(path.join(__dirname, 'unabhaengigkeit.html')));
+app.get('/nutzen',               (req, res) => res.sendFile(path.join(__dirname, 'nutzen.html')));
+app.get('/heizkosten',           (req, res) => res.sendFile(path.join(__dirname, 'heizkosten.html')));
+app.get('/solarisator',          (req, res) => res.redirect(301, '/unabhaengigkeit'));
+app.get('/energierechner',       (req, res) => res.redirect(301, '/nutzen'));
+app.get('/waermepumpe-rechner',  (req, res) => res.redirect(301, '/heizkosten'));
 app.get('/waermepumpe-heizlast', (req, res) => res.sendFile(path.join(__dirname, 'waermepumpe-heizlast.html')));
 app.get('/mieterstrom',          (req, res) => res.sendFile(path.join(__dirname, 'mieterstrom.html')));
 app.get('/impressum',            (req, res) => res.sendFile(path.join(__dirname, 'impressum.html')));

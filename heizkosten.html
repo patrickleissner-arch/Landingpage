@@ -1,0 +1,1043 @@
+﻿<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Heizkosten-Vergleich: Öl/Gas vs. Wärmepumpe + PV. Berechne Ersparnis, CO₂-ETS-II-Kosten und 20-Jahres-Projektion individuell für dein Gebäude.">
+
+  <meta property="og:title" content="Heizkosten-Rechner – Wärmepumpe vs. fossil | Patrick Leißner Energieberatung">
+  <meta property="og:description" content="Was zahlst du für Öl oder Gas – und was kostet eine Wärmepumpe mit PV? Mit CO₂-ETS-II-Aufschlag ab 2027 und 20-Jahres-Projektion.">
+  <meta property="og:type" content="website">
+
+  <title>Heizkosten-Rechner – Wärmepumpe vs. Öl/Gas | Patrick Leißner Energieberatung</title>
+
+  <link rel="preload" as="image" href="assets/Foto/leistung-wp.jpg" fetchpriority="high">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="subpage.css">
+
+  <style>
+    /* Map calculator vars → website CI vars (defined after stylesheet links so they win) */
+    :root {
+      --green:      var(--color-brand-primary);
+      --green-l:    #3a6450;
+      --gold:       var(--color-brand-accent);
+      --beige:      var(--color-beige);
+      --white:      #ffffff;
+      --black:      #000000;
+      --gray:       var(--color-text-muted, #6b7280);
+      --gray-l:     var(--color-border, #e2e4e0);
+      --fossil-col: #C0392B;
+      --wp-col:     #4A7B9D;
+      --r:          0.5rem;
+      --sh:         0 2px 10px rgba(0,0,0,0.09);
+    }
+
+    .ec-calc-wrap { max-width: 980px; margin: 0 auto; padding: 2rem 1rem; }
+
+    /* Cards */
+    .card { background: var(--white); border-radius: var(--r); box-shadow: var(--sh); padding: 1.5rem; margin-bottom: 1.5rem; }
+    .card h2 { color: var(--green); font-size: 1rem; font-weight: 700; margin-bottom: 1rem; padding-bottom: .5rem; border-bottom: 2px solid var(--gold); }
+
+    /* Form */
+    .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+    .form-group { display: flex; flex-direction: column; gap: .3rem; }
+    .ec-calc-wrap label { font-size: .82rem; font-weight: 600; color: var(--green); }
+    .ec-calc-wrap input[type=text],
+    .ec-calc-wrap input[type=number] {
+      padding: .7rem 1rem; border: 2px solid var(--gray-l); border-radius: var(--r);
+      font-family: inherit; font-size: .95rem; color: var(--black); background: var(--white); width: 100%; transition: border-color .18s;
+    }
+    .ec-calc-wrap select {
+      padding: .7rem 2.5rem .7rem 1rem; border: 2px solid var(--gray-l); border-radius: var(--r);
+      font-family: inherit; font-size: .95rem; color: var(--black);
+      background: var(--white) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%236b7280' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E") no-repeat right 14px center;
+      -webkit-appearance: none; width: 100%; cursor: pointer; transition: border-color .18s;
+    }
+    .ec-calc-wrap input:focus, .ec-calc-wrap select:focus { outline: none; border-color: var(--green); box-shadow: 0 0 0 3px rgba(46,79,60,.1); }
+    .hint { font-size: .75rem; color: var(--gray); }
+
+    /* Fuel toggle */
+    .fuel-toggle { display: flex; border: 2px solid var(--green); border-radius: var(--r); overflow: hidden; }
+    .fuel-toggle button { flex: 1; padding: .55rem; border: none; background: var(--white); cursor: pointer; font-weight: 600; font-size: .88rem; transition: all .2s; color: var(--green); }
+    .fuel-toggle button.active { background: var(--green); color: var(--white); }
+
+    /* Accordion */
+    .accord-hdr { display: flex; justify-content: space-between; align-items: center; cursor: pointer; user-select: none; padding: 1rem 1.5rem; background: var(--white); border-radius: var(--r); box-shadow: var(--sh); margin-bottom: .5rem; color: var(--green); font-weight: 700; font-size: .95rem; }
+    .accord-hdr:hover { background: #f8f8f4; }
+    .accord-ico { font-size: 1rem; transition: transform .2s; }
+    .accord-ico.open { transform: rotate(180deg); }
+    .accord-body { display: none; background: var(--white); border-radius: var(--r); box-shadow: var(--sh); padding: 1.5rem; margin-bottom: 1.5rem; }
+    .accord-body.open { display: block; }
+    .exp-sec { margin-bottom: 1.5rem; }
+    .exp-sec h3 { font-size: .78rem; color: var(--gray); text-transform: uppercase; letter-spacing: .5px; margin-bottom: .9rem; padding-bottom: .3rem; border-bottom: 1px solid var(--gray-l); }
+
+    /* Auto params */
+    .auto-params { background: var(--beige); border-radius: var(--r); padding: .7rem 1rem; font-size: .8rem; color: var(--gray); display: flex; gap: 1.5rem; flex-wrap: wrap; margin-bottom: 1rem; }
+    .auto-params strong { color: var(--green); }
+
+    /* Sliders */
+    .slider-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+    .s-item { display: flex; flex-direction: column; gap: .3rem; }
+    .s-item label { font-size: .8rem; }
+    .s-row { display: flex; align-items: center; gap: .5rem; }
+    .ec-calc-wrap input[type=range] { flex: 1; height: 5px; -webkit-appearance: none; border: none; background: var(--gray-l); border-radius: 3px; padding: 0; cursor: pointer; }
+    .ec-calc-wrap input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; width: 17px; height: 17px; border-radius: 50%; background: var(--green); cursor: pointer; }
+    .s-val { min-width: 58px; text-align: right; font-weight: 700; font-size: .82rem; color: var(--green); }
+
+    /* CTA button */
+    .btn-calc { background: var(--gold); color: var(--green); border: none; padding: .9rem 2rem; font-size: 1.05rem; font-weight: 800; border-radius: var(--r); cursor: pointer; width: 100%; margin-top: .5rem; transition: all .2s; letter-spacing: .3px; }
+    .btn-calc:hover { background: var(--green); color: var(--white); }
+
+    /* Hero stats */
+    .hero-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; margin-bottom: 1.5rem; }
+    .hero-card { background: var(--green); border-radius: var(--r); padding: 1.1rem; text-align: center; }
+    .hero-label { font-size: .72rem; color: rgba(255,255,255,.75); margin-bottom: .25rem; }
+    .hero-val { font-size: 1.75rem; font-weight: 800; color: var(--gold); line-height: 1.1; }
+    .hero-unit { font-size: .72rem; color: rgba(255,255,255,.65); margin-top: .15rem; }
+
+    /* Comparison table */
+    .cmp-wrap { overflow-x: auto; }
+    table.cmp { width: 100%; border-collapse: collapse; font-size: .87rem; }
+    table.cmp th { padding: .7rem .8rem; text-align: center; font-size: .82rem; font-weight: 700; }
+    table.cmp th:first-child { text-align: left; }
+    table.cmp th.th-fossil { color: var(--fossil-col); }
+    table.cmp th.th-wp { color: var(--wp-col); }
+    table.cmp th.th-wpv { color: var(--white); background: var(--green); border-radius: 4px 4px 0 0; }
+    table.cmp td { padding: .55rem .8rem; text-align: center; border-bottom: 1px solid var(--beige); }
+    table.cmp td:first-child { text-align: left; font-size: .8rem; color: var(--gray); font-weight: 600; }
+    table.cmp td.td-wpv { background: rgba(46,79,60,.07); font-weight: 700; color: var(--green); }
+    table.cmp tr:nth-child(even) td { background: var(--beige); }
+    table.cmp tr:nth-child(even) td.td-wpv { background: rgba(46,79,60,.13); }
+
+    /* Chart */
+    .chart-wrap { position: relative; height: 300px; }
+
+    /* Pain section – hell, sparsam mit Dunkelgrün */
+    .pain { background: var(--white); border: 1px solid var(--gray-l); border-top: 4px solid var(--fossil-col); border-radius: var(--r); padding: 2rem; margin-bottom: 1.5rem; }
+    .pain h2 { display: flex; align-items: center; gap: .55rem; color: var(--green); font-size: 1.05rem; margin-bottom: 1.2rem; padding-bottom: .5rem; border-bottom: 1px solid var(--gray-l); }
+    .pain h2 svg { color: var(--fossil-col); }
+    .pain-timeline { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; }
+    .pain-card { background: var(--beige); border-radius: var(--r); padding: 1rem; text-align: center; border: 1px solid var(--gray-l); }
+    .pain-card.hl { background: var(--white); border: 2px solid var(--gold); box-shadow: 0 2px 12px rgba(208,171,59,.18); }
+    .pain-yr { font-size: 1.4rem; font-weight: 800; color: var(--gold); }
+    .pain-lbl { font-size: .68rem; color: var(--gray); margin-bottom: .2rem; }
+    .pain-cost { font-size: 1.2rem; font-weight: 700; color: var(--black); margin: .25rem 0; }
+    .pain-co2 { font-size: .78rem; color: var(--gray); }
+    .pain-delta { font-size: .82rem; color: var(--fossil-col); font-weight: 600; margin-top: .2rem; }
+    .pain-sum { margin-top: 1.3rem; padding: .9rem 1rem; background: rgba(208,171,59,.1); border-radius: var(--r); border-left: 4px solid var(--gold); display: flex; flex-direction: column; gap: .3rem; font-size: .9rem; }
+    .pain-sum strong { color: var(--green); }
+
+    /* Climate badge */
+    .clim-badge { display: inline-block; background: var(--green); color: var(--white); font-size: .73rem; padding: .18rem .55rem; border-radius: 99px; }
+
+    /* Tech card */
+    .tech-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; }
+    .tech-item { background: var(--beige); border-radius: var(--r); padding: 1rem; border-left: 3px solid var(--gold); }
+    .tech-label { font-size: .73rem; font-weight: 700; color: var(--gray); text-transform: uppercase; letter-spacing: .4px; margin-bottom: .3rem; }
+    .tech-val { font-size: 1.4rem; font-weight: 800; color: var(--green); line-height: 1.1; }
+
+    /* Post-results CTA */
+    .ec-cta-card { background: var(--white); border-radius: var(--r); box-shadow: var(--sh); padding: 2rem; margin-bottom: 1.5rem; display: flex; flex-direction: column; align-items: center; text-align: center; }
+    .ec-cta-card h2 { color: var(--green); font-size: 1.1rem; font-weight: 700; margin-bottom: .5rem; }
+    .ec-cta-card p { color: var(--gray); margin-bottom: 1.5rem; font-size: .9rem; max-width: 52ch; }
+    .btn-calc-cta { display: block; width: fit-content; margin: 0 auto; align-self: center; background: var(--gold); color: var(--green); border: none; padding: .9rem 2.5rem; font-size: 1rem; font-weight: 800; border-radius: var(--r); cursor: pointer; text-decoration: none; transition: all .2s; letter-spacing: .3px; white-space: nowrap; }
+    .btn-calc-cta:hover { background: var(--green); color: var(--white); }
+
+    /* Disclaimer */
+    .ec-calc-wrap .ec-disclaimer { display: block !important; text-align: center !important; width: 100% !important; font-size: .73rem; color: var(--gray); padding: .5rem 1rem 1.5rem; line-height: 1.5; text-wrap: balance; }
+
+    /* SVG icon alignment inside text / buttons */
+    .ec-icon { display: inline-flex; align-items: center; gap: .45rem; }
+    .ec-icon svg { flex-shrink: 0; vertical-align: middle; }
+
+    /* ── Responsive ──────────────────────────────────────────── */
+
+    /* Tablet / großes Handy (≤ 680 px) */
+    @media (max-width: 680px) {
+      .form-grid, .slider-grid, .pain-timeline { grid-template-columns: 1fr; }
+      .hero-grid  { grid-template-columns: 1fr 1fr; }
+      .tech-grid  { grid-template-columns: 1fr 1fr; }
+
+      /* Vergleichstabelle: Label-Spalte auf feste Breite, damit Zahlen nicht zerquetscht werden */
+      table.cmp td:first-child,
+      table.cmp th:first-child { min-width: 130px; }
+    }
+
+    /* Kleines Handy (≤ 480 px) */
+    @media (max-width: 480px) {
+      /* Section hat sp-section padding-block 5 rem – auf mobil reduzieren */
+      #rechner { padding-block: var(--space-12, 3rem); }
+
+      /* Chart: fixe Höhe runter damit er nicht den ganzen Screen frisst */
+      .chart-wrap { height: 220px; }
+
+      /* Ergebnis-Zahlen in den Hero-Cards etwas kleiner */
+      .hero-val { font-size: 1.4rem; }
+
+      /* CTA-Button auf volle Breite für sicheres Tap-Target */
+      .btn-calc-cta { width: 100%; text-align: center; box-sizing: border-box; white-space: normal; }
+
+      /* Accordion-Header umbricht sauber */
+      .accord-hdr { font-size: .88rem; gap: .5rem; }
+
+      /* Auto-params: einzelne Zeilen statt Flex-Reihe */
+      .auto-params { flex-direction: column; gap: .5rem; }
+
+      /* Pain-Karten etwas kompakter */
+      .pain { padding: 1.25rem; }
+      .pain-timeline { gap: .75rem; }
+
+
+    }
+
+    /* Sehr kleines Handy (≤ 360 px) */
+    @media (max-width: 360px) {
+      .ec-calc-wrap { padding-inline: .75rem; }
+      .hero-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <a href="#main" class="skip-link">Zum Hauptinhalt springen</a>
+
+  <header class="site-header scrolled" role="banner" id="site-header">
+    <nav class="nav-container" aria-label="Hauptnavigation">
+
+      <a href="/" class="nav-logo" aria-label="Patrick Leißner Energieberatung – zur Startseite">
+        <img src="assets/Logo/Initialien-Name-Positiv-frei.png" alt="Patrick Leißner Energieberatung Logo" height="96" loading="eager" style="width:auto">
+      </a>
+
+      <ul class="nav-links" role="list">
+        <li><a href="/#leistungen">Leistungen</a></li>
+        <li><a href="/#ueber-pl">Über mich</a></li>
+        <li><a href="/termin">Termine</a></li>
+        <li><a href="/#kontakt">Kontakt</a></li>
+      </ul>
+
+      <a href="/termin" class="btn btn-accent nav-cta">Termin buchen</a>
+
+      <button
+        class="hamburger"
+        aria-label="Menü öffnen"
+        aria-expanded="false"
+        aria-controls="mobile-menu"
+        id="hamburger-btn"
+      >
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </nav>
+
+    <div class="mobile-menu" id="mobile-menu" aria-hidden="true" role="dialog" aria-label="Hauptnavigation">
+      <ul role="list">
+        <li><a href="/#leistungen" class="mobile-nav-link">Leistungen</a></li>
+        <li><a href="/#ueber-pl" class="mobile-nav-link">Über mich</a></li>
+        <li><a href="/termin" class="mobile-nav-link">Termine</a></li>
+        <li><a href="/#kontakt" class="mobile-nav-link">Kontakt</a></li>
+        <li><a href="/termin" class="btn btn-accent mobile-nav-link">Termin buchen</a></li>
+      </ul>
+    </div>
+  </header>
+
+  <div class="sp-back-bar">
+    <div class="container">
+      <a href="/waermepumpe-heizlast" class="sp-back-link">← Wärmepumpe & Heizlast</a>
+    </div>
+  </div>
+
+  <div class="rechner-tabs-bar" role="navigation" aria-label="Rechner-Auswahl">
+    <div class="rechner-tabs-inner">
+      <a href="/unabhaengigkeit" class="rechner-tab">
+        <span class="rechner-tab-name">Unabhängigkeit</span>
+        <span class="rechner-tab-sub">Wie viel Strom erzeugt meine PV?</span>
+      </a>
+      <a href="/heizkosten" class="rechner-tab active">
+        <span class="rechner-tab-name">Heizkosten</span>
+        <span class="rechner-tab-sub">Was spare ich beim Heizen?</span>
+      </a>
+      <a href="/nutzen" class="rechner-tab">
+        <span class="rechner-tab-name">Nutzen</span>
+        <span class="rechner-tab-sub">Lohnt sich der Umstieg?</span>
+      </a>
+    </div>
+  </div>
+
+  <main id="main">
+
+    <!-- ── Hero ── -->
+    <section class="sp-hero" aria-label="Heizkosten-Rechner – Einleitung">
+
+      <nav class="sp-breadcrumb" aria-label="Brotkrumen-Navigation">
+        <div class="sp-breadcrumb-inner">
+          <a href="/">Startseite</a>
+          <span class="sp-bc-sep" aria-hidden="true">›</span>
+          <a href="/#leistungen">Leistungen</a>
+          <span class="sp-bc-sep" aria-hidden="true">›</span>
+          <a href="/waermepumpe-heizlast">Wärmepumpe</a>
+          <span class="sp-bc-sep" aria-hidden="true">›</span>
+          <span class="sp-bc-current">Heizkosten-Rechner</span>
+        </div>
+      </nav>
+
+      <div class="sp-hero-bg" style="background-image: url('assets/Foto/leistung-wp.jpg')" aria-hidden="true"></div>
+
+      <div class="container sp-hero-content">
+        <p class="sp-hero-eyebrow">Kostenanalyse</p>
+        <h1>Was kostet deine Heizung<br>wirklich – heute und 2030?</h1>
+        <p>Öl und Gas werden durch den CO₂-Preis Jahr für Jahr teurer. Berechne jetzt, was du mit fossiler Heizung zahlst – und was eine Wärmepumpe mit PV kostet.</p>
+      </div>
+    </section>
+
+    <!-- ── Rechner ── -->
+    <section id="rechner" class="sp-section sp-section--beige" aria-label="Heizkosten-Rechner">
+      <div class="ec-calc-wrap">
+
+        <!-- BASISDATEN -->
+        <div class="card">
+          <h2>Ihr Gebäude &amp; aktuelle Heizung</h2>
+          <div class="form-grid">
+            <div class="form-group">
+              <label for="plz">Postleitzahl</label>
+              <input type="text" id="plz" maxlength="5" placeholder="z. B. 04109">
+              <div id="clim-display" class="hint"></div>
+            </div>
+            <div class="form-group">
+              <label for="area">Wohnfläche (m²)</label>
+              <input type="number" id="area" value="150" min="30" max="1500">
+            </div>
+            <div class="form-group">
+              <label for="buildingYear">Baujahr</label>
+              <select id="buildingYear">
+                <option value="vor1970">Vor 1970</option>
+                <option value="1970-1978">1970–1978</option>
+                <option value="1979-1983">1979–1983</option>
+                <option value="1984-1994">1984–1994</option>
+                <option value="1995-2001">1995–2001</option>
+                <option value="2002-2015">2002–2015</option>
+                <option value="ab2016">Ab 2016</option>
+                <option value="saniert">Saniert / KfW-Standard</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="heatingAge">Alter der Heizung</label>
+              <select id="heatingAge">
+                <option value="<5">Unter 5 Jahre</option>
+                <option value="5-10">5–10 Jahre</option>
+                <option value="10-15" selected>10–15 Jahre</option>
+                <option value="15-25">15–25 Jahre</option>
+                <option value=">25">Über 25 Jahre</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Brennstoffart</label>
+              <div class="fuel-toggle">
+                <button id="btn-oil" class="active" onclick="setFuel('oil')">Heizöl</button>
+                <button id="btn-gas" onclick="setFuel('gas')">Erdgas</button>
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="consumption" id="lbl-consumption">Jahresverbrauch (Liter)</label>
+              <input type="number" id="consumption" value="2000" min="100">
+              <div class="hint" id="hint-consumption">Liter Heizöl pro Jahr (Ablesung Tankrechnung)</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- EXPERTENMODUS -->
+        <div class="accord-hdr" onclick="toggleExpert()">
+          <span class="ec-icon">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+            Expertenmodus – Preise &amp; technische Parameter
+          </span>
+          <span class="accord-ico" id="accord-ico">▼</span>
+        </div>
+        <div class="accord-body" id="accord-body">
+
+          <div class="auto-params" id="auto-params">
+            <span>Klimazone: <strong id="ap-zone">–</strong></span>
+            <span>Norm-AT: <strong id="ap-nat">–</strong></span>
+            <span>Vollbenutzungsstunden: <strong id="ap-vbh">–</strong></span>
+            <span>Kesselwirkungsgrad: <strong id="ap-eff">–</strong></span>
+            <span>Geschätzte JAZ WP: <strong id="ap-jaz">–</strong></span>
+            <span>WP-Heizleistung (ber.): <strong id="ap-wpkw">–</strong></span>
+          </div>
+
+          <div class="exp-sec">
+            <h3>Energiepreise</h3>
+            <div class="slider-grid">
+              <div class="s-item"><label>Heizölpreis (ct/L)</label><div class="s-row"><input type="range" id="s-oilPrice" min="60" max="150" value="95" step="1"><span class="s-val" id="v-oilPrice">95 ct</span></div></div>
+              <div class="s-item"><label>Erdgaspreis (ct/kWh)</label><div class="s-row"><input type="range" id="s-gasPrice" min="6" max="20" value="12" step="0.5"><span class="s-val" id="v-gasPrice">12 ct</span></div></div>
+              <div class="s-item"><label>Allgemeinstrom (ct/kWh)</label><div class="s-row"><input type="range" id="s-elecPrice" min="20" max="50" value="32" step="1"><span class="s-val" id="v-elecPrice">32 ct</span></div></div>
+              <div class="s-item"><label>WP-Sondertarif (ct/kWh)</label><div class="s-row"><input type="range" id="s-wpTarif" min="15" max="35" value="22" step="1"><span class="s-val" id="v-wpTarif">22 ct</span></div></div>
+              <div class="s-item"><label>Reststrombezug PV+Speicher (ct/kWh)</label><div class="s-row"><input type="range" id="s-gridPrice" min="0" max="25" value="5" step="1"><span class="s-val" id="v-gridPrice">5 ct</span></div></div>
+            </div>
+            <label style="display:flex;align-items:center;gap:.5rem;font-size:.82rem;font-weight:400;margin-top:.75rem;cursor:pointer">
+              <input type="checkbox" id="useWpTarif">
+              WP-Sondertarif (separater Zähler) für Wärmepumpe verwenden
+            </label>
+          </div>
+
+          <div class="exp-sec">
+            <h3>Jährliche Preissteigerungen</h3>
+            <div class="slider-grid">
+              <div class="s-item"><label>Strompreis-Steigerung (%/Jahr)</label><div class="s-row"><input type="range" id="s-elecInc" min="0" max="10" value="6" step="0.5"><span class="s-val" id="v-elecInc">6,0 %</span></div></div>
+              <div class="s-item"><label>Brennstoff-Steigerung (%/Jahr)</label><div class="s-row"><input type="range" id="s-fuelInc" min="0" max="8" value="4" step="0.5"><span class="s-val" id="v-fuelInc">4,0 %</span></div></div>
+            </div>
+          </div>
+
+          <div class="exp-sec">
+            <h3>CO₂-Bepreisung (BEHG / ETS II ab 2027)</h3>
+            <div class="slider-grid">
+              <div class="s-item"><label>CO₂-Preis 2026 – BEHG (€/t)</label><div class="s-row"><input type="range" id="s-co2_26" min="50" max="80" value="60" step="5"><span class="s-val" id="v-co2_26">60 €/t</span></div></div>
+              <div class="s-item"><label>CO₂-Preis 2027 – ETS II Start (€/t)</label><div class="s-row"><input type="range" id="s-co2_27" min="50" max="150" value="70" step="5"><span class="s-val" id="v-co2_27">70 €/t</span></div></div>
+              <div class="s-item"><label>ETS II Preissteigerung (%/Jahr)</label><div class="s-row"><input type="range" id="s-co2Inc" min="5" max="25" value="15" step="1"><span class="s-val" id="v-co2Inc">15 %</span></div></div>
+            </div>
+          </div>
+
+          <div class="exp-sec">
+            <h3>PV-Anlage &amp; Betrachtungszeitraum</h3>
+            <div class="slider-grid">
+              <div class="s-item">
+                <label>PV-Eigenverbrauchsanteil</label>
+                <div class="s-row"><input type="range" id="s-pvShare" min="0" max="85" value="55" step="1"><span class="s-val" id="v-pvShare">55 %</span></div>
+                <div class="hint" id="hint-pv">≈ PV-Anlage mit Speicher</div>
+              </div>
+              <div class="s-item">
+                <label>Betrachtungszeitraum (Jahre)</label>
+                <div class="s-row"><input type="range" id="s-years" min="10" max="30" value="20" step="1"><span class="s-val" id="v-years">20 J</span></div>
+              </div>
+            </div>
+          </div>
+
+        </div><!-- /accord-body -->
+
+        <button class="btn-calc" onclick="calculate()">
+          <span class="ec-icon">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            Energiekosten jetzt berechnen
+          </span>
+        </button>
+
+        <!-- ERGEBNISSE -->
+        <section id="results" style="display:none;margin-top:2rem" aria-live="polite">
+
+          <div class="hero-grid">
+            <div class="hero-card">
+              <div class="hero-label">Ersparnis im 1. Jahr</div>
+              <div class="hero-val" id="r-sav1">–</div>
+              <div class="hero-unit">€ gegenüber fossil</div>
+            </div>
+            <div class="hero-card">
+              <div class="hero-label">Gesamtersparnis <span id="r-yrs-lbl">20</span> Jahre</div>
+              <div class="hero-val" id="r-savTot">–</div>
+              <div class="hero-unit">€ gegenüber fossil</div>
+            </div>
+            <div class="hero-card">
+              <div class="hero-label">Eff. Strompreis WP+PV</div>
+              <div class="hero-val" id="r-effP">–</div>
+              <div class="hero-unit">ct/kWh (Jahr 1)</div>
+            </div>
+            <div class="hero-card">
+              <div class="hero-label">CO₂-Einsparung gesamt</div>
+              <div class="hero-val" id="r-co2sav">–</div>
+              <div class="hero-unit">Tonnen CO₂</div>
+            </div>
+          </div>
+
+          <div class="card">
+            <h2>Technische Auslegung Wärmepumpe</h2>
+            <div class="tech-grid">
+              <div class="tech-item">
+                <div class="tech-label">Benötigte Heizleistung</div>
+                <div class="tech-val"><span id="t-wpkw">–</span> kW</div>
+                <div class="hint">Nennleistung der Wärmepumpe</div>
+              </div>
+              <div class="tech-item">
+                <div class="tech-label">WP-Betriebsstunden</div>
+                <div class="tech-val"><span id="t-vbh">–</span> h/a</div>
+                <div class="hint">Vollbenutzungsstunden (PLZ-Klimadaten)</div>
+              </div>
+              <div class="tech-item">
+                <div class="tech-label">WP-Strombedarf</div>
+                <div class="tech-val"><span id="t-wpelec">–</span> kWh/a</div>
+                <div class="hint">Jahresstromverbrauch der Wärmepumpe</div>
+              </div>
+              <div class="tech-item">
+                <div class="tech-label">JAZ (geschätzt)</div>
+                <div class="tech-val"><span id="t-jaz">–</span></div>
+                <div class="hint">Jahresarbeitszahl (Baujahr + Klimazone)</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="card">
+            <h2>Direktvergleich</h2>
+            <div class="cmp-wrap">
+              <table class="cmp">
+                <thead>
+                  <tr>
+                    <th>Kennzahl</th>
+                    <th class="th-fossil" id="th-fossil">Heizöl</th>
+                    <th class="th-wp">Wärmepumpe</th>
+                    <th class="th-wpv">WP + PV</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>Kosten 1. Jahr</td>
+                    <td id="cf1">–</td><td id="cw1">–</td><td class="td-wpv" id="cp1">–</td>
+                  </tr>
+                  <tr>
+                    <td>Monatlicher Abschlag</td>
+                    <td id="cfm">–</td><td id="cwm">–</td><td class="td-wpv" id="cpm">–</td>
+                  </tr>
+                  <tr>
+                    <td>Kosten pro m²/Jahr</td>
+                    <td id="cfsm">–</td><td id="cwsm">–</td><td class="td-wpv" id="cpsm">–</td>
+                  </tr>
+                  <tr>
+                    <td>Kosten 2030</td>
+                    <td id="cf30">–</td><td id="cw30">–</td><td class="td-wpv" id="cp30">–</td>
+                  </tr>
+                  <tr>
+                    <td>Gesamt <span id="ct-yrs">20</span> Jahre</td>
+                    <td id="cftot">–</td><td id="cwtot">–</td><td class="td-wpv" id="cptot">–</td>
+                  </tr>
+                  <tr>
+                    <td>Ersparnis vs. Fossil</td>
+                    <td>—</td><td id="cwsav">–</td><td class="td-wpv" id="cpsav">–</td>
+                  </tr>
+                  <tr>
+                    <td>CO₂ pro Jahr</td>
+                    <td id="cfco2">–</td><td id="cwco2">–</td><td class="td-wpv" id="cpco2">–</td>
+                  </tr>
+                  <tr>
+                    <td>CO₂-Kosten gesamt (fossil)</td>
+                    <td id="cfco2c">–</td>
+                    <td colspan="2" style="font-size:.78rem;color:var(--gray)">Strom unterliegt nicht dem BEHG/ETS II</td>
+                  </tr>
+                  <tr>
+                    <td>CO₂-Preis 2030</td>
+                    <td id="cco2p30" colspan="3" style="text-align:center;font-weight:700;color:var(--fossil-col)">–</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <div class="card">
+            <h2>Kostenentwicklung über <span id="chart-yrs">20</span> Jahre</h2>
+            <div class="chart-wrap"><canvas id="myChart"></canvas></div>
+          </div>
+
+          <!-- PAIN SECTION -->
+          <div class="pain">
+            <h2>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+              Was passiert, wenn du NICHT handelst?
+            </h2>
+            <div class="pain-timeline">
+              <div class="pain-card">
+                <div class="pain-yr">2025</div>
+                <div class="pain-cost" id="p25-cost">–</div>
+                <div class="pain-co2" id="p25-co2">–</div>
+                <div class="pain-delta" style="color:var(--gray)">Basisjahr</div>
+              </div>
+              <div class="pain-card hl">
+                <div class="pain-yr">2027</div>
+                <div class="pain-lbl">ETS II tritt in Kraft!</div>
+                <div class="pain-cost" id="p27-cost">–</div>
+                <div class="pain-co2" id="p27-co2">–</div>
+                <div class="pain-delta" id="p27-delta">–</div>
+              </div>
+              <div class="pain-card">
+                <div class="pain-yr">2030</div>
+                <div class="pain-cost" id="p30-cost">–</div>
+                <div class="pain-co2" id="p30-co2">–</div>
+                <div class="pain-delta" id="p30-delta">–</div>
+              </div>
+            </div>
+            <div class="pain-sum">
+              <div>Fossile Mehrkosten 2025–2030 vs. WP+PV: <strong id="pain-extra">–</strong></div>
+              <div>Gesamtersparnis bei Umstieg heute: <strong id="pain-savtot">–</strong></div>
+            </div>
+          </div>
+
+          <!-- POST-RESULTS CTA -->
+          <div class="ec-cta-card">
+            <h2>Nächster Schritt: Persönliche Beratung</h2>
+            <p>Diese Berechnung zeigt das Potenzial – für eine fundierte Auslegung brauchst du eine normgerechte Heizlastberechnung nach DIN EN 12831. Ich helfe dir dabei.</p>
+            <a href="/termin" class="btn-calc-cta">Kostenloses Erstgespräch vereinbaren</a>
+          </div>
+
+        </section><!-- /results -->
+
+        <p class="ec-disclaimer">
+          Alle Angaben ohne Gewähr · Preisannahmen: BEHG-Festpreise, ETS-II-Prognose (EU-Kommission), BDEW-Historik ·
+          Reg. D-ABP9-EILM2-37, IHK Halle-Dessau
+        </p>
+
+      </div><!-- /ec-calc-wrap -->
+    </section>
+
+  </main>
+
+  <footer class="site-footer" role="contentinfo">
+    <div class="container footer-inner">
+      <div class="footer-brand">
+        <a href="/" class="nav-logo" aria-label="Patrick Leißner Energieberatung – zur Startseite">
+          <img src="assets/Logo/Initialien-Gold-frei.png" alt="Patrick Leißner Energieberatung Logo" width="36" height="36" loading="lazy">
+          <span class="nav-logo-text">Patrick Leißner</span>
+        </a>
+        <p>Frei durch eigene Energie.</p>
+      </div>
+      <nav class="footer-links" aria-label="Footer-Navigation">
+        <a href="/impressum.html">Impressum</a>
+        <a href="/datenschutz.html">Datenschutz</a>
+        <a href="#" aria-label="Zurück zum Seitenanfang">Nach oben ↑</a>
+      </nav>
+    </div>
+    <div class="container">
+      <p class="footer-copyright">© 2025 Patrick Leißner. Alle Rechte vorbehalten.</p>
+    </div>
+  </footer>
+
+  <script src="main.js"></script>
+  <script>
+// ─────────────────────────────────────────────
+// DATA
+// ─────────────────────────────────────────────
+const JAZ = {
+  'vor1970':2.5,'1970-1978':2.7,'1979-1983':2.8,
+  '1984-1994':2.9,'1995-2001':3.1,'2002-2015':3.3,
+  'ab2016':3.7,'saniert':3.5
+};
+
+const BOILER = { '<5':0.95,'5-10':0.92,'10-15':0.90,'15-25':0.87,'>25':0.82 };
+
+// PLZ-Präfix (2-stellig) → DIN EN 12831 Klimadaten
+const PLZ_DATEN = {
+  "01":{ region:"Dresden/Meißen",              normTemp:-14, vbh:1850 },
+  "02":{ region:"Görlitz/Bautzen",             normTemp:-16, vbh:1950 },
+  "03":{ region:"Cottbus/Lausitz",             normTemp:-14, vbh:1850 },
+  "04":{ region:"Leipzig",                     normTemp:-14, vbh:1800 },
+  "06":{ region:"Halle/Dessau",                normTemp:-14, vbh:1850 },
+  "07":{ region:"Gera/Jena",                   normTemp:-14, vbh:1880 },
+  "08":{ region:"Zwickau/Plauen",              normTemp:-16, vbh:1950 },
+  "09":{ region:"Chemnitz/Erzgebirge",         normTemp:-16, vbh:1950 },
+  "10":{ region:"Berlin Mitte",                normTemp:-14, vbh:1750 },
+  "11":{ region:"Berlin",                      normTemp:-14, vbh:1750 },
+  "12":{ region:"Berlin Süd",                  normTemp:-14, vbh:1750 },
+  "13":{ region:"Berlin Nord",                 normTemp:-14, vbh:1750 },
+  "14":{ region:"Potsdam/Brandenburg",         normTemp:-14, vbh:1800 },
+  "15":{ region:"Frankfurt (Oder)",            normTemp:-14, vbh:1850 },
+  "16":{ region:"Oranienburg/Eberswalde",      normTemp:-14, vbh:1850 },
+  "17":{ region:"Neubrandenburg/Greifswald",   normTemp:-14, vbh:1900 },
+  "18":{ region:"Rostock/Stralsund",           normTemp:-10, vbh:2000 },
+  "19":{ region:"Schwerin/Ludwigslust",        normTemp:-10, vbh:1950 },
+  "20":{ region:"Hamburg Mitte",               normTemp:-10, vbh:1900 },
+  "21":{ region:"Hamburg Süd/Lüneburg",        normTemp:-10, vbh:1900 },
+  "22":{ region:"Hamburg Nord/West",           normTemp:-10, vbh:1900 },
+  "23":{ region:"Lübeck/Wismar",               normTemp:-10, vbh:1950 },
+  "24":{ region:"Kiel/Flensburg",              normTemp:-12, vbh:2050 },
+  "25":{ region:"Westküste/Sylt",              normTemp:-8,  vbh:2100 },
+  "26":{ region:"Oldenburg/Emden",             normTemp:-10, vbh:1950 },
+  "27":{ region:"Bremerhaven/Cuxhaven",        normTemp:-10, vbh:2000 },
+  "28":{ region:"Bremen",                      normTemp:-10, vbh:1900 },
+  "29":{ region:"Celle/Uelzen",                normTemp:-12, vbh:1880 },
+  "30":{ region:"Hannover",                    normTemp:-12, vbh:1850 },
+  "31":{ region:"Hameln/Hildesheim",           normTemp:-12, vbh:1880 },
+  "32":{ region:"Herford/Minden",              normTemp:-12, vbh:1880 },
+  "33":{ region:"Bielefeld/Paderborn",         normTemp:-12, vbh:1880 },
+  "34":{ region:"Kassel",                      normTemp:-12, vbh:1900 },
+  "35":{ region:"Gießen/Marburg",              normTemp:-12, vbh:1850 },
+  "36":{ region:"Fulda/Bad Hersfeld",          normTemp:-14, vbh:1950 },
+  "37":{ region:"Göttingen/Eschwege",          normTemp:-12, vbh:1900 },
+  "38":{ region:"Braunschweig/Wolfsburg",      normTemp:-12, vbh:1850 },
+  "39":{ region:"Magdeburg/Stendal",           normTemp:-14, vbh:1900 },
+  "40":{ region:"Düsseldorf",                  normTemp:-10, vbh:1700 },
+  "41":{ region:"Mönchengladbach/Neuss",       normTemp:-10, vbh:1700 },
+  "42":{ region:"Wuppertal/Solingen",          normTemp:-10, vbh:1750 },
+  "44":{ region:"Dortmund/Bochum",             normTemp:-12, vbh:1780 },
+  "45":{ region:"Essen/Gelsenkirchen",         normTemp:-10, vbh:1750 },
+  "46":{ region:"Oberhausen/Wesel",            normTemp:-10, vbh:1750 },
+  "47":{ region:"Duisburg/Krefeld",            normTemp:-10, vbh:1720 },
+  "48":{ region:"Münster/Coesfeld",            normTemp:-10, vbh:1780 },
+  "49":{ region:"Osnabrück/Lingen",            normTemp:-10, vbh:1800 },
+  "50":{ region:"Köln",                        normTemp:-10, vbh:1700 },
+  "51":{ region:"Köln Ost/Leverkusen",         normTemp:-10, vbh:1700 },
+  "52":{ region:"Aachen/Düren",                normTemp:-10, vbh:1750 },
+  "53":{ region:"Bonn/Siegburg",               normTemp:-10, vbh:1720 },
+  "54":{ region:"Trier/Bitburg",               normTemp:-12, vbh:1850 },
+  "55":{ region:"Mainz/Bad Kreuznach",         normTemp:-10, vbh:1720 },
+  "56":{ region:"Koblenz/Neuwied",             normTemp:-12, vbh:1780 },
+  "57":{ region:"Siegen/Olpe",                 normTemp:-12, vbh:1880 },
+  "58":{ region:"Hagen/Iserlohn",              normTemp:-12, vbh:1800 },
+  "59":{ region:"Hamm/Arnsberg",               normTemp:-12, vbh:1820 },
+  "60":{ region:"Frankfurt am Main",           normTemp:-10, vbh:1700 },
+  "61":{ region:"Bad Homburg/Friedberg",       normTemp:-10, vbh:1720 },
+  "63":{ region:"Aschaffenburg/Hanau",         normTemp:-10, vbh:1720 },
+  "64":{ region:"Darmstadt",                   normTemp:-10, vbh:1720 },
+  "65":{ region:"Wiesbaden/Limburg",           normTemp:-10, vbh:1720 },
+  "66":{ region:"Saarbrücken/Homburg",         normTemp:-12, vbh:1800 },
+  "67":{ region:"Ludwigshafen/Kaiserslautern", normTemp:-10, vbh:1680 },
+  "68":{ region:"Mannheim",                    normTemp:-10, vbh:1680 },
+  "69":{ region:"Heidelberg",                  normTemp:-10, vbh:1700 },
+  "70":{ region:"Stuttgart",                   normTemp:-12, vbh:1750 },
+  "71":{ region:"Stuttgart/Ludwigsburg",       normTemp:-12, vbh:1750 },
+  "72":{ region:"Tübingen/Reutlingen",         normTemp:-12, vbh:1800 },
+  "73":{ region:"Göppingen/Esslingen",         normTemp:-12, vbh:1780 },
+  "74":{ region:"Heilbronn/Schwäbisch Hall",   normTemp:-12, vbh:1750 },
+  "75":{ region:"Pforzheim/Calw",              normTemp:-12, vbh:1780 },
+  "76":{ region:"Karlsruhe/Baden-Baden",       normTemp:-10, vbh:1700 },
+  "77":{ region:"Offenburg/Lahr",              normTemp:-12, vbh:1750 },
+  "78":{ region:"Villingen-Schwenningen",      normTemp:-14, vbh:1900 },
+  "79":{ region:"Freiburg/Lörrach",            normTemp:-12, vbh:1720 },
+  "80":{ region:"München",                     normTemp:-14, vbh:1850 },
+  "81":{ region:"München Süd/Ost",             normTemp:-14, vbh:1850 },
+  "82":{ region:"Garmisch/Starnberg",          normTemp:-16, vbh:2000 },
+  "83":{ region:"Rosenheim/Traunstein",        normTemp:-14, vbh:1900 },
+  "84":{ region:"Landshut/Dingolfing",         normTemp:-14, vbh:1880 },
+  "85":{ region:"Ingolstadt/Freising",         normTemp:-14, vbh:1880 },
+  "86":{ region:"Augsburg/Donauwörth",         normTemp:-14, vbh:1880 },
+  "87":{ region:"Kempten/Allgäu",              normTemp:-18, vbh:2100 },
+  "88":{ region:"Friedrichshafen/Ravensburg",  normTemp:-14, vbh:1900 },
+  "89":{ region:"Ulm/Heidenheim",              normTemp:-14, vbh:1880 },
+  "90":{ region:"Nürnberg/Fürth",              normTemp:-14, vbh:1880 },
+  "91":{ region:"Erlangen/Ansbach",            normTemp:-14, vbh:1880 },
+  "92":{ region:"Amberg/Weiden",               normTemp:-16, vbh:1950 },
+  "93":{ region:"Regensburg/Cham",             normTemp:-14, vbh:1900 },
+  "94":{ region:"Passau/Straubing",            normTemp:-14, vbh:1900 },
+  "95":{ region:"Hof/Bayreuth",                normTemp:-18, vbh:2050 },
+  "96":{ region:"Bamberg/Coburg",              normTemp:-14, vbh:1900 },
+  "97":{ region:"Würzburg/Schweinfurt",        normTemp:-12, vbh:1800 },
+  "98":{ region:"Suhl/Ilmenau",                normTemp:-16, vbh:2000 },
+  "99":{ region:"Erfurt/Weimar",               normTemp:-14, vbh:1920 }
+};
+const PLZ_DEFAULT = { region:'Deutschland (Mittel)', normTemp:-12, vbh:1900 };
+
+const EF     = { oil:0.2663, gas:0.2017 }; // kg CO₂/kWh
+const EF_EL  = 0.380;                       // kg CO₂/kWh Bundesmix
+const PV_EPC = 0.08;                        // €/kWh PV Gestehungskosten
+
+// ─────────────────────────────────────────────
+// STATE
+// ─────────────────────────────────────────────
+const S = {
+  plz:'', buildingYear:'vor1970', area:150,
+  fuelType:'oil', consumption:2000, heatingAge:'10-15',
+  plzData:null,
+  oilPrice:95, gasPrice:12, elecPrice:32, wpTarif:22, gridPrice:5,
+  elecInc:6, fuelInc:4,
+  co2_26:60, co2_27:70, co2Inc:15,
+  useWpTarif:false, pvShare:55, years:20
+};
+
+// ─────────────────────────────────────────────
+// DERIVED
+// ─────────────────────────────────────────────
+const boilerEff = () => BOILER[S.heatingAge] || 0.90;
+const jaz = () => {
+  const pd = S.plzData || PLZ_DEFAULT;
+  const dJaz = (pd.normTemp + 12) * 0.1;
+  return Math.max(1.5, +((JAZ[S.buildingYear]||3.0) + dJaz).toFixed(1));
+};
+const fuelKwh    = () => S.fuelType==='oil' ? S.consumption*10 : S.consumption;
+const heatDemand = () => fuelKwh() * boilerEff();
+const wpElec     = () => heatDemand() / jaz();
+// Benötigte WP-Heizleistung: Jahreswärmebedarf ÷ Vollbenutzungsstunden
+const wpKw = () => {
+  const vbh = (S.plzData || PLZ_DEFAULT).vbh;
+  return Math.round(heatDemand() / vbh * 10) / 10;
+};
+
+// ─────────────────────────────────────────────
+// PRICE FUNCTIONS
+// ─────────────────────────────────────────────
+function co2Price(yr){
+  if(yr<=2025) return 55;
+  if(yr===2026) return S.co2_26;
+  return S.co2_27 * Math.pow(1+S.co2Inc/100, yr-2027);
+}
+
+function co2PerKwh(yr){ return EF[S.fuelType]*co2Price(yr)/1000; }
+
+function fuelKwhPrice(){ return S.fuelType==='oil' ? S.oilPrice/100/10 : S.gasPrice/100; }
+
+function fuelPriceT(t){
+  const base = Math.max(0.005, fuelKwhPrice()-co2PerKwh(2025));
+  return base*Math.pow(1+S.fuelInc/100,t) + co2PerKwh(2025+t);
+}
+
+function wpPriceT(t){
+  return ((S.useWpTarif?S.wpTarif:S.elecPrice)/100) * Math.pow(1+S.elecInc/100,t);
+}
+
+function pvPriceT(t){
+  const eigen=S.pvShare/100, rest=1-eigen;
+  return rest*(S.gridPrice/100)*Math.pow(1+S.elecInc/100,t) + eigen*PV_EPC;
+}
+
+function yearCosts(t){
+  const fk=fuelKwh(), we=wpElec();
+  return { fossil:fk*fuelPriceT(t), wp:we*wpPriceT(t), wpv:we*pvPriceT(t) };
+}
+
+function co2Fossil(){ return fuelKwh()*EF[S.fuelType]/1000; }
+function co2WP()    { return wpElec()*EF_EL/1000; }
+function co2WPV()   { return wpElec()*(1-S.pvShare/100)*EF_EL/1000; }
+
+// ─────────────────────────────────────────────
+// CALCULATE
+// ─────────────────────────────────────────────
+let chart = null;
+
+function calculate(){
+  readState();
+
+  const n=S.years;
+  const lbls=[], dF=[], dW=[], dV=[];
+  let sumF=0,sumW=0,sumV=0,co2FossilCostTot=0;
+
+  for(let t=0;t<n;t++){
+    const c=yearCosts(t);
+    lbls.push(2025+t);
+    dF.push(Math.round(c.fossil)); dW.push(Math.round(c.wp)); dV.push(Math.round(c.wpv));
+    sumF+=c.fossil; sumW+=c.wp; sumV+=c.wpv;
+    co2FossilCostTot += fuelKwh()*co2PerKwh(2025+t);
+  }
+
+  const c0=yearCosts(0);
+  const sav1=c0.fossil-c0.wpv;
+  const savTot=sumF-sumV;
+  const effP=(pvPriceT(0)*100);
+  const co2save=(co2Fossil()-co2WPV())*n;
+
+  // Hero cards
+  set('r-sav1', fmt(sav1));
+  set('r-savTot', fmt(savTot));
+  set('r-effP', effP.toFixed(1));
+  set('r-co2sav', co2save.toFixed(0));
+  set('r-yrs-lbl', n);
+  set('ct-yrs', n); set('chart-yrs', n);
+
+  // Technische Auslegung
+  const pd = S.plzData || PLZ_DEFAULT;
+  set('t-wpkw',   wpKw().toFixed(1));
+  set('t-vbh',    pd.vbh.toLocaleString('de-DE'));
+  set('t-wpelec', Math.round(wpElec()).toLocaleString('de-DE'));
+  set('t-jaz',    jaz().toFixed(1));
+
+  // Table header
+  set('th-fossil', S.fuelType==='oil'?'Heizöl':'Erdgas');
+
+  const c30=yearCosts(2030-2025);
+  set('cf1',  fmte(c0.fossil));   set('cw1',  fmte(c0.wp));   set('cp1',  fmte(c0.wpv));
+  set('cfm',  fmte(c0.fossil/12));set('cwm',  fmte(c0.wp/12));set('cpm',  fmte(c0.wpv/12));
+  set('cfsm', (c0.fossil/S.area).toFixed(1)+' €');
+  set('cwsm', (c0.wp/S.area).toFixed(1)+' €');
+  set('cpsm', (c0.wpv/S.area).toFixed(1)+' €');
+  set('cf30', fmte(c30.fossil));  set('cw30', fmte(c30.wp));  set('cp30', fmte(c30.wpv));
+  set('cftot',fmte(sumF));        set('cwtot',fmte(sumW));    set('cptot',fmte(sumV));
+  set('cwsav','+'+fmt(sumF-sumW)+' €'); set('cpsav','+'+fmt(sumF-sumV)+' €');
+  set('cfco2', co2Fossil().toFixed(1)+' t/a');
+  set('cwco2', co2WP().toFixed(1)+' t/a');
+  set('cpco2', co2WPV().toFixed(1)+' t/a');
+  set('cfco2c', fmte(co2FossilCostTot));
+  set('cco2p30', co2Price(2030).toFixed(0)+' €/t CO₂ im Jahr 2030');
+
+  // Pain section
+  [2025,2027,2030].forEach(yr=>{
+    const t=yr-2025, c=yearCosts(t);
+    const pfx='p'+String(yr).slice(-2);
+    set(pfx+'-cost', fmt(c.fossil)+' €/Jahr');
+    set(pfx+'-co2',  'CO₂-Preis: '+co2Price(yr).toFixed(0)+' €/t');
+  });
+  const base=yearCosts(0).fossil;
+  set('p27-delta', '+'+fmt(yearCosts(2).fossil-base)+' € mehr als 2025');
+  set('p30-delta', '+'+fmt(yearCosts(5).fossil-base)+' € mehr als 2025');
+
+  let sumF6=0,sumV6=0;
+  for(let t=0;t<=5;t++){const c=yearCosts(t);sumF6+=c.fossil;sumV6+=c.wpv;}
+  set('pain-extra',   fmt(sumF6-sumV6)+' €');
+  set('pain-savtot', fmt(savTot)+' € in '+n+' Jahren');
+
+  renderChart(lbls, dF, dW, dV);
+
+  g('results').style.display='block';
+  g('results').scrollIntoView({behavior:'smooth'});
+  refreshAutoParams();
+}
+
+// ─────────────────────────────────────────────
+// CHART
+// ─────────────────────────────────────────────
+function renderChart(lbls,fossil,wp,wpv){
+  if(chart) chart.destroy();
+  chart = new Chart(g('myChart').getContext('2d'),{
+    type:'line',
+    data:{
+      labels:lbls,
+      datasets:[
+        { label:S.fuelType==='oil'?'Heizöl':'Erdgas', data:fossil,
+          borderColor:'#C0392B', backgroundColor:'rgba(192,57,43,.07)',
+          borderWidth:2.5, tension:.3, pointRadius:2 },
+        { label:'Wärmepumpe', data:wp,
+          borderColor:'#4A7B9D', backgroundColor:'rgba(74,123,157,.07)',
+          borderWidth:2.5, tension:.3, pointRadius:2 },
+        { label:'WP + PV', data:wpv,
+          borderColor:'#2E4F3C', backgroundColor:'rgba(46,79,60,.1)',
+          borderWidth:3, tension:.3, pointRadius:2, fill:true }
+      ]
+    },
+    options:{
+      responsive:true, maintainAspectRatio:false,
+      interaction:{mode:'index',intersect:false},
+      plugins:{
+        legend:{position:'top'},
+        tooltip:{callbacks:{label:ctx=>ctx.dataset.label+': '+fmt(ctx.parsed.y)+' €/Jahr'}}
+      },
+      scales:{
+        y:{ticks:{callback:v=>fmt(v)+' €'},grid:{color:'rgba(0,0,0,.05)'}},
+        x:{grid:{display:false}}
+      }
+    }
+  });
+}
+
+// ─────────────────────────────────────────────
+// STATE SYNC
+// ─────────────────────────────────────────────
+function readState(){
+  S.plz         = g('plz').value.trim();
+  S.buildingYear= g('buildingYear').value;
+  S.area        = +g('area').value || 150;
+  S.consumption = +g('consumption').value || 2000;
+  S.heatingAge  = g('heatingAge').value;
+  S.useWpTarif  = g('useWpTarif').checked;
+  S.oilPrice    = +g('s-oilPrice').value;
+  S.gasPrice    = +g('s-gasPrice').value;
+  S.elecPrice   = +g('s-elecPrice').value;
+  S.wpTarif     = +g('s-wpTarif').value;
+  S.gridPrice   = +g('s-gridPrice').value;
+  S.elecInc     = +g('s-elecInc').value;
+  S.fuelInc     = +g('s-fuelInc').value;
+  S.co2_26      = +g('s-co2_26').value;
+  S.co2_27      = +g('s-co2_27').value;
+  S.co2Inc      = +g('s-co2Inc').value;
+  S.pvShare     = +g('s-pvShare').value;
+  S.years       = +g('s-years').value;
+  if(S.plz.length>=2){
+    S.plzData = PLZ_DATEN[S.plz.slice(0,2)] || null;
+  }
+}
+
+function refreshAutoParams(){
+  const pd = S.plzData || PLZ_DEFAULT;
+  set('ap-zone', pd.region);
+  set('ap-nat',  pd.normTemp+' °C');
+  set('ap-vbh',  pd.vbh+' h');
+  set('ap-eff',   (boilerEff()*100).toFixed(0)+' %');
+  set('ap-jaz',   jaz().toFixed(1));
+  if(S.plz.length>=2 || S.consumption>0){
+    set('ap-wpkw', wpKw().toFixed(1)+' kW');
+  }
+  if(S.plz.length>=2){
+    const label = S.plzData ? pd.region : 'Unbekannte PLZ – Standardwerte';
+    g('clim-display').innerHTML='<span class="clim-badge">'+label+' · JAZ ≈ '+jaz().toFixed(1)+'</span>';
+  }
+}
+
+// ─────────────────────────────────────────────
+// UI HELPERS
+// ─────────────────────────────────────────────
+const g   = id => document.getElementById(id);
+const set = (id,v) => { const el=g(id); if(el) el.textContent=v; };
+const fmt = n => Math.round(n).toLocaleString('de-DE');
+const fmte= n => fmt(n)+' €';
+
+function setFuel(t){
+  S.fuelType=t;
+  g('btn-oil').classList.toggle('active',t==='oil');
+  g('btn-gas').classList.toggle('active',t==='gas');
+  g('lbl-consumption').textContent  = t==='oil'?'Jahresverbrauch (Liter)':'Jahresverbrauch (kWh)';
+  g('hint-consumption').textContent = t==='oil'?'Liter Heizöl pro Jahr (Tankrechnung)':'kWh Erdgas pro Jahr (Jahresabrechnung)';
+  g('th-fossil').textContent = t==='oil'?'Heizöl':'Erdgas';
+  liveUpdate();
+}
+
+function toggleExpert(){
+  const b=g('accord-body'), i=g('accord-ico');
+  const wasOpen=b.classList.contains('open');
+  b.classList.toggle('open',!wasOpen);
+  i.classList.toggle('open',!wasOpen);
+  if(!wasOpen) liveUpdate();
+}
+
+// Zentraler Update-Handler: DOM → S → Panel → ggf. Ergebnisse
+function liveUpdate(){
+  readState();
+  refreshAutoParams();
+  if(g('results').style.display!=='none') calculate();
+}
+
+// ─────────────────────────────────────────────
+// SLIDER INIT
+// ─────────────────────────────────────────────
+const SLIDER_CFG = {
+  'oilPrice':  { unit:' ct',   dec:0 },
+  'gasPrice':  { unit:' ct',   dec:1 },
+  'elecPrice': { unit:' ct',   dec:0 },
+  'wpTarif':   { unit:' ct',   dec:0 },
+  'gridPrice': { unit:' ct',   dec:0 },
+  'elecInc':   { unit:' %',    dec:1 },
+  'fuelInc':   { unit:' %',    dec:1 },
+  'co2_26':    { unit:' €/t',  dec:0 },
+  'co2_27':    { unit:' €/t',  dec:0 },
+  'co2Inc':    { unit:' %',    dec:0 },
+  'pvShare':   { unit:' %',    dec:0 },
+  'years':     { unit:' J',    dec:0 }
+};
+
+function initSliders(){
+  Object.entries(SLIDER_CFG).forEach(([k,c])=>{
+    const el=g('s-'+k), vEl=g('v-'+k);
+    if(!el) return;
+    el.addEventListener('input',()=>{
+      const v=parseFloat(el.value);
+      vEl.textContent = c.dec>0 ? v.toFixed(c.dec).replace('.',',')+c.unit : v+c.unit;
+      if(k==='pvShare') updatePvHint(v);
+      liveUpdate();
+    });
+  });
+}
+
+function updatePvHint(v){
+  const map=[[0,'Kein PV (WP allein)'],[25,'Kleine PV-Anlage'],[55,'PV-Anlage + Speicher'],[85,'PV + Großspeicher']];
+  const [,lbl]=map.reduce((a,b)=>Math.abs(b[0]-v)<Math.abs(a[0]-v)?b:a);
+  g('hint-pv').textContent='≈ '+lbl;
+}
+
+// PLZ – Ziffernfilter, dann liveUpdate (refreshAutoParams übernimmt Badge)
+g('plz').addEventListener('input',()=>{
+  const p=g('plz').value.replace(/\D/g,'').slice(0,5);
+  g('plz').value=p;
+  liveUpdate();
+});
+
+// Alle übrigen Felder
+['buildingYear','heatingAge'].forEach(id=>{
+  g(id).addEventListener('change', liveUpdate);
+});
+['area','consumption'].forEach(id=>{
+  g(id).addEventListener('input', liveUpdate);
+});
+g('useWpTarif').addEventListener('change', liveUpdate);
+
+initSliders();
+  </script>
+</body>
+</html>

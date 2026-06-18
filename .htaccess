@@ -9,6 +9,11 @@ Options -MultiViews
     Require all denied
 </Files>
 
+# 301 Redirects – alte Rechner-URLs
+Redirect 301 /solarisator /unabhaengigkeit
+Redirect 301 /energierechner /nutzen
+Redirect 301 /waermepumpe-rechner /heizkosten
+
 RewriteEngine On
 RewriteBase /
 

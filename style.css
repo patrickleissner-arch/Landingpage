@@ -734,6 +734,15 @@ p { max-width: 68ch; }
   line-height: 1.7;
 }
 
+.leistung-slogan {
+  color: var(--color-brand-accent);
+  font-size: 0.85rem;
+  font-weight: 600;
+  font-style: italic;
+  margin-bottom: var(--space-3);
+  line-height: 1.4;
+}
+
 .leistung-footer {
   padding: var(--space-4) var(--space-6) var(--space-6);
   display: flex;
@@ -1931,3 +1940,49 @@ p { max-width: 68ch; }
   .btn, .service-card, .nav-links a,
   .footer-links a, .service-link { transition: none; }
 }
+
+/* ── Rechner-Tab-Leiste ── */
+.rechner-tabs-bar {
+  background: var(--color-surface-alt, #F1F0E9);
+  border-bottom: 2px solid var(--color-border, #e2e4e0);
+}
+.rechner-tabs-inner {
+  max-width: 980px;
+  margin: 0 auto;
+  padding: 0 1rem;
+  display: flex;
+  gap: 0;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.rechner-tabs-inner::-webkit-scrollbar { display: none; }
+.rechner-tab {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: .1rem;
+  padding: .75rem 1.5rem;
+  text-decoration: none;
+  color: var(--color-text-muted, #6b7280);
+  border-bottom: 3px solid transparent;
+  margin-bottom: -2px;
+  transition: color .18s, border-color .18s;
+  font-family: var(--font-body, 'Outfit', sans-serif);
+}
+.rechner-tab-name { font-size: .88rem; font-weight: 700; white-space: nowrap; }
+.rechner-tab-sub  { font-size: .72rem; font-weight: 400; line-height: 1.3; color: var(--color-text-muted, #6b7280); }
+.rechner-tab:hover { color: var(--color-brand-primary, #2E4F3C); }
+.rechner-tab:hover .rechner-tab-sub { color: var(--color-brand-primary, #2E4F3C); }
+.rechner-tab.active {
+  color: var(--color-brand-primary, #2E4F3C);
+  border-bottom-color: var(--color-brand-accent, #D0AB3B);
+  pointer-events: none;
+}
+.rechner-tab.active .rechner-tab-sub { color: var(--color-brand-primary, #2E4F3C); opacity: .8; }
+
+/* Globale CTA-Card (alle Rechner) */
+.ec-cta-card { background: #ffffff; border-radius: .5rem; box-shadow: 0 2px 10px rgba(0,0,0,.09); padding: 2rem; margin-bottom: 1.5rem; display: flex; flex-direction: column; align-items: center; text-align: center; }
+.ec-cta-card h2 { color: var(--color-brand-primary, #2E4F3C); font-size: 1.1rem; font-weight: 700; margin-bottom: .5rem; }
+.ec-cta-card p  { color: var(--color-text-muted, #6b7280); margin-bottom: 1.5rem; font-size: .9rem; max-width: 52ch; }
+.btn-calc-cta { display: block; width: fit-content; margin: 0 auto; background: var(--color-brand-accent, #D0AB3B); color: var(--color-brand-primary, #2E4F3C); border: none; padding: .9rem 2.5rem; font-size: 1rem; font-weight: 800; border-radius: .5rem; cursor: pointer; text-decoration: none; transition: all .2s; letter-spacing: .3px; white-space: nowrap; font-family: var(--font-body, 'Outfit', sans-serif); }
+.btn-calc-cta:hover { background: var(--color-brand-primary, #2E4F3C); color: #ffffff; }

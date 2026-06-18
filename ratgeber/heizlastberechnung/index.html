@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Heizlastberechnung nach DIN EN 12831 ist Pflicht für KfW-Förderung der Wärmepumpe. Ohne korrekte Berechnung droht Rückforderung. Was LiDAR-Scan damit zu tun hat und was häufig falsch gemacht wird.">
+
+  <meta property="og:title" content="Heizlastberechnung nach DIN – warum sie Pflicht ist | Patrick Leißner">
+  <meta property="og:description" content="KfW-Förderung für Wärmepumpen setzt eine normgerechte Heizlastberechnung voraus. Was oft schief geht – und wie LiDAR-Scan das absichert.">
+  <meta property="og:type" content="article">
+
+  <title>Heizlastberechnung nach DIN – Pflicht und Praxis | Patrick Leißner Energieberatung</title>
+
+  <link rel="canonical" href="https://patrickleissner.de/ratgeber/heizlastberechnung">
+  <link rel="stylesheet" href="../../style.css">
+  <link rel="stylesheet" href="../../subpage.css">
+</head>
+<body>
+
+  <a href="#main" class="skip-link">Zum Hauptinhalt springen</a>
+
+  <header class="site-header scrolled" role="banner" id="site-header">
+    <nav class="nav-container" aria-label="Hauptnavigation">
+      <a href="/" class="nav-logo" aria-label="Patrick Leißner Energieberatung – zur Startseite">
+        <img src="../../assets/Logo/Initialien-Name-Positiv-frei.png" alt="Patrick Leißner Energieberatung Logo" height="96" loading="eager" style="width:auto">
+      </a>
+      <ul class="nav-links" role="list">
+        <li><a href="/#leistungen">Leistungen</a></li>
+        <li><a href="/#ueber-pl">Über mich</a></li>
+        <li><a href="/ratgeber">Ratgeber</a></li>
+        <li><a href="/termin">Termine</a></li>
+        <li><a href="/#kontakt">Kontakt</a></li>
+      </ul>
+      <a href="/termin" class="btn btn-accent nav-cta">Termin buchen</a>
+      <button class="hamburger" aria-label="Menü öffnen" aria-expanded="false" aria-controls="mobile-menu" id="hamburger-btn">
+        <span></span><span></span><span></span>
+      </button>
+    </nav>
+    <div class="mobile-menu" id="mobile-menu" aria-hidden="true" role="dialog" aria-label="Hauptnavigation">
+      <ul role="list">
+        <li><a href="/#leistungen" class="mobile-nav-link">Leistungen</a></li>
+        <li><a href="/#ueber-pl" class="mobile-nav-link">Über mich</a></li>
+        <li><a href="/ratgeber" class="mobile-nav-link">Ratgeber</a></li>
+        <li><a href="/termin" class="mobile-nav-link">Termine</a></li>
+        <li><a href="/#kontakt" class="mobile-nav-link">Kontakt</a></li>
+        <li><a href="/termin" class="btn btn-accent mobile-nav-link">Termin buchen</a></li>
+      </ul>
+    </div>
+  </header>
+
+  <div class="sp-back-bar">
+    <div class="container">
+      <a href="/ratgeber" class="sp-back-link">← Zurück zum Ratgeber</a>
+    </div>
+  </div>
+
+  <main id="main">
+
+    <article>
+
+      <section class="sp-hero" aria-label="Artikeleinleitung">
+        <div class="container sp-hero-content">
+          <p class="sp-hero-eyebrow">KfW-Förderung & Normung</p>
+          <h1>Heizlastberechnung nach DIN –<br>warum sie Pflicht ist und was falsch läuft</h1>
+          <p>Wer eine Wärmepumpe mit KfW-Förderung einbauen will, braucht zwingend eine normgerechte Heizlastberechnung. Was dabei häufig schief geht – und wie eine 3D-Erfassung per LiDAR-Scan das Problem löst.</p>
+        </div>
+      </section>
+
+      <section class="sp-section" aria-label="Artikel-Inhalt">
+        <div class="container" style="max-width:780px">
+
+          <div class="reveal">
+            <h2>Was ist eine Heizlastberechnung?</h2>
+            <p>Die Heizlast eines Gebäudes ist die maximale Wärmeleistung, die eine Heizung bei der kältesten Außentemperatur des Jahres liefern muss, um die gewünschte Raumtemperatur zu halten.</p>
+            <p>Die Heizlastberechnung nach <strong>DIN EN 12831</strong> ermittelt diese Zahl raumweise und gebäudescharf – unter Berücksichtigung von Außenwänden, Innenwänden, Fenstern, Decken, Böden, beheizten und unbeheizten Flächen sowie der Gebäudehülle insgesamt.</p>
+            <p>Das Ergebnis bestimmt, welche Wärmepumpe du brauchst: zu klein gewählt → nicht ausreichend, zu groß gewählt → überdimensioniert und unwirtschaftlich.</p>
+          </div>
+
+          <div class="reveal" style="margin-top:2.5rem">
+            <h2>Warum ist sie für die KfW-Förderung Pflicht?</h2>
+            <p>Die KfW-Bundesförderung für effiziente Gebäude (BEG) – insbesondere die Förderung für Wärmepumpen – setzt eine <strong>normgerechte Heizlastberechnung als Voraussetzung</strong> voraus.</p>
+            <p>Der Grund: Die Förderung soll sicherstellen, dass die geförderte Anlage tatsächlich effizient arbeitet. Eine zu groß dimensionierte Wärmepumpe arbeitet ineffizient (Taktbetrieb) und erfüllt die energetischen Anforderungen der Förderung nicht.</p>
+            <p><strong>Was passiert bei fehlender oder falscher Berechnung?</strong> Der KfW-Bescheid kann widerrufen werden und der bereits ausgezahlte Förderbetrag muss zurückgezahlt werden – inklusive Zinsen.</p>
+          </div>
+
+          <div class="reveal" style="margin-top:2.5rem">
+            <h2>Was häufig falsch gemacht wird</h2>
+            <p>In der Praxis gibt es drei häufige Fehlerquellen:</p>
+
+            <h3 style="margin-top:1.5rem">1. Überschlagsrechnung statt Normberechnung</h3>
+            <p>Viele Handwerker überschlagen die Heizlast anhand von Faustformeln (z. B. 100 W/m²). Das ist schnell, aber normwidrig. Für die KfW ist ausschließlich die Berechnung nach DIN EN 12831 anerkannt.</p>
+
+            <h3 style="margin-top:1.5rem">2. Falsche Gebäudedaten</h3>
+            <p>Wandaufbauten, Dämmstärken, Fensterklassen – viele Gebäude haben keine vollständigen Baupläne, und Annahmen schleichen sich ein. Wer falschen Dämmwert ansetzt, bekommt ein falsches Ergebnis.</p>
+
+            <h3 style="margin-top:1.5rem">3. Fehlende Raumbetrachtung</h3>
+            <p>Nur eine gebäudeweise Gesamtberechnung genügt nicht immer. Für die Auslegung von Heizkörpern und Flächenheizungen wird die raumweise Heizlast benötigt.</p>
+          </div>
+
+          <div class="reveal" style="margin-top:2.5rem">
+            <h2>LiDAR-Scan als Lösung</h2>
+            <p>Ein LiDAR-Scanner (Light Detection and Ranging) erfasst das Gebäude dreidimensional per Lasermessung – von innen und außen. Das Ergebnis ist ein präzises 3D-Modell des Gebäudes mit allen relevanten Abmessungen.</p>
+            <p>Auf Basis dieses Modells kann die Heizlastberechnung mit tatsächlichen Maßen statt Schätzungen durchgeführt werden:</p>
+            <ul style="margin:1rem 0 1rem 1.5rem;line-height:1.8">
+              <li>Exakte Wandflächen und -stärken</li>
+              <li>Tatsächliche Fensterflächen und -positionen</li>
+              <li>Gebäudehülle vollständig erfasst, keine Annahmen nötig</li>
+              <li>Raumweise Erfassung für die DIN-Berechnung</li>
+            </ul>
+            <p>Das Ergebnis ist eine normkonforme Heizlastberechnung auf Basis gemessener Daten – nicht Schätzungen. KfW-tauglich und revisionssicher.</p>
+          </div>
+
+          <div class="reveal" style="margin-top:2.5rem">
+            <h2>Zusammenfassung</h2>
+            <ul style="margin:1rem 0 1rem 1.5rem;line-height:1.8">
+              <li>Heizlastberechnung nach DIN EN 12831 ist KfW-Pflicht für Wärmepumpen-Förderung</li>
+              <li>Ohne korrekte Berechnung: Rückforderung von Fördergeldern möglich</li>
+              <li>Häufige Fehler: Faustformeln, falsche Gebäudedaten, fehlende Raumbetrachtung</li>
+              <li>LiDAR-Scan löst das Problem: 3D-Gebäudeerfassung mit tatsächlichen Maßen</li>
+              <li>Ergebnis: normkonforme, KfW-taugliche Heizlastberechnung</li>
+            </ul>
+          </div>
+
+        </div>
+      </section>
+
+      <section class="sp-section sp-section--beige" aria-label="Beratung">
+        <div class="container">
+          <div class="sp-cta-box reveal">
+            <h2>Heizlastberechnung mit LiDAR-Scan</h2>
+            <p>Ich führe die Heizlastberechnung nach DIN EN 12831 mit 3D-LiDAR-Erfassung durch – normkonform, KfW-tauglich und ohne Annahmen. Vereinbare einen Termin für die Vor-Ort-Aufnahme.</p>
+            <a href="/termin" class="btn btn-accent btn-lg">Termin vereinbaren</a>
+          </div>
+        </div>
+      </section>
+
+    </article>
+
+  </main>
+
+  <footer class="site-footer" role="contentinfo">
+    <div class="container footer-inner">
+      <div class="footer-brand">
+        <a href="/" class="nav-logo" aria-label="Patrick Leißner Energieberatung – zur Startseite">
+          <img src="../../assets/Logo/Initialien-Gold-frei.png" alt="Patrick Leißner Energieberatung Logo" width="36" height="36" loading="lazy">
+          <span class="nav-logo-text">Patrick Leißner</span>
+        </a>
+        <p>Frei durch eigene Energie.</p>
+      </div>
+      <nav class="footer-links" aria-label="Footer-Navigation">
+        <a href="/impressum.html">Impressum</a>
+        <a href="/datenschutz.html">Datenschutz</a>
+        <a href="#" aria-label="Zurück zum Seitenanfang">Nach oben ↑</a>
+      </nav>
+    </div>
+    <div class="container">
+      <p class="footer-copyright">© 2025 Patrick Leißner. Alle Rechte vorbehalten.</p>
+    </div>
+  </footer>
+
+  <script src="../../main.js"></script>
+</body>
+</html>
