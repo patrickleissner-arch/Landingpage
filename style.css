@@ -1947,14 +1947,15 @@ p { max-width: 68ch; }
 /* ── Rechner-Tab-Leiste ── */
 .rechner-tabs-bar {
   background: var(--color-surface-alt, #F1F0E9);
-  border-bottom: 2px solid var(--color-border, #e2e4e0);
+  border-bottom: 1px solid var(--color-border, #e2e4e0);
+  padding: .75rem 0;
 }
 .rechner-tabs-inner {
   max-width: 980px;
   margin: 0 auto;
   padding: 0 1rem;
   display: flex;
-  gap: 0;
+  gap: .5rem;
   overflow-x: auto;
   scrollbar-width: none;
 }
@@ -1964,24 +1965,29 @@ p { max-width: 68ch; }
   flex-direction: column;
   align-items: flex-start;
   gap: .1rem;
-  padding: .75rem 1.5rem;
+  padding: .55rem 1.25rem;
   text-decoration: none;
   color: var(--color-text-muted, #6b7280);
-  border-bottom: 3px solid transparent;
-  margin-bottom: -2px;
-  transition: color .18s, border-color .18s;
+  background: #fff;
+  border: 2px solid var(--color-border, #d1d5db);
+  border-radius: .5rem;
+  transition: color .18s, border-color .18s, background .18s;
   font-family: var(--font-body, 'Outfit', sans-serif);
 }
 .rechner-tab-name { font-size: .88rem; font-weight: 700; white-space: nowrap; }
-.rechner-tab-sub  { font-size: .72rem; font-weight: 400; line-height: 1.3; color: var(--color-text-muted, #6b7280); }
-.rechner-tab:hover { color: var(--color-brand-primary, #2E4F3C); }
-.rechner-tab:hover .rechner-tab-sub { color: var(--color-brand-primary, #2E4F3C); }
-.rechner-tab.active {
+.rechner-tab-sub  { font-size: .72rem; font-weight: 400; line-height: 1.3; color: inherit; opacity: .75; }
+.rechner-tab:hover {
   color: var(--color-brand-primary, #2E4F3C);
-  border-bottom-color: var(--color-brand-accent, #D0AB3B);
+  border-color: var(--color-brand-primary, #2E4F3C);
+}
+.rechner-tab:hover .rechner-tab-sub { opacity: 1; }
+.rechner-tab.active {
+  color: #fff;
+  background: var(--color-brand-primary, #2E4F3C);
+  border-color: var(--color-brand-primary, #2E4F3C);
   pointer-events: none;
 }
-.rechner-tab.active .rechner-tab-sub { color: var(--color-brand-primary, #2E4F3C); opacity: .8; }
+.rechner-tab.active .rechner-tab-sub { color: #fff; opacity: .75; }
 
 /* Globale CTA-Card (alle Rechner) */
 .ec-cta-card { background: #ffffff; border-radius: .5rem; box-shadow: 0 2px 10px rgba(0,0,0,.09); padding: 2rem; margin-bottom: 1.5rem; display: flex; flex-direction: column; align-items: center; text-align: center; }
