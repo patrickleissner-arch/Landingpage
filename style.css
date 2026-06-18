@@ -1961,6 +1961,7 @@ p { max-width: 68ch; }
 }
 .rechner-tabs-inner::-webkit-scrollbar { display: none; }
 .rechner-tab {
+  flex: 1;
   display: inline-flex;
   flex-direction: column;
   align-items: flex-start;
