@@ -75,7 +75,7 @@ Jeder Push deployt sofort live. Vor jedem Push:
 - [ ] Content-Refresh auf bestehenden Leistungs-Unterseiten anhand der drei Varianten + Rechtsrahmen 2026
 
 **Sofort umsetzbar:**
-- [ ] Datenschutz §5 (Brevo-Terminbuchung): bestätigen, dass der bestehende Brevo-AVV auch „Meetings" abdeckt und die Verarbeitung EU-seitig erfolgt (Migration von Zeeg → Brevo am 2026-06-22)
+- [x] Datenschutz §5 (Brevo-Terminbuchung): bestätigt, dass der bestehende Brevo-AVV auch „Meetings" abdeckt und die Verarbeitung EU-seitig erfolgt (Migration von Zeeg → Brevo am 2026-06-22)
 - [x] Verwaiste Datei `impressum - Kopie.html` — war nie im Repo, erledigt
 - [x] Kontaktformular SMTP — `.env` fehlte auf Server; GitHub Actions Workflow (`.github/workflows/deploy-env.yml`) schreibt sie jetzt bei jedem Push automatisch via SSH. Bestätigt 2026-06-01.
 

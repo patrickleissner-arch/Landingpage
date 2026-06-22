@@ -175,7 +175,7 @@
       </ul>
 
       <!-- Desktop CTA -->
-      <a href="#termine" class="btn btn-accent nav-cta">Termin buchen</a>
+      <a href="/termin" class="btn btn-accent nav-cta">Termin buchen</a>
 
       <!-- Mobile Hamburger -->
       <button
@@ -441,10 +441,8 @@
         </div>
 
         <div class="termine-cta reveal">
-          <button class="btn btn-accent btn-lg" id="zeeg-open-btn" aria-haspopup="dialog" aria-controls="zeeg-modal">
-            Termin buchen
-          </button>
-          <p class="termine-hint">Buchungsfenster öffnet sich direkt hier – kein Account nötig.</p>
+          <a href="/termin" class="btn btn-accent btn-lg">Termin buchen</a>
+          <p class="termine-hint">Wähle direkt deinen Wunschtermin – kein Account nötig.</p>
         </div>
 
       </div>
@@ -665,16 +663,6 @@
   </footer>
 
   <script src="main.js"></script>
-  <!-- ── Zeeg Booking Modal ───────────────────────────────── -->
-  <div id="zeeg-modal" class="zeeg-modal" role="dialog" aria-modal="true" aria-label="Termin buchen" hidden>
-    <div class="zeeg-modal-overlay" id="zeeg-modal-overlay"></div>
-    <div class="zeeg-modal-panel">
-      <button class="zeeg-modal-close" id="zeeg-modal-close" aria-label="Schließen">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-      </button>
-      <div class="zeeg-inline-widget" id="zeeg-embed-p902" style="width:100%"></div>
-    </div>
-  </div>
 
 </body>
 </html>
