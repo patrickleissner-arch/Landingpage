@@ -480,6 +480,7 @@ button {
   color: var(--color-text-secondary);
   font-size: 1.0625rem;
   line-height: 1.7;
+  text-wrap: balance;
 }
 
 .section-header-light h2,

@@ -579,13 +579,15 @@ function initConfirmationBanner() {
 }
 
 /* ── Brevo Inline Consent (Two-Click, /termin) ────────────── */
+const BREVO_CONSENT_KEY = 'brevoBookingConsent';
+
 function initBrevoInlineConsent() {
   const consent = qs('#brevo-consent');
   const btn     = qs('#brevo-consent-btn');
   const widget  = qs('#brevo-embed');
   if (!consent || !btn || !widget) return;
 
-  btn.addEventListener('click', () => {
+  const loadCalendar = () => {
     // Brevo-Buchungsseite erst nach ausdruecklicher Einwilligung als iframe laden
     const iframe = document.createElement('iframe');
     iframe.src = 'https://meet.brevo.com/patrick-leissner/borderless';
@@ -596,13 +598,26 @@ function initBrevoInlineConsent() {
 
     widget.hidden = false;
     consent.hidden = true;
-    window.scrollTo({ top: 0, behavior: 'instant' });
 
-    ['.termin-header-section', '.sp-back-bar', '.termin-alt-section', '#site-header', '.site-footer']
+    ['.termin-header-section', '.sp-back-bar', '.termin-alt-section']
       .forEach(sel => {
         const el = document.querySelector(sel);
         if (el) el.hidden = true;
       });
+  };
+
+  let hasConsent = false;
+  try { hasConsent = localStorage.getItem(BREVO_CONSENT_KEY) === 'true'; } catch { /* private mode etc. */ }
+
+  if (hasConsent) {
+    loadCalendar();
+    return;
+  }
+
+  btn.addEventListener('click', () => {
+    try { localStorage.setItem(BREVO_CONSENT_KEY, 'true'); } catch { /* private mode etc. */ }
+    loadCalendar();
+    window.scrollTo({ top: 0, behavior: 'instant' });
   });
 }
 

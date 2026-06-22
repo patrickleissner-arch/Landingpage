@@ -1006,9 +1006,9 @@
   text-align: center;
   gap: var(--space-4);
   background: var(--color-surface, #fff);
-  border: 2px dashed rgba(46, 79, 60, 0.2);
+  border: 1px solid rgba(46, 79, 60, 0.15);
   border-radius: var(--border-radius-lg, 16px);
-  padding: var(--space-12) var(--space-6);
+  padding: var(--space-8) var(--space-6);
 }
 
 .brevo-consent[hidden] { display: none; }
