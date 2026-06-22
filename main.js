@@ -577,67 +577,21 @@ function initConfirmationBanner() {
   history.replaceState(null, '', window.location.pathname);
 }
 
-/* ── Zeeg Modal ───────────────────────────────────────────── */
-function initZeegModal() {
-  const modal   = qs('#zeeg-modal');
-  const openBtn = qs('#zeeg-open-btn');
-  const closeBtn = qs('#zeeg-modal-close');
-  const overlay  = qs('#zeeg-modal-overlay');
-  if (!modal || !openBtn) return;
-
-  let zeegLoaded = false;
-
-  function loadZeegScript() {
-    if (zeegLoaded) return;
-    zeegLoaded = true;
-    const s = document.createElement('script');
-    s.type = 'text/javascript';
-    s.src = 'https://assets.zeeg.me/embed.min.js';
-    s.setAttribute('data-user', 'p902');
-    s.async = true;
-    document.body.appendChild(s);
-  }
-
-  function openModal() {
-    modal.hidden = false;
-    document.body.style.overflow = 'hidden';
-    loadZeegScript();
-    closeBtn.focus();
-  }
-
-  function closeModal() {
-    modal.hidden = true;
-    document.body.style.overflow = '';
-    openBtn.focus();
-  }
-
-  openBtn.addEventListener('click', openModal);
-  closeBtn.addEventListener('click', closeModal);
-  overlay.addEventListener('click', closeModal);
-  document.addEventListener('keydown', e => { if (e.key === 'Escape' && !modal.hidden) closeModal(); });
-
-  // Header-CTA öffnet ebenfalls das Modal
-  const navCta = qs('.nav-cta');
-  if (navCta) {
-    navCta.addEventListener('click', e => { e.preventDefault(); openModal(); });
-  }
-}
-
-/* ── Zeeg Inline Consent (Two-Click, /termin) ─────────────── */
-function initZeegInlineConsent() {
-  const consent = qs('#zeeg-consent');
-  const btn     = qs('#zeeg-consent-btn');
-  const widget  = qs('#zeeg-embed-p902');
+/* ── Brevo Inline Consent (Two-Click, /termin) ────────────── */
+function initBrevoInlineConsent() {
+  const consent = qs('#brevo-consent');
+  const btn     = qs('#brevo-consent-btn');
+  const widget  = qs('#brevo-embed');
   if (!consent || !btn || !widget) return;
 
   btn.addEventListener('click', () => {
-    // Zeeg-Script erst nach ausdruecklicher Einwilligung laden
-    const s = document.createElement('script');
-    s.type = 'text/javascript';
-    s.src = 'https://assets.zeeg.me/embed.min.js';
-    s.setAttribute('data-user', 'p902');
-    s.async = true;
-    document.body.appendChild(s);
+    // Brevo-Buchungsseite erst nach ausdruecklicher Einwilligung als iframe laden
+    const iframe = document.createElement('iframe');
+    iframe.src = 'https://meet.brevo.com/patrick-leissner/borderless';
+    iframe.title = 'Brevo Buchungskalender';
+    iframe.loading = 'lazy';
+    iframe.setAttribute('frameborder', '0');
+    widget.appendChild(iframe);
 
     widget.hidden = false;
     consent.hidden = true;
@@ -656,8 +610,7 @@ function init() {
   initMobileNav();
   initStickyNav();
   initNavCtaVisibility();
-  initZeegModal();
-  initZeegInlineConsent();
+  initBrevoInlineConsent();
   initActiveNav();
   initScrollReveal();
   initSmoothScroll();

@@ -996,8 +996,8 @@
   padding: var(--space-16) 0;
 }
 
-/* ── Zeeg Consent-Gate (Two-Click) ── */
-.zeeg-consent {
+/* ── Brevo Consent-Gate (Two-Click) ── */
+.brevo-consent {
   max-width: 640px;
   margin: 0 auto;
   display: flex;
@@ -1011,20 +1011,20 @@
   padding: var(--space-12) var(--space-6);
 }
 
-.zeeg-consent[hidden] { display: none; }
+.brevo-consent[hidden] { display: none; }
 
-.zeeg-consent-icon {
+.brevo-consent-icon {
   color: var(--color-brand-primary);
 }
 
-.zeeg-consent h3 {
+.brevo-consent h3 {
   font-size: clamp(1.25rem, 2.5vw, 1.6rem);
   font-weight: 700;
   color: var(--color-text-primary);
   margin: 0;
 }
 
-.zeeg-consent p {
+.brevo-consent p {
   font-size: 0.9375rem;
   color: var(--color-text-secondary);
   line-height: 1.7;
@@ -1032,20 +1032,20 @@
   margin: 0;
 }
 
-.zeeg-consent p a {
+.brevo-consent p a {
   color: var(--color-brand-primary);
   text-decoration: underline;
   text-underline-offset: 3px;
 }
 
-.zeeg-consent .btn {
+.brevo-consent .btn {
   margin-top: var(--space-2);
 }
 
-.zeeg-inline-widget[hidden] { display: none; }
+.brevo-inline-widget[hidden] { display: none; }
 
-#zeeg-embed-p902,
-#zeeg-embed-p902 iframe {
+#brevo-embed,
+#brevo-embed iframe {
   width: 100%;
   min-height: 80vh;
   border: none;

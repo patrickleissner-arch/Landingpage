@@ -11,9 +11,9 @@ Landingpage von Patrick Leißner — Energieberatung (Photovoltaik & Wärmepumpe
 - **Frontend:** Klassisches HTML, CSS, Vanilla JavaScript. KEIN Framework (kein React/Next.js/Tailwind/Framer).
   - Seiten: `index.html` (Start) + Unterseiten (`termin.html`, `impressum.html`, `datenschutz.html`, `energierechner.html`, `solarisator.html` u.a.)
   - Styles: `style.css` (global) + `subpage.css` (Unterseiten). Reines CSS mit CSS-Variablen und Media Queries.
-  - Logik: `main.js` (Navigation, Animationen, Zeeg-Consent, Kontaktformular)
+  - Logik: `main.js` (Navigation, Animationen, Brevo-Consent, Kontaktformular)
 - **Backend:** Node.js + Express + Nodemailer (`server.js`) für den E-Mail-Versand des Kontaktformulars (Double-Opt-in). Config über `dotenv` (`.env`, nicht committen).
-- **Drittdienste:** Zeeg (Terminbuchung, nur nach Consent geladen). Selbst gehostet: chart.js (`assets/vendor/`), Schrift Outfit.
+- **Drittdienste:** Brevo (Terminbuchung via „Meetings", nur nach Consent als iframe von `meet.brevo.com` geladen; zugleich E-Mail-Versand des Kontaktformulars). Selbst gehostet: chart.js (`assets/vendor/`), Schrift Outfit.
 - **Server/Deploy:** Apache (`.htaccess`), Node ≥ 18. Deploy: GitHub (`patrickleissner-arch/Landingpage`, Branch `master`) → Hostinger, automatisch bei Push.
 
 ---
@@ -75,7 +75,7 @@ Jeder Push deployt sofort live. Vor jedem Push:
 - [ ] Content-Refresh auf bestehenden Leistungs-Unterseiten anhand der drei Varianten + Rechtsrahmen 2026
 
 **Sofort umsetzbar:**
-- [ ] Datenschutz §5 (Zeeg-Abschnitt): AVV-Block aus HTML-Kommentar einkommentieren, sobald Patrick den Zeeg-AVV bestätigt hat
+- [ ] Datenschutz §5 (Brevo-Terminbuchung): bestätigen, dass der bestehende Brevo-AVV auch „Meetings" abdeckt und die Verarbeitung EU-seitig erfolgt (Migration von Zeeg → Brevo am 2026-06-22)
 - [x] Verwaiste Datei `impressum - Kopie.html` — war nie im Repo, erledigt
 - [x] Kontaktformular SMTP — `.env` fehlte auf Server; GitHub Actions Workflow (`.github/workflows/deploy-env.yml`) schreibt sie jetzt bei jedem Push automatisch via SSH. Bestätigt 2026-06-01.
 
