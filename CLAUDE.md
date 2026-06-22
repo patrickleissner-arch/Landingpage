@@ -78,6 +78,7 @@ Jeder Push deployt sofort live. Vor jedem Push:
 - [x] Datenschutz §5 (Brevo-Terminbuchung): bestätigt, dass der bestehende Brevo-AVV auch „Meetings" abdeckt und die Verarbeitung EU-seitig erfolgt (Migration von Zeeg → Brevo am 2026-06-22)
 - [x] Verwaiste Datei `impressum - Kopie.html` — war nie im Repo, erledigt
 - [x] Kontaktformular SMTP — `.env` fehlte auf Server; GitHub Actions Workflow (`.github/workflows/deploy-env.yml`) schreibt sie jetzt bei jedem Push automatisch via SSH. Bestätigt 2026-06-01.
+- [ ] Brevo-Automation-Workflows in der Brevo-Oberfläche einrichten (2026-06-22): Code liefert jetzt bei erteilter Zusatz-Einwilligung (`consentKontakt`) Events `kontakt_bestaetigt` (Kontaktformular) und `energierechner_bestaetigt` (Energierechner) sowie Kontakte in der Liste `BREVO_LIST_ID` — Nachfass-Sequenzen/Segmentierung darauf aufbauend muss Patrick im Brevo-Dashboard konfigurieren, kein neues Secret nötig (nutzt den bestehenden `BREVO_API_KEY`).
 
 ---
 

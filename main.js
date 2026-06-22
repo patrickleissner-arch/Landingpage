@@ -265,6 +265,7 @@ function initContactForm() {
         phone:      form.querySelector('[name="phone"]').value.trim(),
         subject:    form.querySelector('[name="subject"]').value,
         message:    form.querySelector('[name="message"]').value.trim(),
+        consentKontakt: form.querySelector('[name="consentKontakt"]').checked,
         hp_website: form.querySelector('[name="hp_website"]').value,
       };
       const res  = await fetch('/api/contact', {

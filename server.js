@@ -64,6 +64,14 @@ function brevoPost(apiPath, body) {
   });
 }
 
+function brevoTrackEvent(email, eventName, eventProperties) {
+  return brevoPost('/v3/events', {
+    event_name: eventName,
+    identifiers: { email_id: email },
+    event_properties: eventProperties,
+  });
+}
+
 app.post('/api/contact', async (req, res) => {
   // Honeypot: Bots füllen dieses Feld aus, echte Nutzer nicht
   if (req.body.hp_website) {
@@ -82,7 +90,7 @@ app.post('/api/contact', async (req, res) => {
   hits.push(now);
   rateLimitMap.set(ip, hits);
 
-  const { name, email, phone, subject, message } = req.body;
+  const { name, email, phone, subject, message, consentKontakt } = req.body;
 
   if (!name || !email || !message) {
     return res.status(400).json({ ok: false, error: 'Pflichtfelder fehlen.' });
@@ -95,7 +103,10 @@ app.post('/api/contact', async (req, res) => {
   // Double Opt-in: Submission zwischenspeichern und Bestätigungs-E-Mail senden
   const token = crypto.randomUUID();
   pendingMap.set(token, {
-    payload:   { name, email, phone, subject, message },
+    payload: {
+      name, email, phone, subject, message,
+      consentKontakt: consentKontakt === true || consentKontakt === 'true',
+    },
     expiresAt: now + 24 * 60 * 60 * 1000,
   });
 
@@ -146,7 +157,7 @@ app.get('/api/confirm', async (req, res) => {
     return res.redirect('/?confirmed=expired');
   }
 
-  const { name, email, phone, subject, message } = entry.payload;
+  const { name, email, phone, subject, message, consentKontakt } = entry.payload;
   pendingMap.delete(token);
 
   const subjectLabel = SUBJECT_LABELS[subject] || subject || 'Allgemein';
@@ -171,6 +182,26 @@ app.get('/api/confirm', async (req, res) => {
         <p style="font-family:sans-serif;font-size:15px;white-space:pre-wrap">${safeMessage}</p>
       `,
     });
+
+    // CRM-Sync + Event nur bei zusätzlicher Einwilligung (consentKontakt)
+    if (consentKontakt && process.env.BREVO_LIST_ID) {
+      try {
+        await brevoPost('/v3/contacts', {
+          email,
+          attributes: { VORNAME: name, SMS: phone || undefined },
+          listIds: [Number(process.env.BREVO_LIST_ID)],
+          updateEnabled: false,
+        });
+      } catch (err) {
+        console.error('Brevo CRM error (contact form):', err.message);
+      }
+      try {
+        await brevoTrackEvent(email, 'kontakt_bestaetigt', { betreff: subjectLabel });
+      } catch (err) {
+        console.error('Brevo event error (contact form):', err.message);
+      }
+    }
+
     res.redirect('/?confirmed=true');
   } catch (err) {
     console.error('Confirm mail error:', err.message);
@@ -329,7 +360,7 @@ app.get('/api/lead-confirm', async (req, res) => {
     console.error('Lead notify error:', err.message);
   }
 
-  // (c) CRM: nur wenn consentKontakt
+  // (c) CRM + Event: nur wenn consentKontakt
   if (consentKontakt && process.env.BREVO_LIST_ID) {
     try {
       await brevoPost('/v3/contacts', {
@@ -340,6 +371,11 @@ app.get('/api/lead-confirm', async (req, res) => {
       });
     } catch (err) {
       console.error('Brevo CRM error:', err.message);
+    }
+    try {
+      await brevoTrackEvent(email, 'energierechner_bestaetigt', { plz, heizung: r.fuel || '' });
+    } catch (err) {
+      console.error('Brevo event error:', err.message);
     }
   }
 
