@@ -3,6 +3,7 @@ name: Inject .env on Hostinger
 on:
   push:
     branches: [master]
+  workflow_dispatch:
 
 jobs:
   inject-env:
