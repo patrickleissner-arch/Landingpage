@@ -25,11 +25,11 @@ setInterval(() => {
 }, 30 * 60 * 1000);
 
 // ── Contact form ─────────────────────────────────────────────────
-const SUBJECT_LABELS = {
-  pv:    'Photovoltaikanlage',
-  wp:    'Wärmepumpe',
-  both:  'PV + Wärmepumpe',
-  other: 'Sonstiges',
+const THEMEN_LABELS = {
+  pv:           'Photovoltaikanlage',
+  wp:           'Wärmepumpe',
+  versicherung: 'Versicherungscheck',
+  sonstiges:    'Sonstiges',
 };
 
 function createTransporter() {
@@ -72,6 +72,38 @@ function brevoTrackEvent(email, eventName, eventProperties) {
   });
 }
 
+// Legt einen Kontakt an/merged ihn und gibt zuverlässig die numerische
+// Brevo-Kontakt-ID zurück (auch wenn der Kontakt schon existiert).
+async function brevoUpsertContact(email, attributes, listId) {
+  try {
+    const body = { email, attributes, forceMerge: true, getId: true };
+    if (listId) body.listIds = [Number(listId)];
+    const res = await brevoPost('/v3/contacts', body);
+    return JSON.parse(res.body).id || null;
+  } catch (err) {
+    console.error('Brevo contact upsert error:', err.message);
+    return null;
+  }
+}
+
+// Legt einen Deal in der konfigurierten Vertriebspipeline an (Art. 6 Abs. 1
+// lit. b DSGVO – digitale Variante der bisherigen Anfragebearbeitung).
+async function brevoCreateDeal(name, contactId) {
+  if (!process.env.BREVO_PIPELINE_ID || !process.env.BREVO_DEAL_STAGE_ID) return;
+  try {
+    await brevoPost('/v3/crm/deals', {
+      name,
+      attributes: {
+        pipeline:   process.env.BREVO_PIPELINE_ID,
+        deal_stage: process.env.BREVO_DEAL_STAGE_ID,
+      },
+      linkedContactsIds: contactId ? [contactId] : [],
+    });
+  } catch (err) {
+    console.error('Brevo deal creation error:', err.message);
+  }
+}
+
 app.post('/api/contact', async (req, res) => {
   // Honeypot: Bots füllen dieses Feld aus, echte Nutzer nicht
   if (req.body.hp_website) {
@@ -90,9 +122,16 @@ app.post('/api/contact', async (req, res) => {
   hits.push(now);
   rateLimitMap.set(ip, hits);
 
-  const { name, email, phone, subject, message, consentKontakt } = req.body;
+  const { vorname, nachname, email, phone, strasse, plz, ort, themen, message, consentKontakt } = req.body;
 
-  if (!name || !email || !message) {
+  if (!vorname || !nachname || !email || !phone || !Array.isArray(themen) || !themen.length) {
+    return res.status(400).json({ ok: false, error: 'Pflichtfelder fehlen.' });
+  }
+
+  // Adresse nur bei Energie-Themen Pflicht (Standorteinschätzung) –
+  // bei reinem Versicherungscheck/Sonstiges bleibt sie optional (Datenminimierung)
+  const needsAddress = themen.includes('pv') || themen.includes('wp');
+  if (needsAddress && (!strasse || !plz || !ort)) {
     return res.status(400).json({ ok: false, error: 'Pflichtfelder fehlen.' });
   }
 
@@ -104,7 +143,7 @@ app.post('/api/contact', async (req, res) => {
   const token = crypto.randomUUID();
   pendingMap.set(token, {
     payload: {
-      name, email, phone, subject, message,
+      vorname, nachname, email, phone, strasse, plz, ort, themen, message,
       consentKontakt: consentKontakt === true || consentKontakt === 'true',
     },
     expiresAt: now + 24 * 60 * 60 * 1000,
@@ -118,10 +157,10 @@ app.post('/api/contact', async (req, res) => {
       from:    `"Patrick Leißner Energieberatung" <${process.env.SMTP_USER}>`,
       to:      email,
       subject: 'Bitte bestätigen Sie Ihre Anfrage – Patrick Leißner Energieberatung',
-      text: `Hallo ${name},\n\nvielen Dank für Ihre Anfrage. Bitte bestätigen Sie diese durch Klick auf den folgenden Link:\n\n${confirmUrl}\n\nDer Link ist 24 Stunden gültig. Danach werden alle eingegebenen Daten automatisch gelöscht.\n\nRechtsgrundlage der Verarbeitung: Art. 6 Abs. 1 lit. b DSGVO (Vertragsanbahnung). Verantwortlicher: Patrick Leißner, p@patrickleissner.de.\n\nFalls Sie keine Anfrage gestellt haben, ignorieren Sie diese E-Mail bitte – es wurden keine Daten weitergegeben.\n\nMit freundlichen Grüßen\nPatrick Leißner`,
+      text: `Hallo ${vorname},\n\nvielen Dank für Ihre Anfrage. Bitte bestätigen Sie diese durch Klick auf den folgenden Link:\n\n${confirmUrl}\n\nDer Link ist 24 Stunden gültig. Danach werden alle eingegebenen Daten automatisch gelöscht.\n\nRechtsgrundlage der Verarbeitung: Art. 6 Abs. 1 lit. b DSGVO (Vertragsanbahnung). Verantwortlicher: Patrick Leißner, p@patrickleissner.de.\n\nFalls Sie keine Anfrage gestellt haben, ignorieren Sie diese E-Mail bitte – es wurden keine Daten weitergegeben.\n\nMit freundlichen Grüßen\nPatrick Leißner`,
       html: `
         <div style="font-family:sans-serif;font-size:15px;color:#222;max-width:600px;line-height:1.6">
-          <p>Hallo ${name},</p>
+          <p>Hallo ${vorname},</p>
           <p>vielen Dank für Ihre Anfrage. Bitte bestätigen Sie diese durch Klick auf den folgenden Button:</p>
           <p style="margin:24px 0">
             <a href="${confirmUrl}"
@@ -157,11 +196,15 @@ app.get('/api/confirm', async (req, res) => {
     return res.redirect('/?confirmed=expired');
   }
 
-  const { name, email, phone, subject, message, consentKontakt } = entry.payload;
+  const { vorname, nachname, email, phone, strasse, plz, ort, themen, message, consentKontakt } = entry.payload;
   pendingMap.delete(token);
 
-  const subjectLabel = SUBJECT_LABELS[subject] || subject || 'Allgemein';
-  const safeMessage  = String(message).replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  const name         = `${vorname} ${nachname}`;
+  const themenLabels = (themen || []).map(t => THEMEN_LABELS[t] || t);
+  const themenText   = themenLabels.join(', ') || 'Allgemein';
+  const safeMessage  = String(message || '').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  const phoneText    = phone || '–';
+  const addressText  = (strasse || plz || ort) ? `${strasse || '–'}, ${plz || ''} ${ort || ''}`.trim() : '–';
 
   try {
     const transporter = createTransporter();
@@ -169,36 +212,43 @@ app.get('/api/confirm', async (req, res) => {
       from:    `"Kontaktformular patrickleissner.de" <${process.env.SMTP_USER}>`,
       replyTo: `"${name}" <${email}>`,
       to:      process.env.MAIL_TO || 'p@patrickleissner.de',
-      subject: `Bestätigte Anfrage: ${subjectLabel} – ${name}`,
-      text:    `Name: ${name}\nE-Mail: ${email}\nTelefon: ${phone || '–'}\nBetreff: ${subjectLabel}\n\n${message}`,
+      subject: `Bestätigte Anfrage: ${themenText} – ${name}`,
+      text:    `Name: ${name}\nE-Mail: ${email}\nTelefon: ${phoneText}\nAdresse: ${addressText}\nThemen: ${themenText}\n\n${message || '(keine Nachricht)'}`,
       html: `
         <table style="font-family:sans-serif;font-size:15px;color:#222;max-width:600px">
           <tr><td><strong>Name:</strong></td><td>${name}</td></tr>
           <tr><td><strong>E-Mail:</strong></td><td><a href="mailto:${email}">${email}</a></td></tr>
-          <tr><td><strong>Telefon:</strong></td><td>${phone || '–'}</td></tr>
-          <tr><td><strong>Betreff:</strong></td><td>${subjectLabel}</td></tr>
+          <tr><td><strong>Telefon:</strong></td><td>${phoneText}</td></tr>
+          <tr><td><strong>Adresse:</strong></td><td>${addressText}</td></tr>
+          <tr><td><strong>Themen:</strong></td><td>${themenText}</td></tr>
         </table>
         <hr style="margin:20px 0">
-        <p style="font-family:sans-serif;font-size:15px;white-space:pre-wrap">${safeMessage}</p>
+        <p style="font-family:sans-serif;font-size:15px;white-space:pre-wrap">${safeMessage || '(keine Nachricht)'}</p>
       `,
     });
 
-    // CRM-Sync + Event nur bei zusätzlicher Einwilligung (consentKontakt)
-    if (consentKontakt && process.env.BREVO_LIST_ID) {
-      try {
-        await brevoPost('/v3/contacts', {
-          email,
-          attributes: { VORNAME: name, SMS: phone || undefined },
-          listIds: [Number(process.env.BREVO_LIST_ID)],
-          updateEnabled: false,
-        });
-      } catch (err) {
-        console.error('Brevo CRM error (contact form):', err.message);
-      }
-      try {
-        await brevoTrackEvent(email, 'kontakt_bestaetigt', { betreff: subjectLabel });
-      } catch (err) {
-        console.error('Brevo event error (contact form):', err.message);
+    // Versicherungsbezogene Anfragen dürfen Brevo nie berühren (§ 34d GewO –
+    // Patrick handelt Versicherung persönlich, getrennt von der UG/Energie-CRM).
+    // Sobald "versicherung" unter den Themen ist, wird die GESAMTE Anfrage
+    // ausschließlich per E-Mail an MAIL_TO bearbeitet (siehe oben) – kein
+    // Kontakt, kein Deal, keine Liste, kein Event, auch nicht für ggf.
+    // gleichzeitig ausgewählte Energie-Themen.
+    if (!themen.includes('versicherung')) {
+      // Basis-Kontakt + Deal: immer, unabhängig von consentKontakt (Art. 6 Abs. 1 lit. b)
+      const contactId = await brevoUpsertContact(
+        email,
+        { VORNAME: vorname, NACHNAME: nachname, SMS: phone, STRASSE: strasse, PLZ: plz, STADT: ort, THEMEN: themenText },
+        consentKontakt ? process.env.BREVO_LIST_ID : undefined
+      );
+      await brevoCreateDeal(`${themenText}: ${name}`, contactId);
+
+      // Event nur bei zusätzlicher Einwilligung (consentKontakt) – triggert Automation-Workflows
+      if (consentKontakt) {
+        try {
+          await brevoTrackEvent(email, 'kontakt_bestaetigt', { themen: themenText, plz, ort });
+        } catch (err) {
+          console.error('Brevo event error (contact form):', err.message);
+        }
       }
     }
 
@@ -360,18 +410,16 @@ app.get('/api/lead-confirm', async (req, res) => {
     console.error('Lead notify error:', err.message);
   }
 
-  // (c) CRM + Event: nur wenn consentKontakt
-  if (consentKontakt && process.env.BREVO_LIST_ID) {
-    try {
-      await brevoPost('/v3/contacts', {
-        email,
-        attributes: { VORNAME: safe(vorname), NACHNAME: safe(nachname), SMS: safe(phone) || undefined },
-        listIds: [Number(process.env.BREVO_LIST_ID)],
-        updateEnabled: false,
-      });
-    } catch (err) {
-      console.error('Brevo CRM error:', err.message);
-    }
+  // Basis-Kontakt + Deal: immer, unabhängig von consentKontakt (Art. 6 Abs. 1 lit. b)
+  const contactId = await brevoUpsertContact(
+    email,
+    { VORNAME: safe(vorname), NACHNAME: safe(nachname), SMS: safe(phone) || undefined, PLZ: plz },
+    consentKontakt ? process.env.BREVO_LIST_ID : undefined
+  );
+  await brevoCreateDeal(`Energierechner: ${safe(name)} (${plz})`, contactId);
+
+  // Event nur bei zusätzlicher Einwilligung (consentKontakt) – triggert Automation-Workflows
+  if (consentKontakt) {
     try {
       await brevoTrackEvent(email, 'energierechner_bestaetigt', { plz, heizung: r.fuel || '' });
     } catch (err) {

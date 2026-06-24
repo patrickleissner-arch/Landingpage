@@ -2,7 +2,7 @@
 
 Landingpage von Patrick Leißner — Energieberatung (Photovoltaik & Wärmepumpe) und Versicherungsvermittlung.
 
-**Aktualisiert:** 2026-06-01
+**Aktualisiert:** 2026-06-23
 
 ---
 
@@ -53,6 +53,11 @@ Jeder Push deployt sofort live. Vor jedem Push:
   - Keine Produkt-, Beitrags- oder Renditeversprechen
   - Nichts dem Zufall überlassen — bei Rechtsfragen konservative Variante wählen
   - Unsicherheiten offen kennzeichnen, statt sie zu überspielen
+  - **Harte Regel:** Versicherungsbezogene Anfragen (Thema „Versicherungscheck") dürfen Brevo
+    nie berühren — kein Kontakt, kein Deal, keine Liste, kein Event (`server.js`, `/api/confirm`:
+    Guard `!themen.includes('versicherung')`). Versicherung läuft ausschließlich persönlich über
+    Patrick/p@, getrennt von der Energieberatung der pin-co.de Media UG. Bei jeder Änderung an
+    diesem Code-Pfad diese Trennung erneut prüfen.
 - Keine externen Ressourcen ohne Consent laden (keine externen Fonts/CDNs/Tracker)
 - **Mobile First** — Pflicht, nicht Option
 
@@ -78,7 +83,12 @@ Jeder Push deployt sofort live. Vor jedem Push:
 - [x] Datenschutz §5 (Brevo-Terminbuchung): bestätigt, dass der bestehende Brevo-AVV auch „Meetings" abdeckt und die Verarbeitung EU-seitig erfolgt (Migration von Zeeg → Brevo am 2026-06-22)
 - [x] Verwaiste Datei `impressum - Kopie.html` — war nie im Repo, erledigt
 - [x] Kontaktformular SMTP — `.env` fehlte auf Server; GitHub Actions Workflow (`.github/workflows/deploy-env.yml`) schreibt sie jetzt bei jedem Push automatisch via SSH. Bestätigt 2026-06-01.
-- [ ] Brevo-Automation-Workflows in der Brevo-Oberfläche einrichten (2026-06-22): Code liefert jetzt bei erteilter Zusatz-Einwilligung (`consentKontakt`) Events `kontakt_bestaetigt` (Kontaktformular) und `energierechner_bestaetigt` (Energierechner) sowie Kontakte in der Liste `BREVO_LIST_ID` — Nachfass-Sequenzen/Segmentierung darauf aufbauend muss Patrick im Brevo-Dashboard konfigurieren, kein neues Secret nötig (nutzt den bestehenden `BREVO_API_KEY`).
+- [ ] Brevo-Automation-Workflows in der Brevo-Oberfläche einrichten (2026-06-23): Code liefert bei erteilter Zusatz-Einwilligung (`consentKontakt`) Events `kontakt_bestaetigt` (Kontaktformular, jetzt mit `themen`/`plz`/`ort`) und `energierechner_bestaetigt` (Energierechner) sowie Kontakte in der Liste `BREVO_LIST_ID` — Nachfass-Sequenzen/Willkommens-Mail-Automation darauf aufbauend muss Patrick im Brevo-Dashboard konfigurieren, kein neues Secret nötig (nutzt den bestehenden `BREVO_API_KEY`).
+- [ ] Brevo-Vertriebspipeline einrichten (2026-06-23): Code legt jetzt bei **jeder** bestätigten Anfrage (Kontaktformular + Energierechner, unabhängig von `consentKontakt`) automatisch einen Deal an — vorausgesetzt, Patrick hat:
+  1. Custom-Contact-Attribute `STRASSE`, `PLZ`, `STADT`, `THEMEN` (Typ Text) in Brevo angelegt (Contacts > Einstellungen > Kontaktattribute) — sonst gehen diese Felder beim Speichern verloren (stiller Fehler, bricht aber nichts).
+  2. Eine Pipeline mit mind. einer Stage in Brevo (Sales CRM > Pipelines) angelegt.
+  3. Die zugehörige `pipeline`- und `deal_stage`-ID per `GET /v3/crm/pipeline/details/all` ermittelt und als neue GitHub-Secrets `BREVO_PIPELINE_ID` / `BREVO_DEAL_STAGE_ID` hinterlegt.
+  Ohne diese drei Schritte: kein Fehler im Frontend, Deals werden einfach nicht angelegt (try/catch greift).
 
 ---
 

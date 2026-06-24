@@ -468,19 +468,36 @@
             novalidate
             aria-label="Kontaktformular"
           >
-            <div class="form-group">
-              <label for="name">Name <span aria-hidden="true">*</span></label>
-              <input
-                type="text"
-                id="name"
-                name="name"
-                required
-                autocomplete="name"
-                placeholder="Ihr vollständiger Name"
-                aria-describedby="name-error"
-                aria-required="true"
-              >
-              <span class="field-error" id="name-error" role="alert" aria-live="polite"></span>
+            <div class="form-group-row">
+              <div class="form-group">
+                <label for="contact-vorname">Vorname <span aria-hidden="true">*</span></label>
+                <input
+                  type="text"
+                  id="contact-vorname"
+                  name="vorname"
+                  required
+                  autocomplete="given-name"
+                  placeholder="Ihr Vorname"
+                  aria-describedby="contact-vorname-error"
+                  aria-required="true"
+                >
+                <span class="field-error" id="contact-vorname-error" role="alert" aria-live="polite"></span>
+              </div>
+
+              <div class="form-group">
+                <label for="contact-nachname">Nachname <span aria-hidden="true">*</span></label>
+                <input
+                  type="text"
+                  id="contact-nachname"
+                  name="nachname"
+                  required
+                  autocomplete="family-name"
+                  placeholder="Ihr Nachname"
+                  aria-describedby="contact-nachname-error"
+                  aria-required="true"
+                >
+                <span class="field-error" id="contact-nachname-error" role="alert" aria-live="polite"></span>
+              </div>
             </div>
 
             <div class="form-group">
@@ -499,39 +516,92 @@
             </div>
 
             <div class="form-group">
-              <label for="phone">Telefon <span style="font-weight:400;color:var(--color-text-muted)">(optional)</span></label>
+              <label for="phone">Telefon <span aria-hidden="true">*</span></label>
               <input
                 type="tel"
                 id="phone"
                 name="phone"
                 autocomplete="tel"
                 placeholder="+49 ..."
+                required
+                aria-required="true"
+                aria-describedby="phone-error"
               >
+              <span class="field-error" id="phone-error" role="alert" aria-live="polite"></span>
             </div>
 
             <div class="form-group">
-              <label for="subject">Betreff</label>
-              <select id="subject" name="subject" autocomplete="off">
-                <option value="">Bitte wählen…</option>
-                <option value="pv">Photovoltaikanlage</option>
-                <option value="wp">Wärmepumpe</option>
-                <option value="both">PV + Wärmepumpe</option>
-                <option value="other">Sonstiges</option>
-              </select>
+              <label for="contact-strasse">Straße und Hausnummer
+                <span class="optional-mark" id="contact-strasse-optional-mark" style="font-weight:400;color:var(--color-text-muted)">(optional)</span>
+                <span class="req-mark" id="contact-strasse-req-mark" aria-hidden="true" hidden>*</span>
+              </label>
+              <input
+                type="text"
+                id="contact-strasse"
+                name="strasse"
+                autocomplete="street-address"
+                placeholder="Musterstraße 1"
+                aria-describedby="contact-strasse-error"
+              >
+              <span class="field-error" id="contact-strasse-error" role="alert" aria-live="polite"></span>
+            </div>
+
+            <div class="form-group-row">
+              <div class="form-group">
+                <label for="contact-plz">PLZ
+                  <span class="optional-mark" id="contact-plz-optional-mark" style="font-weight:400;color:var(--color-text-muted)">(optional)</span>
+                  <span class="req-mark" id="contact-plz-req-mark" aria-hidden="true" hidden>*</span>
+                </label>
+                <input
+                  type="text"
+                  id="contact-plz"
+                  name="plz"
+                  maxlength="5"
+                  inputmode="numeric"
+                  autocomplete="postal-code"
+                  placeholder="06766"
+                  aria-describedby="contact-plz-error"
+                >
+                <span class="field-error" id="contact-plz-error" role="alert" aria-live="polite"></span>
+              </div>
+
+              <div class="form-group">
+                <label for="contact-ort">Ort
+                  <span class="optional-mark" id="contact-ort-optional-mark" style="font-weight:400;color:var(--color-text-muted)">(optional)</span>
+                  <span class="req-mark" id="contact-ort-req-mark" aria-hidden="true" hidden>*</span>
+                </label>
+                <input
+                  type="text"
+                  id="contact-ort"
+                  name="ort"
+                  autocomplete="address-level2"
+                  placeholder="Bitterfeld-Wolfen"
+                  aria-describedby="contact-ort-error"
+                >
+                <span class="field-error" id="contact-ort-error" role="alert" aria-live="polite"></span>
+              </div>
             </div>
 
             <div class="form-group">
-              <label for="message">Nachricht <span aria-hidden="true">*</span></label>
+              <span class="field-label" id="contact-themen-label">Worum geht es? <span aria-hidden="true">*</span></span>
+              <p class="field-sublabel" style="font-size:0.8125rem;color:var(--color-text-muted);margin:0 0 4px">Bei Photovoltaik/Wärmepumpe wird zusätzlich deine Adresse für die Standorteinschätzung benötigt.</p>
+              <div class="card-grid cols-2" role="group" aria-labelledby="contact-themen-label">
+                <button type="button" class="card-btn multi" data-group="themen" data-value="pv">Photovoltaik</button>
+                <button type="button" class="card-btn multi" data-group="themen" data-value="wp">Wärmepumpe</button>
+                <button type="button" class="card-btn multi" data-group="themen" data-value="versicherung">Versicherungscheck</button>
+                <button type="button" class="card-btn multi" data-group="themen" data-value="sonstiges">Sonstiges</button>
+              </div>
+              <span class="field-error" id="contact-themen-error" role="alert" aria-live="polite"></span>
+            </div>
+
+            <div class="form-group">
+              <label for="message">Nachricht <span style="font-weight:400;color:var(--color-text-muted)">(optional)</span></label>
               <textarea
                 id="message"
                 name="message"
-                required
                 rows="5"
                 placeholder="Beschreibe kurz dein Projekt oder deine Frage…"
-                aria-describedby="message-error"
-                aria-required="true"
               ></textarea>
-              <span class="field-error" id="message-error" role="alert" aria-live="polite"></span>
             </div>
 
             <div class="form-group form-group-checkbox">

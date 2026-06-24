@@ -162,14 +162,74 @@ function initContactForm() {
 
   if (!form) return;
 
+  /* Mehrfachauswahl Themen (analog Energierechner-Wizard) */
+  const selectedThemen = [];
+  const themenError    = qs('#contact-themen-error');
+
+  // Adresse nur bei Energie-Themen nötig (Standorteinschätzung) –
+  // bei reinem Versicherungscheck/Sonstiges bleibt sie optional (Datenminimierung)
+  function needsAddress() {
+    return selectedThemen.includes('pv') || selectedThemen.includes('wp');
+  }
+
+  const addressFields = ['strasse', 'plz', 'ort'];
+
+  function updateAddressRequirement() {
+    const required = needsAddress();
+    addressFields.forEach(f => {
+      const input = validators[f].el();
+      if (!input) return;
+      const optionalMark = qs(`#${input.id}-optional-mark`);
+      const reqMark      = qs(`#${input.id}-req-mark`);
+      input.required = required;
+      if (required) input.setAttribute('aria-required', 'true');
+      else input.removeAttribute('aria-required');
+      if (optionalMark) optionalMark.hidden = required;
+      if (reqMark)       reqMark.hidden      = !required;
+      if (!required) clearError(f);
+    });
+  }
+
+  form.querySelectorAll('.card-btn.multi[data-group="themen"]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      btn.classList.toggle('selected');
+      const v = btn.dataset.value;
+      if (btn.classList.contains('selected')) {
+        if (!selectedThemen.includes(v)) selectedThemen.push(v);
+      } else {
+        const i = selectedThemen.indexOf(v);
+        if (i !== -1) selectedThemen.splice(i, 1);
+      }
+      if (selectedThemen.length && themenError) themenError.textContent = '';
+      updateAddressRequirement();
+    });
+  });
+
+  function validateThemen() {
+    if (!themenError) return true;
+    if (!selectedThemen.length) {
+      themenError.textContent = 'Bitte wähle mindestens ein Thema aus.';
+      return false;
+    }
+    themenError.textContent = '';
+    return true;
+  }
+
   /* Field validators */
   const validators = {
-    name: {
-      el: () => qs('#name'),
-      errEl: () => qs('#name-error'),
+    vorname: {
+      el: () => qs('#contact-vorname'),
+      errEl: () => qs('#contact-vorname-error'),
       validate(val) {
-        if (!val.trim()) return 'Bitte gib deinen Namen ein.';
-        if (val.trim().length < 2) return 'Name muss mindestens 2 Zeichen haben.';
+        if (!val.trim()) return 'Bitte gib deinen Vornamen ein.';
+        return '';
+      }
+    },
+    nachname: {
+      el: () => qs('#contact-nachname'),
+      errEl: () => qs('#contact-nachname-error'),
+      validate(val) {
+        if (!val.trim()) return 'Bitte gib deinen Nachnamen ein.';
         return '';
       }
     },
@@ -182,12 +242,36 @@ function initContactForm() {
         return '';
       }
     },
-    message: {
-      el: () => qs('#message'),
-      errEl: () => qs('#message-error'),
+    phone: {
+      el: () => qs('#phone'),
+      errEl: () => qs('#phone-error'),
       validate(val) {
-        if (!val.trim()) return 'Bitte gib eine Nachricht ein.';
-        if (val.trim().length < 10) return 'Bitte beschreibe dein Anliegen etwas ausführlicher.';
+        if (!val.trim()) return 'Bitte gib deine Telefonnummer ein.';
+        return '';
+      }
+    },
+    strasse: {
+      el: () => qs('#contact-strasse'),
+      errEl: () => qs('#contact-strasse-error'),
+      validate(val) {
+        if (!val.trim()) return needsAddress() ? 'Bitte gib deine Straße und Hausnummer ein.' : '';
+        return '';
+      }
+    },
+    plz: {
+      el: () => qs('#contact-plz'),
+      errEl: () => qs('#contact-plz-error'),
+      validate(val) {
+        if (!val.trim()) return needsAddress() ? 'Bitte gib deine Postleitzahl ein.' : '';
+        if (val.trim() && !/^\d{5}$/.test(val.trim())) return 'Bitte gib eine gültige 5-stellige PLZ ein.';
+        return '';
+      }
+    },
+    ort: {
+      el: () => qs('#contact-ort'),
+      errEl: () => qs('#contact-ort-error'),
+      validate(val) {
+        if (!val.trim()) return needsAddress() ? 'Bitte gib deinen Ort ein.' : '';
         return '';
       }
     },
@@ -237,13 +321,16 @@ function initContactForm() {
     });
   });
 
+  updateAddressRequirement();
+
   // Form submit
   form.addEventListener('submit', async (e) => {
     e.preventDefault();
 
     // Validate all required fields
     const valid = Object.keys(validators).map(field => showError(field));
-    if (valid.includes(false)) {
+    const themenValid = validateThemen();
+    if (valid.includes(false) || !themenValid) {
       // Focus first invalid field
       const firstInvalid = Object.keys(validators).find(f => {
         const input = validators[f].el();
@@ -260,10 +347,14 @@ function initContactForm() {
     let success = false;
     try {
       const payload = {
-        name:       form.querySelector('[name="name"]').value.trim(),
+        vorname:    form.querySelector('[name="vorname"]').value.trim(),
+        nachname:   form.querySelector('[name="nachname"]').value.trim(),
         email:      form.querySelector('[name="email"]').value.trim(),
         phone:      form.querySelector('[name="phone"]').value.trim(),
-        subject:    form.querySelector('[name="subject"]').value,
+        strasse:    form.querySelector('[name="strasse"]').value.trim(),
+        plz:        form.querySelector('[name="plz"]').value.trim(),
+        ort:        form.querySelector('[name="ort"]').value.trim(),
+        themen:     selectedThemen.slice(),
         message:    form.querySelector('[name="message"]').value.trim(),
         consentKontakt: form.querySelector('[name="consentKontakt"]').checked,
         hp_website: form.querySelector('[name="hp_website"]').value,
@@ -296,6 +387,11 @@ function initContactForm() {
       successMsg.classList.add('is-visible');
       form.reset();
       Object.keys(validators).forEach(f => clearError(f));
+      selectedThemen.length = 0;
+      form.querySelectorAll('.card-btn.multi[data-group="themen"].selected')
+        .forEach(btn => btn.classList.remove('selected'));
+      if (themenError) themenError.textContent = '';
+      updateAddressRequirement();
     } else {
       submitBtn.disabled = false;
       alert('Es ist ein Fehler aufgetreten. Bitte versuche es erneut oder kontaktiere uns direkt per E-Mail.');
