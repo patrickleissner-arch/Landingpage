@@ -70,21 +70,27 @@ function brevoPost(apiPath, body) {
   });
 }
 
-function brevoTrackEvent(email, eventName, eventProperties) {
-  return brevoPost('/v3/events', {
+async function brevoTrackEvent(email, eventName, eventProperties) {
+  const res = await brevoPost('/v3/events', {
     event_name: eventName,
     identifiers: { email_id: email },
     event_properties: eventProperties,
   });
+  if (res.status >= 400) {
+    throw new Error(`${res.status} ${res.body}`);
+  }
 }
 
 // Legt einen Kontakt an/merged ihn und gibt zuverlässig die numerische
 // Brevo-Kontakt-ID zurück (auch wenn der Kontakt schon existiert).
-async function brevoUpsertContact(email, attributes, listId) {
+async function brevoUpsertContact(email, attributes) {
   try {
-    const body = { email, attributes, forceMerge: true, getId: true };
-    if (listId) body.listIds = [Number(listId)];
+    const body = { email, attributes, updateEnabled: true, forceMerge: true, getId: true };
     const res = await brevoPost('/v3/contacts', body);
+    if (res.status >= 400) {
+      console.error('Brevo contact upsert error:', res.status, res.body);
+      return null;
+    }
     return JSON.parse(res.body).id || null;
   } catch (err) {
     console.error('Brevo contact upsert error:', err.message);
@@ -97,7 +103,7 @@ async function brevoUpsertContact(email, attributes, listId) {
 async function brevoCreateDeal(name, contactId) {
   if (!process.env.BREVO_PIPELINE_ID || !process.env.BREVO_DEAL_STAGE_ID) return;
   try {
-    await brevoPost('/v3/crm/deals', {
+    const res = await brevoPost('/v3/crm/deals', {
       name,
       attributes: {
         pipeline:   process.env.BREVO_PIPELINE_ID,
@@ -105,6 +111,9 @@ async function brevoCreateDeal(name, contactId) {
       },
       linkedContactsIds: contactId ? [contactId] : [],
     });
+    if (res.status >= 400) {
+      console.error('Brevo deal creation error:', res.status, res.body);
+    }
   } catch (err) {
     console.error('Brevo deal creation error:', err.message);
   }
@@ -243,18 +252,16 @@ app.get('/api/confirm', async (req, res) => {
       // Basis-Kontakt + Deal: immer, unabhängig von consentKontakt (Art. 6 Abs. 1 lit. b)
       const contactId = await brevoUpsertContact(
         email,
-        { VORNAME: vorname, NACHNAME: nachname, SMS: phone, STRASSE: strasse, PLZ: plz, STADT: ort, THEMEN: themenText },
-        consentKontakt ? process.env.BREVO_LIST_ID : undefined
+        { VORNAME: vorname, NACHNAME: nachname, SMS: phone, STRASSE: strasse, PLZ: plz, STADT: ort, THEMEN: themenText }
       );
       await brevoCreateDeal(`${themenText}: ${name}`, contactId);
 
-      // Event nur bei zusätzlicher Einwilligung (consentKontakt) – triggert Automation-Workflows
-      if (consentKontakt) {
-        try {
-          await brevoTrackEvent(email, 'kontakt_bestaetigt', { themen: themenText, plz, ort });
-        } catch (err) {
-          console.error('Brevo event error (contact form):', err.message);
-        }
+      // Event immer (consentKontakt als Property) – die Automation in Brevo
+      // entscheidet anhand dieser Property, ob Liste/Welcome-Mail ausgelöst werden.
+      try {
+        await brevoTrackEvent(email, 'kontakt_bestaetigt', { themen: themenText, plz, ort, consentKontakt });
+      } catch (err) {
+        console.error('Brevo event error (contact form):', err.message);
       }
     }
 
@@ -419,18 +426,16 @@ app.get('/api/lead-confirm', async (req, res) => {
   // Basis-Kontakt + Deal: immer, unabhängig von consentKontakt (Art. 6 Abs. 1 lit. b)
   const contactId = await brevoUpsertContact(
     email,
-    { VORNAME: safe(vorname), NACHNAME: safe(nachname), SMS: safe(phone) || undefined, PLZ: plz },
-    consentKontakt ? process.env.BREVO_LIST_ID : undefined
+    { VORNAME: safe(vorname), NACHNAME: safe(nachname), SMS: safe(phone) || undefined, PLZ: plz }
   );
   await brevoCreateDeal(`Energierechner: ${safe(name)} (${plz})`, contactId);
 
-  // Event nur bei zusätzlicher Einwilligung (consentKontakt) – triggert Automation-Workflows
-  if (consentKontakt) {
-    try {
-      await brevoTrackEvent(email, 'energierechner_bestaetigt', { plz, heizung: r.fuel || '' });
-    } catch (err) {
-      console.error('Brevo event error:', err.message);
-    }
+  // Event immer (consentKontakt als Property) – die Automation in Brevo
+  // entscheidet anhand dieser Property, ob Liste/Welcome-Mail ausgelöst werden.
+  try {
+    await brevoTrackEvent(email, 'energierechner_bestaetigt', { plz, heizung: r.fuel || '', consentKontakt });
+  } catch (err) {
+    console.error('Brevo event error:', err.message);
   }
 
   res.redirect('/nutzen?confirmed=true');
