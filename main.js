@@ -285,6 +285,61 @@ function initContactForm() {
     }
   };
 
+  /* Wizard: 3 Schritte (Kontaktdaten / Thema+Adresse / Nachricht+Bestätigung) */
+  const totalSteps  = 3;
+  let   currentStep = 1;
+  const stepLabels  = { 1: 'Deine Kontaktdaten', 2: 'Worum geht es?', 3: 'Nachricht & Bestätigung' };
+  const fieldToStep = {
+    vorname: 1, nachname: 1, email: 1, phone: 1,
+    strasse: 2, plz: 2, ort: 2,
+    datenschutz: 3
+  };
+  const stepCounter  = qs('#contact-step-counter');
+  const progressFill = qs('#contact-step-progress-fill');
+  const backBtn      = qs('#contactBackBtn');
+  const nextBtn      = qs('#contactNextBtn');
+
+  function showStep(n) {
+    currentStep = n;
+    form.querySelectorAll('.contact-step').forEach(s => s.classList.remove('active'));
+    const stepEl = qs('#contact-step-' + n);
+    if (stepEl) stepEl.classList.add('active');
+    if (stepCounter)  stepCounter.textContent = `Schritt ${n} von ${totalSteps} — ${stepLabels[n]}`;
+    if (progressFill) progressFill.style.width = (n / totalSteps * 100) + '%';
+    if (backBtn)    backBtn.hidden    = n === 1;
+    if (nextBtn)    nextBtn.hidden    = n === totalSteps;
+    if (submitBtn)  submitBtn.hidden  = n !== totalSteps;
+    const heading = stepEl && stepEl.querySelector('.step-heading');
+    if (heading) heading.focus({ preventScroll: true });
+  }
+
+  function fieldsOfStep(n) {
+    return Object.keys(fieldToStep).filter(f => fieldToStep[f] === n);
+  }
+
+  function attemptNext() {
+    if (currentStep >= totalSteps) return;
+    const stepFields = fieldsOfStep(currentStep);
+    let allValid = true;
+    stepFields.forEach(f => { if (!showError(f)) allValid = false; });
+    if (currentStep === 2 && !validateThemen()) allValid = false;
+
+    if (!allValid) {
+      const firstInvalid = stepFields.find(f => {
+        const input = validators[f].el();
+        return input && input.classList.contains('has-error');
+      });
+      if (firstInvalid) validators[firstInvalid].el().focus();
+      return;
+    }
+    showStep(currentStep + 1);
+  }
+
+  if (nextBtn) nextBtn.addEventListener('click', attemptNext);
+  if (backBtn) backBtn.addEventListener('click', () => {
+    if (currentStep > 1) showStep(currentStep - 1);
+  });
+
   function showError(field) {
     const { el, errEl, validate } = validators[field];
     const input = el();
@@ -327,14 +382,25 @@ function initContactForm() {
   form.addEventListener('submit', async (e) => {
     e.preventDefault();
 
-    // Validate all required fields
+    // Enter-Taste in einem früheren Schritt: zum nächsten Schritt statt absenden
+    if (currentStep < totalSteps) {
+      attemptNext();
+      return;
+    }
+
+    // Validate all required fields (defensive – Wizard validiert sonst schon pro Schritt)
     const valid = Object.keys(validators).map(field => showError(field));
     const themenValid = validateThemen();
     if (valid.includes(false) || !themenValid) {
-      // Focus first invalid field
+      const invalidSteps = Object.keys(validators)
+        .filter(f => validators[f].el() && validators[f].el().classList.contains('has-error'))
+        .map(f => fieldToStep[f]);
+      if (!themenValid) invalidSteps.push(2);
+      const targetStep = invalidSteps.length ? Math.min(...invalidSteps) : totalSteps;
+      showStep(targetStep);
       const firstInvalid = Object.keys(validators).find(f => {
         const input = validators[f].el();
-        return input && input.classList.contains('has-error');
+        return input && fieldToStep[f] === targetStep && input.classList.contains('has-error');
       });
       if (firstInvalid) validators[firstInvalid].el().focus();
       return;
@@ -392,6 +458,7 @@ function initContactForm() {
         .forEach(btn => btn.classList.remove('selected'));
       if (themenError) themenError.textContent = '';
       updateAddressRequirement();
+      showStep(1);
     } else {
       submitBtn.disabled = false;
       alert('Es ist ein Fehler aufgetreten. Bitte versuche es erneut oder kontaktiere uns direkt per E-Mail.');

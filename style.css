@@ -241,6 +241,17 @@ button {
   color: #ffffff;
 }
 
+/* Outline button (for light backgrounds, e.g. Wizard-"Zurück") */
+.btn-outline {
+  background: transparent;
+  color: var(--color-text-muted);
+  border-color: var(--color-border);
+}
+.btn-outline:hover {
+  border-color: var(--color-brand-primary);
+  color: var(--color-brand-primary);
+}
+
 /* Submit button states */
 .btn-submit { min-width: 200px; }
 .btn-submit .btn-loading { display: none; }
@@ -1478,8 +1489,61 @@ p { max-width: 68ch; }
 .contact-form {
   display: flex;
   flex-direction: column;
-  gap: var(--space-5);
+  gap: var(--space-4);
 }
+
+/* Kontakt-Wizard: Schritt-Anzeige + Fortschrittsbalken */
+.step-progress-wrap { margin-bottom: var(--space-2); }
+
+.step-counter {
+  margin: 0 0 var(--space-2);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--color-text-muted);
+}
+
+.step-progress {
+  height: 4px;
+  border-radius: 4px;
+  background: var(--color-border);
+  overflow: hidden;
+}
+
+.step-progress-fill {
+  height: 100%;
+  background: var(--color-brand-accent);
+  transition: width var(--transition-base);
+}
+
+/* Kontakt-Wizard: Schritte */
+.contact-step {
+  display: none;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.contact-step.active { display: flex; }
+
+.step-heading {
+  margin: 0;
+  font-family: var(--font-body);
+  font-size: 1.0625rem;
+  color: var(--color-brand-primary);
+}
+.step-heading:focus-visible { outline: none; }
+
+.contact-step-nav {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  margin-top: var(--space-2);
+}
+
+.contact-step-nav .btn-primary:not(.btn-submit) { margin-left: auto; }
+.contact-step-nav .btn-submit { margin-left: auto; }
+
+/* .btn setzt display:inline-flex und überschreibt sonst das [hidden]-Attribut */
+.contact-step-nav .btn[hidden] { display: none; }
 
 .form-group {
   display: flex;
@@ -1533,7 +1597,7 @@ p { max-width: 68ch; }
   box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.1);
 }
 
-.form-group textarea { resize: vertical; min-height: 140px; }
+.form-group textarea { resize: vertical; min-height: 110px; }
 
 .form-group select {
   appearance: none;
@@ -1663,6 +1727,14 @@ p { max-width: 68ch; }
   display: flex;
   flex-direction: column;
   gap: var(--space-6);
+}
+
+@media (min-width: 768px) {
+  .contact-info {
+    position: sticky;
+    top: calc(var(--nav-height) + var(--space-6));
+    align-self: start;
+  }
 }
 
 .contact-info h3 {
