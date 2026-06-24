@@ -1,0 +1,56 @@
+name: Brevo Setup prüfen/ergänzen
+
+on:
+  workflow_dispatch:
+
+jobs:
+  brevo-setup:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Contact-Attribute prüfen und fehlende anlegen
+        env:
+          BREVO_API_KEY: ${{ secrets.BREVO_API_KEY }}
+        run: |
+          echo "=== Vorhandene normale Contact-Attribute ==="
+          curl -s -X GET "https://api.brevo.com/v3/contacts/attributes" \
+            -H "api-key: $BREVO_API_KEY" -H "Accept: application/json" \
+            | jq -r '.attributes[] | select(.category=="normal") | "\(.name) (\(.type))"'
+
+          echo ""
+          echo "=== Benötigte Attribute prüfen ==="
+          ALL=$(curl -s -X GET "https://api.brevo.com/v3/contacts/attributes" \
+            -H "api-key: $BREVO_API_KEY" -H "Accept: application/json")
+
+          for NAME in STRASSE PLZ STADT THEMEN; do
+            EXISTS=$(echo "$ALL" | jq -r --arg n "$NAME" '.attributes[] | select(.name==$n) | .name')
+            if [ -z "$EXISTS" ]; then
+              echo "Lege Attribut $NAME (text) an..."
+              HTTP_CODE=$(curl -s -o /tmp/resp.json -w "%{http_code}" -X POST \
+                "https://api.brevo.com/v3/contacts/attributes/normal/$NAME" \
+                -H "api-key: $BREVO_API_KEY" -H "Content-Type: application/json" \
+                -d '{"type":"text"}')
+              echo "  -> HTTP $HTTP_CODE: $(cat /tmp/resp.json)"
+            else
+              echo "$NAME existiert bereits - kein Handlungsbedarf."
+            fi
+          done
+
+      - name: Pipeline + Deal-Stage gegen gesetzte Secrets prüfen
+        env:
+          BREVO_API_KEY: ${{ secrets.BREVO_API_KEY }}
+          BREVO_PIPELINE_ID: ${{ secrets.BREVO_PIPELINE_ID }}
+          BREVO_DEAL_STAGE_ID: ${{ secrets.BREVO_DEAL_STAGE_ID }}
+        run: |
+          echo "=== Alle Pipelines (Namen/Stages, keine sensiblen Daten) ==="
+          ALL=$(curl -s -X GET "https://api.brevo.com/v3/crm/pipeline/details/all" \
+            -H "api-key: $BREVO_API_KEY" -H "Accept: application/json")
+          echo "$ALL" | jq -r '.[] | "Pipeline: \(.pipeline_name)  [id passt? " + (if .pipeline == env.BREVO_PIPELINE_ID then "JA" else "nein" end) + "]\n" + (.stages[] | "  Stage: \(.name)  [id passt? " + (if .id == env.BREVO_DEAL_STAGE_ID then "JA" else "nein" end) + "]")'
+
+          echo ""
+          MATCH_PIPELINE=$(echo "$ALL" | jq -r --arg pid "$BREVO_PIPELINE_ID" '.[] | select(.pipeline==$pid) | .pipeline_name')
+          MATCH_STAGE=$(echo "$ALL" | jq -r --arg pid "$BREVO_PIPELINE_ID" --arg sid "$BREVO_DEAL_STAGE_ID" '.[] | select(.pipeline==$pid) | .stages[] | select(.id==$sid) | .name')
+          if [ -n "$MATCH_PIPELINE" ] && [ -n "$MATCH_STAGE" ]; then
+            echo "OK: BREVO_PIPELINE_ID/BREVO_DEAL_STAGE_ID zeigen auf eine gültige Pipeline/Stage."
+          else
+            echo "WARNUNG: Die gesetzten IDs passen zu keiner aktuell vorhandenen Pipeline/Stage."
+          fi

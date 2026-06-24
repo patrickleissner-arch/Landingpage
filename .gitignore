@@ -1,4 +1,5 @@
 .env
+*.env
 node_modules/
 
 # Lokales Dev-Tooling (nicht deployen)

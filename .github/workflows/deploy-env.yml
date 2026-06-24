@@ -52,3 +52,10 @@ jobs:
             ps aux | grep -i node | grep -v grep
             echo "=== nodejs-Verzeichnis mtime/Inhalt ==="
             ls -la --time-style=full-iso "$APP_PATH" | head -20
+            echo "=== process.env Keys des laufenden lsnode-Prozesses (nur Namen, keine Werte) ==="
+            PID=$(pgrep -f "lsnode:$APP_PATH" | head -1)
+            if [ -n "$PID" ]; then
+              tr '\0' '\n' < "/proc/$PID/environ" | cut -d= -f1 | sort
+            else
+              echo "Kein laufender Prozess gefunden"
+            fi
