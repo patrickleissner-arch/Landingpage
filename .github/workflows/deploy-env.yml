@@ -29,6 +29,9 @@ jobs:
           password: ${{ secrets.SSH_PASS }}
           envs: SMTP_HOST,SMTP_PORT,SMTP_USER,SMTP_PASS,MAIL_TO,BREVO_API_KEY,BREVO_SENDER,BREVO_NOTIFY,BREVO_LIST_ID,BREVO_PIPELINE_ID,BREVO_DEAL_STAGE_ID
           script: |
+            echo "=== Öffentliche Outbound-IP des Hosting-Accounts (für Brevo 'Authorised IPs') ==="
+            curl -s https://api.ipify.org
+            echo ""
             APP_PATH=$(find /home -name "server.js" -not -path "*/node_modules/*" 2>/dev/null | head -1 | xargs -I{} dirname {})
             if [ -z "$APP_PATH" ]; then
               echo "FEHLER: server.js nicht gefunden"; exit 1
