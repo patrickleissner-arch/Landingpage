@@ -33,10 +33,11 @@ const THEMEN_LABELS = {
 };
 
 function createTransporter() {
+  const port = Number(process.env.SMTP_PORT) || 587;
   return nodemailer.createTransport({
     host:   process.env.SMTP_HOST,
-    port:   Number(process.env.SMTP_PORT) || 587,
-    secure: false,
+    port,
+    secure: port === 465, // Port 465 verlangt implizites TLS, 587/25 nutzen STARTTLS
     auth: { user: process.env.SMTP_USER, pass: process.env.SMTP_PASS },
   });
 }
