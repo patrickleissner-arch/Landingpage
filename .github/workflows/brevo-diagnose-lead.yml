@@ -1,0 +1,29 @@
+name: Brevo Diagnose - Energierechner-Lead-Listenzuordnung
+
+on:
+  workflow_dispatch:
+
+jobs:
+  diagnose:
+    runs-on: ubuntu-latest
+    steps:
+      - name: BREVO_LIST_ID gegen Liste "Website Leads" (#2) prüfen
+        env:
+          BREVO_API_KEY: ${{ secrets.BREVO_API_KEY }}
+          BREVO_LIST_ID: ${{ secrets.BREVO_LIST_ID }}
+        run: |
+          echo "=== Stimmt das Secret BREVO_LIST_ID mit Liste #2 (Website Leads) ueberein? ==="
+          if [ "$BREVO_LIST_ID" = "2" ]; then
+            echo "MATCH: BREVO_LIST_ID zeigt auf Liste #2"
+          else
+            echo "MISMATCH: BREVO_LIST_ID zeigt NICHT auf Liste #2 (Wert wird nicht ausgegeben)"
+          fi
+
+          echo ""
+          echo "=== Liste #2 Details (Name, Anzahl Kontakte) ==="
+          curl -s "https://api.brevo.com/v3/contacts/lists/2" -H "api-key: $BREVO_API_KEY" -H "Accept: application/json" | jq '{name, totalSubscribers, totalBlacklisted}'
+
+          echo ""
+          echo "=== Die letzten 10 zuletzt geänderten Kontakte (E-Mail, listIds, Attribute) ==="
+          curl -s "https://api.brevo.com/v3/contacts?sort=desc&limit=10&sort=desc" -H "api-key: $BREVO_API_KEY" -H "Accept: application/json" \
+            | jq '.contacts[] | {email, listIds, modifiedAt, attributes: {VORNAME, NACHNAME, PLZ}}'
