@@ -16,8 +16,9 @@ jobs:
           password: ${{ secrets.SSH_PASS }}
           script: |
             APP_PATH=$(find /home -name "server.js" -not -path "*/node_modules/*" 2>/dev/null | grep -v ".builds" | head -1 | xargs -I{} dirname {})
+            ENV_DIR=$(dirname "$APP_PATH")
             echo "APP_PATH: $APP_PATH"
             echo "=== .env Struktur (nur Keys + Wertlängen) ==="
-            awk -F= '{ printf "%s (len=%d)\n", $1, length($2) }' "$APP_PATH/.env"
+            awk -F= '{ printf "%s (len=%d)\n", $1, length($2) }' "$ENV_DIR/.env"
             echo "=== Letzte 80 Zeilen console.log (stdout/stderr des Node-Prozesses) ==="
             tail -n 80 "$APP_PATH/console.log" 2>/dev/null || echo "Keine console.log gefunden"

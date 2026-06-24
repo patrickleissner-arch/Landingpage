@@ -1,5 +1,8 @@
 const path       = require('path');
-require('dotenv').config({ path: path.join(__dirname, '.env') });
+// .env liegt eine Ebene über __dirname, AUSSERHALB des von Hostingers
+// Auto-Deploy synchronisierten Ordners – sonst überschreibt/löscht der
+// rsync bei jedem Push die Datei wieder (siehe deploy-env.yml).
+require('dotenv').config({ path: path.join(__dirname, '..', '.env') });
 const express    = require('express');
 const nodemailer = require('nodemailer');
 const crypto     = require('crypto');
