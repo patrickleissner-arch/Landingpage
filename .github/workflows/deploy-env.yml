@@ -37,3 +37,6 @@ jobs:
               "$SMTP_HOST" "$SMTP_PORT" "$SMTP_USER" "$SMTP_PASS" "$MAIL_TO" "$BREVO_API_KEY" "$BREVO_SENDER" "$BREVO_NOTIFY" "$BREVO_LIST_ID" "$BREVO_PIPELINE_ID" "$BREVO_DEAL_STAGE_ID" \
               > "$APP_PATH/.env"
             echo ".env geschrieben nach $APP_PATH"
+            mkdir -p "$APP_PATH/tmp"
+            touch "$APP_PATH/tmp/restart.txt"
+            echo "Neustart getriggert (tmp/restart.txt)"
