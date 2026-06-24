@@ -39,10 +39,9 @@ jobs:
             echo ".env geschrieben nach $APP_PATH"
             mkdir -p "$APP_PATH/tmp"
             touch "$APP_PATH/tmp/restart.txt"
-            echo "Neustart getriggert (tmp/restart.txt)"
-            echo "=== laufende node-Prozesse ==="
-            ps aux | grep -i node | grep -v grep
-            echo "=== .htaccess (Passenger-Konfig) ==="
-            cat "$APP_PATH/.htaccess" 2>/dev/null | grep -i passenger
-            echo "=== restart.txt mtime ==="
-            stat "$APP_PATH/tmp/restart.txt" 2>/dev/null || ls -la "$APP_PATH/tmp/"
+            # touch allein reicht bei LiteSpeed (lsnode) nicht zuverlässig: alte Worker-
+            # Prozesse überleben das Signal teilweise und laufen mit veraltetem/leerem
+            # .env weiter. Deshalb zusätzlich alle bestehenden Worker explizit beenden -
+            # LiteSpeed spawnt beim nächsten Request automatisch frische Prozesse.
+            pkill -f "lsnode:$APP_PATH" && echo "Alte lsnode-Worker beendet" || echo "Keine laufenden lsnode-Worker gefunden"
+            echo "Neustart getriggert (tmp/restart.txt + Worker-Kill)"
