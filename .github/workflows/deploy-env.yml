@@ -59,6 +59,18 @@ jobs:
             ps aux | grep -i node | grep -v grep
             echo "=== nodejs-Verzeichnis mtime/Inhalt ==="
             ls -la --time-style=full-iso "$APP_PATH" | head -20
+            echo "=== LSNODE_STARTUP_FILE / LSNODE_ROOT des laufenden Workers (Pfade, keine Secrets) ==="
+            PID=$(pgrep -f "lsnode:$APP_PATH" | head -1)
+            if [ -n "$PID" ]; then
+              tr '\0' '\n' < "/proc/$PID/environ" 2>/dev/null | grep -E '^(LSNODE_STARTUP_FILE|LSNODE_ROOT|NODE_OPTIONS)='
+            fi
+            echo "=== Direkter dotenv-Test (node, ohne LiteSpeed-Wrapper) ==="
+            cd "$APP_PATH" && node -e "
+              const r = require('dotenv').config({ path: require('path').join(__dirname, '.env') });
+              console.log('dotenv error:', r.error ? r.error.message : 'none');
+              console.log('geladene Keys:', r.parsed ? Object.keys(r.parsed).join(',') : 'keine');
+              console.log('SMTP_HOST in process.env danach:', typeof process.env.SMTP_HOST, JSON.stringify(process.env.SMTP_HOST ? process.env.SMTP_HOST.length : null));
+            "
             echo "=== Request auslösen, damit ein frischer Worker startet ==="
             curl -s -o /dev/null -X POST https://patrickleissner.de/api/contact -H "Content-Type: application/json" -d '{}'
             sleep 3
