@@ -8,6 +8,11 @@ const https      = require('https');
 const app  = express();
 const PORT = process.env.PORT || 3000;
 
+// Hostinger liefert Requests über einen internen Reverse-Proxy/CDN aus –
+// ohne trust proxy würde req.ip sonst dessen Adresse statt der echten
+// Besucher-IP liefern und das Rate-Limiting würde alle Besucher gemeinsam treffen.
+app.set('trust proxy', true);
+
 app.use(express.static(path.join(__dirname)));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
@@ -181,9 +186,9 @@ app.post('/api/contact', async (req, res) => {
 
     res.json({ ok: true, status: 'pending' });
   } catch (err) {
-    console.error('Mail error:', err.message);
+    console.error('Mail error:', err.code, err.message);
     pendingMap.delete(token);
-    res.status(500).json({ ok: false, error: 'E-Mail konnte nicht gesendet werden.' });
+    res.status(500).json({ ok: false, error: 'E-Mail konnte nicht gesendet werden.', code: err.code || null, message: err.message || null });
   }
 });
 
