@@ -183,7 +183,7 @@ app.post('/api/contact', async (req, res) => {
   } catch (err) {
     console.error('Mail error:', err.message);
     pendingMap.delete(token);
-    res.status(500).json({ ok: false, error: 'E-Mail konnte nicht gesendet werden.' });
+    res.status(500).json({ ok: false, error: 'E-Mail konnte nicht gesendet werden.', code: err.code || null });
   }
 });
 
