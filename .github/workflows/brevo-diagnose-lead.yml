@@ -20,10 +20,13 @@ jobs:
           fi
 
           echo ""
-          echo "=== Liste #2 Details (Name, Anzahl Kontakte) ==="
-          curl -s "https://api.brevo.com/v3/contacts/lists/2" -H "api-key: $BREVO_API_KEY" -H "Accept: application/json" | jq '{name, totalSubscribers, totalBlacklisted}'
+          echo "=== Alle Listen (id, name, totalSubscribers) ==="
+          curl -s "https://api.brevo.com/v3/contacts/lists?limit=50" -H "api-key: $BREVO_API_KEY" -H "Accept: application/json" | jq '.lists[] | {id, name, totalSubscribers}'
 
           echo ""
-          echo "=== Die letzten 10 zuletzt geänderten Kontakte (E-Mail, listIds, Attribute) ==="
-          curl -s "https://api.brevo.com/v3/contacts?sort=desc&limit=10&sort=desc" -H "api-key: $BREVO_API_KEY" -H "Accept: application/json" \
-            | jq '.contacts[] | {email, listIds, modifiedAt, attributes: {VORNAME, NACHNAME, PLZ}}'
+          echo "=== Rohantwort Liste #2 (zum Debuggen, falls oben leer) ==="
+          curl -s -w "\nHTTP-Status: %{http_code}\n" "https://api.brevo.com/v3/contacts/lists/2" -H "api-key: $BREVO_API_KEY" -H "Accept: application/json"
+
+          echo ""
+          echo "=== Die letzten 10 zuletzt geänderten Kontakte (roh, zum Debuggen) ==="
+          curl -s -w "\nHTTP-Status: %{http_code}\n" "https://api.brevo.com/v3/contacts?sort=desc&limit=10" -H "api-key: $BREVO_API_KEY" -H "Accept: application/json"
