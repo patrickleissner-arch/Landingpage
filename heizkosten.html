@@ -91,10 +91,14 @@
 
     /* Hero stats */
     .hero-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; margin-bottom: 1.5rem; }
+    .hero-grid--wirtschaft { grid-template-columns: repeat(2, 1fr); }
     .hero-card { background: var(--green); border-radius: var(--r); padding: 1.1rem; text-align: center; }
     .hero-label { font-size: .72rem; color: rgba(255,255,255,.75); margin-bottom: .25rem; }
     .hero-val { font-size: 1.75rem; font-weight: 800; color: var(--gold); line-height: 1.1; }
     .hero-unit { font-size: .72rem; color: rgba(255,255,255,.65); margin-top: .15rem; }
+    .invest-note { font-size: .76rem; color: var(--gray); text-align: center; margin: -0.6rem 0 1.5rem; }
+    .soft-contact-cta { text-align: center; font-size: .85rem; color: var(--gray); margin: 0 0 1.2rem; }
+    .soft-contact-cta a { color: var(--green); font-weight: 700; }
 
     /* Comparison table */
     .cmp-wrap { overflow-x: auto; }
@@ -114,9 +118,9 @@
     .chart-wrap { position: relative; height: 300px; }
 
     /* Pain section – hell, sparsam mit Dunkelgrün */
-    .pain { background: var(--white); border: 1px solid var(--gray-l); border-top: 4px solid var(--fossil-col); border-radius: var(--r); padding: 2rem; margin-bottom: 1.5rem; }
+    .pain { background: var(--white); border: 1px solid var(--gray-l); border-top: 4px solid var(--gold); border-radius: var(--r); padding: 2rem; margin-bottom: 1.5rem; }
     .pain h2 { display: flex; align-items: center; gap: .55rem; color: var(--green); font-size: 1.05rem; margin-bottom: 1.2rem; padding-bottom: .5rem; border-bottom: 1px solid var(--gray-l); }
-    .pain h2 svg { color: var(--fossil-col); }
+    .pain h2 svg { color: var(--gold); }
     .pain-timeline { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; }
     .pain-card { background: var(--beige); border-radius: var(--r); padding: 1rem; text-align: center; border: 1px solid var(--gray-l); }
     .pain-card.hl { background: var(--white); border: 2px solid var(--gold); box-shadow: 0 2px 12px rgba(208,171,59,.18); }
@@ -124,7 +128,7 @@
     .pain-lbl { font-size: .68rem; color: var(--gray); margin-bottom: .2rem; }
     .pain-cost { font-size: 1.2rem; font-weight: 700; color: var(--black); margin: .25rem 0; }
     .pain-co2 { font-size: .78rem; color: var(--gray); }
-    .pain-delta { font-size: .82rem; color: var(--fossil-col); font-weight: 600; margin-top: .2rem; }
+    .pain-delta { font-size: .82rem; color: var(--green); font-weight: 600; margin-top: .2rem; }
     .pain-sum { margin-top: 1.3rem; padding: .9rem 1rem; background: rgba(208,171,59,.1); border-radius: var(--r); border-left: 4px solid var(--gold); display: flex; flex-direction: column; gap: .3rem; font-size: .9rem; }
     .pain-sum strong { color: var(--green); }
 
@@ -447,6 +451,20 @@
             </div>
           </div>
 
+          <div class="hero-grid hero-grid--wirtschaft">
+            <div class="hero-card">
+              <div class="hero-label">Amortisation (geschätzt)</div>
+              <div class="hero-val" id="r-amort">–</div>
+              <div class="hero-unit">Jahre bis Investition ausgeglichen</div>
+            </div>
+            <div class="hero-card">
+              <div class="hero-label">Rendite p. a. (geschätzt)</div>
+              <div class="hero-val" id="r-rendite">–</div>
+              <div class="hero-unit">% – keine Anlageberatung</div>
+            </div>
+          </div>
+          <p class="invest-note" id="invest-note">–</p>
+
           <div class="card">
             <h2>Technische Auslegung Wärmepumpe</h2>
             <div class="tech-grid">
@@ -511,6 +529,10 @@
                     <td>—</td><td id="cwsav">–</td><td class="td-wpv" id="cpsav">–</td>
                   </tr>
                   <tr>
+                    <td>Amortisation (geschätzt)</td>
+                    <td>—</td><td id="cwam">–</td><td class="td-wpv" id="cpam">–</td>
+                  </tr>
+                  <tr>
                     <td>CO₂ pro Jahr</td>
                     <td id="cfco2">–</td><td id="cwco2">–</td><td class="td-wpv" id="cpco2">–</td>
                   </tr>
@@ -533,11 +555,11 @@
             <div class="chart-wrap"><canvas id="myChart"></canvas></div>
           </div>
 
-          <!-- PAIN SECTION -->
+          <!-- KOSTENENTWICKLUNG IM VERGLEICH -->
           <div class="pain">
             <h2>
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
-              Was passiert, wenn du NICHT handelst?
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 17 9 11 13 15 21 7"/><polyline points="14 7 21 7 21 14"/></svg>
+              Kostenentwicklung 2025–2030 im Vergleich
             </h2>
             <div class="pain-timeline">
               <div class="pain-card">
@@ -566,6 +588,8 @@
             </div>
           </div>
 
+          <p class="soft-contact-cta">Lieber erst eine Frage stellen, statt direkt einen Termin zu buchen? <a href="/#kontakt">Zum Kontaktformular →</a></p>
+
           <!-- POST-RESULTS CTA -->
           <div class="ec-cta-card">
             <h2>Nächster Schritt: Persönliche Beratung</h2>
@@ -576,8 +600,9 @@
         </section><!-- /results -->
 
         <p class="ec-disclaimer">
-          Alle Angaben ohne Gewähr · Preisannahmen: BEHG-Festpreise, ETS-II-Prognose (EU-Kommission), BDEW-Historik ·
-          Reg. D-ABP9-EILM2-37, IHK Halle-Dessau
+          Alle Angaben ohne Gewähr · Auch Amortisation und Rendite sind unverbindliche Schätzungen, keine Anlageberatung · Preisannahmen: BEHG-Festpreise, ETS-II-Prognose (EU-Kommission), BDEW-Historik ·
+          Reg. D-ABP9-EILM2-37, IHK Halle-Dessau ·
+          Vertiefende Analyse: <a href="https://ecowattiv.de/dww/" target="_blank" rel="noopener noreferrer">DWW-Wirtschaftlichkeitsrechner (ecowattiv) ↗</a>
         </p>
 
       </div><!-- /ec-calc-wrap -->
@@ -586,7 +611,7 @@
   </main>
 
   <footer class="site-footer" role="contentinfo">
-    <div class="container footer-inner">
+    <div class="container footer-grid">
       <div class="footer-brand">
         <a href="/" class="nav-logo" aria-label="Patrick Leißner Energieberatung – zur Startseite">
           <img src="/assets/Logo/Initialien-Gold-frei.png" alt="Patrick Leißner Energieberatung Logo" width="36" height="36" loading="lazy">
@@ -594,13 +619,35 @@
         </a>
         <p>Frei durch eigene Energie.</p>
       </div>
+      <div class="footer-col">
+        <h3>Kontakt</h3>
+        <a href="tel:+4901734994994">0173 499 4994</a>
+        <a href="mailto:p@patrickleissner.de">p@patrickleissner.de</a>
+        <span>Bitterfeld-Wolfen</span>
+      </div>
+      <nav class="footer-col" aria-label="Leistungen">
+        <h3>Leistungen</h3>
+        <a href="/beratung-technik">Beratung und Technik</a>
+        <a href="/koordination-netzwerk">Koordination und Netzwerk</a>
+        <a href="/waermepumpe-heizlast">Wärmepumpe und Heizlast</a>
+        <a href="/analyse-vorsorge">Analyse und Vorsorge</a>
+        <a href="/mieterstrom">Mieterstrom und Objektenergie</a>
+      </nav>
+      <nav class="footer-col" aria-label="Rechner und Ratgeber">
+        <h3>Rechner &amp; Ratgeber</h3>
+        <a href="/unabhaengigkeit">Unabhängigkeitsrechner</a>
+        <a href="/heizkosten">Heizkosten-Rechner</a>
+        <a href="/nutzen">Nutzen-Rechner</a>
+        <a href="/ratgeber">Ratgeber</a>
+        <a href="https://ecowattiv.de/dww/" target="_blank" rel="noopener noreferrer">DWW-Wirtschaftlichkeitsrechner ↗</a>
+      </nav>
+    </div>
+    <div class="container footer-bottom">
       <nav class="footer-links" aria-label="Footer-Navigation">
         <a href="/impressum">Impressum</a>
         <a href="/datenschutz">Datenschutz</a>
         <a href="#" aria-label="Zurück zum Seitenanfang">Nach oben ↑</a>
       </nav>
-    </div>
-    <div class="container">
       <p class="footer-copyright">© 2026 Patrick Leißner. Alle Rechte vorbehalten.</p>
       <p class="footer-operator">pin-co.de Media UG (haftungsbeschränkt) · Bitterfeld-Wolfen</p>
     </div>
@@ -724,6 +771,12 @@ const EF     = { oil:0.2663, gas:0.2017 }; // kg CO₂/kWh
 const EF_EL  = 0.380;                       // kg CO₂/kWh Bundesmix
 const PV_EPC = 0.08;                        // €/kWh PV Gestehungskosten
 
+// Grobe Investitionsschätzung für Amortisation/Rendite (keine Anlagenplanung)
+const WP_INVEST_BASE = 9000;  // € Basiskosten Wärmepumpe inkl. Installation
+const WP_INVEST_KW   = 1200;  // €/kW Leistungspreis
+const PV_YIELD_KWP    = 950;   // kWh/kWp/Jahr DE-Mittel (PVGIS)
+const PV_PRICE_KWP    = 1450;  // €/kWp inkl. Montage
+
 // ─────────────────────────────────────────────
 // STATE
 // ─────────────────────────────────────────────
@@ -791,6 +844,25 @@ function co2Fossil(){ return fuelKwh()*EF[S.fuelType]/1000; }
 function co2WP()    { return wpElec()*EF_EL/1000; }
 function co2WPV()   { return wpElec()*(1-S.pvShare/100)*EF_EL/1000; }
 
+// Grobe Investitionsschätzung (keine Anlagenplanung) – Basis für Amortisation/Rendite
+function investEstimate(){
+  const wpInvest = WP_INVEST_BASE + wpKw()*WP_INVEST_KW;
+  const impliedKwp = S.pvShare>0 ? (wpElec()*S.pvShare/100)/PV_YIELD_KWP : 0;
+  const pvInvest = impliedKwp*PV_PRICE_KWP;
+  return { wpInvest, pvInvest, total: wpInvest+pvInvest };
+}
+
+// Erstes Jahr, in dem die kumulierte Ersparnis die Investition ausgleicht (statische Schätzung)
+function amortYears(investSum, diffArr){
+  if (!(investSum>0)) return null;
+  let cum=0;
+  for(let t=0;t<diffArr.length;t++){
+    const prev=cum; cum+=diffArr[t];
+    if (cum>=investSum) return t + (investSum-prev)/diffArr[t];
+  }
+  return null;
+}
+
 // ─────────────────────────────────────────────
 // CALCULATE
 // ─────────────────────────────────────────────
@@ -824,6 +896,22 @@ function calculate(){
   set('r-co2sav', co2save.toFixed(0));
   set('r-yrs-lbl', n);
   set('ct-yrs', n); set('chart-yrs', n);
+
+  // Amortisation & Rendite (grobe, sichtbar gekennzeichnete Investitionsschätzung)
+  const inv = investEstimate();
+  const diffWP = [], diffWPV = [];
+  for (let t=0;t<n;t++){ diffWP.push(dF[t]-dW[t]); diffWPV.push(dF[t]-dV[t]); }
+  const amortWP  = amortYears(inv.wpInvest, diffWP);
+  const amortWPV = amortYears(inv.total, diffWPV);
+  const renditeWPV = inv.total>0 ? (diffWPV[0]/inv.total*100) : 0;
+
+  set('r-amort',  amortWPV!==null ? amortWPV.toFixed(1)+' Jahre' : '–');
+  set('r-rendite', inv.total>0 ? renditeWPV.toFixed(1)+' %' : '–');
+  set('cwam', amortWP!==null  ? amortWP.toFixed(1)+' Jahre'  : '–');
+  set('cpam', amortWPV!==null ? amortWPV.toFixed(1)+' Jahre' : '–');
+  set('invest-note', 'Angenommene Investition: ca. ' + fmt(Math.round(inv.total))
+      + ' € (Wärmepumpe inkl. Installation' + (inv.pvInvest>0 ? ' + anteilige PV-Anlage bei ' + S.pvShare + '% Deckung' : '')
+      + ') – grobe Schätzung, keine Anlagenplanung.');
 
   // Technische Auslegung
   const pd = S.plzData || PLZ_DEFAULT;
