@@ -127,6 +127,7 @@
     align-items: center;
     gap: 16px;
     z-index: 200;
+    transition: transform 0.25s ease;
 }
 .wizard-nav-bar.hidden { display: none; }
 .nav-center {
@@ -1666,6 +1667,22 @@ const W = {
 const $ = id => document.getElementById(id);
 let costChart = null;
 
+// Wizard-Nav-Bar ist position:fixed und überlagert sonst den Footer beim Scrollen
+// (oder die iOS-Tastatur) – beide Effekte teilen sich denselben transform, daher zentral kombiniert.
+let navKeyboardOffset = 0;
+let navFooterNear = false;
+function updateNavTransform() {
+    const nav = $('wizard-nav');
+    if (!nav) return;
+    if (navFooterNear) {
+        nav.style.transform = 'translateY(120%)';
+    } else if (navKeyboardOffset > 50) {
+        nav.style.transform = `translateY(-${navKeyboardOffset}px)`;
+    } else {
+        nav.style.transform = '';
+    }
+}
+
 // === CARD BUTTONS ===
 document.addEventListener('DOMContentLoaded', () => {
     // Single-select
@@ -1787,11 +1804,18 @@ document.addEventListener('DOMContentLoaded', () => {
     // iOS: sticky bar über virtueller Tastatur halten
     if (window.visualViewport) {
         window.visualViewport.addEventListener('resize', () => {
-            const nav = $('wizard-nav');
-            if (!nav) return;
-            const offset = window.innerHeight - window.visualViewport.height - window.visualViewport.offsetTop;
-            nav.style.transform = offset > 50 ? `translateY(-${offset}px)` : '';
+            navKeyboardOffset = window.innerHeight - window.visualViewport.height - window.visualViewport.offsetTop;
+            updateNavTransform();
         });
+    }
+
+    // Sticky Nav-Bar beim Erreichen des Footers wegschieben, statt ihn zu überlagern
+    const footerEl = document.querySelector('.site-footer');
+    if (footerEl && 'IntersectionObserver' in window) {
+        new IntersectionObserver(entries => {
+            navFooterNear = entries[0].isIntersecting;
+            updateNavTransform();
+        }).observe(footerEl);
     }
 });
 
