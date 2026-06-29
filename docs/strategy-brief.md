@@ -2,7 +2,7 @@
 
 **Zweck:** Diese Datei gibt Claude Code im Website-Repo den strategischen Kontext, ohne den Obsidian-Vault lesen zu müssen. Die Source-of-Truth bleibt im Vault (`G:\Meine Ablage\SECOND-BRAIN\Patrick\`); diese Datei wird aktualisiert, sobald sich die Strategie ändert.
 
-**Stand:** 2026-06-01 (KW23) · **Version:** 1.1
+**Stand:** 2026-06-27 · **Version:** 1.2
 **Vault-Referenzen:** Angebot `00 Kontext/Angebot.md` · Projekt `02 Projekte/Website und Markenauftritt.md` · Rechtsbasis `04 Ressourcen/Photovoltaik und Wärmepumpe/Rechtsrahmen PV 2026.md` · Argumentation `04 Ressourcen/Photovoltaik und Wärmepumpe/Hardware vs HEMS — der Kunden-Mehrwert.md`
 
 ---
@@ -51,13 +51,14 @@ Sobald **eine** dieser Bedingungen kippt — Sektorkopplung, variable Tarife, Er
 ### Variante 2 — Premium Sigenergy SigenStor (5-in-1)
 
 - **Zielgruppe:** Anspruchsvoll, zukunftsorientiert, Wert auf Autarkie + Erweiterbarkeit + Notstrom
-- **Komponenten:** PV + Sigenergy SigenStor (Hybrid-Wechselrichter + Speicher + EMS in einem Turm, optional EV-DC-Lader 25 kW)
+- **Komponenten:** PV + Sigenergy SigenStor (Hybrid-Wechselrichter + Speicher + EMS in einem Turm, optional EV-DC-Lader 25 kW). Aktuelle Geräte-Generation: **SigenStor Neo** (bestätigt aktuell gelistetes Produkt auf sigenergy.com/de).
 - **USPs:**
-  - LFP-Zellen (sicher), kompakte Bauform (passt in HWR/Keller)
+  - LFP-Zellen (sicher), kompakte Bauform (passt in HWR/Keller). Herstellerangabe (sigenergy.com/de, Stand 2026-06-27): 314-Ah-Zellen, 100 % Entladetiefe (nutzbare Kapazität), **5-facher** Rundum-Batterieschutz
   - **Modulare Erweiterung mit eigenem BMS pro Modul** — kalendarische Alterung wird beim Nachrüsten irrelevant
-  - **GPT-4o-Integration (mySigen-App)** — entscheidet autonom über Laden/Entladen/Einspeisen auf Basis von Wetter, Verbrauch und Strompreis
-  - Notstrom „praktisch unterbrechungsfrei" (350 ms Backfeed-Schutz)
+  - **GPT-4o-Integration (mySigen-App)** — entscheidet autonom über Laden/Entladen/Einspeisen auf Basis von Wetter, Verbrauch und Strompreis. Offiziell als „Sigen AI Mode" (Optimierung nach PV-Prognose/dynamischen Tarifen) und „Sigen AI Assistant" (erklärt Systemverhalten in Echtzeit) bezeichnet.
+  - Notstrom „praktisch unterbrechungsfrei" (350 ms Backfeed-Schutz) — Sigenergy selbst bewirbt „0 ms Lastumschaltung" als Herstellerangabe; diese Formulierung **nicht** wörtlich übernehmen (siehe Compliance-Anker)
   - **Outdoor-tauglich (IP66, -20 °C bis +55 °C, Heizmodule ab 0 °C)** — einzige Variante mit echtem Außen-Use-Case (Carport, Außenwand, unbeheizte Garage)
+  - **EV-Home-Energy-Bridge (V2H/V2G):** bidirektionales Laden bis 25 kW, Herstellerangabe „100 % Ökostrom-Laden". Laut Hersteller fahrzeugabhängig — Funktionsumfang folgt teils erst per OTA nach Veröffentlichung der Standards. Wirtschaftlich relevanter seit 01.01.2026 durch Wegfall der doppelten Netzentgeltbelastung beim bidirektionalen Laden (siehe Rechtsrahmen unten)
 
 ### Variante 3 — Solaris² + StromKontoPlus (DWW/DSG)
 
@@ -86,8 +87,9 @@ Sobald **eine** dieser Bedingungen kippt — Sektorkopplung, variable Tarife, Er
 
 - Betrifft neue **steuerbare Verbrauchseinrichtungen > 4,2 kW**: Wärmepumpen, Wallboxen, Klimageräte, Batteriespeicher mit Netzbezug
 - Netzbetreiber darf bei Engpass auf min. 4,2 kW herunterregeln (nie ganz abschalten)
-- Gegenleistung — 3 Rabatt-Module: **Modul 1** (~165 €/Jahr pauschal) / **Modul 2** (40 % Arbeitspreis Netzentgelt) / **Modul 3** (zeitvariables Netzentgelt)
+- Gegenleistung — 3 Rabatt-Module: **Modul 1** (ca. 110–190 €/Jahr brutto pauschal, regionsabhängig vom Netzbetreiber) / **Modul 2** (Reduzierung des Netzentgelt-Arbeitspreises **um 60 %** — Quelle: BNetzA, netze-bw.de) / **Modul 3** (zeitvariables Netzentgelt, nur kombinierbar mit Modul 1)
 - Voraussetzung: iMSys + Steuerbox
+- **Bidirektionales Laden (V2H/V2G):** seit 01.01.2026 entfällt die bisherige doppelte Netzentgeltbelastung für Speicher/bidirektionales Laden (EnWG-Novelle, unabhängig bestätigt) — macht EV-Speicher wirtschaftlich relevanter für die Premium-Variante
 
 ### Konsequenz für die Anlagenvarianten
 
@@ -119,6 +121,8 @@ Bei allen Änderungen an Texten — besonders rechtlich oder produktbezogen — 
 3. **Bei Sigenergy**: „0 ms Notstrom" ist Marketing — korrekt: „praktisch unterbrechungsfrei, ms-Bereich, 350 ms Backfeed-Schutz".
 4. **Bei Eco**: ehrlich kommunizieren, dass diese Variante das Solarspitzengesetz nicht intelligent abfedert.
 5. **Outdoor-Aufstellung**: **nur Sigenergy** ist outdoor-tauglich. Bei Solaris²: IP41, nur Innen. Nicht verwechseln.
+6. **Herstellerangaben (Sigenergy-Hardware)**: Effizienz-, Garantie-, Kapazitäts- und Sicherheitskennzahlen immer klar als „laut Sigenergy"/Herstellerangabe kennzeichnen, nicht als eigene geprüfte Aussage oder Zusicherung übernehmen — gilt für alles, was nicht unabhängig verifiziert werden konnte (Stand der Direktverifizierung: 2026-06-27).
+7. **Bei V2H/V2G (bidirektionales Laden)**: Sigenergy selbst weist darauf hin, dass die V2X-Funktion vom jeweiligen Fahrzeug abhängt und Teile erst nach Veröffentlichung der Standards per OTA folgen. Nicht als pauschal sofort verfügbares Feature darstellen.
 
 ---
 
@@ -134,3 +138,4 @@ Werden im Repo via TODOs in `CLAUDE.md` getrackt. Konzept-Arbeit (Footer/Header,
 |---|---|---|
 | 1.0 | 2026-06-01 (morgens) | Erstanlage: Tech-Stack, 3 Varianten, Rechtsrahmen, Markenwerte, Compliance-Anker |
 | 1.1 | 2026-06-01 (mittags) | „Strategischer Rahmen: Hardware vs. steuerbares System" + Sweet-Spot-Framing für Variante 2; 5 Bedingungen für Eco-Vertretbarkeit; neuer Vault-Verweis auf „Hardware vs HEMS — der Kunden-Mehrwert.md" |
+| 1.2 | 2026-06-27 | §14a-Modul-2-Korrektur (60 % statt 40 %) + Modul-1-Spanne; V2H/V2G-Update inkl. Fahrzeug-/OTA-Vorbehalt; Sigenergy-Hardware direkt von sigenergy.com/de verifiziert (314 Ah, 5-facher Schutz, GPT-4o, Sigen AI Mode/Assistant bestätigt; 200 %/97,8 %/SigenAgent/„mySigen 4.0" NICHT übernommen, nicht auffindbar) |
