@@ -444,6 +444,48 @@ app.get('/api/lead-confirm', async (req, res) => {
   res.redirect('/nutzen?confirmed=true');
 });
 
+// ── Spotpreis (EPEX SPOT Day-Ahead via Fraunhofer ISE Energy-Charts API) ──
+// Kein API-Key nötig, kostenlos, öffentlich. Serverseitiger Proxy vermeidet
+// Drittanbieter-Anfragen direkt aus dem Browser des Besuchers.
+let spotCache = { data: null, expiresAt: 0 };
+
+app.get('/api/spotprice', async (req, res) => {
+  res.setHeader('Access-Control-Allow-Origin', '*');
+
+  if (spotCache.data && Date.now() < spotCache.expiresAt) {
+    return res.json(spotCache.data);
+  }
+
+  try {
+    const raw = await new Promise((resolve, reject) => {
+      const url = 'https://api.energy-charts.info/price?bzn=DE-LU';
+      https.get(url, { headers: { 'Accept': 'application/json' } }, (r) => {
+        let buf = '';
+        r.on('data', c => buf += c);
+        r.on('end', () => {
+          if (r.statusCode !== 200) return reject(new Error(`API ${r.statusCode}`));
+          try { resolve(JSON.parse(buf)); } catch (e) { reject(e); }
+        });
+      }).on('error', reject);
+    });
+
+    const prices = (raw.unix_seconds || []).map((ts, i) => {
+      const priceCtKwh = (raw.price[i] ?? 0) / 10; // EUR/MWh → ct/kWh
+      const d = new Date(ts * 1000);
+      const hh = String(d.getUTCHours()).padStart(2, '0');
+      const mm = String(d.getUTCMinutes()).padStart(2, '0');
+      return { ts, label: `${hh}:${mm}`, priceCtKwh: +priceCtKwh.toFixed(2), negative: priceCtKwh < 0 };
+    });
+
+    const payload = { source: 'Fraunhofer ISE Energy-Charts (EPEX SPOT DE-LU)', updated: new Date().toISOString(), prices };
+    spotCache = { data: payload, expiresAt: Date.now() + 60 * 60 * 1000 }; // 60 min TTL
+    res.json(payload);
+  } catch (err) {
+    console.error('Spotprice API error:', err.message);
+    res.status(503).json({ error: 'Preisdaten momentan nicht verfügbar.', detail: err.message });
+  }
+});
+
 // ── Clean URLs ───────────────────────────────────────────────────
 app.get('/beratung-technik',    (req, res) => res.sendFile(path.join(__dirname, 'beratung-technik.html')));
 app.get('/koordination-netzwerk', (req, res) => res.sendFile(path.join(__dirname, 'koordination-netzwerk.html')));
@@ -459,6 +501,7 @@ app.get('/mieterstrom',          (req, res) => res.sendFile(path.join(__dirname,
 app.get('/impressum',            (req, res) => res.sendFile(path.join(__dirname, 'impressum.html')));
 app.get('/datenschutz',         (req, res) => res.sendFile(path.join(__dirname, 'datenschutz.html')));
 app.get('/termin',              (req, res) => res.sendFile(path.join(__dirname, 'termin.html')));
+app.get('/spotpreis',           (req, res) => res.sendFile(path.join(__dirname, 'spotpreis.html')));
 
 app.get('*', (req, res) => res.sendFile(path.join(__dirname, 'index.html')));
 

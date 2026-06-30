@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Aktuelle EPEX-SPOT-Day-Ahead-Strompreise für Deutschland live – inkl. negativer Preisstunden, die §51 EEG (Solarspitzengesetz) auslösen.">
+
+  <meta property="og:title" content="Spotpreis-Monitor – Börsenstrompreis live | Patrick Leißner Energieberatung">
+  <meta property="og:description" content="Wenn Börsenstrompreise unter null fallen, gibt es keine Einspeisevergütung mehr (§51 EEG). Hier siehst du, wann das heute der Fall ist.">
+  <meta property="og:type" content="website">
+
+  <title>Spotpreis-Monitor – EPEX SPOT Day-Ahead | Patrick Leißner Energieberatung</title>
+
+  <script src="/assets/vendor/chart.umd.js"></script>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="subpage.css">
+
+  <style>
+    .sp-wrap { max-width: 860px; margin: 0 auto; padding: 2.5rem 1rem 4rem; }
+
+    .sp-kv-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin-bottom: 2rem; }
+    .sp-kv-card { background: var(--color-surface-alt); border-radius: var(--border-radius); padding: 1rem 1.25rem; text-align: center; }
+    .sp-kv-card.negative { background: #fff1f1; border: 1px solid #e57373; }
+    .sp-kv-value { display: block; font-size: 1.6rem; font-weight: 800; color: var(--color-brand-primary); line-height: 1.1; }
+    .sp-kv-card.negative .sp-kv-value { color: #c62828; }
+    .sp-kv-label { display: block; font-size: 0.775rem; color: var(--color-text-secondary); margin-top: 0.25rem; }
+
+    .sp-chart-wrap { position: relative; height: 320px; margin-bottom: 1.25rem; }
+
+    .sp-disclaimer {
+      font-size: 0.775rem; color: var(--color-text-muted);
+      border-top: 1px solid var(--color-border);
+      padding-top: 0.75rem; margin-top: 0.25rem;
+    }
+
+    .sp-update { font-size: 0.775rem; color: var(--color-text-muted); text-align: right; margin-bottom: 1.25rem; }
+
+    .sp-explain {
+      margin-top: 2.5rem;
+      background: var(--color-brand-primary);
+      color: #fff;
+      border-radius: var(--border-radius);
+      padding: 1.5rem 1.75rem;
+    }
+    .sp-explain h2 { font-size: 1.1rem; color: var(--color-brand-accent); margin-bottom: 0.5rem; }
+    .sp-explain p { font-size: 0.9rem; line-height: 1.7; margin-bottom: 0.75rem; color: rgba(255,255,255,0.87); }
+    .sp-explain p:last-child { margin-bottom: 0; }
+    .sp-explain a { color: var(--color-brand-accent); text-decoration: underline; }
+
+    .sp-fallback {
+      display: none;
+      padding: 2rem;
+      text-align: center;
+      background: var(--color-surface-alt);
+      border-radius: var(--border-radius);
+      color: var(--color-text-secondary);
+    }
+    .sp-fallback strong { display: block; margin-bottom: 0.5rem; }
+
+    @media (max-width: 600px) {
+      .sp-kv-grid { grid-template-columns: 1fr 1fr; }
+      .sp-chart-wrap { height: 220px; }
+    }
+  </style>
+</head>
+<body>
+
+  <a href="#main" class="skip-link">Zum Hauptinhalt springen</a>
+
+  <header class="site-header scrolled" role="banner" id="site-header">
+    <nav class="nav-container" aria-label="Hauptnavigation">
+      <a href="/" class="nav-logo" aria-label="Patrick Leißner Energieberatung – zur Startseite">
+        <img src="assets/Logo/Initialien-Name-Positiv-frei.png" alt="Patrick Leißner Energieberatung Logo" height="96" loading="eager" style="width:auto">
+      </a>
+      <ul class="nav-links" role="list">
+        <li><a href="/#leistungen">Leistungen</a></li>
+        <li><a href="/#ueber-pl">Über mich</a></li>
+        <li><a href="/termin">Termine</a></li>
+        <li><a href="/#kontakt">Kontakt</a></li>
+      </ul>
+      <a href="/termin" class="btn btn-accent nav-cta">Termin buchen</a>
+      <button class="hamburger" aria-label="Menü öffnen" aria-expanded="false" aria-controls="mobile-menu" id="hamburger-btn">
+        <span></span><span></span><span></span>
+      </button>
+    </nav>
+    <div class="mobile-menu" id="mobile-menu" aria-hidden="true" role="dialog" aria-label="Hauptnavigation">
+      <ul role="list">
+        <li><a href="/#leistungen" class="mobile-nav-link">Leistungen</a></li>
+        <li><a href="/#ueber-pl" class="mobile-nav-link">Über mich</a></li>
+        <li><a href="/termin" class="mobile-nav-link">Termine</a></li>
+        <li><a href="/#kontakt" class="mobile-nav-link">Kontakt</a></li>
+        <li><a href="/termin" class="btn btn-accent mobile-nav-link">Termin buchen</a></li>
+      </ul>
+    </div>
+  </header>
+
+  <div class="sp-back-bar">
+    <div class="container">
+      <a href="/ratgeber" class="sp-back-link">Zurück zum Ratgeber</a>
+    </div>
+  </div>
+
+  <main id="main">
+    <section class="sp-hero" aria-label="Spotpreis-Monitor – Einleitung">
+      <nav class="sp-breadcrumb" aria-label="Brotkrumen-Navigation">
+        <div class="sp-breadcrumb-inner">
+          <a href="/">Startseite</a>
+          <span class="sp-bc-sep" aria-hidden="true">›</span>
+          <a href="/ratgeber">Ratgeber</a>
+          <span class="sp-bc-sep" aria-hidden="true">›</span>
+          <span class="sp-bc-current">Spotpreis-Monitor</span>
+        </div>
+      </nav>
+      <div class="container sp-hero-content">
+        <p class="sp-hero-eyebrow">Daten &amp; Markt · EPEX SPOT DE-LU</p>
+        <h1>Börsenstrompreise – live.</h1>
+        <p>Wenn der Preis unter null fällt, zahlt niemand für deinen Solarstrom. Das Solarspitzengesetz (§ 51 EEG) macht genau das zur Regel. Hier siehst du, wann das heute passiert.</p>
+      </div>
+    </section>
+
+    <section class="sp-section sp-section--compact" aria-label="Spotpreis-Chart">
+      <div class="container">
+        <div class="sp-wrap">
+
+          <div class="sp-kv-grid" id="kvGrid" aria-live="polite"></div>
+
+          <p class="sp-update" id="updateLabel"></p>
+
+          <div class="sp-chart-wrap">
+            <canvas id="spotChart" aria-label="Viertelstündliche Day-Ahead-Börsenstrompreise in ct/kWh"></canvas>
+          </div>
+
+          <div class="sp-fallback" id="fallback" role="alert">
+            <strong>Preisdaten momentan nicht verfügbar.</strong>
+            Die Börsendaten konnten nicht geladen werden. Bitte versuche es später erneut.
+          </div>
+
+          <p class="sp-disclaimer">
+            Marktdaten: EPEX SPOT DE-LU Day-Ahead via <a href="https://www.energy-charts.info" target="_blank" rel="noopener">Fraunhofer ISE Energy-Charts</a>.
+            Preise in ct/kWh brutto. Kein individueller Tarif, keine Empfehlung.
+            Negative Preise nach §&nbsp;51 EEG bedeuten: keine EEG-Einspeisevergütung in dieser Viertelstunde.
+          </p>
+
+          <div class="sp-explain">
+            <h2>Was bedeutet das für deine PV-Anlage?</h2>
+            <p>
+              Bei negativen Börsenstrompreisen erhält eine normale PV-Anlage <strong>null Euro Einspeisevergütung</strong>
+              für diesen Zeitraum – ganz egal, wieviel Strom ins Netz geht.
+              Eine Anlage mit intelligentem Energiemanagementsystem (HEMS) hingegen lädt in diesen Stunden
+              gezielt den Speicher auf und verhindert so den Vergütungsverlust.
+            </p>
+            <p>
+              <a href="/ratgeber/solarspitzengesetz">→ Solarspitzengesetz erklärt (§ 51 EEG)</a>&ensp;·&ensp;
+              <a href="/beratung-technik#eco">→ Welche Variante reagiert wie?</a>
+            </p>
+            <p>
+              <a href="/termin" class="btn btn-accent" style="margin-top:0.75rem; display:inline-block;">
+                Passt deine Anlage zu negativen Preisen? Lass uns sprechen.
+              </a>
+            </p>
+          </div>
+
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer" role="contentinfo">
+    <div class="container footer-grid">
+      <div class="footer-brand">
+        <a href="/" class="footer-logo" aria-label="Patrick Leißner Energieberatung – zur Startseite">
+          <img src="/assets/Logo/Initialien-Name-Positiv-frei.png" alt="Patrick Leißner Logo" height="80" loading="lazy" style="width:auto">
+          <span class="nav-logo-text">Patrick Leißner</span>
+        </a>
+        <p>Frei durch eigene Energie.</p>
+        <div class="footer-social" aria-label="Social Media">
+          <a href="https://www.instagram.com/patrickleissner.de" target="_blank" rel="noopener" aria-label="Patrick Leißner auf Instagram">
+            <img src="/assets/icons/gold_instagram_icon_frei.png" alt="" width="17" height="17" loading="lazy">
+          </a>
+          <a href="https://www.facebook.com/patrickleissner.de" target="_blank" rel="noopener" aria-label="Patrick Leißner auf Facebook">
+            <img src="/assets/icons/gold_facebook_icon_frei.png" alt="" width="17" height="17" loading="lazy">
+          </a>
+          <a href="https://x.com/patrickLeiszner" target="_blank" rel="noopener" aria-label="Patrick Leißner auf X">
+            <img src="/assets/icons/gold_x_icon_frei.png" alt="" width="17" height="17" loading="lazy">
+          </a>
+          <a href="https://wa.me/491734994994" target="_blank" rel="noopener" aria-label="Patrick Leißner auf WhatsApp">
+            <img src="/assets/icons/gold_whatsapp_icon_frei.png" alt="" width="17" height="17" loading="lazy">
+          </a>
+        </div>
+      </div>
+      <div class="footer-col">
+        <h3>Kontakt</h3>
+        <a href="tel:+4901734994994">0173 499 4994</a>
+        <a href="mailto:p@patrickleissner.de">p@patrickleissner.de</a>
+        <span>Bitterfeld-Wolfen</span>
+      </div>
+      <nav class="footer-col" aria-label="Leistungen">
+        <h3>Leistungen</h3>
+        <a href="/beratung-technik">Beratung und Technik</a>
+        <a href="/koordination-netzwerk">Koordination und Netzwerk</a>
+        <a href="/waermepumpe-heizlast">Wärmepumpe und Heizlast</a>
+        <a href="/analyse-vorsorge">Analyse und Vorsorge</a>
+        <a href="/mieterstrom">Mieterstrom und Objektenergie</a>
+      </nav>
+      <nav class="footer-col" aria-label="Rechner und Ratgeber">
+        <h3>Rechner &amp; Ratgeber</h3>
+        <a href="/unabhaengigkeit">Unabhängigkeitsrechner</a>
+        <a href="/heizkosten">Heizkosten-Rechner</a>
+        <a href="/nutzen">Nutzen-Rechner</a>
+        <a href="/spotpreis">Spotpreis-Monitor</a>
+        <a href="/ratgeber">Ratgeber</a>
+        <a href="https://ecowattiv.de/dww/" target="_blank" rel="noopener noreferrer">DWW-Wirtschaftlichkeitsrechner ↗</a>
+      </nav>
+    </div>
+    <div class="container footer-bottom">
+      <nav class="footer-links" aria-label="Footer-Navigation">
+        <a href="/impressum">Impressum</a>
+        <a href="/datenschutz">Datenschutz</a>
+        <a href="#" aria-label="Zurück zum Seitenanfang">Nach oben ↑</a>
+      </nav>
+      <p class="footer-copyright">© 2026 Patrick Leißner. Alle Rechte vorbehalten.</p>
+      <p class="footer-operator">pin-co.de Media UG (haftungsbeschränkt) · Bitterfeld-Wolfen</p>
+    </div>
+  </footer>
+
+  <script src="main.js"></script>
+  <script>
+(function () {
+  const GREEN    = '#2E4F3C';
+  const GOLD     = '#D0AB3B';
+  const RED      = '#c62828';
+  const RED_LIGHT= 'rgba(198,40,40,0.18)';
+  const GRID_CLR = 'rgba(0,0,0,0.07)';
+
+  async function load() {
+    try {
+      const res = await fetch('/api/spotprice');
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      const { prices, updated } = await res.json();
+      if (!prices || !prices.length) throw new Error('Keine Preisdaten');
+
+      document.getElementById('fallback').style.display = 'none';
+
+      // KPI cards
+      const valid = prices.filter(p => p.priceCtKwh !== null);
+      const current = valid[valid.length - 1];
+      const minP = valid.reduce((a, b) => b.priceCtKwh < a.priceCtKwh ? b : a);
+      const maxP = valid.reduce((a, b) => b.priceCtKwh > a.priceCtKwh ? b : a);
+      const negCount = valid.filter(p => p.negative).length;
+
+      const kv = document.getElementById('kvGrid');
+      kv.innerHTML = `
+        <div class="sp-kv-card${current.negative ? ' negative' : ''}">
+          <span class="sp-kv-value">${fmt(current.priceCtKwh)}</span>
+          <span class="sp-kv-label">Aktuell (${current.label} Uhr) ct/kWh</span>
+        </div>
+        <div class="sp-kv-card">
+          <span class="sp-kv-value" style="color:${minP.negative ? RED : GREEN}">${fmt(minP.priceCtKwh)}</span>
+          <span class="sp-kv-label">Tagesminimum (${minP.label} Uhr)</span>
+        </div>
+        <div class="sp-kv-card">
+          <span class="sp-kv-value">${negCount}</span>
+          <span class="sp-kv-label">Viertelstunden mit Negativpreis heute</span>
+        </div>`;
+
+      // Update label
+      const upd = new Date(updated);
+      document.getElementById('updateLabel').textContent =
+        `Stand: ${upd.toLocaleTimeString('de-DE', { hour: '2-digit', minute: '2-digit' })} Uhr (Daten werden stündlich aktualisiert)`;
+
+      // Chart
+      const labels = prices.map(p => p.label);
+      const data   = prices.map(p => p.priceCtKwh);
+      const colors = prices.map(p => p.negative ? RED_LIGHT : 'rgba(46,79,60,0.18)');
+      const borders= prices.map(p => p.negative ? RED : GREEN);
+
+      const ctx = document.getElementById('spotChart').getContext('2d');
+      new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels,
+          datasets: [{
+            label: 'ct/kWh',
+            data,
+            backgroundColor: colors,
+            borderColor: borders,
+            borderWidth: 1.5,
+            borderRadius: 2,
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: { display: false },
+            tooltip: {
+              callbacks: {
+                label: ctx => `${fmt(ctx.parsed.y)} ct/kWh${ctx.parsed.y < 0 ? ' (negativ – §51 EEG)' : ''}`
+              }
+            }
+          },
+          scales: {
+            x: {
+              grid: { color: GRID_CLR },
+              ticks: {
+                maxTicksLimit: 12,
+                font: { size: 11 },
+                color: '#6b7280',
+              }
+            },
+            y: {
+              grid: { color: GRID_CLR },
+              ticks: { font: { size: 11 }, color: '#6b7280', callback: v => v + ' ct' },
+              afterDataLimits(scale) {
+                const pad = (scale.max - scale.min) * 0.08 || 2;
+                scale.min -= pad;
+                scale.max += pad;
+              }
+            }
+          },
+          // Null-Linie fett hervorheben
+          plugins2: {},
+        },
+        plugins: [{
+          id: 'zeroline',
+          afterDraw(chart) {
+            const { ctx: c, scales: { x, y } } = chart;
+            const z = y.getPixelForValue(0);
+            c.save();
+            c.strokeStyle = GOLD;
+            c.lineWidth = 2;
+            c.setLineDash([4, 3]);
+            c.beginPath();
+            c.moveTo(x.left, z);
+            c.lineTo(x.right, z);
+            c.stroke();
+            c.restore();
+          }
+        }]
+      });
+
+    } catch (err) {
+      console.error('Spotpreis:', err);
+      document.getElementById('spotChart').style.display = 'none';
+      document.getElementById('kvGrid').style.display = 'none';
+      document.getElementById('fallback').style.display = 'block';
+    }
+  }
+
+  function fmt(v) {
+    return (v >= 0 ? '' : '−') + Math.abs(v).toFixed(2).replace('.', ',');
+  }
+
+  load();
+})();
+  </script>
+</body>
+</html>

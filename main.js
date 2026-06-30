@@ -466,12 +466,15 @@ function initContactForm() {
   });
 }
 
-/* ── WebGL Shader Hero ────────────────────────────────────── */
-function initShaderHero() {
+/* ── WebGL Shader Hero (wiederverwendbar für Hero + weitere Sektionen) ── */
+function initShaderHero(canvasId = 'heroCanvas', opts = {}) {
   if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
 
-  const canvas = document.getElementById('heroCanvas');
+  const canvas = document.getElementById(canvasId);
   if (!canvas) return;
+
+  const speed = opts.speed ?? 1;
+  const dim = opts.dim ?? 1;
 
   const gl = canvas.getContext('webgl2');
   if (!gl) return; // Fallback: CSS-Hintergrund #070d0a bleibt sichtbar
@@ -486,6 +489,7 @@ precision highp float;
 out vec4 O;
 uniform vec2 resolution;
 uniform float time;
+uniform float dim;
 #define FC gl_FragCoord.xy
 #define T time
 #define R resolution
@@ -527,7 +531,7 @@ void main(void){
     col+=.002*b/length(max(p,vec2(b*p.x*.02,p.y)));
     col=mix(col,vec3(bg*.10,bg*.16,bg*.12),d);
   }
-  O=vec4(col,1);
+  O=vec4(col*dim,1);
 }`;
 
   function compile(shader, src) {
@@ -563,13 +567,17 @@ void main(void){
 
   const uRes  = gl.getUniformLocation(prog, 'resolution');
   const uTime = gl.getUniformLocation(prog, 'time');
+  const uDim  = gl.getUniformLocation(prog, 'dim');
 
   let animId = null;
+  let inViewport = true; // optimistisch, bis der IntersectionObserver feuert
 
   function resize() {
     const dpr = Math.max(1, 0.5 * devicePixelRatio);
-    canvas.width  = window.innerWidth  * dpr;
-    canvas.height = window.innerHeight * dpr;
+    const w = canvas.clientWidth  || window.innerWidth;
+    const h = canvas.clientHeight || window.innerHeight;
+    canvas.width  = w * dpr;
+    canvas.height = h * dpr;
     gl.viewport(0, 0, canvas.width, canvas.height);
   }
 
@@ -579,9 +587,22 @@ void main(void){
     gl.useProgram(prog);
     gl.bindBuffer(gl.ARRAY_BUFFER, buf);
     gl.uniform2f(uRes, canvas.width, canvas.height);
-    gl.uniform1f(uTime, now * 1e-3);
+    gl.uniform1f(uTime, now * 1e-3 * speed);
+    gl.uniform1f(uDim, dim);
     gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
     animId = requestAnimationFrame(loop);
+  }
+
+  // Läuft nur, wenn Tab aktiv UND Canvas im Viewport ist — wichtig, sobald
+  // mehrere Varianten-Sektionen mit eigenem Canvas auf einer Seite stehen.
+  function syncAnimState() {
+    const shouldRun = inViewport && !document.hidden;
+    if (shouldRun && animId === null) {
+      animId = requestAnimationFrame(loop);
+    } else if (!shouldRun && animId !== null) {
+      cancelAnimationFrame(animId);
+      animId = null;
+    }
   }
 
   resize();
@@ -592,13 +613,12 @@ void main(void){
   });
   animId = requestAnimationFrame(loop);
 
-  document.addEventListener('visibilitychange', () => {
-    if (document.hidden) {
-      cancelAnimationFrame(animId);
-    } else {
-      animId = requestAnimationFrame(loop);
-    }
-  });
+  document.addEventListener('visibilitychange', syncAnimState);
+
+  new IntersectionObserver(([entry]) => {
+    inViewport = entry.isIntersecting;
+    syncAnimState();
+  }, { threshold: 0 }).observe(canvas);
 }
 
 /* ── Partner Section ───────────────────────────────────────────── */
@@ -620,6 +640,8 @@ function initOrbitalTimeline() {
     { id: 6, name: 'Clover',                         logo: 'assets/partner/Clover_Logo.png' },
     { id: 7, name: 'Viessmann',                      logo: 'assets/partner/neu_Viessmann.png' },
   ];
+
+  const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
   let rotationAngle = 0;
   let animId = null;
@@ -644,9 +666,7 @@ function initOrbitalTimeline() {
     nodeEls.push({ el: node, partner: p });
   });
 
-  function animate() {
-    rotationAngle = (rotationAngle + 0.3) % 360;
-
+  function positionNodes() {
     const total = partners.length;
     const radius = getRadius();
 
@@ -662,7 +682,17 @@ function initOrbitalTimeline() {
       el.style.opacity = opacity;
       el.style.zIndex = Math.round(10 + 5 * depth);
     });
+  }
 
+  // prefers-reduced-motion: Logos einmalig statisch positionieren, keine Endlos-Rotation starten
+  if (prefersReducedMotion) {
+    positionNodes();
+    return;
+  }
+
+  function animate() {
+    rotationAngle = (rotationAngle + 0.18) % 360;
+    positionNodes();
     animId = requestAnimationFrame(animate);
   }
 
@@ -794,7 +824,10 @@ function init() {
   initScrollReveal();
   initSmoothScroll();
   initContactForm();
-  initShaderHero();
+  initShaderHero('heroCanvas');
+  initShaderHero('ecoCanvas', { speed: 0.55, dim: 0.5 });
+  initShaderHero('premiumCanvas', { speed: 0.55, dim: 0.5 });
+  initShaderHero('solarisCanvas', { speed: 0.55, dim: 0.5 });
   initSpotlightCards();
   initPartnerSection();
   initAddressLink();
