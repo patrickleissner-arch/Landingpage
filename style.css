@@ -2196,6 +2196,42 @@ p { max-width: 68ch; }
 
 .embed-consent-text a { color: var(--color-brand-primary); text-decoration: underline; }
 
+/* ── Spotpreis-Monitor ───────────────────────────────────── */
+.spotpreis-chart-wrap {
+  position: relative;
+  height: 320px;
+  margin-top: var(--space-8);
+  margin-bottom: var(--space-3);
+}
+
+@media (max-width: 600px) {
+  .spotpreis-chart-wrap { height: 220px; }
+}
+
+.spotpreis-fallback {
+  display: none;
+  padding: var(--space-10) var(--space-6);
+  text-align: center;
+  background: var(--color-surface-alt);
+  border-radius: var(--border-radius);
+  color: var(--color-text-secondary);
+  margin-top: var(--space-8);
+}
+
+.spotpreis-disclaimer {
+  font-size: 0.775rem;
+  color: var(--color-text-muted);
+  line-height: 1.6;
+  border-top: 1px solid var(--color-border);
+  padding-top: var(--space-4);
+  margin-top: var(--space-4);
+}
+
+.spotpreis-disclaimer a {
+  color: var(--color-brand-primary);
+  text-decoration: underline;
+}
+
 /* ── Scroll Reveal Animations ─────────────────────────────── */
 .reveal {
   opacity: 0;

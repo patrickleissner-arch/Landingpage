@@ -14,54 +14,6 @@
   <script src="/assets/vendor/chart.umd.js"></script>
   <link rel="stylesheet" href="style.css">
   <link rel="stylesheet" href="subpage.css">
-
-  <style>
-    .sp-wrap { max-width: 860px; margin: 0 auto; padding: 2.5rem 1rem 4rem; }
-
-    .sp-kv-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin-bottom: 2rem; }
-    .sp-kv-card { background: var(--color-surface-alt); border-radius: var(--border-radius); padding: 1rem 1.25rem; text-align: center; }
-    .sp-kv-card.negative { background: #fff1f1; border: 1px solid #e57373; }
-    .sp-kv-value { display: block; font-size: 1.6rem; font-weight: 800; color: var(--color-brand-primary); line-height: 1.1; }
-    .sp-kv-card.negative .sp-kv-value { color: #c62828; }
-    .sp-kv-label { display: block; font-size: 0.775rem; color: var(--color-text-secondary); margin-top: 0.25rem; }
-
-    .sp-chart-wrap { position: relative; height: 320px; margin-bottom: 1.25rem; }
-
-    .sp-disclaimer {
-      font-size: 0.775rem; color: var(--color-text-muted);
-      border-top: 1px solid var(--color-border);
-      padding-top: 0.75rem; margin-top: 0.25rem;
-    }
-
-    .sp-update { font-size: 0.775rem; color: var(--color-text-muted); text-align: right; margin-bottom: 1.25rem; }
-
-    .sp-explain {
-      margin-top: 2.5rem;
-      background: var(--color-brand-primary);
-      color: #fff;
-      border-radius: var(--border-radius);
-      padding: 1.5rem 1.75rem;
-    }
-    .sp-explain h2 { font-size: 1.1rem; color: var(--color-brand-accent); margin-bottom: 0.5rem; }
-    .sp-explain p { font-size: 0.9rem; line-height: 1.7; margin-bottom: 0.75rem; color: rgba(255,255,255,0.87); }
-    .sp-explain p:last-child { margin-bottom: 0; }
-    .sp-explain a { color: var(--color-brand-accent); text-decoration: underline; }
-
-    .sp-fallback {
-      display: none;
-      padding: 2rem;
-      text-align: center;
-      background: var(--color-surface-alt);
-      border-radius: var(--border-radius);
-      color: var(--color-text-secondary);
-    }
-    .sp-fallback strong { display: block; margin-bottom: 0.5rem; }
-
-    @media (max-width: 600px) {
-      .sp-kv-grid { grid-template-columns: 1fr 1fr; }
-      .sp-chart-wrap { height: 220px; }
-    }
-  </style>
 </head>
 <body>
 
@@ -101,6 +53,7 @@
   </div>
 
   <main id="main">
+
     <section class="sp-hero" aria-label="Spotpreis-Monitor – Einleitung">
       <nav class="sp-breadcrumb" aria-label="Brotkrumen-Navigation">
         <div class="sp-breadcrumb-inner">
@@ -114,55 +67,63 @@
       <div class="container sp-hero-content">
         <p class="sp-hero-eyebrow">Daten &amp; Markt · EPEX SPOT DE-LU</p>
         <h1>Börsenstrompreise – live.</h1>
-        <p>Wenn der Preis unter null fällt, zahlt niemand für deinen Solarstrom. Das Solarspitzengesetz (§ 51 EEG) macht genau das zur Regel. Hier siehst du, wann das heute passiert.</p>
+        <p>Wenn der Preis unter null fällt, zahlt niemand für deinen Solarstrom. Das Solarspitzengesetz (§&nbsp;51 EEG) macht genau das zur Regel. Hier siehst du, wann das heute passiert.</p>
       </div>
     </section>
 
-    <section class="sp-section sp-section--compact" aria-label="Spotpreis-Chart">
+    <!-- KPI-Zahlen + Chart -->
+    <section class="sp-section sp-section--compact" aria-label="Aktuelle Börsenstrompreise">
       <div class="container">
-        <div class="sp-wrap">
 
-          <div class="sp-kv-grid" id="kvGrid" aria-live="polite"></div>
+        <div class="sp-stats reveal" id="kvGrid" aria-live="polite">
+          <!-- wird per JS befüllt -->
+        </div>
 
-          <p class="sp-update" id="updateLabel"></p>
+        <p id="updateLabel" style="text-align:center; margin-top:var(--space-4); font-size:0.775rem; color:var(--color-text-muted);"></p>
 
-          <div class="sp-chart-wrap">
-            <canvas id="spotChart" aria-label="Viertelstündliche Day-Ahead-Börsenstrompreise in ct/kWh"></canvas>
-          </div>
+        <div class="spotpreis-chart-wrap">
+          <canvas id="spotChart" aria-label="Viertelstündliche Day-Ahead-Börsenstrompreise in ct/kWh"></canvas>
+        </div>
 
-          <div class="sp-fallback" id="fallback" role="alert">
-            <strong>Preisdaten momentan nicht verfügbar.</strong>
-            Die Börsendaten konnten nicht geladen werden. Bitte versuche es später erneut.
-          </div>
+        <div class="spotpreis-fallback" id="fallback" role="alert">
+          <strong>Preisdaten momentan nicht verfügbar.</strong><br>
+          Die Börsendaten konnten nicht geladen werden. Bitte versuche es später erneut.
+        </div>
 
-          <p class="sp-disclaimer">
-            Marktdaten: EPEX SPOT DE-LU Day-Ahead via <a href="https://www.energy-charts.info" target="_blank" rel="noopener">Fraunhofer ISE Energy-Charts</a>.
-            Preise in ct/kWh brutto. Kein individueller Tarif, keine Empfehlung.
-            Negative Preise nach §&nbsp;51 EEG bedeuten: keine EEG-Einspeisevergütung in dieser Viertelstunde.
+        <p class="spotpreis-disclaimer">
+          Marktdaten: EPEX SPOT DE-LU Day-Ahead via
+          <a href="https://www.energy-charts.info" target="_blank" rel="noopener">Fraunhofer ISE Energy-Charts</a>.
+          Preise in ct/kWh brutto. Kein individueller Tarif, keine Empfehlung.
+          Negative Preise nach §&nbsp;51 EEG bedeuten: keine EEG-Einspeisevergütung in dieser Viertelstunde.
+        </p>
+
+      </div>
+    </section>
+
+    <!-- Erklärung + CTA -->
+    <section class="sp-section sp-section--dark" aria-label="Bedeutung für PV-Anlage">
+      <div class="container">
+        <div class="sp-section-header reveal">
+          <span class="sp-eyebrow">Was bedeutet das?</span>
+          <h2>Negative Preise – und was deine Anlage daraus macht.</h2>
+          <p>
+            Bei negativen Börsenstrompreisen erhält eine normale PV-Anlage
+            <strong>null Euro Einspeisevergütung</strong> – ganz egal, wie viel Strom ins Netz geht.
+            Eine Anlage mit intelligentem Energiemanagementsystem (HEMS) erkennt das und lädt in diesen
+            Stunden gezielt den Speicher auf, statt einzuspeisen.
           </p>
-
-          <div class="sp-explain">
-            <h2>Was bedeutet das für deine PV-Anlage?</h2>
-            <p>
-              Bei negativen Börsenstrompreisen erhält eine normale PV-Anlage <strong>null Euro Einspeisevergütung</strong>
-              für diesen Zeitraum – ganz egal, wieviel Strom ins Netz geht.
-              Eine Anlage mit intelligentem Energiemanagementsystem (HEMS) hingegen lädt in diesen Stunden
-              gezielt den Speicher auf und verhindert so den Vergütungsverlust.
-            </p>
-            <p>
-              <a href="/ratgeber/solarspitzengesetz">→ Solarspitzengesetz erklärt (§ 51 EEG)</a>&ensp;·&ensp;
-              <a href="/beratung-technik#eco">→ Welche Variante reagiert wie?</a>
-            </p>
-            <p>
-              <a href="/termin" class="btn btn-accent" style="margin-top:0.75rem; display:inline-block;">
-                Passt deine Anlage zu negativen Preisen? Lass uns sprechen.
-              </a>
-            </p>
-          </div>
-
+          <p style="margin-top:var(--space-4);">
+            <a href="/ratgeber/solarspitzengesetz">→ Solarspitzengesetz erklärt (§&nbsp;51 EEG)</a>
+            &ensp;·&ensp;
+            <a href="/beratung-technik#eco">→ Welche Variante reagiert wie?</a>
+          </p>
+        </div>
+        <div style="text-align:center; margin-top:var(--space-8);">
+          <a href="/termin" class="btn btn-accent btn-lg">Passt deine Anlage zu negativen Preisen? Lass uns sprechen.</a>
         </div>
       </div>
     </section>
+
   </main>
 
   <footer class="site-footer" role="contentinfo">
@@ -239,102 +200,65 @@
       const { prices, updated } = await res.json();
       if (!prices || !prices.length) throw new Error('Keine Preisdaten');
 
-      document.getElementById('fallback').style.display = 'none';
-
-      // KPI cards
-      const valid = prices.filter(p => p.priceCtKwh !== null);
+      // KPI-Stats
+      const valid   = prices.filter(p => p.priceCtKwh !== null);
       const current = valid[valid.length - 1];
-      const minP = valid.reduce((a, b) => b.priceCtKwh < a.priceCtKwh ? b : a);
-      const maxP = valid.reduce((a, b) => b.priceCtKwh > a.priceCtKwh ? b : a);
-      const negCount = valid.filter(p => p.negative).length;
+      const minP    = valid.reduce((a, b) => b.priceCtKwh < a.priceCtKwh ? b : a);
+      const negCount= valid.filter(p => p.negative).length;
 
-      const kv = document.getElementById('kvGrid');
-      kv.innerHTML = `
-        <div class="sp-kv-card${current.negative ? ' negative' : ''}">
-          <span class="sp-kv-value">${fmt(current.priceCtKwh)}</span>
-          <span class="sp-kv-label">Aktuell (${current.label} Uhr) ct/kWh</span>
+      document.getElementById('kvGrid').innerHTML = `
+        <div class="sp-stat-item">
+          <div class="sp-stat-number"${current.negative ? ' style="color:#c62828"' : ''}>${fmt(current.priceCtKwh)} ct</div>
+          <div class="sp-stat-label">Aktuell (${current.label}&nbsp;Uhr)</div>
         </div>
-        <div class="sp-kv-card">
-          <span class="sp-kv-value" style="color:${minP.negative ? RED : GREEN}">${fmt(minP.priceCtKwh)}</span>
-          <span class="sp-kv-label">Tagesminimum (${minP.label} Uhr)</span>
+        <div class="sp-stat-item">
+          <div class="sp-stat-number"${minP.negative ? ' style="color:#c62828"' : ''}>${fmt(minP.priceCtKwh)} ct</div>
+          <div class="sp-stat-label">Tagesminimum (${minP.label}&nbsp;Uhr)</div>
         </div>
-        <div class="sp-kv-card">
-          <span class="sp-kv-value">${negCount}</span>
-          <span class="sp-kv-label">Viertelstunden mit Negativpreis heute</span>
+        <div class="sp-stat-item">
+          <div class="sp-stat-number"${negCount > 0 ? ' style="color:#c62828"' : ''}>${negCount}</div>
+          <div class="sp-stat-label">Negative Preisstunden heute</div>
         </div>`;
 
-      // Update label
       const upd = new Date(updated);
       document.getElementById('updateLabel').textContent =
-        `Stand: ${upd.toLocaleTimeString('de-DE', { hour: '2-digit', minute: '2-digit' })} Uhr (Daten werden stündlich aktualisiert)`;
+        'Stand: ' + upd.toLocaleTimeString('de-DE', { hour: '2-digit', minute: '2-digit' }) + ' Uhr · stündlich aktualisiert';
 
       // Chart
-      const labels = prices.map(p => p.label);
-      const data   = prices.map(p => p.priceCtKwh);
-      const colors = prices.map(p => p.negative ? RED_LIGHT : 'rgba(46,79,60,0.18)');
-      const borders= prices.map(p => p.negative ? RED : GREEN);
+      const labels  = prices.map(p => p.label);
+      const data    = prices.map(p => p.priceCtKwh);
+      const bgColors= prices.map(p => p.negative ? RED_LIGHT : 'rgba(46,79,60,0.15)');
+      const bdColors= prices.map(p => p.negative ? RED : GREEN);
 
-      const ctx = document.getElementById('spotChart').getContext('2d');
-      new Chart(ctx, {
+      new Chart(document.getElementById('spotChart').getContext('2d'), {
         type: 'bar',
         data: {
           labels,
-          datasets: [{
-            label: 'ct/kWh',
-            data,
-            backgroundColor: colors,
-            borderColor: borders,
-            borderWidth: 1.5,
-            borderRadius: 2,
-          }]
+          datasets: [{ label: 'ct/kWh', data, backgroundColor: bgColors, borderColor: bdColors, borderWidth: 1.5, borderRadius: 2 }]
         },
         options: {
           responsive: true,
           maintainAspectRatio: false,
           plugins: {
             legend: { display: false },
-            tooltip: {
-              callbacks: {
-                label: ctx => `${fmt(ctx.parsed.y)} ct/kWh${ctx.parsed.y < 0 ? ' (negativ – §51 EEG)' : ''}`
-              }
-            }
+            tooltip: { callbacks: { label: c => fmt(c.parsed.y) + ' ct/kWh' + (c.parsed.y < 0 ? ' (negativ – §51 EEG)' : '') } }
           },
           scales: {
-            x: {
-              grid: { color: GRID_CLR },
-              ticks: {
-                maxTicksLimit: 12,
-                font: { size: 11 },
-                color: '#6b7280',
-              }
-            },
+            x: { grid: { color: GRID_CLR }, ticks: { maxTicksLimit: 12, font: { size: 11 }, color: '#6b7280' } },
             y: {
               grid: { color: GRID_CLR },
               ticks: { font: { size: 11 }, color: '#6b7280', callback: v => v + ' ct' },
-              afterDataLimits(scale) {
-                const pad = (scale.max - scale.min) * 0.08 || 2;
-                scale.min -= pad;
-                scale.max += pad;
-              }
+              afterDataLimits(s) { const p = (s.max - s.min) * 0.08 || 2; s.min -= p; s.max += p; }
             }
-          },
-          // Null-Linie fett hervorheben
-          plugins2: {},
+          }
         },
         plugins: [{
           id: 'zeroline',
           afterDraw(chart) {
             const { ctx: c, scales: { x, y } } = chart;
             const z = y.getPixelForValue(0);
-            c.save();
-            c.strokeStyle = GOLD;
-            c.lineWidth = 2;
-            c.setLineDash([4, 3]);
-            c.beginPath();
-            c.moveTo(x.left, z);
-            c.lineTo(x.right, z);
-            c.stroke();
-            c.restore();
+            c.save(); c.strokeStyle = GOLD; c.lineWidth = 2; c.setLineDash([4, 3]);
+            c.beginPath(); c.moveTo(x.left, z); c.lineTo(x.right, z); c.stroke(); c.restore();
           }
         }]
       });
