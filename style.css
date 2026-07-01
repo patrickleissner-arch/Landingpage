@@ -620,40 +620,48 @@ p { max-width: 68ch; }
   justify-content: center;
 }
 
-/* Hero KPI-Statleiste — Platzhalter-Slot, wartet auf echte Zahlen (siehe HTML-Kommentar) */
-.hero-kpi-grid {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: var(--space-4);
-  margin-top: var(--space-4);
+/* ── Trust-Streifen — Glaskarten (Übergang Hero → Leistungen) ── */
+.trust-strip {
+  background: var(--color-surface-alt);              /* Beige, geht nahtlos in Leistungen über */
+  padding-block: var(--space-14) var(--space-10);
 }
 
-.hero-kpi-card {
+.trust-strip-inner {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);             /* gleiche Spalten */
+  gap: var(--space-4);
+}
+
+.trust-item {
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: var(--space-1);
-  min-width: 9rem;
-  padding: var(--space-4) var(--space-5);
-  background: rgba(208, 171, 59, 0.10);
+  text-align: center;
+  padding: var(--space-5) var(--space-4);
+  background: rgba(255, 255, 255, 0.55);             /* Glas-Füllung */
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(208, 171, 59, 0.28);
+  border: 1px solid rgba(208, 171, 59, 0.25);         /* dezenter Gold-Rand als Marken-Akzent */
   border-radius: var(--border-radius-lg);
+  box-shadow: 0 4px 20px var(--color-shadow);
 }
 
-.hero-kpi-value {
-  font-size: clamp(1.5rem, 2.6vw, 2rem);
-  font-weight: 800;
-  color: var(--color-brand-accent);
+.trust-value {
+  font-size: clamp(1.125rem, 2vw, 1.5rem);
+  font-weight: 700;
+  color: var(--color-brand-primary);                 /* Dunkelgrün statt Gold — bessere Lesbarkeit auf hellem Glas */
   line-height: 1.1;
 }
 
-.hero-kpi-label {
+.trust-label {
   font-size: 0.8rem;
-  color: rgba(255, 255, 255, 0.72);
-  text-align: center;
+  color: var(--color-text-secondary);
+  max-width: 24ch;
+}
+
+@media (max-width: 640px) {
+  .trust-strip-inner { grid-template-columns: 1fr; }
 }
 
 /* Scroll indicator */
