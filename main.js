@@ -838,9 +838,11 @@ function init() {
   initSmoothScroll();
   initContactForm();
   initShaderHero('heroCanvas');
-  // Ein einziger Canvas läuft durchgehend hinter allen drei Varianten-Sektionen
-  // (Eco/Premium/Solaris) – kein sichtbarer Schnitt mehr an den Sektionsgrenzen.
-  initShaderHero('variantCanvas', { speed: 0.55, dim: 0.5, dpr: 0.6, observeResize: true });
+  // Ein einziger, viewport-hoher Sticky-Canvas läuft durchgehend hinter allen
+  // drei Varianten-Sektionen (Eco/Premium/Solaris) – gleich hell auf jeder
+  // Sektion, kein Schnitt. observeResize hält die Fläche bei mobilem
+  // Adressleisten-/Rotationswechsel deckungsgleich.
+  initShaderHero('variantCanvas', { speed: 0.55, dim: 0.5, observeResize: true });
   initSpotlightCards();
   initPartnerSection();
   initAddressLink();

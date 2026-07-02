@@ -107,7 +107,9 @@ body {
   line-height: 1.65;
   color: var(--color-text-primary);
   background-color: var(--color-surface);
-  overflow-x: hidden;
+  /* clip statt hidden: verhindert horizontales Scrollen, erzeugt aber
+     KEINEN Scroll-Container – sonst bräche position:sticky (Varianten-BG). */
+  overflow-x: clip;
 }
 
 img, svg { display: block; max-width: 100%; }
@@ -698,23 +700,31 @@ p { max-width: 68ch; }
   background: #070d0a;
 }
 
-/* Durchgehender Shader-Hintergrund: EIN Canvas hinter allen drei
-   Varianten-Sektionen (Eco/Premium/Solaris). Der Wrapper trägt die
-   Fallback-Farbe (kein WebGL / prefers-reduced-motion) und klippt den
-   Canvas; die Sektionen darin werden transparent und schweben – samt
-   ihrer Glas-Kacheln – über dem gemeinsamen Hintergrund. */
+/* Durchgehender Shader-Hintergrund über alle drei Varianten-Sektionen
+   (Eco/Premium/Solaris). Der Canvas ist EIN viewport-hoher, klebender
+   (position:sticky) Layer, der beim Scrollen hinter allen Sektionen
+   gepinnt bleibt – dadurch ist der Shader auf jeder Sektion gleich hell
+   (auch mobil, wo der Block sehr hoch wird) und rendert nur ~1 Bildschirm
+   statt der vollen Blockhöhe. Der Wrapper trägt die Fallback-Farbe
+   (kein WebGL / prefers-reduced-motion); die Sektionen werden transparent
+   und schweben – samt ihrer Glas-Kacheln – über dem gemeinsamen Grund. */
 .variant-stack {
   position: relative;
-  overflow: hidden;
   background: #070d0a;
 }
 
 .variant-bg {
-  position: absolute;
-  inset: 0;
+  position: sticky;
+  top: 0;
   width: 100%;
-  height: 100%;
+  height: 100vh;
+  height: 100dvh;
+  /* aus dem Fluss nehmen, damit die Sektionen oben am Block beginnen und
+     den gepinnten Canvas überlagern */
+  margin-bottom: -100vh;
+  margin-bottom: -100dvh;
   z-index: 0;
+  display: block;
 }
 
 .variant-stack > .section-variant {
@@ -809,6 +819,16 @@ p { max-width: 68ch; }
 .variant-cta {
   display: flex;
   justify-content: center;
+}
+
+/* Lange Varianten-CTAs ("… Lass uns sprechen.") dürfen umbrechen, statt auf
+   schmalen Screens über den Rand hinauszulaufen (die globale .btn-Regel setzt
+   white-space:nowrap). */
+.variant-cta .btn {
+  white-space: normal;
+  max-width: 100%;
+  text-align: center;
+  line-height: 1.3;
 }
 
 /* ── Leistungen Section ───────────────────────────────────── */
