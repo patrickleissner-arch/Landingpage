@@ -700,6 +700,26 @@
 
 .sp-contact-card a:hover { gap: var(--space-3); }
 
+/* Kontakt-Karten auf heller (Beige-)Sektion: weiße Karten, dunkle Schrift –
+   bricht den dunkelgrünen Block über dem Footer auf. */
+.sp-section--beige .sp-contact-card {
+  background: var(--color-surface);
+  border: 1.5px solid var(--color-border);
+  box-shadow: 0 4px 24px var(--color-shadow);
+}
+
+.sp-section--beige .sp-contact-card h3 {
+  color: var(--color-brand-primary);
+}
+
+.sp-section--beige .sp-contact-card p {
+  color: var(--color-text-secondary);
+}
+
+.sp-section--beige .sp-contact-card a {
+  color: var(--color-brand-accent-dark);
+}
+
 /* ── Back Link ─────────────────────────────────────────────── */
 .sp-back-link {
   display: inline-flex;
@@ -822,6 +842,98 @@
   font-size: 0.9rem;
   color: var(--color-text-secondary);
   line-height: 1.65;
+}
+
+/* ── Ratgeber-Artikel: Fließtext ───────────────────────────── */
+.sp-article-body {
+  max-width: 780px;
+}
+
+.sp-article-body .reveal + .reveal {
+  margin-top: var(--space-16);
+}
+
+.sp-article-body h2 {
+  font-size: clamp(1.5rem, 3vw, 2rem);
+  font-weight: 700;
+  color: var(--color-brand-primary);
+  line-height: 1.25;
+  margin-bottom: var(--space-4);
+}
+
+.sp-article-body h3 {
+  font-size: 1.1875rem;
+  font-weight: 600;
+  color: var(--color-text-primary);
+  line-height: 1.3;
+  margin-top: var(--space-8);
+  margin-bottom: var(--space-3);
+}
+
+.sp-article-body p {
+  font-size: 1rem;
+  color: var(--color-text-secondary);
+  line-height: 1.75;
+  margin-bottom: var(--space-4);
+}
+
+.sp-article-body p:last-child {
+  margin-bottom: 0;
+}
+
+.sp-article-body ul,
+.sp-article-body ol {
+  margin: var(--space-4) 0 var(--space-4) var(--space-6);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.sp-article-body ul:last-child,
+.sp-article-body ol:last-child {
+  margin-bottom: 0;
+}
+
+.sp-article-body li {
+  font-size: 1rem;
+  color: var(--color-text-secondary);
+  line-height: 1.7;
+}
+
+.sp-article-body strong {
+  color: var(--color-text-primary);
+}
+
+/* ── CTA-Box (Artikel-Abschluss, auf Beige-Sections) ───────── */
+.sp-cta-box {
+  max-width: 640px;
+  margin-inline: auto;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-4);
+  background: var(--color-surface);
+  border: 1.5px solid var(--color-border);
+  border-radius: var(--border-radius-lg);
+  padding: var(--space-10) var(--space-8);
+}
+
+.sp-cta-box h2 {
+  font-size: clamp(1.5rem, 3vw, 2rem);
+  font-weight: 700;
+  color: var(--color-brand-primary);
+  line-height: 1.2;
+}
+
+.sp-cta-box p {
+  font-size: 1rem;
+  color: var(--color-text-secondary);
+  line-height: 1.7;
+}
+
+.sp-cta-box .btn {
+  margin-top: var(--space-2);
 }
 
 /* ── Legal Pages (Impressum / Datenschutz) ─────────────────── */

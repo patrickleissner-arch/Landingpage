@@ -190,14 +190,17 @@
     <section class="sp-section sp-section--compact" aria-label="Einleitung Varianten">
       <div class="container variant-intro reveal">
         <span class="section-label">Drei Wege zu deiner Energie</span>
-        <h2>Es gibt nicht die PV-Anlage. Es gibt deine.</h2>
+        <h2>Es gibt nicht die PV-Anlage.<br>Es gibt deine.</h2>
         <p>Je nach Dachsituation, Budget und Anspruch passt eine andere Lösung. Hier sind die drei Varianten, zwischen denen ich dich ehrlich berate.</p>
       </div>
     </section>
 
+    <!-- ── Varianten: durchgehender Shader-Hintergrund über alle drei Sektionen ── -->
+    <div class="variant-stack">
+      <canvas class="variant-bg" id="variantCanvas" aria-hidden="true"></canvas>
+
     <!-- ── Eco ── -->
     <section id="eco" class="section section-dark section-variant" aria-labelledby="eco-heading">
-      <canvas class="variant-canvas" id="ecoCanvas" aria-hidden="true"></canvas>
       <div class="container variant-inner">
         <div class="section-header section-header-light reveal">
           <span class="section-label">Variante 1 · Eco</span>
@@ -242,7 +245,6 @@
 
     <!-- ── Premium (Sigenergy SigenStor) ── -->
     <section id="premium" class="section section-dark section-variant" aria-labelledby="premium-heading">
-      <canvas class="variant-canvas" id="premiumCanvas" aria-hidden="true"></canvas>
       <div class="container variant-inner">
         <div class="section-header section-header-light reveal">
           <span class="section-label">Variante 2 · Premium</span>
@@ -296,7 +298,6 @@
 
     <!-- ── Solaris² + StromKontoPlus ── -->
     <section id="solaris" class="section section-dark section-variant" aria-labelledby="solaris-heading">
-      <canvas class="variant-canvas" id="solarisCanvas" aria-hidden="true"></canvas>
       <div class="container variant-inner">
         <div class="section-header section-header-light reveal">
           <span class="section-label">Variante 3 · Solaris² + StromKontoPlus</span>
@@ -342,6 +343,9 @@
         </div>
       </div>
     </section>
+
+    </div>
+    <!-- /.variant-stack -->
 
     <!-- ── Vorteile ── -->
     <section class="sp-section" aria-labelledby="vorteile-bt-heading">
@@ -537,7 +541,7 @@
     </section>
 
     <!-- ── Kontakt CTA ── -->
-    <section class="sp-section sp-section--dark" aria-labelledby="kontakt-bt-heading">
+    <section class="sp-section sp-section--beige" aria-labelledby="kontakt-bt-heading">
       <div class="container">
         <div class="sp-section-header reveal">
           <span class="sp-eyebrow">Jetzt starten</span>

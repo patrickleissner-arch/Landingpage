@@ -698,11 +698,30 @@ p { max-width: 68ch; }
   background: #070d0a;
 }
 
-.variant-canvas {
+/* Durchgehender Shader-Hintergrund: EIN Canvas hinter allen drei
+   Varianten-Sektionen (Eco/Premium/Solaris). Der Wrapper trägt die
+   Fallback-Farbe (kein WebGL / prefers-reduced-motion) und klippt den
+   Canvas; die Sektionen darin werden transparent und schweben – samt
+   ihrer Glas-Kacheln – über dem gemeinsamen Hintergrund. */
+.variant-stack {
+  position: relative;
+  overflow: hidden;
+  background: #070d0a;
+}
+
+.variant-bg {
   position: absolute;
   inset: 0;
   width: 100%;
   height: 100%;
+  z-index: 0;
+}
+
+.variant-stack > .section-variant {
+  position: relative;
+  z-index: 1;
+  background: transparent;
+  overflow: visible;
 }
 
 .variant-inner {
@@ -757,7 +776,8 @@ p { max-width: 68ch; }
   text-align: center;
   color: var(--color-text-on-dark-muted);
   font-size: 0.8rem;
-  margin-bottom: var(--space-8);
+  max-width: 56rem;
+  margin: 0 auto var(--space-8);
 }
 
 /* Prominenter Hinweis (z.B. Solaris²-Gegenleistung) — bewusst NICHT als
@@ -783,6 +803,7 @@ p { max-width: 68ch; }
   font-size: 0.875rem;
   line-height: 1.6;
   margin: 0;
+  max-width: none; /* Fließtext füllt die volle Callout-Breite, kein 68ch-Cap */
 }
 
 .variant-cta {

@@ -573,7 +573,9 @@ void main(void){
   let inViewport = true; // optimistisch, bis der IntersectionObserver feuert
 
   function resize() {
-    const dpr = Math.max(1, 0.5 * devicePixelRatio);
+    // opts.dpr erlaubt einen festen, niedrigeren Faktor für den großen,
+    // über drei Sektionen durchgehenden Varianten-Canvas (Performance).
+    const dpr = opts.dpr ?? Math.max(1, 0.5 * devicePixelRatio);
     const w = canvas.clientWidth  || window.innerWidth;
     const h = canvas.clientHeight || window.innerHeight;
     canvas.width  = w * dpr;
@@ -611,6 +613,17 @@ void main(void){
     clearTimeout(resizeTimer);
     resizeTimer = setTimeout(resize, 120);
   });
+
+  // Der durchgehende Varianten-Canvas ändert seine Höhe nicht nur bei
+  // Fensterresize, sondern auch wenn Inhalt umbricht (Fonts, Reveal, Mobile).
+  // Ein ResizeObserver hält die Zeichenfläche dann deckungsgleich.
+  if (opts.observeResize && 'ResizeObserver' in window) {
+    new ResizeObserver(() => {
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(resize, 120);
+    }).observe(canvas);
+  }
+
   animId = requestAnimationFrame(loop);
 
   document.addEventListener('visibilitychange', syncAnimState);
@@ -825,9 +838,9 @@ function init() {
   initSmoothScroll();
   initContactForm();
   initShaderHero('heroCanvas');
-  initShaderHero('ecoCanvas', { speed: 0.55, dim: 0.5 });
-  initShaderHero('premiumCanvas', { speed: 0.55, dim: 0.5 });
-  initShaderHero('solarisCanvas', { speed: 0.55, dim: 0.5 });
+  // Ein einziger Canvas läuft durchgehend hinter allen drei Varianten-Sektionen
+  // (Eco/Premium/Solaris) – kein sichtbarer Schnitt mehr an den Sektionsgrenzen.
+  initShaderHero('variantCanvas', { speed: 0.55, dim: 0.5, dpr: 0.6, observeResize: true });
   initSpotlightCards();
   initPartnerSection();
   initAddressLink();
