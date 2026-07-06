@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Energiekosten-Rechner von Patrick Leißner – gib deine echten Verbrauchswerte ein und sieh, was PV und Wärmepumpe wirklich für dich bedeuten.">
     <title>Mein Energierechner | Patrick Leißner</title>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.9/dist/chart.umd.min.js" defer></script>
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="subpage.css">
     <style>
@@ -32,32 +31,78 @@
     --danger:    #dc2626;
 }
 
-/* --- Wizard Wrap --- */
+/* --- Wizard Wrap / Cockpit --- */
 .wizard-wrap {
-    max-width: 1200px;
+    max-width: 1240px;
     margin: 0 auto;
-    padding: 48px 5% 110px;
+    padding: 32px 5% 120px;
 }
 
-/* --- Top Progress Line --- */
-.er-top-bar {
-    width: 100%;
-    height: 3px;
-    background: var(--gray-200);
+/* Intro über dem Cockpit */
+.cockpit-intro { margin: 0 0 22px; }
+.cockpit-intro h1 {
+    font-size: 1.6rem;
+    font-weight: 800;
+    color: var(--pl-green);
+    margin: 0 0 6px;
+    line-height: 1.15;
 }
-.er-top-fill {
-    height: 3px;
-    background: var(--pl-gold);
-    transition: width 0.4s ease;
+.cockpit-intro p {
+    font-size: 0.9rem;
+    color: var(--gray-500);
+    line-height: 1.6;
+    margin: 0;
+    max-width: 62ch;
 }
-.step-counter {
+
+/* Zwei-Spalten-Cockpit: links Eingaben, rechts Live-Ergebnis */
+.cockpit-grid { display: block; }
+@media (min-width: 900px) {
+    .cockpit-grid {
+        display: grid;
+        grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
+        gap: 30px;
+        align-items: start;
+    }
+    .cockpit-results {
+        position: sticky;
+        top: calc(var(--nav-height, 72px) + 1rem);
+        max-height: calc(100vh - var(--nav-height, 72px) - 2rem);
+        overflow-y: auto;
+        overscroll-behavior: contain;
+        padding-right: 4px;
+    }
+}
+
+/* Eingabe-Sektionen (immer sichtbar, kein Step-Gating) */
+.cockpit-section {
+    border: 1px solid var(--gray-200);
+    border-radius: var(--radius-lg);
+    padding: 20px 22px;
+    margin-bottom: 16px;
+    background: #fff;
+}
+.cockpit-section > .sec-head { margin-bottom: 16px; }
+.sec-head h2 {
+    font-size: 1.05rem;
+    font-weight: 800;
+    color: var(--pl-green);
+    margin: 0 0 3px;
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+}
+.sec-head .sec-num {
     font-size: 0.72rem;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-    color: var(--gray-400);
-    padding: 12px 0 0;
-    margin: 0 0 32px;
+    font-weight: 800;
+    color: var(--pl-gold);
+    letter-spacing: 0.06em;
+}
+.sec-head p {
+    font-size: 0.8rem;
+    color: var(--gray-500);
+    line-height: 1.55;
+    margin: 0;
 }
 
 /* --- Mehrere Dachflächen --- */
@@ -101,91 +146,192 @@
 }
 .btn-add-surface:hover { border-color: var(--pl-green); background: var(--pl-beige); }
 
-/* --- Finanzierungs-Preview --- */
-.rate-preview {
-    font-size: 0.88rem;
-    font-weight: 700;
-    color: var(--pl-green);
-    background: var(--pl-beige);
-    border-radius: var(--radius);
-    padding: 8px 12px;
-    margin-top: 8px;
+/* --- Finanzierungs-Herzstück (im Ergebnis-Rail) --- */
+.fin-hero {
+    background: var(--pl-green);
+    border-radius: var(--radius-lg);
+    padding: 20px 22px;
+    margin-bottom: 16px;
+    color: #fff;
 }
-
-/* --- Sticky Nav Bar --- */
-.wizard-nav-bar {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    background: #fff;
-    border-top: 1px solid var(--gray-200);
-    box-shadow: 0 -4px 20px rgba(0,0,0,0.08);
-    padding: 12px 5%;
-    padding-bottom: calc(12px + env(safe-area-inset-bottom));
-    display: flex;
-    align-items: center;
-    gap: 16px;
-    z-index: 200;
-    transition: transform 0.25s ease;
+.fin-hero-eyebrow {
+    font-size: 0.65rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--pl-gold);
+    margin: 0 0 12px;
 }
-.wizard-nav-bar.hidden { display: none; }
-.nav-center {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 5px;
+.fin-compare {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+    margin-bottom: 14px;
 }
-.nav-step-label {
-    font-size: 0.7rem;
+.fin-col .fin-label {
+    display: block;
+    font-size: 0.66rem;
     font-weight: 700;
     text-transform: uppercase;
-    letter-spacing: 0.09em;
-    color: var(--gray-400);
+    letter-spacing: 0.05em;
+    color: rgba(255,255,255,0.6);
+    margin-bottom: 6px;
+    min-height: 2.4em;
+}
+.fin-col .fin-amount {
+    font-size: 1.9rem;
+    font-weight: 800;
+    line-height: 1;
+    color: #fff;
+}
+.fin-col.neu .fin-amount { color: var(--pl-gold); }
+.fin-col .fin-sub {
+    display: block;
+    font-size: 0.7rem;
+    color: rgba(255,255,255,0.6);
+    margin-top: 6px;
+    line-height: 1.45;
+}
+.fin-delta {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    background: rgba(208,171,59,0.16);
+    border-radius: var(--radius);
+    padding: 10px 14px;
+    margin-bottom: 14px;
+}
+.fin-delta-badge {
+    background: var(--pl-gold);
+    color: var(--pl-green);
+    font-weight: 800;
+    font-size: 0.95rem;
+    padding: 4px 12px;
+    border-radius: 20px;
     white-space: nowrap;
 }
-.nav-progress-mini {
-    width: 100%;
-    max-width: 160px;
-    height: 3px;
-    background: var(--gray-200);
-    border-radius: 2px;
-    overflow: hidden;
+.fin-delta-text { font-size: 0.78rem; color: rgba(255,255,255,0.85); }
+.fin-bilanz {
+    font-size: 0.76rem;
+    color: rgba(255,255,255,0.7);
+    margin: 0 0 16px;
+    line-height: 1.5;
 }
-.nav-progress-fill {
-    height: 3px;
-    background: var(--pl-gold);
-    transition: width 0.4s ease;
+.fin-bilanz strong { color: var(--pl-gold); font-size: 0.95rem; }
+.fin-financed {
+    font-size: 0.76rem;
+    color: rgba(255,255,255,0.82);
+    line-height: 1.4;
+    margin: 12px 0 0;
 }
-#nav-btn-back { display: none; }
-@media (max-width: 400px) { .nav-center { display: none; } }
-
-/* --- Wizard Step --- */
-.wizard-step { display: none; }
-.wizard-step.active {
-    display: block;
-    animation: erSlideIn 0.28s ease forwards;
-}
-@keyframes erSlideIn {
-    from { opacity: 0; transform: translateX(18px); }
-    to   { opacity: 1; transform: translateX(0); }
+.fin-financed strong { color: var(--pl-gold); font-weight: 800; }
+.fin-note {
+    font-size: 0.68rem;
+    color: rgba(255,255,255,0.5);
+    line-height: 1.5;
+    margin: 8px 0 0;
 }
 
-.step-heading { margin-bottom: 6px; }
-.step-heading h2 {
-    font-size: 1.5rem;
+/* --- Slider (Zins / Laufzeit) --- */
+.fin-sliders { display: grid; gap: 14px; }
+.s-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 6px;
+}
+.s-row label {
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: rgba(255,255,255,0.85);
+}
+.s-val {
+    font-size: 0.85rem;
     font-weight: 800;
-    color: var(--pl-green);
-    margin-bottom: 4px;
+    color: var(--pl-gold);
 }
-.step-hint {
-    font-size: 0.875rem;
-    color: var(--gray-500);
-    font-style: italic;
-    margin-bottom: 28px;
-    line-height: 1.6;
+.fin-sliders input[type="range"] {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 100%;
+    height: 5px;
+    border-radius: 3px;
+    background: rgba(255,255,255,0.22);
+    outline: none;
+    margin: 0;
 }
+.fin-sliders input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 20px; height: 20px;
+    border-radius: 50%;
+    background: var(--pl-gold);
+    border: 2px solid #fff;
+    cursor: pointer;
+}
+.fin-sliders input[type="range"]::-moz-range-thumb {
+    width: 20px; height: 20px;
+    border-radius: 50%;
+    background: var(--pl-gold);
+    border: 2px solid #fff;
+    cursor: pointer;
+}
+.fin-sliders input[type="range"]:focus-visible { outline: 2px solid var(--pl-gold); outline-offset: 4px; }
+
+/* --- EMS-Entscheidung --- */
+.ems-hint {
+    font-size: 0.78rem;
+    color: var(--gray-600);
+    line-height: 1.55;
+    margin: 12px 0 0;
+    background: var(--pl-beige);
+    border-left: 3px solid var(--pl-gold);
+    border-radius: 0 var(--radius) var(--radius) 0;
+    padding: 10px 14px;
+}
+.ems-hint a { color: var(--pl-green); font-weight: 700; }
+
+/* --- Mobiles Ergebnis-Dock --- */
+.ergebnis-dock { display: none; }
+@media (max-width: 899px) {
+    .ergebnis-dock {
+        position: fixed;
+        bottom: 0; left: 0; right: 0;
+        z-index: 200;
+        display: flex;
+        align-items: stretch;
+        background: var(--pl-green);
+        box-shadow: 0 -4px 20px rgba(0,0,0,0.18);
+        padding: 10px 4% calc(10px + env(safe-area-inset-bottom));
+        gap: 10px;
+        cursor: pointer;
+        border: none;
+        width: 100%;
+        font-family: inherit;
+        text-align: center;
+    }
+    .dock-col { flex: 1; }
+    .dock-label {
+        display: block;
+        font-size: 0.58rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        color: rgba(255,255,255,0.6);
+    }
+    .dock-amount { font-size: 1.15rem; font-weight: 800; color: #fff; }
+    .dock-col.neu .dock-amount { color: var(--pl-gold); }
+    .dock-arrow { align-self: center; color: rgba(255,255,255,0.7); font-size: 1.2rem; }
+    /* Platz schaffen, damit das fixierte Dock den Footer-Inhalt (Impressum/Datenschutz) nicht überdeckt */
+    .site-footer { padding-bottom: calc(96px + env(safe-area-inset-bottom)); }
+}
+
+@keyframes erSlideIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
 
 /* --- Field Groups --- */
 .field-group { margin-bottom: 26px; }
@@ -264,6 +410,19 @@
 }
 .plz-feedback.found { color: var(--pl-green); }
 .plz-feedback.error { color: var(--danger); }
+
+/* Live berechneter Stromabschlag (Plausibilitätsbrücke zum Kundenbeleg) */
+.abschlag-calc {
+    margin: 8px 0 0;
+    font-size: 0.82rem;
+    font-weight: 700;
+    color: var(--pl-green);
+    background: var(--pl-beige);
+    border-radius: var(--radius);
+    padding: 8px 12px;
+    display: none;
+}
+.abschlag-calc.show { display: block; }
 
 /* Select */
 .er-select {
@@ -373,41 +532,7 @@
     color: #fff;
 }
 
-/* --- Navigation Buttons --- */
-.step-nav {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-top: 36px;
-    gap: 12px;
-}
-.btn-back {
-    padding: 12px 24px;
-    border: 2px solid var(--gray-300);
-    border-radius: var(--radius);
-    background: transparent;
-    font-family: inherit;
-    font-size: 0.9rem;
-    font-weight: 600;
-    color: var(--gray-600);
-    cursor: pointer;
-    transition: all 0.16s;
-}
-.btn-back:hover { border-color: var(--pl-green); color: var(--pl-green); }
-.btn-next {
-    padding: 13px 32px;
-    border: none;
-    border-radius: var(--radius);
-    background: var(--pl-green);
-    color: #fff;
-    font-family: inherit;
-    font-size: 0.95rem;
-    font-weight: 700;
-    cursor: pointer;
-    transition: all 0.16s;
-    margin-left: auto;
-}
-.btn-next:hover { background: #1d3424; transform: translateY(-1px); }
+/* (Wizard-Navigations-Buttons entfernt – das Cockpit hat keine Schritt-Navigation) */
 .btn-calc {
     padding: 15px 40px;
     border: none;
@@ -429,85 +554,8 @@
     box-shadow: 0 6px 20px rgba(208,171,59,0.3);
 }
 
-/* --- Result Section --- */
-.result-section { display: none; }
-.result-section.visible {
-    display: block;
-    animation: erSlideIn 0.35s ease forwards;
-}
-
-/* Result Hero */
-.result-hero {
-    background: var(--pl-green);
-    border-radius: var(--radius-xl);
-    overflow: hidden;
-    margin-bottom: 20px;
-}
-.result-hero-head {
-    padding: 22px 26px 16px;
-    border-bottom: 1px solid rgba(255,255,255,0.1);
-}
-.result-hero-head h2 {
-    color: #fff;
-    font-size: 1.25rem;
-    font-weight: 800;
-    margin-bottom: 3px;
-}
-.result-hero-head p {
-    color: rgba(255,255,255,0.65);
-    font-size: 0.8rem;
-}
-.result-compare {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-}
-@media (max-width: 480px) { .result-compare { grid-template-columns: 1fr; } }
-.compare-col { padding: 22px 26px; }
-.compare-col.heute { border-right: 1px solid rgba(255,255,255,0.1); }
-@media (max-width: 480px) {
-    .compare-col.heute { border-right: none; border-bottom: 1px solid rgba(255,255,255,0.1); }
-}
-.compare-label {
-    font-size: 0.65rem;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-    color: rgba(255,255,255,0.55);
-    margin-bottom: 8px;
-}
-.compare-amount {
-    font-size: 2.2rem;
-    font-weight: 800;
-    color: #fff;
-    line-height: 1;
-}
-.compare-col.neu .compare-amount { color: var(--pl-gold); }
-.compare-sub {
-    font-size: 0.75rem;
-    color: rgba(255,255,255,0.55);
-    margin-top: 6px;
-}
-.result-delta {
-    padding: 14px 26px;
-    background: rgba(208,171,59,0.14);
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    flex-wrap: wrap;
-}
-.delta-badge {
-    background: var(--pl-gold);
-    color: var(--pl-green);
-    font-weight: 800;
-    font-size: 1rem;
-    padding: 4px 14px;
-    border-radius: 20px;
-    white-space: nowrap;
-}
-.delta-text {
-    color: rgba(255,255,255,0.8);
-    font-size: 0.85rem;
-}
+/* --- Result Section (immer sichtbar im Cockpit) --- */
+.result-section { display: block; }
 
 /* KPI Grid */
 .kpi-grid {
@@ -587,6 +635,109 @@
     margin: 0 0 20px;
 }
 .result-soft-cta a { color: var(--pl-green); font-weight: 700; }
+
+/* Dein Dach im Detail (Pro-Fläche-Aufschlüsselung) */
+.roof-card {
+    background: #fff;
+    border: 1px solid var(--gray-200);
+    border-radius: var(--radius-lg);
+    padding: 18px 20px;
+    margin-bottom: 20px;
+}
+.roof-card-head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-bottom: 14px;
+}
+.roof-card-head h3 { font-size: 0.92rem; font-weight: 800; color: var(--pl-green); margin: 0; }
+.roof-total-kwp { font-size: 0.92rem; font-weight: 800; color: var(--pl-gold); white-space: nowrap; }
+.roof-row { margin-bottom: 12px; }
+.roof-row:last-child { margin-bottom: 0; }
+.roof-row-top {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 10px;
+    margin-bottom: 5px;
+}
+.roof-row-label { font-size: 0.8rem; font-weight: 600; color: var(--pl-green); }
+.roof-row-val { font-size: 0.78rem; color: var(--gray-600); white-space: nowrap; }
+.roof-bar-track { height: 8px; background: var(--gray-100); border-radius: 4px; overflow: hidden; }
+.roof-bar { height: 8px; background: linear-gradient(90deg, var(--pl-green), var(--pl-gold)); border-radius: 4px; transition: width 0.3s ease; }
+.roof-hint { font-size: 0.74rem; color: var(--gray-500); line-height: 1.55; margin: 14px 0 0; }
+
+/* Energiebilanz: Wohin fließt dein Sonnenstrom? */
+.energy-card {
+    background: #fff;
+    border: 1px solid var(--gray-200);
+    border-radius: var(--radius-lg);
+    padding: 18px 20px;
+    margin-bottom: 20px;
+}
+.energy-head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-bottom: 12px;
+}
+.energy-head h3 { font-size: 0.92rem; font-weight: 800; color: var(--pl-green); margin: 0; }
+.energy-autarkie { font-size: 0.95rem; font-weight: 800; color: var(--pl-gold); white-space: nowrap; }
+.energy-bar { display: flex; height: 14px; border-radius: 7px; overflow: hidden; background: var(--gray-100); }
+.energy-seg { height: 14px; transition: width 0.3s ease; }
+.energy-seg.self { background: var(--pl-green); }
+.energy-seg.grid { background: var(--gray-300); }
+.energy-legend { display: flex; gap: 18px; flex-wrap: wrap; margin: 10px 0 14px; font-size: 0.76rem; color: var(--gray-600); }
+.energy-legend i.dot { display: inline-block; width: 10px; height: 10px; border-radius: 50%; margin-right: 5px; vertical-align: middle; }
+.energy-legend i.dot.self { background: var(--pl-green); }
+.energy-legend i.dot.grid { background: var(--gray-300); }
+.energy-legend b { font-weight: 800; color: var(--pl-green); }
+.energy-figures { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+@media (max-width: 460px) { .energy-figures { grid-template-columns: 1fr; } }
+.energy-figures > div { background: var(--pl-beige); border-radius: var(--radius); padding: 10px 12px; }
+.ef-label { display: block; font-size: 0.68rem; color: var(--gray-500); margin-bottom: 3px; }
+.ef-val { display: block; font-size: 0.95rem; font-weight: 800; color: var(--pl-green); }
+.einspeise-line { margin: 14px 0 0; font-size: 0.78rem; color: var(--gray-600); line-height: 1.5; border-top: 1px solid var(--gray-200); padding-top: 10px; }
+.einspeise-line strong { color: var(--pl-green); }
+.autarkie-hint { margin: 8px 0 0; font-size: 0.74rem; color: var(--gray-500); line-height: 1.5; }
+.autarkie-hint:empty { display: none; }
+
+/* Anlage-Zusammenfassung (Gesamt-kWp) in Sektion 4 */
+.anlage-summary {
+    margin: 12px 0 0;
+    font-size: 0.85rem;
+    font-weight: 800;
+    color: var(--pl-green);
+    background: rgba(208,171,59,0.13);
+    border-radius: var(--radius);
+    padding: 9px 12px;
+}
+.anlage-summary:empty { display: none; }
+
+/* Preis-Slider am Chart */
+.price-slider { margin-bottom: 16px; }
+.price-slider .s-row { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 6px; }
+.price-slider .s-row label { font-size: 0.78rem; font-weight: 700; color: var(--pl-green); }
+.price-slider .s-val { font-size: 0.82rem; font-weight: 800; color: var(--pl-gold); }
+.price-slider input[type="range"] {
+    -webkit-appearance: none; appearance: none;
+    width: 100%; height: 5px; border-radius: 3px;
+    background: var(--gray-200); outline: none; margin: 0;
+}
+.price-slider input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none; appearance: none;
+    width: 18px; height: 18px; border-radius: 50%;
+    background: var(--pl-green); border: 2px solid #fff; cursor: pointer;
+}
+.price-slider input[type="range"]::-moz-range-thumb {
+    width: 18px; height: 18px; border-radius: 50%;
+    background: var(--pl-green); border: 2px solid #fff; cursor: pointer;
+}
+.price-slider .price-hint { font-size: 0.72rem; color: var(--gray-500); margin: 6px 0 0; }
 
 /* Chart */
 .chart-card {
@@ -692,18 +843,6 @@
 }
 .btn-new-calc:hover { color: rgba(255,255,255,0.8); }
 
-/* Bilanz-Zeile im Hero */
-.bilanz-row {
-    padding: 14px 26px;
-    background: rgba(255,255,255,0.06);
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    flex-wrap: wrap;
-    border-top: 1px solid rgba(255,255,255,0.08);
-}
-.bilanz-label, .bilanz-suffix { font-size: 0.75rem; color: rgba(255,255,255,0.6); }
-.bilanz-amount { font-size: 1.3rem; font-weight: 800; color: var(--pl-gold); }
 
 /* Persönlicher Fazit-Text */
 .result-narrative {
@@ -735,9 +874,6 @@
 @media (max-width: 480px) { .lead-field-row { grid-template-columns: 1fr; } }
 .lead-field-row--half { grid-template-columns: 1fr; max-width: 50%; }
 @media (max-width: 480px) { .lead-field-row--half { max-width: 100%; } }
-.result-back-bar { padding: 12px 0 4px; }
-.btn-result-back { background: none; border: none; color: var(--gray-500); font-size: 0.82rem; cursor: pointer; padding: 6px 0; letter-spacing: 0.01em; }
-.btn-result-back:hover { color: var(--pl-green); }
 .lead-gate .er-input {
     background: rgba(255,255,255,0.1);
     border-color: rgba(255,255,255,0.25);
@@ -782,11 +918,13 @@
 
 /* Print CSS */
 @media print {
-    .wizard-nav-bar, .wizard-step, .er-top-bar, .step-counter,
+    .cockpit-inputs, .ergebnis-dock, .fin-sliders, .rechner-tabs-bar, .sp-back-bar,
     .lead-gate, .btn-new-calc, .sources-wrap, .site-header, footer,
-    .result-notice, .result-back-bar, .result-soft-cta { display: none !important; }
+    .result-notice, .result-soft-cta { display: none !important; }
+    .cockpit-grid { display: block !important; }
+    .cockpit-results { position: static !important; max-height: none !important; overflow: visible !important; }
     .result-section { display: block !important; }
-    .result-hero { border-radius: 0; }
+    .fin-hero { border-radius: 0; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
     #cost-chart { height: 300px !important; }
     body { font-size: 12pt; }
     .print-header { display: block !important; }
@@ -892,300 +1030,324 @@
 
   <main id="main">
 
-    <!-- Wizard -->
+    <!-- Nutzen-Cockpit -->
     <div class="wizard-wrap">
 
-      <!-- Fortschrittsanzeige -->
-      <div class="er-top-bar" aria-hidden="true">
-        <div class="er-top-fill" id="er-top-fill" style="width:20%"></div>
+      <div class="cockpit-intro">
+        <h1>Lohnt sich der Umstieg – rechne es live durch</h1>
+        <p>Alle Angaben auf einen Blick, das Ergebnis rechnet sofort mit. Die entscheidende Frage steht rechts: Was kostet die Finanzierung deiner eigenen Anlage im Monat – gegenüber dem, was du heute Monat für Monat an den Energieversorger zahlst?</p>
       </div>
-      <p class="step-counter" id="step-counter" aria-live="polite">Schritt 1 von 5 — Dein Gebäude</p>
 
-      <!-- SCHRITT 1: Gebäude -->
-      <section class="wizard-step active" id="step-1" aria-labelledby="h-step1">
-        <div class="step-heading">
-          <h2 id="h-step1">Dein Gebäude</h2>
-          <p class="step-hint">Gebäudetyp und Baujahr bestimmen den Wärmebedarf – und wie gut eine Wärmepumpe passt.</p>
-        </div>
+      <div class="cockpit-grid">
 
-        <div class="field-group">
-          <span class="field-label" id="lbl-gebaeude">Gebäudetyp</span>
-          <div class="card-grid cols-4" role="group" aria-labelledby="lbl-gebaeude">
-            <button type="button" class="card-btn selected" data-group="gebaeude" data-value="efh">Einfamilienhaus</button>
-            <button type="button" class="card-btn" data-group="gebaeude" data-value="dhh">Doppelhaushälfte</button>
-            <button type="button" class="card-btn" data-group="gebaeude" data-value="rh">Reihenhaus</button>
-            <button type="button" class="card-btn" data-group="gebaeude" data-value="mfh">Mehrfamilienhaus</button>
-          </div>
-        </div>
+        <!-- LINKS: Eingaben -->
+        <div class="cockpit-inputs" id="cockpit-inputs">
 
-        <div class="field-group">
-          <label class="field-label" for="inp-baujahr">Baujahr</label>
-          <span class="field-sublabel">Steht im Grundbuchauszug oder Energieausweis</span>
-          <select id="inp-baujahr" class="er-select">
-            <option value="">Bitte wählen …</option>
-            <option value="vor_1960">Vor 1960</option>
-            <option value="1960_1979">1960 – 1979</option>
-            <option value="1980_1994">1980 – 1994</option>
-            <option value="1995_2009">1995 – 2009</option>
-            <option value="ab_2010">Ab 2010</option>
-          </select>
-          <div class="field-error" id="err-baujahr">Bitte wähle ein Baujahr.</div>
-        </div>
-
-        <div class="field-group">
-          <label class="field-label" for="inp-area">Beheizte Wohnfläche</label>
-          <span class="field-sublabel">Nur tatsächlich beheizte Fläche – ohne Keller oder Garage</span>
-          <div class="input-row">
-            <input type="number" id="inp-area" class="er-input" placeholder="z. B. 150" min="40" max="800" inputmode="numeric">
-            <span class="input-unit">m²</span>
-          </div>
-          <div class="field-error" id="err-area">Bitte gib eine Fläche zwischen 40 und 800 m² ein.</div>
-        </div>
-
-        <div class="field-group">
-          <label class="field-label" for="inp-plz">Postleitzahl</label>
-          <input type="text" id="inp-plz" class="er-input" placeholder="z. B. 06766" maxlength="5" inputmode="numeric" autocomplete="postal-code">
-          <div class="plz-feedback" id="plz-feedback" aria-live="polite"> </div>
-          <div class="field-error" id="err-plz">Bitte gib deine 5-stellige Postleitzahl ein.</div>
-        </div>
-
-      </section>
-
-      <!-- SCHRITT 2: Heizung -->
-      <section class="wizard-step" id="step-2" aria-labelledby="h-step2">
-        <div class="step-heading">
-          <h2 id="h-step2">Deine aktuelle Heizung</h2>
-          <p class="step-hint">Heizöl und Gas – das ist das Geld, das jeden Monat weg ist. Lass es uns genau anschauen.</p>
-        </div>
-
-        <div class="field-group">
-          <span class="field-label" id="lbl-fuel">Womit heizt du?</span>
-          <div class="card-grid" role="group" aria-labelledby="lbl-fuel">
-            <button type="button" class="card-btn selected" data-group="fuelType" data-value="oil">Heizöl</button>
-            <button type="button" class="card-btn" data-group="fuelType" data-value="gas">Erdgas</button>
-            <button type="button" class="card-btn" data-group="fuelType" data-value="pellets">Pellets</button>
-            <button type="button" class="card-btn" data-group="fuelType" data-value="fernwaerme">Fernwärme</button>
-            <button type="button" class="card-btn" data-group="fuelType" data-value="strom">Strom<span class="btn-sub">Direktheizung</span></button>
-          </div>
-        </div>
-
-        <div class="field-group">
-          <label class="field-label" for="inp-consumption" id="lbl-consumption">Jahresverbrauch Heizung</label>
-          <span class="field-sublabel" id="consumption-hint">Steht auf deiner Heizöl-Tankrechnung</span>
-          <div class="input-row">
-            <input type="number" id="inp-consumption" class="er-input" placeholder="z. B. 2500" min="1" max="999999" inputmode="numeric">
-            <span class="input-unit" id="consumption-unit">Liter</span>
-          </div>
-          <div class="field-error" id="err-consumption">Bitte gib deinen Jahresverbrauch ein.</div>
-        </div>
-
-        <div class="field-group" id="grp-fuelprice">
-          <label class="field-label" for="inp-fuelprice">Was zahlst du aktuell?</label>
-          <span class="field-sublabel">Steht auf deiner letzten Rechnung oder Abrechnung</span>
-          <div class="input-row">
-            <input type="number" id="inp-fuelprice" class="er-input" placeholder="z. B. 0.95"
-                   min="0" max="9999" step="0.01" inputmode="decimal">
-            <span class="input-unit" id="fuelprice-unit">€/Liter</span>
-          </div>
-        </div>
-
-        <div class="field-group">
-          <label class="field-label" for="inp-heizalter">Alter der Heizungsanlage</label>
-          <select id="inp-heizalter" class="er-select">
-            <option value="">Bitte wählen …</option>
-            <option value="sehr_alt">Älter als 25 Jahre</option>
-            <option value="alt">15 – 25 Jahre</option>
-            <option value="mittel">10 – 15 Jahre</option>
-            <option value="neu">Jünger als 10 Jahre</option>
-            <option value="brennwert">Brennwertgerät</option>
-          </select>
-          <div class="field-error" id="err-heizalter">Bitte wähle das Alter deiner Heizung.</div>
-        </div>
-
-        <div class="field-group">
-          <label class="field-label" for="inp-heizabschlag">
-            Monatlicher Heizkosten-Abschlag <span class="field-opt">(optional)</span>
-          </label>
-          <span class="field-sublabel">Dein Abschlag an den Versorger – hilft als Plausibilitätsprüfung</span>
-          <div class="input-row">
-            <input type="number" id="inp-heizabschlag" class="er-input" placeholder="z. B. 180" min="0" max="2000" inputmode="numeric">
-            <span class="input-unit">€/Monat</span>
-          </div>
-        </div>
-
-      </section>
-
-      <!-- SCHRITT 3: Strom -->
-      <section class="wizard-step" id="step-3" aria-labelledby="h-step3">
-        <div class="step-heading">
-          <h2 id="h-step3">Dein Stromverbrauch</h2>
-          <p class="step-hint">Mit einer Wärmepumpe verschiebt sich der Bedarf von Brennstoff auf Strom – daher ist dein Ausgangswert wichtig.</p>
-        </div>
-
-        <div class="field-group">
-          <span class="field-label">Wie möchtest du eingeben?</span>
-          <div class="toggle-mode" role="group" aria-label="Eingabemodus Strom">
-            <button type="button" class="active" id="tog-kwh" onclick="setElecMode('kwh')">kWh/Jahr</button>
-            <button type="button" id="tog-abschlag" onclick="setElecMode('abschlag')">Monatlicher Abschlag</button>
-          </div>
-          <div id="grp-kwh">
-            <div class="input-row">
-              <input type="number" id="inp-elec-kwh" class="er-input" placeholder="z. B. 4000" min="500" max="50000" inputmode="numeric">
-              <span class="input-unit">kWh/Jahr</span>
+          <!-- 1 · Standortanalyse -->
+          <section class="cockpit-section" aria-labelledby="h-sec1">
+            <div class="sec-head">
+              <h2 id="h-sec1"><span class="sec-num">1</span> Standortanalyse</h2>
+              <p>Die Postleitzahl bestimmt die Sonneneinstrahlung deiner Region – die Basis dafür, wie viel Strom dein Dach produziert.</p>
             </div>
-            <div class="field-error" id="err-elec">Bitte gib deinen Jahresstromverbrauch ein (500–50.000 kWh).</div>
-          </div>
-          <div id="grp-abschlag" style="display:none">
-            <div class="input-row">
-              <input type="number" id="inp-elec-abschlag" class="er-input" placeholder="z. B. 110" min="10" max="2000" inputmode="numeric">
-              <span class="input-unit">€/Monat</span>
+
+            <div class="field-group">
+              <label class="field-label" for="inp-plz">Postleitzahl</label>
+              <input type="text" id="inp-plz" class="er-input" placeholder="z. B. 06766" maxlength="5" inputmode="numeric" autocomplete="postal-code">
+              <div class="plz-feedback" id="plz-feedback" aria-live="polite"> </div>
             </div>
-          </div>
-        </div>
+          </section>
 
-        <div class="field-group">
-          <label class="field-label" for="inp-elecprice">Dein Strompreis</label>
-          <span class="field-sublabel">Steht auf deiner Stromrechnung – aktueller Schnitt ca. 32 ct/kWh</span>
-          <div class="input-row">
-            <input type="number" id="inp-elecprice" class="er-input" value="32" min="15" max="60" step="0.5" inputmode="decimal">
-            <span class="input-unit">ct/kWh</span>
-          </div>
-        </div>
-
-        <div class="field-group">
-          <span class="field-label" id="lbl-eauto">E-Auto vorhanden oder geplant?</span>
-          <div class="card-grid cols-2" role="group" aria-labelledby="lbl-eauto">
-            <button type="button" class="card-btn selected" data-group="eauto" data-value="nein">Nein</button>
-            <button type="button" class="card-btn" data-group="eauto" data-value="ja">Ja / geplant</button>
-          </div>
-        </div>
-
-      </section>
-
-      <!-- SCHRITT 4: Dach -->
-      <section class="wizard-step" id="step-4" aria-labelledby="h-step4">
-        <div class="step-heading">
-          <h2 id="h-step4">Dein Dach</h2>
-          <p class="step-hint">Mehrere Flächen möglich — Hauptdach, Gegenseite, Garage, Carport oder Fassade. Eine grobe Schätzung reicht; ich vermesse vor Ort mit LiDAR auf den Zentimeter genau.</p>
-        </div>
-
-        <div id="surfaces-container"></div>
-
-        <button type="button" class="btn-add-surface" id="btn-add-surface">+ Weitere Fläche hinzufügen</button>
-        <div class="field-error" id="err-surfaces">Bitte gib mindestens eine Fläche mit mehr als 5 m² ein.</div>
-
-      </section>
-
-      <!-- SCHRITT 5: Ziele -->
-      <section class="wizard-step" id="step-5" aria-labelledby="h-step5">
-        <div class="step-heading">
-          <h2 id="h-step5">Deine Ziele</h2>
-          <p class="step-hint">Was soll der Rechner für dich durchleuchten? Mehrfachauswahl möglich.</p>
-        </div>
-
-        <div class="field-group">
-          <span class="field-label" id="lbl-interesse">Worum geht es dir?</span>
-          <div class="card-grid cols-2" role="group" aria-labelledby="lbl-interesse">
-            <button type="button" class="card-btn multi selected" data-group="interesse" data-value="pv">Photovoltaik</button>
-            <button type="button" class="card-btn multi selected" data-group="interesse" data-value="wp">Wärmepumpe</button>
-            <button type="button" class="card-btn multi" data-group="interesse" data-value="speicher">Batteriespeicher</button>
-          </div>
-        </div>
-
-        <div class="field-group">
-          <span class="field-label" id="lbl-speichervariante">Welche Speicherlösung passt zu dir?</span>
-          <div class="card-grid cols-2" role="group" aria-labelledby="lbl-speichervariante">
-            <button type="button" class="card-btn selected" data-group="speicherVariante" data-value="premium">Premium<span class="btn-sub">Intelligentes Energiemanagement – empfohlener Standard 2026</span></button>
-            <button type="button" class="card-btn" data-group="speicherVariante" data-value="eco">Eco<span class="btn-sub">Einfacher Speicher – nur sinnvoll bei minimalem Budget, ohne Wallbox/WP/dynamischen Tarif</span></button>
-          </div>
-        </div>
-
-        <div class="field-group">
-          <span class="field-label" id="lbl-finanz">Finanzierung</span>
-          <div class="card-grid cols-3" role="group" aria-labelledby="lbl-finanz">
-            <button type="button" class="card-btn" data-group="finanzierung" data-value="eigen">Eigenkapital</button>
-            <button type="button" class="card-btn selected" data-group="finanzierung" data-value="finanz">Finanzierung</button>
-            <button type="button" class="card-btn" data-group="finanzierung" data-value="offen">Noch offen</button>
-          </div>
-        </div>
-
-        <div id="grp-finanzierung-detail" style="display:none">
-
-          <div class="field-group">
-            <label class="field-label" for="inp-kreditbetrag">Finanzierungssumme</label>
-            <span class="field-sublabel">Dein geplanter Kreditbetrag – leer lassen für die geschätzte Investitionssumme</span>
-            <div class="input-row">
-              <input type="number" id="inp-kreditbetrag" class="er-input"
-                     placeholder="z. B. 50000" min="0" max="999999" inputmode="numeric">
-              <span class="input-unit">€</span>
+          <!-- 2 · Stromverbrauch -->
+          <section class="cockpit-section" aria-labelledby="h-sec2">
+            <div class="sec-head">
+              <h2 id="h-sec2"><span class="sec-num">2</span> Stromverbrauch</h2>
+              <p>Deine Ist-Werte laut Stromrechnung – Verbrauch und Preis liest du direkt vom Beleg ab.</p>
             </div>
-            <p class="rate-preview" id="rate-preview" style="display:none"></p>
-          </div>
 
-          <div class="field-group">
-            <label class="field-label" for="inp-zinssatz">Zinssatz (Effektivzins)</label>
-            <span class="field-sublabel">0 % bei Sonderaktion möglich – typisch 3–6 % · steht im Kreditangebot</span>
-            <div class="input-row">
-              <input type="number" id="inp-zinssatz" class="er-input" value="3.5"
-                     min="0" max="9" step="0.1" inputmode="decimal">
-              <span class="input-unit">% p.a.</span>
+            <div class="field-group">
+              <span class="field-label">Wie möchtest du eingeben?</span>
+              <div class="toggle-mode" role="group" aria-label="Eingabemodus Strom">
+                <button type="button" class="active" id="tog-kwh" onclick="setElecMode('kwh')">kWh/Jahr</button>
+                <button type="button" id="tog-abschlag" onclick="setElecMode('abschlag')">Monatlicher Abschlag</button>
+              </div>
+              <div id="grp-kwh">
+                <div class="input-row">
+                  <input type="number" id="inp-elec-kwh" class="er-input" placeholder="z. B. 4000" min="500" max="50000" inputmode="numeric">
+                  <span class="input-unit">kWh/Jahr</span>
+                </div>
+              </div>
+              <div id="grp-abschlag" style="display:none">
+                <div class="input-row">
+                  <input type="number" id="inp-elec-abschlag" class="er-input" placeholder="z. B. 110" min="10" max="2000" inputmode="numeric">
+                  <span class="input-unit">€/Monat</span>
+                </div>
+              </div>
+              <p class="field-sublabel" id="elec-kwh-note" style="margin-top:8px"></p>
             </div>
-          </div>
 
-          <div class="field-group">
-            <label class="field-label" for="inp-laufzeit">Laufzeit</label>
-            <select id="inp-laufzeit" class="er-select">
-              <option value="10">10 Jahre</option>
-              <option value="15">15 Jahre</option>
-              <option value="20" selected>20 Jahre</option>
-              <option value="25">25 Jahre</option>
-              <option value="30">30 Jahre</option>
-            </select>
-          </div>
-
-          <div class="field-group">
-            <label class="field-label" for="inp-zinsfestschreibung">Zinsfestschreibung</label>
-            <span class="field-sublabel">Nach Ablauf kann sich der Anschlusszins ändern</span>
-            <select id="inp-zinsfestschreibung" class="er-select">
-              <option value="10">10 Jahre</option>
-              <option value="15">15 Jahre</option>
-              <option value="20" selected>20 Jahre (gesamte Laufzeit)</option>
-              <option value="25">25 Jahre</option>
-            </select>
-          </div>
-
-          <div class="field-group">
-            <label class="field-label" for="inp-sondertilgung">
-              Sondertilgung <span class="field-opt">(optional)</span>
-            </label>
-            <span class="field-sublabel">Z. B. BEG-Förderung oder KfW-Zuschuss, der nach Bewilligung zurückfließt</span>
-            <div class="input-row">
-              <input type="number" id="inp-sondertilgung" class="er-input"
-                     placeholder="z. B. 7500" min="0" max="999999" inputmode="numeric">
-              <span class="input-unit">€</span>
+            <div class="field-group">
+              <label class="field-label" for="inp-elecprice">Dein Strompreis</label>
+              <span class="field-sublabel">Steht auf deiner Stromrechnung – aktueller Schnitt ca. 32 ct/kWh</span>
+              <div class="input-row">
+                <input type="number" id="inp-elecprice" class="er-input" value="32" min="15" max="60" step="0.5" inputmode="decimal">
+                <span class="input-unit">ct/kWh</span>
+              </div>
+              <p class="abschlag-calc" id="elec-abschlag-calc"></p>
             </div>
-          </div>
 
-          <div class="field-group">
-            <span class="field-label" id="lbl-zinsfrei">Sonderkonditionen</span>
-            <div class="card-grid cols-2" role="group" aria-labelledby="lbl-zinsfrei">
-              <button type="button" class="card-btn selected" data-group="zinsfreiJahr1" data-value="nein">Standard</button>
-              <button type="button" class="card-btn" data-group="zinsfreiJahr1" data-value="ja">1. Jahr 0 % Zinsen</button>
+            <div class="field-group">
+              <span class="field-label" id="lbl-sektoren-ist">Schon elektrisch – steckt bereits in deiner Rechnung <span class="field-opt">(Kontext, kein Aufpreis)</span></span>
+              <span class="field-sublabel">Was heute schon mit Strom läuft, ist im abgelesenen Verbrauch oben bereits enthalten. Hilft nur, deinen PV-Eigenverbrauch einzuordnen – ändert den Kostenvergleich nicht.</span>
+              <div class="card-grid cols-2" role="group" aria-labelledby="lbl-sektoren-ist">
+                <button type="button" class="card-btn multi" data-group="sektorenIst" data-value="eauto">E-Auto vorhanden</button>
+                <button type="button" class="card-btn multi" data-group="sektorenIst" data-value="klima">Klimaanlage / Split</button>
+                <button type="button" class="card-btn multi" data-group="sektorenIst" data-value="dle">Durchlauferhitzer</button>
+                <button type="button" class="card-btn multi" data-group="sektorenIst" data-value="eheiz">Infrarot / Nachtspeicher</button>
+              </div>
             </div>
-          </div>
 
-        </div>
+            <div class="field-group">
+              <span class="field-label" id="lbl-sektoren-neu">Künftig geplant – kommt neu dazu <span class="field-opt">(erhöht den künftigen Bedarf)</span></span>
+              <span class="field-sublabel">Noch nicht auf deiner Rechnung. Deine PV deckt einen Teil davon selbst – „heute" bleibt unverändert, nur das künftige Bild ändert sich.</span>
+              <div class="card-grid cols-2" role="group" aria-labelledby="lbl-sektoren-neu">
+                <button type="button" class="card-btn multi" data-group="sektorenNeu" data-value="eauto">E-Auto / Wallbox</button>
+                <button type="button" class="card-btn multi" data-group="sektorenNeu" data-value="klima">Klimaanlage / Split<span class="btn-sub">Heizen &amp; Kühlen</span></button>
+                <button type="button" class="card-btn multi" data-group="sektorenNeu" data-value="dle">Durchlauferhitzer<span class="btn-sub">Warmwasser elektrisch</span></button>
+                <button type="button" class="card-btn multi" data-group="sektorenNeu" data-value="eheiz">Infrarot / Nachtspeicher</button>
+              </div>
+            </div>
 
-        <div class="field-group">
-          <span class="field-label" id="lbl-zeit">Zeithorizont</span>
-          <div class="card-grid cols-3" role="group" aria-labelledby="lbl-zeit">
-            <button type="button" class="card-btn" data-group="zeithorizont" data-value="sofort">So bald wie möglich</button>
-            <button type="button" class="card-btn selected" data-group="zeithorizont" data-value="bald">In 1–2 Jahren</button>
-            <button type="button" class="card-btn" data-group="zeithorizont" data-value="info">Ich informiere mich</button>
-          </div>
-        </div>
+            <div class="field-group" id="grp-ev-km" style="display:none">
+              <label class="field-label" for="inp-ev-km">Fahrleistung des geplanten E-Autos <span class="field-opt">(optional)</span></label>
+              <div class="input-row">
+                <input type="number" id="inp-ev-km" class="er-input" placeholder="z. B. 15000" min="0" max="80000" inputmode="numeric">
+                <span class="input-unit">km/Jahr</span>
+              </div>
+            </div>
+          </section>
 
-      </section>
+          <!-- 3 · Aktuelle Heizung & Gebäude -->
+          <section class="cockpit-section" aria-labelledby="h-sec3">
+            <div class="sec-head">
+              <h2 id="h-sec3"><span class="sec-num">3</span> Aktuelle Heizung &amp; Gebäude</h2>
+              <p>Deine heutige Heizsituation und die Gebäudedaten – Basis deiner IST-Kosten und der Wärmepumpen-Einschätzung.</p>
+            </div>
+
+            <div class="field-group">
+              <span class="field-label" id="lbl-gebaeude">Gebäudetyp</span>
+              <div class="card-grid cols-4" role="group" aria-labelledby="lbl-gebaeude">
+                <button type="button" class="card-btn selected" data-group="gebaeude" data-value="efh">Einfamilienhaus</button>
+                <button type="button" class="card-btn" data-group="gebaeude" data-value="dhh">Doppelhaushälfte</button>
+                <button type="button" class="card-btn" data-group="gebaeude" data-value="rh">Reihenhaus</button>
+                <button type="button" class="card-btn" data-group="gebaeude" data-value="mfh">Mehrfamilienhaus</button>
+              </div>
+            </div>
+
+            <div class="field-group">
+              <label class="field-label" for="inp-baujahr">Baujahr</label>
+              <span class="field-sublabel">Steht im Grundbuchauszug oder Energieausweis</span>
+              <select id="inp-baujahr" class="er-select">
+                <option value="">Bitte wählen …</option>
+                <option value="vor_1960">Vor 1960</option>
+                <option value="1960_1979">1960 – 1979</option>
+                <option value="1980_1994">1980 – 1994</option>
+                <option value="1995_2009">1995 – 2009</option>
+                <option value="ab_2010">Ab 2010</option>
+              </select>
+            </div>
+
+            <div class="field-group">
+              <label class="field-label" for="inp-area">Beheizte Wohnfläche</label>
+              <span class="field-sublabel">Nur tatsächlich beheizte Fläche – ohne Keller oder Garage</span>
+              <div class="input-row">
+                <input type="number" id="inp-area" class="er-input" placeholder="z. B. 150" min="40" max="800" inputmode="numeric">
+                <span class="input-unit">m²</span>
+              </div>
+            </div>
+
+            <div class="field-group">
+              <span class="field-label" id="lbl-fuel">Womit heizt du?</span>
+              <div class="card-grid" role="group" aria-labelledby="lbl-fuel">
+                <button type="button" class="card-btn selected" data-group="fuelType" data-value="oil">Heizöl</button>
+                <button type="button" class="card-btn" data-group="fuelType" data-value="gas">Erdgas</button>
+                <button type="button" class="card-btn" data-group="fuelType" data-value="pellets">Pellets</button>
+                <button type="button" class="card-btn" data-group="fuelType" data-value="fernwaerme">Fernwärme</button>
+                <button type="button" class="card-btn" data-group="fuelType" data-value="strom">Strom<span class="btn-sub">Direkt/Nachtspeicher/Infrarot</span></button>
+              </div>
+            </div>
+
+            <div class="field-group">
+              <label class="field-label" for="inp-consumption" id="lbl-consumption">Jahresverbrauch Heizung</label>
+              <span class="field-sublabel" id="consumption-hint">Steht auf deiner Heizöl-Tankrechnung</span>
+              <div class="input-row">
+                <input type="number" id="inp-consumption" class="er-input" placeholder="z. B. 2500" min="1" max="999999" inputmode="numeric">
+                <span class="input-unit" id="consumption-unit">Liter</span>
+              </div>
+            </div>
+
+            <div class="field-group" id="grp-fuelprice">
+              <label class="field-label" for="inp-fuelprice">Was zahlst du aktuell?</label>
+              <span class="field-sublabel">Steht auf deiner letzten Rechnung oder Abrechnung</span>
+              <div class="input-row">
+                <input type="number" id="inp-fuelprice" class="er-input" placeholder="z. B. 0.95" min="0" max="9999" step="0.01" inputmode="decimal">
+                <span class="input-unit" id="fuelprice-unit">€/Liter</span>
+              </div>
+            </div>
+
+            <div class="field-group">
+              <label class="field-label" for="inp-heizalter">Alter der Heizungsanlage</label>
+              <select id="inp-heizalter" class="er-select">
+                <option value="">Bitte wählen …</option>
+                <option value="sehr_alt">Älter als 25 Jahre</option>
+                <option value="alt">15 – 25 Jahre</option>
+                <option value="mittel">10 – 15 Jahre</option>
+                <option value="neu">Jünger als 10 Jahre</option>
+                <option value="brennwert">Brennwertgerät</option>
+              </select>
+            </div>
+
+            <div class="field-group">
+              <label class="field-label" for="inp-heizabschlag">Monatlicher Heizkosten-Abschlag <span class="field-opt">(optional)</span></label>
+              <span class="field-sublabel">Dein Abschlag an den Versorger – hilft als Plausibilitätsprüfung</span>
+              <div class="input-row">
+                <input type="number" id="inp-heizabschlag" class="er-input" placeholder="z. B. 180" min="0" max="2000" inputmode="numeric">
+                <span class="input-unit">€/Monat</span>
+              </div>
+            </div>
+          </section>
+
+          <!-- 4 · Deine Anlage (Dachflächen) -->
+          <section class="cockpit-section" aria-labelledby="h-sec4">
+            <div class="sec-head">
+              <h2 id="h-sec4"><span class="sec-num">4</span> Deine Anlage &amp; Dachflächen</h2>
+              <p>Zähl je Fläche die Module, die real aufs Dach passen (Störflächen wie Dachfenster/SAT sind so schon berücksichtigt), und gib die Modulleistung an. Ausrichtung und Neigung bestimmen den Ertrag – daraus ergibt sich die Anlagengröße.</p>
+            </div>
+
+            <div class="field-group">
+              <span class="field-label" id="lbl-interesse">Worum geht es? <span class="field-opt">(Mehrfachauswahl)</span></span>
+              <div class="card-grid cols-2" role="group" aria-labelledby="lbl-interesse">
+                <button type="button" class="card-btn multi selected" data-group="interesse" data-value="pv">Photovoltaik</button>
+                <button type="button" class="card-btn multi selected" data-group="interesse" data-value="wp">Wärmepumpe</button>
+              </div>
+            </div>
+
+            <div id="surfaces-container"></div>
+            <button type="button" class="btn-add-surface" id="btn-add-surface">+ Weitere Fläche hinzufügen</button>
+            <p class="anlage-summary" id="anlage-summary"></p>
+          </section>
+
+          <!-- 5 · Speicher & Energiemanagement -->
+          <section class="cockpit-section" aria-labelledby="h-sec5">
+            <div class="sec-head">
+              <h2 id="h-sec5"><span class="sec-num">5</span> Speicher &amp; Energiemanagement</h2>
+              <p>Der Speicher lädt tagsüber mit PV-Strom, den du nachts nutzt. Speichergröße + PV-Größe + intelligentes Management (EMS) bestimmen zusammen deine Unabhängigkeit.</p>
+            </div>
+
+            <div class="field-group">
+              <span class="field-label" id="lbl-speicher">Batteriespeicher</span>
+              <div class="card-grid cols-1" role="group" aria-labelledby="lbl-speicher">
+                <button type="button" class="card-btn multi" data-group="interesse" data-value="speicher">Batteriespeicher einplanen<span class="btn-sub">speichert PV-Strom für die Nacht → mehr Autarkie</span></button>
+              </div>
+            </div>
+
+            <div class="field-group" id="grp-batt" style="display:none">
+              <label class="field-label" for="inp-batt">Speichergröße (Kapazität) <span class="field-opt">(leer = automatisch)</span></label>
+              <span class="field-sublabel">Wie viele kWh der Speicher aufnehmen kann – größer = mehr Nachtstrom aus PV → höhere Autarkie.</span>
+              <div class="input-row">
+                <input type="number" id="inp-batt" class="er-input" placeholder="automatisch" min="0" max="120" step="0.5" inputmode="decimal">
+                <span class="input-unit">kWh</span>
+              </div>
+            </div>
+
+            <div class="field-group">
+              <span class="field-label" id="lbl-ems">Intelligentes Energiemanagement (EMS)?</span>
+              <div class="card-grid cols-2" role="group" aria-labelledby="lbl-ems">
+                <button type="button" class="card-btn selected" data-group="ems" data-value="ja">Ja, mit EMS<span class="btn-sub">reagiert auf Strompreise &amp; Netzentgelte</span></button>
+                <button type="button" class="card-btn" data-group="ems" data-value="nein">Normale PV-Anlage<span class="btn-sub">ohne intelligente Steuerung</span></button>
+              </div>
+              <p class="ems-hint">Ohne EMS entfällt bei negativen Strompreisen die Einspeisevergütung anteilig (<a href="/ratgeber/solarspitzengesetz" target="_blank" rel="noopener">Solarspitzengesetz §51 EEG</a>) und der <a href="/ratgeber/14a-enwg" target="_blank" rel="noopener">§14a-Netzentgelt-Rabatt</a> kann ggf. nicht genutzt werden. Mehr im <a href="/ratgeber/pv-speicher-vergleich" target="_blank" rel="noopener">Speicher-Vergleich</a> (Annahmen, keine Zusage).</p>
+            </div>
+          </section>
+
+          <!-- 6 · Deine Unabhängigkeit (Autarkie) -->
+          <section class="cockpit-section" aria-labelledby="h-sec6">
+            <div class="sec-head">
+              <h2 id="h-sec6"><span class="sec-num">6</span> Deine Unabhängigkeit</h2>
+              <p>Ergebnis aus Anlage + Speicher + Standort: Wie viel deines Stroms du selbst deckst, was ins Netz geht – und was dir die Überschusseinspeisung bringt.</p>
+            </div>
+
+            <div class="energy-card" id="energy-card">
+              <div class="energy-head">
+                <h3>Wohin fließt dein Sonnenstrom?</h3>
+                <span class="energy-autarkie" id="energy-autarkie">–</span>
+              </div>
+              <div class="energy-bar" role="img" aria-label="Anteil PV-Eigenstrom gegenüber Netzbezug">
+                <div class="energy-seg self" id="energy-seg-self" style="width:0%"></div>
+                <div class="energy-seg grid" id="energy-seg-grid" style="width:100%"></div>
+              </div>
+              <div class="energy-legend">
+                <span><i class="dot self"></i> Aus eigener PV <b id="energy-self-pct">–</b></span>
+                <span><i class="dot grid"></i> Netzbezug <b id="energy-grid-pct">–</b></span>
+              </div>
+              <div class="energy-figures">
+                <div><span class="ef-label">Selbst genutzt</span><span class="ef-val" id="ef-selbst">–</span></div>
+                <div><span class="ef-label">Ins Netz eingespeist</span><span class="ef-val" id="ef-einspeist">–</span></div>
+                <div><span class="ef-label">Aus dem Netz bezogen</span><span class="ef-val" id="ef-netz">–</span></div>
+              </div>
+              <p class="einspeise-line" id="einspeise"></p>
+              <p class="autarkie-hint" id="autarkie-hint"></p>
+            </div>
+          </section>
+
+          <!-- 7 · Finanzierung -->
+          <section class="cockpit-section" aria-labelledby="h-sec7">
+            <div class="sec-head">
+              <h2 id="h-sec7"><span class="sec-num">7</span> Finanzierung</h2>
+              <p>Gib deinen kalkulierten Anlagenpreis ein; Zinssatz und Laufzeit stellst du rechts direkt am Ergebnis ein – die Rate rechnet live mit.</p>
+            </div>
+
+            <div class="field-group">
+              <span class="field-label" id="lbl-finanz">Wie finanzierst du?</span>
+              <div class="card-grid cols-3" role="group" aria-labelledby="lbl-finanz">
+                <button type="button" class="card-btn" data-group="finanzierung" data-value="eigen">Eigenkapital</button>
+                <button type="button" class="card-btn selected" data-group="finanzierung" data-value="finanz">Finanzierung</button>
+                <button type="button" class="card-btn" data-group="finanzierung" data-value="offen">Noch offen</button>
+              </div>
+            </div>
+
+            <div id="grp-finanzierung-detail">
+              <div class="field-group">
+                <label class="field-label" for="inp-kreditbetrag">Anlagenpreis <span class="field-opt">(dein Angebot, inkl. Speicher/WP)</span></label>
+                <span class="field-sublabel">Gib deinen kalkulierten Angebotspreis ein — daraus rechnet sich die Rate. Leer lassen = grobe Schätzung anhand der Anlagengröße.</span>
+                <div class="input-row">
+                  <input type="number" id="inp-kreditbetrag" class="er-input" placeholder="z. B. 32000" min="0" max="999999" inputmode="numeric">
+                  <span class="input-unit">€</span>
+                </div>
+              </div>
+
+              <div class="field-group">
+                <label class="field-label" for="inp-sondertilgung">Sondertilgung / Förderung <span class="field-opt">(optional)</span></label>
+                <span class="field-sublabel">Z. B. BEG-Förderung oder KfW-Zuschuss, der nach Bewilligung zurückfließt</span>
+                <div class="input-row">
+                  <input type="number" id="inp-sondertilgung" class="er-input" placeholder="z. B. 7500" min="0" max="999999" inputmode="numeric">
+                  <span class="input-unit">€</span>
+                </div>
+              </div>
+
+              <div class="field-group">
+                <span class="field-label" id="lbl-zinsfrei">Sonderkonditionen</span>
+                <div class="card-grid cols-2" role="group" aria-labelledby="lbl-zinsfrei">
+                  <button type="button" class="card-btn selected" data-group="zinsfreiJahr1" data-value="nein">Standard</button>
+                  <button type="button" class="card-btn" data-group="zinsfreiJahr1" data-value="ja">1. Jahr 0 % Zinsen</button>
+                </div>
+              </div>
+            </div>
+          </section>
+
+        </div><!-- .cockpit-inputs -->
+
+        <!-- RECHTS: Live-Ergebnis -->
+        <div class="cockpit-results">
 
       <!-- ERGEBNIS -->
       <section class="result-section" id="result-section" aria-labelledby="h-result">
@@ -1195,36 +1357,38 @@
           <div class="print-header-sub">patrickleissner.de · +49 173 4994994 · Unverbindliche Ersteinschätzung</div>
         </div>
 
-        <div class="result-back-bar">
-          <button type="button" class="btn-result-back" onclick="goTo(5)">&#8592; Angaben korrigieren</button>
-        </div>
+        <div class="fin-hero">
+          <p class="fin-hero-eyebrow" id="h-result">Dein Kosten-Nutzen-Vergleich · <span id="res-location">deine Region</span></p>
+          <div class="fin-compare">
+            <div class="fin-col heute">
+              <span class="fin-label">Heute an den Versorger</span>
+              <span class="fin-amount" id="res-heute">–</span>
+              <span class="fin-sub">€/Monat · Heizung + Strom</span>
+            </div>
+            <div class="fin-col neu">
+              <span class="fin-label">In dein Eigentum</span>
+              <span class="fin-amount" id="res-neu">–</span>
+              <span class="fin-sub" id="res-neu-sub">€/Monat</span>
+            </div>
+          </div>
+          <div class="fin-delta">
+            <span class="fin-delta-badge" id="res-delta">–</span>
+            <span class="fin-delta-text" id="res-delta-text">monatliche Differenz</span>
+          </div>
+          <p class="fin-bilanz">Über 20 Jahre schätzungsweise <strong id="res-bilanz20">–</strong> weniger ans Netz.</p>
 
-        <div class="result-hero">
-          <div class="result-hero-head">
-            <h2 id="h-result">Deine Ersteinschätzung</h2>
-            <p>Für dein Gebäude in <strong id="res-location" style="color:var(--pl-gold)">deiner Region</strong></p>
-          </div>
-          <div class="result-compare">
-            <div class="compare-col heute">
-              <div class="compare-label">Heute gibst du weg</div>
-              <div class="compare-amount" id="res-heute">–</div>
-              <div class="compare-sub">pro Monat (Heizung + Strom)</div>
+          <div class="fin-sliders" id="fin-sliders">
+            <div class="s-item">
+              <div class="s-row"><label for="sld-zins">Zinssatz</label><span class="s-val" id="val-zins">3,5 % p. a.</span></div>
+              <input type="range" id="sld-zins" min="0" max="8" step="0.1" value="3.5" aria-label="Zinssatz in Prozent pro Jahr">
             </div>
-            <div class="compare-col neu">
-              <div class="compare-label">Stattdessen in dein Eigentum</div>
-              <div class="compare-amount" id="res-neu">–</div>
-              <div class="compare-sub" id="res-neu-sub">pro Monat (inkl. Finanzierung)</div>
+            <div class="s-item">
+              <div class="s-row"><label for="sld-laufzeit">Laufzeit</label><span class="s-val" id="val-laufzeit">20 Jahre</span></div>
+              <input type="range" id="sld-laufzeit" min="5" max="30" step="1" value="20" aria-label="Laufzeit in Jahren">
             </div>
           </div>
-          <div class="result-delta">
-            <div class="delta-badge" id="res-delta">–</div>
-            <div class="delta-text" id="res-delta-text">monatliche Differenz</div>
-          </div>
-          <div class="bilanz-row">
-            <span class="bilanz-label">In 20 Jahren schätzungsweise</span>
-            <span class="bilanz-amount" id="res-bilanz20">–</span>
-            <span class="bilanz-suffix">weniger ans Netz</span>
-          </div>
+          <p class="fin-financed" id="fin-financed"></p>
+          <p class="fin-note" id="fin-note">Investition in dein Eigentum statt Monat für Monat ans Netz. Unverbindliche Beispielrechnung, kein Finanzierungs- oder Kreditangebot.</p>
         </div>
 
         <div class="kpi-grid">
@@ -1234,7 +1398,7 @@
             <div class="kpi-sub" id="kpi-pv-sub">–</div>
           </div>
           <div class="kpi-card">
-            <div class="kpi-label">Heizkosten neu</div>
+            <div class="kpi-label" id="kpi-heiz-label">Heizkosten neu</div>
             <div class="kpi-value" id="kpi-heiz">–</div>
             <div class="kpi-sub" id="kpi-heiz-sub">–</div>
           </div>
@@ -1245,6 +1409,15 @@
           </div>
         </div>
 
+        <div class="roof-card" id="roof-card">
+          <div class="roof-card-head">
+            <h3>Dein Dach im Detail</h3>
+            <span class="roof-total-kwp" id="roof-total-kwp">–</span>
+          </div>
+          <div id="roof-breakdown"></div>
+          <p class="roof-hint">Jede Fläche zählt: Ausrichtung, Neigung und Größe bestimmen, wie viel Strom dein Dach erzeugt. Was du selbst verbrauchst (Wärmepumpe, Auto, Warmwasser), sparst du zum vollen Strompreis; Überschuss wird eingespeist.</p>
+        </div>
+
         <div class="wirtschaft-grid">
           <div class="kpi-card kpi-card--highlight">
             <div class="kpi-label">Amortisation (geschätzt)</div>
@@ -1252,34 +1425,40 @@
             <div class="kpi-sub">Bis die Investition durch Energieersparnis ausgeglichen ist</div>
           </div>
           <div class="kpi-card kpi-card--highlight">
-            <div class="kpi-label">Rendite p. a. (geschätzt)</div>
+            <div class="kpi-label">Ersparnisquote p. a. (geschätzt)</div>
             <div class="kpi-value" id="kpi-rendite">–</div>
-            <div class="kpi-sub">Jährliche Ersparnis im Verhältnis zur Investition – keine Anlageberatung</div>
+            <div class="kpi-sub">Rechnerische jährliche Energieersparnis im Verhältnis zur Investition – keine Rendite­zusage, keine Anlageberatung</div>
           </div>
         </div>
 
         <div class="eco-premium-note" id="eco-premium-note">
-          <h3>Eco oder Premium: Warum die Speicherwahl heute zählt</h3>
+          <h3>Mit oder ohne Energiemanagement – warum das heute zählt</h3>
           <p id="eco-premium-text">–</p>
-          <p class="eco-premium-source">Annahmen: Bundesnetzagentur (Negativpreis-Stunden 2025), pv magazine/ENTSO-E, netze-bw/spotmyenergy (§14a Modul 3). Geschätzte Werte, keine Anlageberatung.</p>
+          <p class="eco-premium-source">Laut Annahmen, nicht unabhängig geprüft · Quellen: Bundesnetzagentur (Negativpreis-Stunden 2025), pv magazine/ENTSO-E, netze-bw/spotmyenergy (§14a Modul 3). Mehr im <a href="/ratgeber/solarspitzengesetz" target="_blank" rel="noopener">Solarspitzengesetz-Ratgeber</a> und zum <a href="/ratgeber/14a-enwg" target="_blank" rel="noopener">§14a EnWG</a>. Geschätzte Werte, keine Anlageberatung.</p>
         </div>
 
         <div class="result-narrative" id="res-narrative"></div>
 
-        <div class="chart-card">
+        <div class="chart-card" id="chart-card">
           <div class="chart-title">Kumulierte Gesamtausgaben über 20 Jahre</div>
           <div class="chart-subtitle">Was du insgesamt zahlst — der Abstand zwischen den Linien ist dein Vorteil</div>
+          <div class="price-slider">
+            <div class="s-row"><label for="sld-preis">Erwartete Energiepreis-Steigerung</label><span class="s-val" id="val-preis">6,0 % / Jahr</span></div>
+            <input type="range" id="sld-preis" min="0" max="12" step="0.5" value="6" aria-label="Erwartete Energiepreis-Steigerung in Prozent pro Jahr">
+            <p class="price-hint">Annahme für Strom- und Brennstoffpreis (zzgl. separater CO₂-Bepreisung nach BEHG/ETS2). Keine Zusage – zieh den Regler, um verschiedene Szenarien zu sehen.</p>
+          </div>
           <div class="chart-legend">
-            <div class="legend-item"><div class="legend-dot" style="background:#dc2626"></div> Öl / Gas heute</div>
-            <div class="legend-item"><div class="legend-dot" style="background:#2E4F3C"></div> PV + Wärmepumpe</div>
+            <div class="legend-item"><div class="legend-dot" style="background:#dc2626"></div> Weiter wie heute</div>
+            <div class="legend-item"><div class="legend-dot" style="background:#2E4F3C"></div> Mit eigener Anlage</div>
           </div>
           <div style="position:relative;height:260px">
             <canvas id="cost-chart" role="img" aria-label="20-Jahres-Kostenvergleich"></canvas>
           </div>
+          <p class="price-hint" id="chart-note"></p>
         </div>
 
         <div class="result-notice">
-          <strong>Unverbindliche Schätzung ohne Gewähr</strong> – basierend auf deinen Angaben und Durchschnittswerten (DIN EN 12831, PVGIS, BDEW, BEHG). Keine zugesicherte Ersparnis. Auch Amortisation, Rendite und der Eco-Premium-Vergleich sind unverbindliche Schätzungen ohne Gewähr und keine Anlageberatung.
+          <strong>Unverbindliche Schätzung ohne Gewähr</strong> – basierend auf deinen Angaben und Durchschnittswerten (DIN EN 12831, PVGIS, BDEW, BEHG). Keine zugesicherte Ersparnis, kein Finanzierungs- oder Kreditangebot. Auch Amortisation, Ersparnisquote und der Energiemanagement-Vergleich sind unverbindliche Schätzungen ohne Gewähr und keine Anlageberatung.
           Für eine verbindliche Planung komme ich kostenlos zu dir und messe alles vor Ort.
         </div>
 
@@ -1369,20 +1548,24 @@
         </div>
 
       </section>
+
+        </div><!-- .cockpit-results -->
+      </div><!-- .cockpit-grid -->
     </div><!-- .wizard-wrap -->
   </main>
 
-  <!-- Sticky Wizard Navigation -->
-  <div class="wizard-nav-bar" id="wizard-nav">
-    <button type="button" class="btn-back" id="nav-btn-back" onclick="navBack()">← Zurück</button>
-    <div class="nav-center">
-      <span class="nav-step-label" id="nav-step-label">Schritt 1 von 5</span>
-      <div class="nav-progress-mini">
-        <div class="nav-progress-fill" id="nav-progress-fill" style="width:20%"></div>
-      </div>
-    </div>
-    <button type="button" class="btn-next" id="nav-btn-next" onclick="navNext()">Weiter →</button>
-  </div>
+  <!-- Mobiles Ergebnis-Dock (immer sichtbares Geld-Ergebnis) -->
+  <button type="button" class="ergebnis-dock" id="ergebnis-dock" onclick="scrollToResult()" aria-label="Zum vollständigen Ergebnis springen">
+    <span class="dock-col heute">
+      <span class="dock-label">Heute</span>
+      <span class="dock-amount" id="dock-heute">–</span>
+    </span>
+    <span class="dock-col neu">
+      <span class="dock-label">Deine Rate</span>
+      <span class="dock-amount" id="dock-neu">–</span>
+    </span>
+    <span class="dock-arrow" aria-hidden="true">↑</span>
+  </button>
 
   <footer class="site-footer" role="contentinfo">
     <div class="container footer-grid">
@@ -1549,6 +1732,23 @@ const PLZ_DATEN = {
     "99":{ region:"Erfurt/Weimar",               normTemp:-14, vbh:1920 }
 };
 
+// === PLZ → PV-ERTRAG (kWh/kWp·a, optimal ausgerichtet, Süd-Gradient nach PVGIS/DWD) ===
+// Wird per Merge an PLZ_DATEN[prefix].pvY gehängt; unbekannte PLZ nutzen BASE_YIELD (950) als Fallback.
+const PLZ_PVY = {
+    "01":980,"02":985,"03":985,"04":975,"06":975,"07":970,"08":970,"09":965,
+    "10":985,"11":985,"12":985,"13":985,"14":985,"15":980,"16":975,
+    "17":950,"18":955,"19":950,
+    "20":945,"21":945,"22":945,"23":945,"24":950,"25":955,"26":940,"27":940,"28":940,"29":950,
+    "30":955,"31":955,"32":950,"33":955,"34":960,"35":965,"36":965,"37":955,"38":955,"39":965,
+    "40":965,"41":965,"42":960,"44":960,"45":960,"46":960,"47":965,"48":960,"49":955,
+    "50":975,"51":975,"52":970,"53":980,"54":985,"55":1010,"56":985,"57":960,"58":960,"59":960,
+    "60":1015,"61":1010,"63":1015,"64":1020,"65":1015,"66":1010,"67":1030,"68":1035,"69":1030,
+    "70":1030,"71":1030,"72":1035,"73":1035,"74":1030,"75":1030,"76":1040,"77":1050,"78":1060,"79":1080,
+    "80":1080,"81":1080,"82":1100,"83":1090,"84":1075,"85":1070,"86":1080,"87":1100,"88":1090,"89":1070,
+    "90":1040,"91":1035,"92":1030,"93":1040,"94":1050,"95":1010,"96":1030,"97":1030,"98":980,"99":985
+};
+Object.keys(PLZ_PVY).forEach(k => { if (PLZ_DATEN[k]) PLZ_DATEN[k].pvY = PLZ_PVY[k]; });
+
 // === BAUJAHR → KENNWERTE ===
 const BAUJAHR_DATEN = {
     "vor_1960":  { heizlastM2:150, jaz:3.5, label:"Altbau vor 1960" },
@@ -1573,28 +1773,39 @@ const FUEL = {
 };
 
 // === BERECHUNGS-KONSTANTEN ===
-const ORIENT = { S:1.00, SW:0.96, SO:0.96, W:0.85, O:0.82, N:0.55, NW:0.65, NO:0.65 };
-const TILT   = { flach:0.87, mittel:1.00, steil:0.91, vertikal:0.70 };
+const ORIENT_LABEL = { S:'Süd', SW:'Südwest', SO:'Südost', W:'West', O:'Ost', N:'Nord', NW:'Nordwest', NO:'Nordost' };
 const SHADE  = { keine:1.00, gering:0.92, stark:0.78 };
+// Ertrag relativ zur Süd-Optimallage – Neigung × Himmelsrichtung KOMBINIERT (PVGIS-Näherung, Annahme).
+// Flachdach ist fast ausrichtungsunabhängig; Ost/West verliert mit zunehmender Steilheit; Nord steil bricht ein.
+const TILT_ORIENT = {
+    S:  { flach:0.93, mittel:1.00, steil:0.96, vertikal:0.71 },
+    SO: { flach:0.92, mittel:0.96, steil:0.92, vertikal:0.66 },
+    SW: { flach:0.92, mittel:0.96, steil:0.92, vertikal:0.66 },
+    O:  { flach:0.89, mittel:0.83, steil:0.76, vertikal:0.55 },
+    W:  { flach:0.89, mittel:0.83, steil:0.76, vertikal:0.55 },
+    NO: { flach:0.85, mittel:0.72, steil:0.60, vertikal:0.42 },
+    NW: { flach:0.85, mittel:0.72, steil:0.60, vertikal:0.42 },
+    N:  { flach:0.82, mittel:0.62, steil:0.48, vertikal:0.32 }
+};
+function tiltOrientFactor(o, t) { const r = TILT_ORIENT[o] || TILT_ORIENT.S; return r[t] != null ? r[t] : (r.mittel || 1); }
 const BASE_YIELD    = 950;   // kWh/kWp/Jahr DE-Mittel (PVGIS)
-const KWP_PER_M2    = 0.16;  // kWp/m² (Standardmodul ~400W)
-const PV_PRICE_KWP  = 1450;  // €/kWp inkl. Montage (2025)
-const WP_BASE       = 8000;  // € Grundinvestition Wärmepumpe
-const WP_PER_M2     = 35;    // €/m² Wohnfläche
-const LOAN_RATE     = 0.035; // Finanzierungszins p.a.
-const LOAN_YEARS    = 20;
-const SELF_CONS     = 0.60;  // Eigenverbrauchsquote (mit Speicher)
-const ELEC_INC      = 0.06;  // Strompreisanstieg p.a.
-const FUEL_INC      = 0.04;  // Brennstoffpreisanstieg p.a.
 const CO2_2025      = 55;    // €/t (BEHG)
 const CO2_2027      = 70;    // €/t (ETS II Start)
 const CO2_INC       = 0.15;  // CO₂-Preissteigerung p.a. ab 2027
+const CO2_MAX       = 300;   // €/t Deckel (konservativ; im Bereich der 2035-Prognosen, keine Zusage)
 const YEARS         = 20;
+// Strom-/Brennstoffpreisanstieg kommen jetzt live vom Slider (W.priceInc); Eigenverbrauch dynamisch (scq);
+// Einspeisevergütung größenabhängig (feedTarif); Zins/Laufzeit vom Slider — daher keine festen Konstanten mehr dafür.
 
-// === ECO VS. PREMIUM (Solarspitzengesetz / §14a EnWG, Annahmen) ===
-const FEEDIN_TARIF        = 0.0778; // €/kWh Einspeisevergütung Teileinspeisung, Stand 01.02.2026 (§51 EEG)
-const NEGATIVSTUNDEN_PV   = 0.16;   // Anteil PV-Erzeugung in Negativpreis-Stunden, DE-Schnitt 2025 (pv magazine/ENTSO-E)
+// === EINSPEISUNG / EMS (Solarspitzengesetz / §14a EnWG, Annahmen) ===
 const MODUL3_DIFF_KWH     = 0.06;   // €/kWh Ø-Differenz Standard- vs. Niedertarif §14a Modul 3 (netze-bw/spotmyenergy 2025)
+
+// === SEKTOREN (kWh/Jahr je Zusatzverbraucher) ===
+const EV_KWH          = 3000;   // kWh/Jahr E-Auto Standard (~15.000 km)
+const EV_KWH_PER_KM   = 0.20;   // kWh/km
+const KLIMA_KWH       = 1500;   // kWh/Jahr Klimaanlage/Split (Heizen + Kühlen)
+const DLE_KWH         = 1800;   // kWh/Jahr Durchlauferhitzer (Warmwasser elektrisch)
+const EHEIZ_KWH       = 3000;   // kWh/Jahr Infrarot-/Nachtspeicher-Zusatzheizung
 
 // === DACHFLÄCHEN ===
 const SURFACE_LABELS = [
@@ -1620,11 +1831,19 @@ function renderSurfaces() {
   ${canDel ? `<button type="button" class="surface-delete" data-surf-del="${idx}" aria-label="Fläche entfernen">×</button>` : ''}
 </div>
 <div class="field-group">
-  <label class="field-label">Nutzbare Fläche</label>
+  <label class="field-label">Anzahl Module</label>
   <div class="input-row">
-    <input type="number" class="er-input" data-surf-area="${idx}"
-           value="${s.area||''}" placeholder="z. B. 40" min="1" max="500" inputmode="numeric">
-    <span class="input-unit">m²</span>
+    <input type="number" class="er-input" data-surf-modules="${idx}"
+           value="${s.modules||''}" placeholder="z. B. 18" min="1" max="60" inputmode="numeric">
+    <span class="input-unit">Module</span>
+  </div>
+</div>
+<div class="field-group">
+  <label class="field-label">Modulleistung</label>
+  <div class="input-row">
+    <input type="number" class="er-input" data-surf-wp="${idx}"
+           value="${s.modulePower||''}" placeholder="440" min="250" max="700" step="5" inputmode="numeric">
+    <span class="input-unit">Wp</span>
   </div>
 </div>
 <div class="field-group">
@@ -1656,7 +1875,7 @@ function renderSurfaces() {
 }
 
 function addSurface() {
-    W.surfaces.push({ label:'Weitere Fläche', area:0, orientation:'S', tilt:'mittel', shading:'keine' });
+    W.surfaces.push({ label:'Weitere Fläche', modules:0, modulePower:440, orientation:'S', tilt:'mittel', shading:'keine' });
     renderSurfaces();
 }
 
@@ -1666,37 +1885,21 @@ function removeSurface(idx) {
     renderSurfaces();
 }
 
-// === WIZARD STATE ===
+// === STATE (Cockpit – kein Step-Gating mehr) ===
 const W = {
-    step: 1,
     gebaeude:"efh", baujahr:"", area:0, plz:"", plzData:null,
     fuelType:"oil", fuelPrice:null, consumption:0, heizAlter:"alt", heizAbschlag:null,
-    elecMode:"kwh", elecKwh:0, elecAbschlag:0, elecPrice:0.32,
-    eauto:"nein",
-    surfaces:[{ label:'Hauptdach', area:0, orientation:'S', tilt:'mittel', shading:'keine' }],
-    interesse:["pv","wp"], speicherVariante:"premium", finanzierung:"finanz",
-    zinssatz:3.5, laufzeit:20, zinsfestschreibung:20, sondertilgung:0, zinsfreiJahr1:'nein', kreditbetrag:0,
-    zeithorizont:"bald"
+    elecMode:"kwh", elecKwh:0, elecPrice:0.32,
+    surfaces:[{ label:'Hauptdach', modules:0, modulePower:440, orientation:'S', tilt:'mittel', shading:'keine' }],
+    interesse:["pv","wp"], sektorenIst:[], sektorenNeu:[], evKm:0, battKwh:0,
+    ems:"ja", finanzierung:"finanz",
+    zinssatz:3.5, laufzeit:20, sondertilgung:0, zinsfreiJahr1:'nein', kreditbetrag:0,
+    priceInc:6
 };
 
 const $ = id => document.getElementById(id);
-let costChart = null;
-
-// Wizard-Nav-Bar ist position:fixed und überlagert sonst den Footer beim Scrollen
-// (oder die iOS-Tastatur) – beide Effekte teilen sich denselben transform, daher zentral kombiniert.
-let navKeyboardOffset = 0;
-let navFooterNear = false;
-function updateNavTransform() {
-    const nav = $('wizard-nav');
-    if (!nav) return;
-    if (navFooterNear) {
-        nav.style.transform = 'translateY(120%)';
-    } else if (navKeyboardOffset > 50) {
-        nav.style.transform = `translateY(-${navKeyboardOffset}px)`;
-    } else {
-        nav.style.transform = '';
-    }
-}
+let chartData = null;      // { fossil, neu } – für Redraw bei Resize (eigener Canvas-Renderer)
+let chartResizeTimer = null;
 
 // === CARD BUTTONS ===
 document.addEventListener('DOMContentLoaded', () => {
@@ -1710,29 +1913,30 @@ document.addEventListener('DOMContentLoaded', () => {
             W[g] = btn.dataset.value;
             if (g === 'fuelType') updateFuelUI();
             if (g === 'finanzierung') updateFinanzUI();
-            if (g === 'zinsfreiJahr1') updateRatePreview();
+            recalc();
         });
         btn.addEventListener('keydown', e => {
             if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); btn.click(); }
         });
     });
-    // Multi-select
+    // Multi-select (interesse, sektoren)
     document.querySelectorAll('.card-btn.multi').forEach(btn => {
         btn.addEventListener('click', () => {
             btn.classList.toggle('selected');
-            const v = btn.dataset.value;
-            if (btn.classList.contains('selected')) {
-                if (!W.interesse.includes(v)) W.interesse.push(v);
-            } else {
-                W.interesse = W.interesse.filter(x => x !== v);
-            }
+            const g = btn.dataset.group, v = btn.dataset.value;
+            if (!Array.isArray(W[g])) W[g] = [];
+            if (btn.classList.contains('selected')) { if (!W[g].includes(v)) W[g].push(v); }
+            else { W[g] = W[g].filter(x => x !== v); }
+            if (g === 'interesse') updateBatteryUI();
+            if (g === 'sektorenNeu') updateEvUI();
+            recalc();
         });
         btn.addEventListener('keydown', e => {
             if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); btn.click(); }
         });
     });
 
-    // PLZ live lookup
+    // PLZ live lookup (+ regionaler PV-Ertrag)
     $('inp-plz').addEventListener('input', e => {
         const raw = e.target.value.replace(/\D/g, '').slice(0, 5);
         e.target.value = raw;
@@ -1741,56 +1945,50 @@ document.addEventListener('DOMContentLoaded', () => {
         if (raw.length === 5) {
             const d = PLZ_DATEN[raw.substring(0, 2)];
             if (d) {
-                fb.textContent = '✓ ' + d.region;
+                fb.textContent = '✓ ' + d.region + ' · ≈ ' + (d.pvY || BASE_YIELD) + ' kWh/kWp';
                 fb.className = 'plz-feedback found';
                 W.plzData = d;
-                $('inp-plz').classList.replace('has-error', 'valid') || $('inp-plz').classList.add('valid');
             } else {
                 fb.textContent = 'PLZ nicht bekannt – Standardwerte werden verwendet';
                 fb.className = 'plz-feedback error';
                 W.plzData = null;
-                $('inp-plz').classList.replace('valid', 'has-error') || $('inp-plz').classList.add('has-error');
             }
         } else {
             fb.textContent = ' ';
             fb.className = 'plz-feedback';
             W.plzData = null;
-            $('inp-plz').classList.remove('valid', 'has-error');
         }
+        recalc();
     });
 
-    // Finanzierungsparameter
-    $('inp-kreditbetrag').addEventListener('input', e => {
-        W.kreditbetrag = Math.max(0, parseFloat(e.target.value) || 0);
-        updateRatePreview();
+    // Finanzierungs-Slider (Zins / Laufzeit) im Ergebnis-Hero
+    $('sld-zins').addEventListener('input', e => {
+        W.zinssatz = Math.max(0, Math.min(8, parseFloat(e.target.value) || 0));
+        updateSliderLabels();
+        recalc();
     });
-    $('inp-zinssatz').addEventListener('input', e => {
-        W.zinssatz = Math.max(0, Math.min(9, parseFloat(e.target.value) || 0));
-        updateRatePreview();
-    });
-    $('inp-laufzeit').addEventListener('change', e => {
+    $('sld-laufzeit').addEventListener('input', e => {
         W.laufzeit = parseInt(e.target.value) || 20;
-        updateRatePreview();
+        updateSliderLabels();
+        recalc();
     });
-    $('inp-zinsfestschreibung').addEventListener('change', e => {
-        W.zinsfestschreibung = parseInt(e.target.value) || 20;
-    });
-    $('inp-sondertilgung').addEventListener('input', e => {
-        W.sondertilgung = Math.max(0, parseFloat(e.target.value) || 0);
-        updateRatePreview();
+    // Energiepreis-Steigerung (am 20-Jahres-Chart)
+    $('sld-preis').addEventListener('input', e => {
+        W.priceInc = Math.max(0, Math.min(12, parseFloat(e.target.value) || 0));
+        updateSliderLabels();
+        recalc();
     });
 
-    // Brennstoffpreis
-    $('inp-fuelprice').addEventListener('input', e => {
-        const v = parseFloat(e.target.value);
-        W.fuelPrice = isNaN(v) || v <= 0 ? null : v;
-    });
+    // Alle übrigen Eingaben/Selects im Cockpit → Live-Neuberechnung
+    const inputs = $('cockpit-inputs');
+    inputs.addEventListener('input', recalc);
+    inputs.addEventListener('change', recalc);
 
     // Dachflächen: Event-Delegation
     const sc = $('surfaces-container');
     sc.addEventListener('click', e => {
         const del = e.target.closest('[data-surf-del]');
-        if (del) { removeSurface(parseInt(del.dataset.surfDel)); return; }
+        if (del) { removeSurface(parseInt(del.dataset.surfDel)); recalc(); return; }
         const btn = e.target.closest('[data-surf-prop]');
         if (!btn) return;
         const idx  = parseInt(btn.dataset.surfIdx);
@@ -1800,38 +1998,39 @@ document.addEventListener('DOMContentLoaded', () => {
            .forEach(b => b.classList.remove('selected'));
         btn.classList.add('selected');
         W.surfaces[idx][prop] = val;
+        recalc();
     });
     sc.addEventListener('input', e => {
-        const inp = e.target.closest('[data-surf-area]');
-        if (!inp) return;
-        W.surfaces[parseInt(inp.dataset.surfArea)].area = parseFloat(inp.value) || 0;
+        const mod = e.target.closest('[data-surf-modules]');
+        if (mod) { W.surfaces[parseInt(mod.dataset.surfModules)].modules = parseInt(mod.value) || 0; recalc(); return; }
+        const wp = e.target.closest('[data-surf-wp]');
+        if (wp) { W.surfaces[parseInt(wp.dataset.surfWp)].modulePower = parseFloat(wp.value) || 0; recalc(); return; }
     });
     sc.addEventListener('change', e => {
         const sel = e.target.closest('[data-surf-label]');
         if (!sel) return;
         W.surfaces[parseInt(sel.dataset.surfLabel)].label = sel.value;
     });
-    $('btn-add-surface').addEventListener('click', addSurface);
+    $('btn-add-surface').addEventListener('click', () => { addSurface(); recalc(); });
 
-    // Initiales Render
-    renderSurfaces();
-
-    // iOS: sticky bar über virtueller Tastatur halten
+    // Mobiles Ergebnis-Dock über der virtuellen Tastatur halten (iOS)
     if (window.visualViewport) {
         window.visualViewport.addEventListener('resize', () => {
-            navKeyboardOffset = window.innerHeight - window.visualViewport.height - window.visualViewport.offsetTop;
-            updateNavTransform();
+            const dock = $('ergebnis-dock');
+            if (!dock) return;
+            const off = window.innerHeight - window.visualViewport.height - window.visualViewport.offsetTop;
+            dock.style.transform = off > 60 ? `translateY(-${off}px)` : '';
         });
     }
 
-    // Sticky Nav-Bar beim Erreichen des Footers wegschieben, statt ihn zu überlagern
-    const footerEl = document.querySelector('.site-footer');
-    if (footerEl && 'IntersectionObserver' in window) {
-        new IntersectionObserver(entries => {
-            navFooterNear = entries[0].isIntersecting;
-            updateNavTransform();
-        }).observe(footerEl);
-    }
+    // Initiales Render & Erstberechnung
+    renderSurfaces();
+    updateFuelUI();
+    updateFinanzUI();
+    updateBatteryUI();
+    updateEvUI();
+    updateSliderLabels();
+    recalc();
 });
 
 // === FUEL UI ===
@@ -1840,6 +2039,11 @@ function updateFuelUI() {
     $('consumption-unit').textContent = cfg.unit;
     $('consumption-hint').textContent = cfg.hint;
     $('inp-consumption').placeholder = 'z. B. ' + cfg.dflt;
+    // Elektroheizung: klarstellen, dass der Heizstrom oben bei der Heizung steht (kein Doppelzählen)
+    const elecNote = $('elec-kwh-note');
+    if (elecNote) elecNote.textContent = W.fuelType === 'strom'
+        ? 'Nur Haushaltsstrom OHNE Heizstrom. Den Heizstrom trägst du oben bei „Aktuelle Heizung" ein, sonst zählt er doppelt.'
+        : '';
     const grp = $('grp-fuelprice');
     if (cfg.dispUnit) {
         grp.style.display = '';
@@ -1855,8 +2059,10 @@ function updateFuelUI() {
 
 // === FINANZIERUNG UI ===
 function updateFinanzUI() {
-    $('grp-finanzierung-detail').style.display =
-        W.finanzierung === 'finanz' ? '' : 'none';
+    const on = W.finanzierung === 'finanz';
+    $('grp-finanzierung-detail').style.display = on ? '' : 'none';
+    const sl = $('fin-sliders');
+    if (sl) sl.style.display = on ? '' : 'none';
 }
 
 // === STROM-MODUS ===
@@ -1866,136 +2072,96 @@ function setElecMode(mode) {
     $('tog-abschlag').classList.toggle('active', mode === 'abschlag');
     $('grp-kwh').style.display      = mode === 'kwh'      ? '' : 'none';
     $('grp-abschlag').style.display = mode === 'abschlag' ? '' : 'none';
+    recalc();
 }
 
-// === NAVIGATION ===
-function nextStep(from) {
-    if (!validateStep(from)) return;
-    collectStep(from);
-    goToStep(from + 1);
+// === SPEICHER-/SEKTOR-UI ===
+function updateBatteryUI() {
+    const on = Array.isArray(W.interesse) && W.interesse.includes('speicher');
+    $('grp-batt').style.display = on ? '' : 'none';
 }
-function prevStep(from) { goToStep(from - 1); }
-function navNext() { if (W.step < 5) nextStep(W.step); else startCalc(); }
-function navBack() { if (W.step > 1) prevStep(W.step); }
-
-function goToStep(n) {
-    W.step = n;
-    document.querySelectorAll('.wizard-step').forEach(s => s.classList.remove('active'));
-    $('result-section').classList.remove('visible');
-    const el = $('step-' + n);
-    if (el) el.classList.add('active');
-    updateProgress(n);
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+function updateEvUI() {
+    const on = Array.isArray(W.sektorenNeu) && W.sektorenNeu.includes('eauto');
+    $('grp-ev-km').style.display = on ? '' : 'none';
+}
+function updateSliderLabels() {
+    $('val-zins').textContent = W.zinssatz.toLocaleString('de-DE', { minimumFractionDigits: 1, maximumFractionDigits: 1 }) + ' % p. a.';
+    $('val-laufzeit').textContent = W.laufzeit + ' Jahre';
+    const vp = $('val-preis');
+    if (vp) vp.textContent = W.priceInc.toLocaleString('de-DE', { minimumFractionDigits: 1, maximumFractionDigits: 1 }) + ' % / Jahr';
 }
 
-const STEP_LABELS = ['Dein Gebäude','Deine Heizung','Dein Strom','Dein Dach','Deine Ziele'];
-
-function updateProgress(n) {
-    const pct = Math.min(n / 5 * 100, 100);
-
-    const fill = $('er-top-fill');
-    if (fill) fill.style.width = pct + '%';
-
-    const counter = $('step-counter');
-    if (counter) counter.textContent = n <= 5
-        ? 'Schritt ' + n + ' von 5 — ' + STEP_LABELS[n - 1]
-        : '';
-
-    const navFill = $('nav-progress-fill');
-    if (navFill) navFill.style.width = pct + '%';
-
-    const navLabel = $('nav-step-label');
-    if (navLabel && n <= 5) navLabel.textContent = 'Schritt ' + n + ' von 5';
-
-    const btnBack = $('nav-btn-back');
-    if (btnBack) btnBack.style.display = (n > 1 && n <= 5) ? 'block' : 'none';
-
-    const btnNext = $('nav-btn-next');
-    if (btnNext) {
-        if (n === 5) {
-            btnNext.textContent = 'Analyse starten';
-            btnNext.className = 'btn-calc';
-        } else {
-            btnNext.textContent = 'Weiter →';
-            btnNext.className = 'btn-next';
-        }
-    }
-
-    const nav = $('wizard-nav');
-    if (nav) nav.classList.toggle('hidden', n > 5);
+// Zum vollständigen Ergebnis scrollen (mobiles Dock)
+function scrollToResult() {
+    const el = $('result-section');
+    if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
 
-// === VALIDATION ===
-function showErr(id, show) {
-    const el = $(id);
-    if (el) el.classList.toggle('visible', show);
+// === EINGABEN LESEN (ein Durchlauf DOM → W) ===
+function readInputs() {
+    W.baujahr     = $('inp-baujahr').value;
+    W.area        = parseFloat($('inp-area').value) || 0;
+    W.plz         = $('inp-plz').value;
+    if (W.plz && W.plz.length >= 2) W.plzData = PLZ_DATEN[W.plz.substring(0, 2)] || null;
+    W.consumption = parseFloat($('inp-consumption').value) || 0;
+    W.heizAlter   = $('inp-heizalter').value || 'alt';
+    const hab = $('inp-heizabschlag').value;
+    W.heizAbschlag = hab ? parseFloat(hab) : null;
+    const fp = parseFloat($('inp-fuelprice').value);
+    W.fuelPrice = (isNaN(fp) || fp <= 0) ? null : fp;
+    W.elecPrice = (parseFloat($('inp-elecprice').value) || 32) / 100;
+    if (W.elecMode === 'kwh') {
+        W.elecKwh = parseFloat($('inp-elec-kwh').value) || 0;
+    } else {
+        const ab = parseFloat($('inp-elec-abschlag').value) || 0;
+        W.elecKwh = W.elecPrice > 0 ? (ab * 12) / W.elecPrice : 0;
+    }
+    W.evKm          = Math.max(0, parseFloat($('inp-ev-km').value) || 0);
+    W.battKwh       = Math.max(0, parseFloat($('inp-batt').value) || 0);
+    W.kreditbetrag  = Math.max(0, parseFloat($('inp-kreditbetrag').value) || 0);
+    W.sondertilgung = Math.max(0, parseFloat($('inp-sondertilgung').value) || 0);
+    W.zinssatz      = Math.max(0, parseFloat($('sld-zins').value) || 0);
+    W.laufzeit      = parseInt($('sld-laufzeit').value) || 20;
+    W.priceInc      = Math.max(0, parseFloat($('sld-preis').value) || 0);
 }
 
-function validateStep(n) {
-    let ok = true;
-
-    if (n === 1) {
-        const bj = $('inp-baujahr').value;
-        showErr('err-baujahr', !bj);
-        if (!bj) ok = false;
-
-        const a = parseFloat($('inp-area').value);
-        const aOk = a >= 40 && a <= 800;
-        showErr('err-area', !aOk);
-        $('inp-area').classList.toggle('has-error', !aOk);
-        if (!aOk) ok = false;
-
-        const p = $('inp-plz').value;
-        showErr('err-plz', p.length !== 5);
-        if (p.length !== 5) ok = false;
-    }
-    if (n === 2) {
-        const c = parseFloat($('inp-consumption').value);
-        showErr('err-consumption', !(c > 0));
-        if (!(c > 0)) ok = false;
-        const ha = $('inp-heizalter').value;
-        showErr('err-heizalter', !ha);
-        if (!ha) ok = false;
-    }
-    if (n === 3) {
-        if (W.elecMode === 'kwh') {
-            const e = parseFloat($('inp-elec-kwh').value);
-            const eOk = e >= 500 && e <= 50000;
-            showErr('err-elec', !eOk);
-            if (!eOk) ok = false;
-        }
-    }
-    if (n === 4) {
-        const hasArea = W.surfaces.some(s => s.area >= 5);
-        showErr('err-surfaces', !hasArea);
-        if (!hasArea) ok = false;
-    }
-    return ok;
+// === LIVE-NEUBERECHNUNG (debounced) ===
+let recalcTimer = null, chartTimer = null;
+function recalc() { clearTimeout(recalcTimer); recalcTimer = setTimeout(runModel, 120); }
+function runModel() {
+    readInputs();
+    updateStromAbschlag();
+    const m = computeModel();
+    renderResults(m);
+    scheduleChart(m);
 }
 
-// === COLLECT ===
-function collectStep(n) {
-    if (n === 1) {
-        W.baujahr = $('inp-baujahr').value;
-        W.area    = parseFloat($('inp-area').value);
-        W.plz     = $('inp-plz').value;
+// Live berechneter Stromabschlag / implizite kWh (Brücke zum Kundenbeleg)
+function updateStromAbschlag() {
+    const el = $('elec-abschlag-calc');
+    if (!el) return;
+    const price = W.elecPrice > 0 ? W.elecPrice : 0.32;
+    if (W.elecMode === 'kwh') {
+        if (W.elecKwh > 0) {
+            el.textContent = 'Das entspricht ≈ ' + fmt(W.elecKwh * price / 12) + ' €/Monat Stromabschlag (Plausibilitätscheck zum Beleg).';
+            el.classList.add('show');
+        } else { el.textContent = ''; el.classList.remove('show'); }
+    } else {
+        if (W.elecKwh > 0) {
+            el.textContent = 'Das entspricht ≈ ' + fmt(W.elecKwh) + ' kWh/Jahr bei ' + Math.round(price * 100) + ' ct/kWh.';
+            el.classList.add('show');
+        } else { el.textContent = ''; el.classList.remove('show'); }
     }
-    if (n === 2) {
-        W.consumption = parseFloat($('inp-consumption').value);
-        W.heizAlter   = $('inp-heizalter').value;
-        const ab = $('inp-heizabschlag').value;
-        W.heizAbschlag = ab ? parseFloat(ab) : null;
-    }
-    if (n === 3) {
-        W.elecPrice = parseFloat($('inp-elecprice').value) / 100;
-        if (W.elecMode === 'kwh') {
-            W.elecKwh = parseFloat($('inp-elec-kwh').value);
-        } else {
-            const ab = parseFloat($('inp-elec-abschlag').value) || 0;
-            W.elecKwh = (ab * 12) / W.elecPrice;
-        }
-    }
-    // n === 4: W.surfaces wird live via Event-Delegation aktualisiert
+}
+function scheduleChart(m) {
+    clearTimeout(chartTimer);
+    const card = $('chart-card');
+    if (card) card.style.display = m.ready ? '' : 'none'; // synchron: kein sichtbarer leerer Kasten bei unvollständigen Eingaben
+    if (!m.ready) { chartData = null; return; }
+    chartTimer = setTimeout(() => {
+        // Karte ist zum Zeichenzeitpunkt bereits sichtbar (Container hat Höhe) → korrekte Größe
+        drawCostChart(m.fossilCum, m.neuCum); // schon vor Preiseingabe (ohne Rate) → Regler sichtbar wirksam
+    }, 300);
 }
 
 // === ANNUITÄT (monatliche Compoundierung / Zinseszins) ===
@@ -2033,212 +2199,464 @@ function calcZinsfreiRates(K, zinssatz, laufzeit, sondertilgung) {
     return { rate1: tilgM1, rate2 };
 }
 
-function updateRatePreview() {
-    const K  = W.kreditbetrag > 0 ? W.kreditbetrag : 0;
-    const el = $('rate-preview');
-    if (!el) return;
-    if (K <= 0 || W.finanzierung !== 'finanz') { el.style.display = 'none'; return; }
-    if (W.zinsfreiJahr1 === 'ja' && W.zinssatz > 0) {
-        const rates = calcZinsfreiRates(K, W.zinssatz, W.laufzeit, W.sondertilgung);
-        if (!rates) { el.style.display = 'none'; return; }
-        el.textContent = '1. Jahr: ca. ' + fmt(Math.round(rates.rate1)) + ' €/Mon. (0 % Zinsen)'
-            + ' · ab Jahr 2: ca. ' + fmt(Math.round(rates.rate2)) + ' €/Mon. (' + W.zinssatz + ' % p.a.)';
-    } else {
-        const m = calcMonthlyRate(K, W.zinssatz, W.laufzeit, W.sondertilgung, 'nein');
-        el.textContent = 'Monatliche Rate: ca. ' + fmt(Math.round(m)) + ' €'
-            + (W.zinssatz === 0 ? ' (zinslos, reine Tilgung)' : ' · ' + W.zinssatz + ' % p.a. · ' + W.laufzeit + ' J.');
-    }
-    el.style.display = '';
-}
-
-// === HAUPTBERECHNUNG ===
-function startCalc() {
-    if (!validateStep(5)) return;
-    collectStep(4);
-
+// === MODELL (reine Berechnung, kein DOM) ===
+function computeModel() {
     const bj  = BAUJAHR_DATEN[W.baujahr] || BAUJAHR_DATEN['1980_1994'];
     const eta = HEIZUNG_ETA[W.heizAlter] || 0.82;
     const fc  = FUEL[W.fuelType] || FUEL.oil;
-    const plz = W.plzData || { region:'Deutschland', vbh:1800 };
+    const plz = W.plzData || { region:'Deutschland', vbh:1800, pvY:BASE_YIELD };
+    const baseYield = plz.pvY || BASE_YIELD;
 
-    let vbh = plz.vbh;
-    if (bj.heizlastM2 <= 55) vbh = Math.round(vbh * 0.85);
+    const missing = [];
+    if (!(W.area > 0))        missing.push('Wohnfläche');
+    if (!(W.consumption > 0)) missing.push('Heizverbrauch');
+    if (!W.surfaces.some(s => s.modules > 0)) missing.push('Anzahl Module (Dachfläche)');
+    const ready = missing.length === 0;
 
     // Energiebilanz Heizung
     const E_fossil = W.consumption * fc.kwhPU;   // kWh Brennstoffeinsatz
-    const Q_heat   = E_fossil * eta;              // kWh Nutzwärme
+    const Q_heat   = E_fossil * eta;             // kWh Nutzwärme
+    const wpOn     = W.interesse.includes('wp');
     const E_WP     = Q_heat / bj.jaz;            // kWh Strom für Wärmepumpe
+    const wpDemand = wpOn ? E_WP : 0;            // nur steuerbare WP → §14a/Modul-3-relevant
+    // Heizstrom, der im NEU-Szenario tatsächlich Strombedarf ist:
+    //  WP an → effizienter WP-Strom; sonst Elektro-Direktheizung (Nachtspeicher/Infrarot) → voller Heizstrom;
+    //  fossil (Öl/Gas/Pellets/Fernwärme) → 0 (wird separat als Brennstoff bezahlt, siehe restHeizFossil).
+    const isElektroHeizung = W.fuelType === 'strom';
+    const heizStrom = wpOn ? E_WP : (isElektroHeizung ? E_fossil : 0);
 
-    // PV — Summe aller Dachflächen
+    // Künftig geplante Zusatzverbraucher (Gruppe B) — erhöhen nur den KÜNFTIGEN Bedarf, nie "heute".
+    // Gruppe A ("schon vorhanden") steckt bereits im abgelesenen Verbrauch → kein Rechen-Effekt.
+    const sekNeu = W.sektorenNeu || [];
+    const evKwh    = sekNeu.includes('eauto') ? (W.evKm > 0 ? W.evKm * EV_KWH_PER_KM : EV_KWH) : 0;
+    const klimaKwh = sekNeu.includes('klima') ? KLIMA_KWH : 0;
+    const dleKwh   = sekNeu.includes('dle')   ? DLE_KWH   : 0;
+    // Infrarot/Nachtspeicher nur zählen, wenn nicht ohnehin Hauptheizung = Strom (kein Doppelzählen)
+    const eheizKwh = (sekNeu.includes('eheiz') && W.fuelType !== 'strom') ? EHEIZ_KWH : 0;
+    const zukunftStrom = evKwh + klimaKwh + dleKwh + eheizKwh;
+
+    // PV — Summe aller Dachflächen (Modulanzahl × Modulleistung, PLZ-abhängiger Ertrag) + Aufschlüsselung je Fläche
     let kWp = 0, pvYield = 0;
+    const surfaceRows = [];
     for (const s of W.surfaces) {
-        if (!(s.area > 0)) continue;
-        const skWp = s.area * KWP_PER_M2;
+        if (!(s.modules > 0)) continue;
+        const modWp  = s.modulePower > 0 ? s.modulePower : 440;
+        const skWp   = s.modules * modWp / 1000;
+        const sYield = skWp * baseYield
+                     * tiltOrientFactor(s.orientation, s.tilt)
+                     * (SHADE[s.shading] || 1);
         kWp     += skWp;
-        pvYield += skWp * BASE_YIELD
-                 * (ORIENT[s.orientation] || 1)
-                 * (TILT[s.tilt] || 1)
-                 * (SHADE[s.shading] || 1);
+        pvYield += sYield;
+        surfaceRows.push({ label: s.label, orientation: s.orientation, modules: s.modules, modulePower: modWp, kWp: skWp, yield: sYield });
     }
 
-    const totalDemand = E_WP + W.elecKwh;
-    const pvSelbst    = Math.min(pvYield * SELF_CONS, totalDemand);
+    // Bedarf (inkl. Heizstrom: WP-Strom oder Elektro-Direktheizung, + künftig geplante Lasten)
+    const baseDemand  = W.elecKwh + heizStrom;      // abgelesener Haushaltsstrom + elektrischer Heizstrom
+    const totalDemand = baseDemand + zukunftStrom;  // + künftig geplante Lasten
+    const hasBattery  = W.interesse.includes('speicher');
+    const emsOn       = W.ems === 'ja';
+    const battKwh     = W.battKwh > 0
+        ? W.battKwh
+        : (hasBattery ? Math.min(15, Math.max(5, Math.round(totalDemand / 365))) : 0);
 
-    // Kosten heute
-    const ppu = W.fuelPrice !== null ? W.fuelPrice / fc.dispDiv : fc.ppu;
+    // Autarkie/Eigenverbrauch — verbrauchs- UND speicherabhängig (sättigende Kurven, an HTW-Logik angelehnt).
+    // Ohne Speicher begrenzt die Gleichzeitigkeit den Direktverbrauch (kein 100 % möglich); der Speicher hebt
+    // die Autarkie durch Nachtnutzung deutlich. autarkFrac = Anteil des Bedarfs, den die PV selbst deckt.
+    const demandMWh  = Math.max(0.1, totalDemand / 1000);
+    const pvPerMWh   = kWp / demandMWh;        // spez. PV (kWp je MWh Verbrauch)
+    const battPerMWh = battKwh / demandMWh;    // spez. Speicher (kWh je MWh Verbrauch)
+    let autarkFrac = 0.45 * (1 - Math.exp(-1.1 * pvPerMWh));                       // Direktnutzung (Gleichzeitigkeit)
+    if (hasBattery && battKwh > 0)
+        autarkFrac += 0.60 * (1 - Math.exp(-1.4 * battPerMWh)) * (1 - autarkFrac); // Speicher-Nachtnutzung
+    // EMS/HEMS: prognosebasiertes Speicherladen, Lastverschiebung in die PV-Stunden, WP-/Wallbox-Steuerung
+    // → spürbar höhere Eigenversorgung (mit Speicher stärker, weil steuerbar). Annahme, keine Zusage.
+    if (emsOn) autarkFrac += (hasBattery ? 0.10 : 0.05) * (1 - autarkFrac);
+    autarkFrac = Math.min(autarkFrac, 0.92);
+    const pvSelbst = Math.min(totalDemand * autarkFrac, pvYield);
+    const pvExport = Math.max(0, pvYield - pvSelbst);
+    const autarkie = totalDemand > 0 ? Math.min(100, pvSelbst / totalDemand * 100) : 0;
+
+    // Kosten heute — NUR abgelesener Verbrauch + Heizung (künftig geplante Lasten zählen NICHT in "heute")
+    const ppu          = W.fuelPrice !== null ? W.fuelPrice / fc.dispDiv : fc.ppu;
     const fuelPriceKwh = ppu / fc.kwhPU;
     const fossilJahr   = E_fossil * fuelPriceKwh;
-    const elecJahr     = W.elecKwh * W.elecPrice;
+    const elecJahr     = W.elecKwh * W.elecPrice;   // Ist-Stromkosten laut Rechnung
     const heuteJahr    = fossilJahr + elecJahr;
 
-    // Kosten neu (WP + PV)
-    const netElec   = Math.max(0, totalDemand - pvSelbst);
+    // Einspeisevergütung (ÜBERSCHUSSeinspeisung — Kunde nutzt/speichert selbst, nur der Rest wird vergütet):
+    // größenabhängige EEG-Staffel (Stand Feb–Jul 2026, Bundesnetzagentur, halbjährliche Degression 1 % — Annahme) + EMS/Solarspitzengesetz-Effekt.
+    const feedTarif     = kWp <= 10 ? 0.0778 : kWp <= 40 ? 0.0673 : 0.056; // €/kWh: ≤10 / 10–40 / >40 kWp
+    const feedInMitEms  = pvExport * feedTarif;   // mit EMS/iMSys: volle Überschussvergütung
+    const feedInOhneEms = 0;                       // ohne EMS/iMSys: realistisch keine verlässliche Vergütung (Solarspitzengesetz) – Annahme
+    const feedIn        = emsOn ? feedInMitEms : feedInOhneEms;
+    const modul3Vorteil = emsOn ? (wpDemand + zukunftStrom) * MODUL3_DIFF_KWH : 0;
+    // EMS-Vorteil = die ohne EMS entgangene volle Einspeisung + der entgangene §14a-Modul-3-Rabatt
+    const emsDelta      = (feedInMitEms - feedInOhneEms) + (wpDemand + zukunftStrom) * MODUL3_DIFF_KWH;
+
+    // Kosten neu
+    const netElec     = Math.max(0, totalDemand - pvSelbst);
     const newElecJahr = netElec * W.elecPrice;
 
-    // Investition & Annuität (monatliche Compoundierung / Zinseszins)
-    const invest      = kWp * PV_PRICE_KWP + WP_BASE + W.area * WP_PER_M2;
-    const creditBase  = W.kreditbetrag > 0 ? W.kreditbetrag : invest;
+    // Investition & Annuität — ausschließlich der eingegebene Angebotspreis (keine Auto-Schätzung)
+    const invest     = W.kreditbetrag > 0 ? W.kreditbetrag : 0;
+    const creditBase = invest;
+    const needsPrice = W.finanzierung === 'finanz' && invest <= 0; // Rate erst nach Preiseingabe
     let monthlyRate = 0;
-    if (W.finanzierung === 'finanz') {
+    if (W.finanzierung === 'finanz' && invest > 0) {
         monthlyRate = calcMonthlyRate(creditBase, W.zinssatz, W.laufzeit, W.sondertilgung, W.zinsfreiJahr1);
     }
     const annuity = monthlyRate * 12;
-    const neuJahr = newElecJahr + annuity;
+    // Ohne Wärmepumpe bleibt die fossile Heizung bestehen → auch im Neu-Szenario weiter zahlen (keine Scheinersparnis).
+    // Bei Elektro-Direktheizung steckt die Heizung schon im Strombedarf (baseDemand) → keine separate Restheizung (kein Doppelzählen).
+    const restHeizFossil = (wpOn || isElektroHeizung) ? 0 : fossilJahr;
+    const neuJahr = newElecJahr + annuity - feedIn - modul3Vorteil + restHeizFossil;
 
     // CO₂
-    const co2Jetzt  = E_fossil * fc.ef / 1000; // t/Jahr
+    const co2Jetzt = E_fossil * fc.ef / 1000; // t/Jahr
 
-    // 20-Jahres-Projektion
+    // 20-Jahres-Projektion (Rate endet nach Laufzeit)
+    // Energiepreis-Steigerung: interaktiver Slider (Default 6 %/a) treibt Strom- UND Brennstoffpreis,
+    // weil steigende Öl-/Gaspreise + CO₂-Bepreisung die Anbieterkosten künftig gemeinsam nach oben ziehen.
+    const priceInc = (W.priceInc != null ? W.priceInc : 6) / 100;
+    const fossilInc = priceInc;
+    const elecInc   = priceInc;
+    // CO₂-Bepreisung (BEHG/nEHS) trifft nur direkt gekaufte fossile Brennstoffe (Heizöl, Erdgas).
+    // Bei Strom/Fernwärme steckt der CO₂-Preis (ETS) bereits im Arbeitspreis, Pellets sind quasi neutral → kein Aufschlag.
+    const behg = (W.fuelType === 'oil' || W.fuelType === 'gas');
     const fossilArr = [], neuArr = [], energySavArr = [];
     for (let t = 0; t < YEARS; t++) {
-        const co2P   = t < 2 ? CO2_2025 + t * 5
-                             : CO2_2027 * Math.pow(1 + CO2_INC, t - 2);
-        const co2Add = E_fossil * fc.ef * co2P / 1e6;
-        const cFoss  = (E_fossil * fuelPriceKwh * Math.pow(1 + FUEL_INC, t))
-                     + (elecJahr * Math.pow(1 + ELEC_INC, t))
+        const co2P   = Math.min(CO2_MAX, t < 2 ? CO2_2025 + t * 5 : CO2_2027 * Math.pow(1 + CO2_INC, t - 2));
+        const co2Add = behg ? E_fossil * fc.ef * co2P / 1000 : 0; // €/Jahr zusätzliche CO₂-Bepreisung (nur Öl/Gas)
+        const cFoss  = (fossilJahr * Math.pow(1 + fossilInc, t))
+                     + (elecJahr * Math.pow(1 + elecInc, t))
                      + co2Add;
-        const cNeuEnergie = netElec * W.elecPrice * Math.pow(1 + ELEC_INC, t);
-        const cNeu   = cNeuEnergie + annuity;
+        // Fossile Restheizung im Neu-Szenario nur, wenn weder WP noch Elektroheizung:
+        // bei Elektroheizung steckt der Heizstrom bereits in newElecJahr (kein Doppelzählen).
+        const neuFossil   = (wpOn || isElektroHeizung) ? 0 : (fossilJahr * Math.pow(1 + fossilInc, t) + co2Add);
+        const cNeuEnergie = Math.max(0, newElecJahr * Math.pow(1 + elecInc, t) - feedIn - modul3Vorteil) + neuFossil;
+        const annuityT    = t < W.laufzeit ? annuity : 0;
+        const cNeu        = cNeuEnergie + annuityT;
         fossilArr.push(Math.round(cFoss));
         neuArr.push(Math.round(cNeu));
-        energySavArr.push(cFoss - cNeuEnergie); // Ersparnis ohne Finanzierungskosten – Basis für Amortisation/Rendite
+        energySavArr.push(cFoss - cNeuEnergie); // Ersparnis ohne Finanzierungskosten – Basis Amortisation/Rendite
     }
 
-    // Amortisation & Rendite (statische Schätzung auf Basis der Energieersparnis, ohne Finanzierungskosten)
+    // Amortisation & Rendite (auf Basis der Energieersparnis, ohne Finanzierungskosten)
     let amortJahre = null;
     if (invest > 0 && energySavArr[0] > 0) {
         let cum = 0;
         for (let t = 0; t < YEARS; t++) {
             const prevCum = cum;
             cum += energySavArr[t];
-            if (cum >= invest) {
-                amortJahre = t + (invest - prevCum) / energySavArr[t];
-                break;
-            }
+            if (cum >= invest) { amortJahre = t + (invest - prevCum) / energySavArr[t]; break; }
         }
     }
     const renditeProzent = invest > 0 ? (energySavArr[0] / invest) * 100 : 0;
 
-    // Eco vs. Premium — entgangene Einspeisevergütung (Solarspitzengesetz) + §14a-Modul-3-Rabatt (Annahmen)
-    const pvExport             = Math.max(0, pvYield - pvSelbst);
-    const verlustEco           = pvExport * NEGATIVSTUNDEN_PV * FEEDIN_TARIF;
-    const modul3VorteilPremium = E_WP * MODUL3_DIFF_KWH;
-    const ecoVsPremiumDelta    = verlustEco + modul3VorteilPremium;
-
-    // === ERGEBNIS RENDERN ===
-    const heuteM = Math.round(heuteJahr / 12);
-    const neuM   = Math.round(neuJahr   / 12);
-    const delta  = heuteM - neuM;
-
-    $('res-location').textContent = plz.region;
-    $('res-heute').textContent    = fmt(heuteM) + ' €';
-    $('res-neu').textContent      = fmt(neuM)   + ' €';
-    $('res-neu-sub').textContent  = W.finanzierung === 'eigen'
-        ? 'pro Monat (Energiekosten, ohne Tilgung)'
-        : W.finanzierung === 'offen'
-        ? 'pro Monat (Energiekosten, Finanzierung noch offen)'
-        : 'pro Monat (inkl. Finanzierung ' + W.zinssatz + ' %, ' + W.laufzeit + ' J.)';
-    $('res-delta').textContent    = (delta >= 0 ? '− ' : '+ ') + fmt(Math.abs(delta)) + ' €/Monat';
-    $('res-delta-text').textContent = delta >= 0
-        ? 'monatliche Einsparung gegenüber heute'
-        : 'monatlicher Mehraufwand bei Finanzierung';
-
-    $('kpi-pv').textContent     = fmt(Math.round(pvYield)) + ' kWh';
-    $('kpi-pv-sub').textContent = Math.round(kWp * 10) / 10 + ' kWp · '
-                                + Math.round(pvSelbst / (pvYield || 1) * 100) + '% Eigenverbrauch';
-    $('kpi-heiz').textContent   = fmt(Math.round(newElecJahr)) + ' €/Jahr';
-    $('kpi-heiz-sub').textContent = 'Vorher: ' + fmt(Math.round(fossilJahr)) + ' €/Jahr'
-                                  + (fossilJahr > 0 ? ' (−' + Math.round((1 - newElecJahr / fossilJahr) * 100) + '%)' : '');
-    $('kpi-co2').textContent    = co2Jetzt.toFixed(1).replace('.', ',') + ' t';
-
-    $('kpi-amort').textContent  = amortJahre !== null ? (Math.round(amortJahre * 10) / 10).toString().replace('.', ',') + ' Jahre' : '–';
-    $('kpi-rendite').textContent = invest > 0 ? (Math.round(renditeProzent * 10) / 10).toString().replace('.', ',') + ' %' : '–';
-
-    $('eco-premium-text').textContent = W.speicherVariante === 'eco'
-        ? `Du hast Eco (einfacher Speicher) gewählt. Ein einfacher Speicher kann nicht auf Strompreissignale reagieren: Bei den 2025 bundesweit 573 Stunden mit negativen Strompreisen entfällt die Einspeisevergütung (Solarspitzengesetz) – das macht laut dieser Schätzung rund ${fmt(Math.round(verlustEco))} €/Jahr aus. Außerdem bleibt der automatische §14a-Modul-3-Netzentgelt-Rabatt (≈${fmt(Math.round(modul3VorteilPremium))} €/Jahr) ungenutzt, weil dafür ein Energiemanagement-System nötig ist. Geschätzter Unterschied zu Premium: rund ${fmt(Math.round(ecoVsPremiumDelta))} €/Jahr.`
-        : `Du hast Premium (intelligentes Energiemanagement) gewählt – laut Strategie-Briefing der empfohlene Standard 2026. Ein einfacher Eco-Speicher würde bei den 2025 bundesweit 573 Stunden mit negativen Strompreisen die Einspeisevergütung verlieren (Solarspitzengesetz) und den automatischen §14a-Modul-3-Netzentgelt-Rabatt nicht nutzen können. Geschätzter Unterschied zur Eco-Variante: rund ${fmt(Math.round(ecoVsPremiumDelta))} €/Jahr zu deinen Gunsten.`;
-
-    // 20-Jahres-Bilanz
-    const bilanz20 = fossilArr.reduce((a,b) => a+b, 0) - neuArr.reduce((a,b) => a+b, 0);
-    $('res-bilanz20').textContent = fmt(Math.round(bilanz20)) + ' €';
-
-    // Persönlicher Fazit-Text
-    const fuelLabel = { oil:'Heizöl', gas:'Erdgas', pellets:'Holzpellets', fernwaerme:'Fernwärme', strom:'Heizstrom' }[W.fuelType] || 'fossiler Energie';
-    const narrativeText = W.finanzierung === 'eigen'
-        ? `Du heizt aktuell mit ${fuelLabel} und gibst dafür laut dieser Schätzung ${fmt(heuteM)} €/Monat aus — Geld, das jeden Monat weg ist. Mit PV + Wärmepumpe würdest du stattdessen ${fmt(neuM)} €/Monat aufwenden und dir eine Anlage aufbauen, die dir dauerhaft gehört.`
-        : `Du heizt aktuell mit ${fuelLabel} und gibst dafür laut dieser Schätzung ${fmt(heuteM)} €/Monat aus — Geld, das jeden Monat weg ist. Mit PV + Wärmepumpe und einer Finanzierung würdest du laut dieser Schätzung ${fmt(neuM)} €/Monat zahlen — und damit in dein eigenes Eigentum investieren statt in das des Energieversorgers.`;
-    $('res-narrative').textContent = narrativeText;
-
-    // PLZ im Lead-Formular vorausfüllen
-    const lgPlz = $('lg-plz');
-    if (lgPlz && W.plz) lgPlz.value = W.plz;
-
-    // Sektion anzeigen, Chart nach Render
-    document.querySelectorAll('.wizard-step').forEach(s => s.classList.remove('active'));
-    $('result-section').classList.add('visible');
-    updateProgress(6);
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-
-    // Kumulierter Chart
+    // Kumulierter Chart + 20-Jahres-Bilanz
     const fossilCum = [], neuCum = [];
     let fSum = 0, nSum = 0;
     for (let t = 0; t < YEARS; t++) {
         fSum += fossilArr[t]; fossilCum.push(Math.round(fSum));
         nSum += neuArr[t];    neuCum.push(Math.round(nSum));
     }
-    setTimeout(() => renderChart(fossilCum, neuCum), 60);
+    const bilanz20 = fossilArr.reduce((a, b) => a + b, 0) - neuArr.reduce((a, b) => a + b, 0);
+
+    return {
+        ready, missing, region: plz.region, baseYield,
+        heuteJahr, neuJahr, monthlyRate, annuity,
+        pvYield, kWp, pvSelbst, netElec, newElecJahr, fossilJahr, elecJahr, isElektroHeizung, autarkie, feedTarif,
+        feedIn, feedInMitEms, feedInOhneEms, modul3Vorteil, emsDelta, emsOn, pvExport, battKwh, hasBattery, zukunftStrom, wpOn,
+        invest, creditBase, needsPrice, restHeizFossil, co2Jetzt, amortJahre, renditeProzent,
+        fossilArr, neuArr, fossilCum, neuCum, bilanz20, surfaceRows
+    };
 }
 
-// === CHART ===
-function renderChart(fossil, neu) {
-    const canvas = $('cost-chart');
-    if (!canvas || typeof Chart === 'undefined') return;
-    if (costChart) { costChart.destroy(); costChart = null; }
-    const labels = Array.from({ length: YEARS }, (_, i) => String(2025 + i));
-    costChart = new Chart(canvas.getContext('2d'), {
-        type: 'line',
-        data: {
-            labels,
-            datasets: [
-                { label:'Öl/Gas', data:fossil, borderColor:'#dc2626', backgroundColor:'rgba(220,38,38,0.08)', borderWidth:2.5, fill:false, tension:0.3, pointRadius:0, pointHoverRadius:4 },
-                { label:'PV + Wärmepumpe', data:neu, borderColor:'#2E4F3C', backgroundColor:'rgba(46,79,60,0.08)', borderWidth:2.5, fill:false, tension:0.3, pointRadius:0, pointHoverRadius:4 }
-            ]
-        },
-        options: {
-            responsive:true, maintainAspectRatio:false,
-            animation:{ duration:400 },
-            interaction:{ intersect:false, mode:'index' },
-            plugins:{
-                legend:{ display:false },
-                tooltip:{ callbacks:{ label: ctx => ctx.dataset.label + ': ' + fmt(ctx.raw) + ' €' } }
-            },
-            scales:{
-                y:{ beginAtZero:false, ticks:{ callback: v => (v >= 1000 ? Math.round(v/1000) + '.000 €' : v + ' €') }, grid:{ color:'rgba(0,0,0,0.04)' } },
-                x:{ grid:{ display:false }, ticks:{ maxTicksLimit:10 } }
+// === ERGEBNIS RENDERN (DOM) ===
+function renderResults(m) {
+    const dash = '–';
+    $('res-location').textContent = m.region || 'deine Region';
+
+    if (!m.ready) {
+        ['res-heute','res-neu','res-delta','res-bilanz20','kpi-pv','kpi-pv-sub','kpi-heiz','kpi-heiz-sub','kpi-co2','kpi-amort','kpi-rendite','dock-heute','dock-neu']
+            .forEach(id => { const el = $(id); if (el) el.textContent = dash; });
+        $('res-neu-sub').textContent = '€/Monat';
+        const fehlt = (m.missing && m.missing.length) ? m.missing.join(', ') : 'Wohnfläche, Heizverbrauch, Anzahl Module (Dachfläche)';
+        $('res-delta-text').textContent = 'Bitte noch eingeben: ' + fehlt;
+        $('res-narrative').textContent = 'Es fehlt noch: ' + fehlt + '. Sobald das eingetragen ist, rechnet das Cockpit deinen Kosten-Nutzen-Vergleich live durch.';
+        $('eco-premium-text').textContent = 'Sobald die Anlagendaten stehen, siehst du hier, was ein intelligentes Energiemanagement (EMS) gegenüber einer normalen PV-Anlage ausmacht.';
+        $('roof-total-kwp').textContent = dash;
+        $('roof-breakdown').innerHTML = '<p class="roof-hint" style="margin:0">Trag oben die <strong>Anzahl Module</strong> je Dachfläche ein, dann siehst du hier, wie viel jede Fläche erzeugt.</p>';
+        ['energy-autarkie','energy-self-pct','energy-grid-pct','ef-selbst','ef-einspeist','ef-netz']
+            .forEach(id => { const el = $(id); if (el) el.textContent = dash; });
+        $('energy-seg-self').style.width = '0%';
+        $('energy-seg-grid').style.width = '100%';
+        const einEl0 = $('einspeise'); if (einEl0) einEl0.textContent = '';
+        const hintEl0 = $('autarkie-hint'); if (hintEl0) hintEl0.textContent = '';
+        const anlEl0 = $('anlage-summary'); if (anlEl0) anlEl0.textContent = '';
+        const finEl0 = $('fin-financed'); if (finEl0) { finEl0.textContent = ''; finEl0.style.display = 'none'; }
+        const cn0 = $('chart-note'); if (cn0) cn0.textContent = '';
+        chartData = null;
+        return;
+    }
+
+    const heuteM = Math.round(m.heuteJahr / 12);
+    const neuM   = Math.round(m.neuJahr   / 12);
+    const delta  = heuteM - neuM;
+    const rateM  = Math.round(m.monthlyRate);
+    const netM   = Math.round(m.newElecJahr / 12);
+    const feedM  = Math.round((m.feedIn + m.modul3Vorteil) / 12);
+    const heizM  = Math.round(m.restHeizFossil / 12); // fortlaufende fossile Heizung (nur ohne WP)
+
+    $('res-heute').textContent  = fmt(heuteM) + ' €';
+    $('dock-heute').textContent = fmt(heuteM) + ' €';
+
+    const finEl = $('fin-financed');
+    if (m.needsPrice) {
+        // Kein Angebotspreis eingegeben → keine Rate/Finanz-Simulation. Energie-Ergebnis zeigt sich bereits.
+        $('res-neu').textContent   = '? €';
+        $('dock-neu').textContent  = '? €';
+        $('res-neu-sub').textContent = 'Trag deinen Anlagenpreis in Sektion 6 ein – dann rechnet die Rate.';
+        $('res-delta').textContent = '–';
+        $('res-delta-text').textContent = 'Anlagenpreis eingeben für den Kostenvergleich';
+        $('res-bilanz20').textContent = '–';
+        if (finEl) { finEl.textContent = 'Trag deinen Anlagenpreis (Sektion 6) ein, um die monatliche Rate zu berechnen.'; finEl.style.display = ''; }
+        const cn = $('chart-note');
+        if (cn) cn.textContent = 'Grüne Linie = reine Energiekosten im neuen Szenario, noch ohne Finanzierungsrate. Trag deinen Anlagenpreis (Sektion 6) ein, dann hebt sie sich um die Rate.';
+    } else {
+        $('res-neu').textContent    = fmt(neuM) + ' €';
+        $('dock-neu').textContent   = fmt(neuM) + ' €';
+
+        const heizPart = heizM > 0 ? ' + Heizung ' + fmt(heizM) + ' €' : '';
+        let sub;
+        if (W.finanzierung === 'finanz') {
+            sub = 'Rate ' + fmt(rateM) + ' € + Strom ' + fmt(netM) + ' €' + heizPart
+                + (feedM > 0 ? ' − Einspeisung ' + fmt(feedM) + ' €' : '') + ' /Mon.';
+        } else if (W.finanzierung === 'eigen') {
+            sub = 'Energiekosten ' + fmt(netM) + ' €' + heizPart
+                + (feedM > 0 ? ' − Einspeisung ' + fmt(feedM) + ' €' : '') + ' /Mon. (ohne Tilgung)';
+        } else {
+            sub = 'Energiekosten ' + fmt(netM + heizM) + ' €/Mon. · Finanzierung noch offen';
+        }
+        $('res-neu-sub').textContent = sub;
+
+        if (finEl) {
+            if (W.finanzierung === 'finanz' && m.creditBase > 0) {
+                finEl.textContent = 'Finanziert: ' + fmt(m.creditBase) + ' € (dein Angebotspreis) · '
+                    + W.zinssatz.toLocaleString('de-DE', { minimumFractionDigits: 1, maximumFractionDigits: 1 }) + ' % · ' + W.laufzeit + ' Jahre';
+                finEl.style.display = '';
+            } else {
+                finEl.textContent = '';
+                finEl.style.display = 'none';
             }
         }
-    });
+
+        $('res-delta').textContent = (delta >= 0 ? '− ' : '+ ') + fmt(Math.abs(delta)) + ' €/Monat';
+        $('res-delta-text').textContent = delta >= 0
+            ? 'monatlich günstiger als heute'
+            : 'monatlicher Mehraufwand – du baust aber Eigentum auf';
+        $('res-bilanz20').textContent = fmt(Math.round(m.bilanz20)) + ' €';
+        const cn = $('chart-note');
+        if (cn) cn.textContent = '';
+    }
+
+    $('kpi-pv').textContent     = fmt(Math.round(m.pvYield)) + ' kWh';
+    $('kpi-pv-sub').textContent = (Math.round(m.kWp * 10) / 10) + ' kWp · '
+                                + Math.round(m.pvSelbst / (m.pvYield || 1) * 100) + '% Eigenverbrauch · ≈ ' + m.baseYield + ' kWh/kWp';
+    if (m.wpOn) {
+        $('kpi-heiz-label').textContent = 'Heizkosten neu';
+        $('kpi-heiz').textContent   = fmt(Math.round(m.newElecJahr)) + ' €/Jahr';
+        $('kpi-heiz-sub').textContent = 'Vorher: ' + fmt(Math.round(m.fossilJahr)) + ' €/Jahr'
+                                      + (m.fossilJahr > 0 ? ' (−' + Math.round((1 - m.newElecJahr / m.fossilJahr) * 100) + '%)' : '');
+    } else if (m.isElektroHeizung) {
+        // Elektroheizung: Heizstrom steckt bereits in "Stromkosten neu" und wird teils von der PV gedeckt
+        const vorherStrom = m.elecJahr + m.fossilJahr; // Haushalt + Heizstrom (bisherige Stromrechnung gesamt)
+        $('kpi-heiz-label').textContent = 'Stromkosten neu';
+        $('kpi-heiz').textContent   = fmt(Math.round(m.newElecJahr)) + ' €/Jahr';
+        $('kpi-heiz-sub').textContent = 'inkl. elektrischer Heizung · vorher ' + fmt(Math.round(vorherStrom)) + ' €/Jahr'
+                                      + (vorherStrom > 0 ? ' (−' + Math.round((1 - m.newElecJahr / vorherStrom) * 100) + '%)' : '');
+    } else {
+        $('kpi-heiz-label').textContent = 'Stromkosten neu';
+        $('kpi-heiz').textContent   = fmt(Math.round(m.newElecJahr)) + ' €/Jahr';
+        $('kpi-heiz-sub').textContent = 'Heizung unverändert (weiter fossil, ' + fmt(Math.round(m.fossilJahr)) + ' €/Jahr)';
+    }
+    $('kpi-co2').textContent    = m.co2Jetzt.toFixed(1).replace('.', ',') + ' t';
+
+    $('kpi-amort').textContent   = m.amortJahre !== null ? (Math.round(m.amortJahre * 10) / 10).toString().replace('.', ',') + ' Jahre' : '–';
+    $('kpi-rendite').textContent = m.invest > 0 ? (Math.round(m.renditeProzent * 10) / 10).toString().replace('.', ',') + ' %' : '–';
+
+    // Dach im Detail: Pro-Fläche-Zeilen + Gesamt-kWp (visuell, damit der Kunde das Potenzial selbst sieht)
+    $('roof-total-kwp').textContent = 'Gesamt: ' + (Math.round(m.kWp * 10) / 10).toString().replace('.', ',') + ' kWp · ' + fmt(m.pvYield) + ' kWh/Jahr';
+    const rows = m.surfaceRows || [];
+    const maxY = rows.reduce((mx, r) => Math.max(mx, r.yield), 0) || 1;
+    $('roof-breakdown').innerHTML = rows.map(r => {
+        const pct = Math.max(4, Math.round(r.yield / maxY * 100));
+        const kwpTxt = (Math.round(r.kWp * 10) / 10).toString().replace('.', ',');
+        return `<div class="roof-row">
+          <div class="roof-row-top">
+            <span class="roof-row-label">${r.label} · ${ORIENT_LABEL[r.orientation] || r.orientation} · ${r.modules} × ${r.modulePower} Wp</span>
+            <span class="roof-row-val">${kwpTxt} kWp · ${fmt(r.yield)} kWh</span>
+          </div>
+          <div class="roof-bar-track"><div class="roof-bar" style="width:${pct}%"></div></div>
+        </div>`;
+    }).join('');
+
+    // Energiebilanz: Wohin fließt dein Sonnenstrom? (Autarkie visuell)
+    const autark = Math.round(m.autarkie);
+    $('energy-autarkie').textContent = autark + ' % unabhängig';
+    $('energy-seg-self').style.width = autark + '%';
+    $('energy-seg-grid').style.width = (100 - autark) + '%';
+    $('energy-self-pct').textContent = autark + '%';
+    $('energy-grid-pct').textContent = (100 - autark) + '%';
+    $('ef-selbst').textContent   = fmt(m.pvSelbst) + ' kWh';
+    $('ef-einspeist').textContent = fmt(m.pvExport) + ' kWh';
+    $('ef-netz').textContent     = fmt(m.netElec) + ' kWh';
+
+    // Einspeisevergütung (Überschusseinspeisung) sichtbar + EMS-/Solarspitzengesetz-Effekt
+    const einEl = $('einspeise');
+    if (einEl) {
+        const ct = (m.feedTarif * 100).toLocaleString('de-DE', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+        const staffel = m.kWp <= 10 ? '≤ 10 kWp' : '> 10 kWp';
+        const emsNote = m.emsOn
+            ? 'Ohne EMS/intelligentes Messsystem ist keine verlässliche Einspeisevergütung zu erwarten (Solarspitzengesetz).'
+            : 'Mit EMS wären es ≈ ' + fmt(m.feedInMitEms) + ' €/Jahr (Solarspitzengesetz).';
+        einEl.innerHTML = '<strong>Einspeisevergütung (Überschuss): ≈ ' + fmt(m.feedIn) + ' €/Jahr</strong> – '
+            + ct + ' ct/kWh (' + staffel + '). ' + emsNote + ' Annahme, keine Zusage.';
+    }
+
+    // Hinweis zur Speicher-Rolle für die Autarkie
+    const hintEl = $('autarkie-hint');
+    if (hintEl) {
+        const battTxt = m.hasBattery
+            ? 'Dein Speicher (' + (Math.round(m.battKwh * 10) / 10).toString().replace('.', ',') + ' kWh) verschiebt Tagesstrom in die Nacht → höhere Autarkie. Ein größerer Speicher hebt sie weiter.'
+            : 'Ohne Batteriespeicher wird der Großteil der Produktion eingespeist – direkt genutzt wird nur der zeitgleiche Verbrauch. Ein Speicher hebt deine Autarkie deutlich.';
+        const emsTxt = m.emsOn
+            ? ' Dein Energiemanagement hebt sie zusätzlich: prognosebasiertes Laden und Lastverschiebung in die Sonnenstunden.'
+            : ' Ein Energiemanagement würde sie zusätzlich heben (prognosebasiertes Laden, Lastverschiebung).';
+        hintEl.textContent = battTxt + emsTxt;
+    }
+
+    // Anlage-Zusammenfassung (Gesamt-kWp aus den Flächen)
+    const anlEl = $('anlage-summary');
+    if (anlEl) {
+        const n = (m.surfaceRows || []).length;
+        anlEl.textContent = 'Deine Anlage: ' + (Math.round(m.kWp * 10) / 10).toString().replace('.', ',')
+            + ' kWp aus ' + n + (n === 1 ? ' Fläche' : ' Flächen') + ' · ' + fmt(m.pvYield) + ' kWh/Jahr Produktion.';
+    }
+
+    $('eco-premium-text').textContent = m.emsOn
+        ? `Du rechnest mit intelligentem Energiemanagement (EMS). Das lohnt sich: Bei den 2025 bundesweit rund 573 Stunden mit negativen Strompreisen würde eine normale PV-Anlage die Einspeisevergütung anteilig verlieren (Solarspitzengesetz), und der automatische §14a-Modul-3-Netzentgelt-Rabatt bliebe ungenutzt. Geschätzter Vorteil des EMS: rund ${fmt(Math.round(m.emsDelta))} €/Jahr zu deinen Gunsten.`
+        : `Du rechnest mit einer normalen PV-Anlage ohne Energiemanagement. Bei den 2025 bundesweit rund 573 Stunden mit negativen Strompreisen entfällt anteilig die Einspeisevergütung (Solarspitzengesetz), und der automatische §14a-Modul-3-Netzentgelt-Rabatt bleibt ungenutzt. Mit einem EMS wären es laut dieser Schätzung rund ${fmt(Math.round(m.emsDelta))} €/Jahr mehr zu deinen Gunsten.`;
+
+    const fuelLabel = { oil:'Heizöl', gas:'Erdgas', pellets:'Holzpellets', fernwaerme:'Fernwärme', strom:'Heizstrom' }[W.fuelType] || 'fossiler Energie';
+    $('res-narrative').textContent = W.finanzierung === 'eigen'
+        ? `Du heizt aktuell mit ${fuelLabel} und gibst dafür laut dieser Schätzung ${fmt(heuteM)} €/Monat aus — Geld, das jeden Monat weg ist. Mit deiner eigenen Anlage würdest du stattdessen rund ${fmt(neuM)} €/Monat aufwenden und dir Vermögen aufbauen, das dir dauerhaft gehört.`
+        : `Du heizt aktuell mit ${fuelLabel} und gibst dafür laut dieser Schätzung ${fmt(heuteM)} €/Monat aus — Geld, das jeden Monat weg ist. Mit einer Finanzierung deiner eigenen Anlage zahlst du laut dieser Schätzung rund ${fmt(neuM)} €/Monat — und investierst damit in dein Eigentum statt in das des Energieversorgers.`;
+
+    // PLZ im Lead-Formular vorbelegen
+    const lgPlz = $('lg-plz');
+    if (lgPlz && W.plz && !lgPlz.value) lgPlz.value = W.plz;
 }
+
+// === CHART (eigener Canvas-Renderer – keine Fremdbibliothek, garantierte Zeichnung) ===
+function niceStep(raw) {
+    if (!(raw > 0)) return 1;
+    const pow = Math.pow(10, Math.floor(Math.log10(raw)));
+    const f = raw / pow;
+    return (f <= 1 ? 1 : f <= 2 ? 2 : f <= 5 ? 5 : 10) * pow;
+}
+function roundRectPath(ctx, x, y, w, h, r) {
+    ctx.beginPath();
+    ctx.moveTo(x + r, y);
+    ctx.arcTo(x + w, y,     x + w, y + h, r);
+    ctx.arcTo(x + w, y + h, x,     y + h, r);
+    ctx.arcTo(x,     y + h, x,     y,     r);
+    ctx.arcTo(x,     y,     x + w, y,     r);
+    ctx.closePath();
+}
+function drawCostChart(fossil, neu) {
+    chartData = { fossil, neu };
+    const canvas = $('cost-chart');
+    const note = $('chart-note');
+    const fEnd = fossil[fossil.length - 1], nEnd = neu[neu.length - 1];
+    const ctx = canvas && canvas.getContext && canvas.getContext('2d');
+    if (!ctx) { // Canvas nicht verfügbar → nie ein leeres Feld: Klartext-Fallback
+        if (note) note.textContent = 'Nach 20 Jahren summiert: heutiger Weg ≈ ' + fmt(fEnd) + ' €, mit eigener Anlage ≈ ' + fmt(nEnd) + ' €.';
+        return;
+    }
+    const cssW = canvas.clientWidth  || (canvas.parentElement && canvas.parentElement.clientWidth) || 600;
+    const cssH = canvas.clientHeight || 260;
+    const dpr  = window.devicePixelRatio || 1;
+    canvas.width  = Math.round(cssW * dpr);
+    canvas.height = Math.round(cssH * dpr);
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    ctx.clearRect(0, 0, cssW, cssH);
+
+    const n = fossil.length;
+    const padL = 60, padR = 74, padT = 14, padB = 26;
+    const plotW = Math.max(10, cssW - padL - padR);
+    const plotH = Math.max(10, cssH - padT - padB);
+    const maxV = Math.max(fEnd, nEnd, 1);
+    const step = niceStep(maxV / 4);
+    const yMax = step * Math.max(1, Math.ceil(maxV / step));
+    const X = i => padL + plotW * (n > 1 ? i / (n - 1) : 0);
+    const Y = v => padT + plotH * (1 - v / yMax);
+    const year0 = new Date().getFullYear();
+
+    // Y-Gridlines + €-Labels
+    ctx.font = '11px Outfit, system-ui, sans-serif';
+    ctx.textBaseline = 'middle';
+    for (let g = 0; g <= yMax + step * 0.001; g += step) {
+        const gy = Y(g);
+        ctx.strokeStyle = 'rgba(0,0,0,0.06)'; ctx.lineWidth = 1;
+        ctx.beginPath(); ctx.moveTo(padL, gy); ctx.lineTo(padL + plotW, gy); ctx.stroke();
+        ctx.fillStyle = '#8a8a80'; ctx.textAlign = 'right';
+        ctx.fillText(g >= 1000 ? Math.round(g / 1000) + 'k €' : Math.round(g) + ' €', padL - 8, gy);
+    }
+    // X-Labels (Jahre) alle 5
+    ctx.textAlign = 'center'; ctx.textBaseline = 'top'; ctx.fillStyle = '#8a8a80';
+    for (let i = 0; i < n; i += 5) ctx.fillText(String(year0 + i), X(i), padT + plotH + 8);
+
+    // Linie + dezente Fläche
+    const drawLine = (arr, color, fill) => {
+        ctx.beginPath();
+        arr.forEach((v, i) => { const px = X(i), py = Y(v); i ? ctx.lineTo(px, py) : ctx.moveTo(px, py); });
+        ctx.save();
+        ctx.strokeStyle = color; ctx.lineWidth = 2.5; ctx.lineJoin = 'round'; ctx.lineCap = 'round';
+        ctx.stroke();
+        ctx.lineTo(X(n - 1), Y(0)); ctx.lineTo(X(0), Y(0)); ctx.closePath();
+        ctx.fillStyle = fill; ctx.fill();
+        ctx.restore();
+    };
+    drawLine(neu,    '#2E4F3C', 'rgba(46,79,60,0.07)');
+    drawLine(fossil, '#dc2626', 'rgba(220,38,38,0.07)');
+
+    // Endwert-Chips (Summe nach 20 Jahren) rechts an den Linienenden – für die Beratung wertvoller als Hover.
+    // Liegen die Endwerte dicht beieinander, die Chips vertikal auseinanderschieben (keine Überlappung).
+    const chipH = 18;
+    let yF = Y(fEnd), yN = Y(nEnd);
+    if (Math.abs(yF - yN) < chipH + 2) {
+        const mid = (yF + yN) / 2, off = chipH / 2 + 1;
+        if (fEnd >= nEnd) { yF = mid - off; yN = mid + off; } else { yN = mid - off; yF = mid + off; }
+    }
+    const chip = (v, yc, color) => {
+        const text = fmt(v) + ' €';
+        ctx.font = '700 11px Outfit, system-ui, sans-serif';
+        const w = ctx.measureText(text).width + 12;
+        let bx = X(n - 1) + 6; if (bx + w > cssW) bx = cssW - w;
+        const by = Math.min(cssH - chipH, Math.max(0, yc - chipH / 2));
+        ctx.fillStyle = color; roundRectPath(ctx, bx, by, w, chipH, 5); ctx.fill();
+        ctx.fillStyle = '#fff'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+        ctx.fillText(text, bx + w / 2, by + chipH / 2 + 0.5);
+    };
+    chip(fEnd, yF, '#dc2626');
+    chip(nEnd, yN, '#2E4F3C');
+}
+window.addEventListener('resize', () => {
+    if (!chartData) return;
+    clearTimeout(chartResizeTimer);
+    chartResizeTimer = setTimeout(() => drawCostChart(chartData.fossil, chartData.neu), 150);
+});
 
 // === QUELLEN-TOGGLE ===
 function toggleSources() {
@@ -2299,16 +2717,33 @@ async function submitLead() {
     }
 }
 
-// === RESET ===
+// === RESET (neue Berechnung, kein Step-Reset) ===
 function resetWizard() {
-    W.step = 1;
-    W.kreditbetrag = 0;
-    W.surfaces = [{ label:'Hauptdach', area:0, orientation:'S', tilt:'mittel', shading:'keine' }];
+    // Eingabefelder leeren/zurücksetzen
+    ['inp-baujahr','inp-heizalter','inp-area','inp-consumption','inp-fuelprice','inp-heizabschlag',
+     'inp-elec-kwh','inp-elec-abschlag','inp-ev-km','inp-batt','inp-kreditbetrag','inp-sondertilgung','inp-plz']
+        .forEach(id => { const el = $(id); if (el) el.value = ''; });
+    const ep = $('inp-elecprice'); if (ep) ep.value = '32';
+    const fb = $('plz-feedback'); if (fb) { fb.textContent = ' '; fb.className = 'plz-feedback'; }
+
+    // Karten-/Slider-State zurücksetzen
+    W.gebaeude = 'efh'; W.fuelType = 'oil'; W.finanzierung = 'finanz';
+    W.ems = 'ja'; W.zinsfreiJahr1 = 'nein';
+    W.interesse = ['pv','wp']; W.sektorenIst = []; W.sektorenNeu = []; W.plzData = null;
+    W.zinssatz = 3.5; W.laufzeit = 20; W.priceInc = 6;
+    const setSel = (group, value) => document.querySelectorAll(`.card-btn[data-group="${group}"]`)
+        .forEach(b => b.classList.toggle('selected', b.dataset.value === value));
+    ['gebaeude','fuelType','finanzierung','ems','zinsfreiJahr1'].forEach(g => setSel(g, W[g]));
+    document.querySelectorAll('.card-btn.multi[data-group="interesse"]').forEach(b => b.classList.toggle('selected', ['pv','wp'].includes(b.dataset.value)));
+    document.querySelectorAll('.card-btn.multi[data-group="sektorenIst"], .card-btn.multi[data-group="sektorenNeu"]').forEach(b => b.classList.remove('selected'));
+    const sz = $('sld-zins'); if (sz) sz.value = '3.5';
+    const sl = $('sld-laufzeit'); if (sl) sl.value = '20';
+    const sp = $('sld-preis'); if (sp) sp.value = '6';
+
+    // Dachflächen zurück
+    W.surfaces = [{ label:'Hauptdach', modules:0, modulePower:440, orientation:'S', tilt:'mittel', shading:'keine' }];
     renderSurfaces();
-    const kbInp = $('inp-kreditbetrag');
-    if (kbInp) kbInp.value = '';
-    const rp = $('rate-preview');
-    if (rp) rp.style.display = 'none';
+
     // Lead-Gate zurücksetzen
     const lgForm = $('lead-gate-form');
     const lgSucc = $('lead-success');
@@ -2320,10 +2755,14 @@ function resetWizard() {
     if (lgErr) { lgErr.style.display = 'none'; lgErr.textContent = 'Bitte Vorname, Nachname, E-Mail, PLZ und die Analyse-Zustimmung ausfüllen.'; }
     const lgBtn = $('lg-submit-btn');
     if (lgBtn) { lgBtn.disabled = false; lgBtn.textContent = 'Analyse zusenden & PDF freischalten'; }
-    document.querySelectorAll('.wizard-step').forEach(s => s.classList.remove('active'));
-    $('result-section').classList.remove('visible');
-    $('step-1').classList.add('active');
-    updateProgress(1);
+
+    setElecMode('kwh');
+    updateFuelUI();
+    updateFinanzUI();
+    updateBatteryUI();
+    updateEvUI();
+    updateSliderLabels();
+    recalc();
     window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
