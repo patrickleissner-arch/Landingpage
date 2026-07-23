@@ -905,29 +905,30 @@
 }
 .btn-booking-outline:hover { border-color: #fff; background: rgba(255,255,255,0.08); }
 
-/* Print-Header (nur sichtbar beim Drucken) */
-.print-header {
-    display: none;
-    text-align: center;
-    padding: 0 0 20px;
-    border-bottom: 2px solid var(--pl-green);
-    margin-bottom: 20px;
-}
-.print-header-name { font-size: 1.1rem; font-weight: 800; color: var(--pl-green); }
-.print-header-sub  { font-size: 0.8rem; color: var(--gray-500); }
+/* Druck-Tabellenhülle — am Bildschirm neutralisiert, damit das Layout unverändert
+   bleibt. Erst im Druck wird daraus eine echte Tabelle, deren thead/tfoot der
+   Browser auf jeder Seite wiederholt UND für die er Platz freihält. */
+.print-sheet,
+.print-sheet > tbody,
+.print-sheet > tbody > tr,
+.print-sheet > tbody > tr > td { display: block; width: auto; padding: 0; }
+.print-head-group,
+.print-foot-group { display: none; }
 
-/* Print CSS */
-@media print {
-    .cockpit-inputs, .ergebnis-dock, .fin-sliders, .rechner-tabs-bar, .sp-back-bar,
-    .lead-gate, .btn-new-calc, .sources-wrap, .site-header, footer,
-    .result-notice, .result-soft-cta { display: none !important; }
-    .cockpit-grid { display: block !important; }
-    .cockpit-results { position: static !important; max-height: none !important; overflow: visible !important; }
-    .result-section { display: block !important; }
-    .fin-hero { border-radius: 0; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
-    #cost-chart { height: 300px !important; }
-    body { font-size: 12pt; }
-    .print-header { display: block !important; }
+/* Print-Briefkopf und -Fuß (nur sichtbar beim Drucken) */
+.print-header,
+.print-footer { display: none; }
+/* Die Sicherheitszone ist laut Style Guide (S.3) als transparenter Rand in jeder
+   Logodatei enthalten; das sichtbare Logo misst ca. 74 % der Dateibreite.
+   43mm Dateibreite ≈ 32mm sichtbares Logo — die Vorgabe für den A4-Briefbogen (S.4). */
+.print-header img { width: 43mm; height: auto; display: block; }
+
+/* Hinweis unter dem Druckbutton (am Bildschirm sichtbar, nicht im Druck) */
+.print-hint {
+    font-size: 0.72rem;
+    color: rgba(255,255,255,0.55);
+    margin-top: 10px;
+    line-height: 1.5;
 }
 
 /* Sources */
@@ -972,6 +973,178 @@
     margin-top: 14px;
     font-size: 0.7rem;
     color: var(--gray-400);
+}
+
+/* =========================================================================
+   Print CSS — standardisiert auf weißem A4-Papier.
+   Leitplanken: tonersparend, vollständig S/W-tauglich, Farbe ist nie
+   alleiniger Bedeutungsträger. Browser drucken Hintergründe standardmäßig
+   nicht — deshalb gliedert das Layout ausschließlich über Haarlinien und
+   Weißraum, niemals über gefüllte Flächen.
+   Steht bewusst am Ende des Stylesheets: bei gleicher Spezifität gewinnt
+   die zuletzt notierte Regel.
+   ========================================================================= */
+@media print {
+    @page { size: A4 portrait; margin: 12mm 18mm 12mm; }
+
+    /* --- Was nicht aufs Papier gehört --- */
+    .site-header, footer, .sp-back-bar, .rechner-tabs-bar,
+    .cockpit-intro, .cockpit-inputs, .ergebnis-dock, .fin-sliders,
+    .lead-gate, .btn-new-calc, .result-soft-cta, .print-hint,
+    .sources-chevron { display: none !important; }
+
+    /* --- Container zurücksetzen ---
+       .cockpit-results ist am Bildschirm sticky mit max-height und
+       overflow-y:auto — im Druck würde das den Inhalt auf eine
+       Bildschirmhöhe beschneiden. */
+    .wizard-wrap { padding: 0 !important; max-width: none !important; }
+    .cockpit-grid { display: block !important; }
+    .cockpit-results {
+        position: static !important; top: auto !important;
+        max-height: none !important; overflow: visible !important;
+        padding-right: 0 !important;
+    }
+    .result-section { animation: none !important; transform: none !important; }
+
+    /* --- Briefkopf und Kontaktfuß auf JEDER Seite ---
+       Bewusst über thead/tfoot statt position:fixed: fixierte Elemente werden
+       zwar pro Seite wiederholt, reservieren aber keinen Platz im Textfluss
+       und legen sich ab Seite 2 über den Inhalt (nachgemessen). */
+    .print-sheet { display: table !important; width: 100%; border-collapse: collapse; }
+    .print-sheet > tbody { display: table-row-group !important; }
+    .print-sheet > tbody > tr { display: table-row !important; }
+    .print-body { display: table-cell !important; }
+    .print-head-group { display: table-header-group !important; }
+    .print-foot-group { display: table-footer-group !important; }
+    .print-head-group td, .print-foot-group td { padding: 0; }
+
+    .print-header { display: block !important; text-align: left; padding-bottom: 5mm; }
+    .print-footer {
+        display: block !important;
+        border-top: 0.5pt solid var(--pl-green);
+        margin-top: 5mm; padding-top: 2mm;
+        font-size: 8pt; color: #444;
+    }
+
+    /* --- Reihenfolge: Haftungshinweis direkt unter die Zahlen (§ 34d),
+           ohne das Markup umzubauen --- */
+    .print-flow { display: flex !important; flex-direction: column; }
+    /* Basiswert für ALLE Kinder: Flex-Items ohne eigenes order bekommen sonst 0
+       und rutschen vor den Hero. Jeder Block wird darum explizit einsortiert. */
+    .print-flow > * { order: 50; }
+    .fin-hero          { order: 1; }
+    .result-notice     { order: 2; }   /* Haftungshinweis direkt unter die Zahlen (§ 34d) */
+    .kpi-grid          { order: 3; }
+    .wirtschaft-grid   { order: 4; }
+    .roof-card         { order: 5; }
+    .eco-premium-note  { order: 6; }
+    .result-narrative  { order: 7; }
+    .chart-card        { order: 8; }
+    .sources-wrap      { order: 9; }
+
+    /* --- Umbrüche: kein Block wird je zerrissen ---
+           bewusst auf die einzelne .kpi-card, nicht auf .kpi-grid. */
+    .fin-hero, .kpi-card, .chart-card, .roof-card,
+    .result-notice, .result-narrative, .eco-premium-note { break-inside: avoid; }
+    .roof-card { background: none; border: 0.5pt solid #999; border-radius: 0; }
+    h1, h2, h3, .chart-title, .sources-body h4 { break-after: avoid; }
+    .sources-meta { break-before: avoid; }
+    p { orphans: 3; widows: 3; }
+
+    /* --- Typografie nach Style Guide S.6 ---
+           Basis auf der Root, nicht auf body: alle Größen sind rem-basiert und
+           würden eine body-Angabe schlicht ignorieren. */
+    html { font-size: 12pt; }
+    body { font-size: 10pt; color: #000; }
+    * { text-align: left; }
+    .fin-hero-eyebrow { font-size: 14pt; font-weight: 600; color: var(--pl-green) !important; }
+    .fin-amount { font-size: 20pt; }
+    .kpi-value  { font-size: 13pt; }
+    .fin-label, .kpi-label { font-size: 9pt; }
+    .fin-sub, .kpi-sub, .result-narrative, .sources-body { font-size: 10pt; }
+
+    /* --- Heller Briefbogen statt dunkler Fläche ---
+           Borders drucken zuverlässig, Hintergründe nicht: Gliederung nur über
+           Haarlinien. Kein print-color-adjust — der Ausdruck soll auf jedem
+           S/W-Drucker und mit abgeschalteten Hintergrundgrafiken lesbar sein. */
+    .fin-hero {
+        background: none !important;
+        color: #000 !important;
+        border-radius: 0;
+        padding: 0;
+        margin-bottom: 8mm;
+    }
+    .fin-hero-eyebrow { padding-bottom: 3mm; border-bottom: 0.5pt solid var(--pl-green); }
+    .fin-compare { border-bottom: 0.5pt solid #999; }
+    .fin-col { padding: 4mm 0; }
+    .fin-col.heute { border-right: 0.5pt solid #999; padding-right: 6mm; }
+    .fin-col.neu   { padding-left: 6mm; }
+    /* Gold auf Weiß wird im S/W-Druck zu hellem Grau — der wichtigste Betrag
+       auf dem Blatt wäre dann der schwächste. Deshalb Grün. */
+    .fin-amount,
+    .fin-col.neu .fin-amount { color: var(--pl-green) !important; }
+    .fin-label, .fin-sub, .fin-delta-text, .fin-bilanz,
+    .fin-note, .fin-financed { color: #444 !important; }
+    /* Sämtliche Gold-Texte im Ergebnisbereich auf Grün: Gold auf Weiß wird im
+       S/W-Druck zu hellem Grau — betroffen sind ausgerechnet die Kennzahlen. */
+    .fin-bilanz strong,
+    .fin-financed strong,
+    .roof-total-kwp { color: var(--pl-green) !important; }
+    /* Verlaufsbalken ist eine Hintergrundfläche und druckt ohnehin nicht —
+       als Haarlinie ersetzen, damit die Zeile nicht ins Leere läuft. */
+    .roof-bar { background: none !important; height: 0; border-top: 1pt solid var(--pl-green); border-radius: 0; }
+    .roof-hint, .eco-premium-source { color: #444 !important; }
+    .fin-delta { background: none !important; padding: 4mm 0 0; border-radius: 0; }
+    .fin-delta-badge {
+        background: none !important;
+        border: 1.5pt solid var(--pl-green);
+        border-radius: 0;
+        color: var(--pl-green) !important;
+        padding: 1.5mm 3mm;
+    }
+
+    /* --- Karten und Hinweisblöcke: Rahmen und Linien statt Flächen --- */
+    .kpi-grid { gap: 4mm; margin-bottom: 8mm; }
+    .kpi-card { background: none; border: 0.5pt solid #999; border-radius: 0; padding: 4mm; }
+    .kpi-value { color: var(--pl-green); }
+    .kpi-label, .kpi-sub { color: #444; }
+    .result-narrative, .eco-premium-note {
+        background: none;
+        border-left: 1.5pt solid var(--pl-green);
+        border-radius: 0;
+        color: #000;
+        padding: 0 0 0 5mm;
+        margin-bottom: 8mm;
+    }
+
+    /* --- Haftungshinweis: gehört sichtbar zu den Zahlen (§ 34d GewO) --- */
+    .result-notice {
+        display: block !important;
+        background: none;
+        border: 0.5pt solid #444;
+        border-radius: 0;
+        padding: 3mm;
+        margin-bottom: 8mm;
+        font-size: 9pt;
+        color: #000;
+    }
+
+    /* --- Quellen: Aufklapper im Druck erzwingen, sonst druckt nur die Überschrift --- */
+    .sources-wrap { display: block !important; border-top: 0.5pt solid var(--pl-green); }
+    .sources-body { display: block !important; padding: 2mm 0 0; color: #000; }
+    .sources-toggle { padding: 3mm 0 0; color: var(--pl-green); font-size: 10pt; }
+    .sources-body h4 { color: var(--pl-green); }
+    .sources-body a  { color: #000; text-decoration: none; }
+    .sources-meta    { color: #444; }
+
+    /* --- Chart: feste Höhe in mm, der eigene Renderer zeichnet per beforeprint neu --- */
+    .chart-card { background: none; border: 0.5pt solid #999; border-radius: 0; padding: 4mm; margin-bottom: 8mm; }
+    .chart-canvas-wrap { height: 70mm !important; }
+    /* Legendenpunkte sind Hintergründe und drucken nicht — durch dieselben
+       Strichmuster ersetzen, die der Chart im Druck verwendet. */
+    .legend-dot { width: 7mm; height: 0; border-radius: 0; background: none !important; }
+    .legend-item:nth-child(1) .legend-dot { border-top: 1.5pt dashed #000; }
+    .legend-item:nth-child(2) .legend-dot { border-top: 1.5pt solid var(--pl-green); }
 }
     </style>
 </head>
@@ -1352,10 +1525,24 @@
       <!-- ERGEBNIS -->
       <section class="result-section" id="result-section" aria-labelledby="h-result">
 
-        <div class="print-header">
-          <div class="print-header-name">Patrick Leißner · Energieberatung</div>
-          <div class="print-header-sub">patrickleissner.de · +49 173 4994994 · Unverbindliche Ersteinschätzung</div>
-        </div>
+        <!-- Tabellenhülle nur für den Druck: thead/tfoot wiederholt der Browser auf
+             jeder Seite UND reserviert dafür Platz im Textfluss. position:fixed kann
+             das nicht — es wiederholt sich zwar, legt sich ab Seite 2 aber über den
+             Inhalt. Am Bildschirm ist die Tabelle per display:block neutralisiert. -->
+        <table class="print-sheet" role="presentation">
+        <thead class="print-head-group"><tr><td>
+          <div class="print-header">
+            <img src="assets/Logo/Initialien-Name-Positiv-frei.png"
+                 alt="Patrick Leißner Energieberatung" width="3257" height="1774">
+          </div>
+        </td></tr></thead>
+        <tfoot class="print-foot-group"><tr><td>
+          <div class="print-footer">
+            Patrick Leißner · Energieberatung · patrickleissner.de · +49 173 4994994 · Unverbindliche Ersteinschätzung
+          </div>
+        </td></tr></tfoot>
+        <tbody><tr><td class="print-body">
+        <div class="print-flow">
 
         <div class="fin-hero">
           <p class="fin-hero-eyebrow" id="h-result">Dein Kosten-Nutzen-Vergleich · <span id="res-location">deine Region</span></p>
@@ -1451,7 +1638,7 @@
             <div class="legend-item"><div class="legend-dot" style="background:#dc2626"></div> Weiter wie heute</div>
             <div class="legend-item"><div class="legend-dot" style="background:#2E4F3C"></div> Mit eigener Anlage</div>
           </div>
-          <div style="position:relative;height:260px">
+          <div class="chart-canvas-wrap" style="position:relative;height:260px">
             <canvas id="cost-chart" role="img" aria-label="20-Jahres-Kostenvergleich"></canvas>
           </div>
           <p class="price-hint" id="chart-note"></p>
@@ -1466,7 +1653,7 @@
 
         <div class="lead-gate" id="lead-gate">
           <div class="lead-gate-head">
-            <h3>Möchtest du deine Analyse als PDF behalten?</h3>
+            <h3>Analyse per E-Mail erhalten</h3>
             <p>Dein Ergebnis siehst du bereits oben — optional sende ich dir die unverbindliche Ersteinschätzung zusätzlich kostenlos per E-Mail zu, damit du sie in Ruhe lesen oder ausdrucken kannst.</p>
           </div>
           <div class="lead-gate-form" id="lead-gate-form">
@@ -1504,10 +1691,13 @@
               <input type="checkbox" id="lg-consent-kontakt">
               <span>Patrick darf mich auch zur persönlichen Beratung kontaktieren / mir relevante Informationen zusenden (optional, jederzeit widerrufbar).</span>
             </label>
-            <div class="field-error" id="lg-error" style="display:none">Bitte Vorname, Nachname, E-Mail, PLZ und die Analyse-Zustimmung ausfüllen.</div>
+            <!-- kein Inline-display: .field-error ist per CSS ausgeblendet und wird
+                 über die Klasse .visible eingeblendet. Ein Inline-Stil würde diese
+                 Klassenregel überstimmen und die Meldung dauerhaft unsichtbar machen. -->
+            <div class="field-error" id="lg-error">Bitte Vorname, Nachname, E-Mail, PLZ und die Analyse-Zustimmung ausfüllen.</div>
             <input type="text" name="hp_website" id="hp_website" style="display:none;visibility:hidden" tabindex="-1" autocomplete="off">
             <button type="button" class="btn-booking" id="lg-submit-btn" onclick="submitLead()">
-              Analyse zusenden &amp; PDF freischalten
+              Analyse per E-Mail zusenden
             </button>
           </div>
           <div class="lead-success" id="lead-success" style="display:none">
@@ -1515,6 +1705,7 @@
             <strong>Fast geschafft — bitte bestätige deine E-Mail!</strong>
             <p>Wir haben dir eine Bestätigungsmail geschickt. Klicke auf den Link darin, um deine Analyse zu erhalten. (Spam-Ordner prüfen falls nötig.)</p>
             <button type="button" class="btn-booking" onclick="window.print()">Jetzt drucken / als PDF speichern</button>
+            <p class="print-hint">Tipp: Im Druckdialog „Kopf- und Fußzeilen“ abwählen — sonst druckt der Browser zusätzlich URL und Datum über den Briefkopf.</p>
             <a href="/termin" class="btn-booking btn-booking-outline" style="margin-top:12px;display:inline-block">Kostenlosen Beratungstermin buchen</a>
           </div>
         </div>
@@ -1546,6 +1737,10 @@
             <p class="sources-meta">Stand: Januar 2026 &nbsp;·&nbsp; Alle Werte dienen der Orientierung. Verbindliche Berechnungen nach DIN erfordern eine Vor-Ort-Analyse durch einen zertifizierten Energieberater.</p>
           </div>
         </div>
+
+        </div><!-- .print-flow -->
+        </td></tr></tbody>
+        </table>
 
       </section>
 
@@ -1899,6 +2094,7 @@ const W = {
 
 const $ = id => document.getElementById(id);
 let chartData = null;      // { fossil, neu } – für Redraw bei Resize (eigener Canvas-Renderer)
+let chartPrintMode = false; // im Druck: gestrichelte Fossil-Linie, kräftigeres Raster, keine Flächen
 let chartResizeTimer = null;
 
 // === CARD BUTTONS ===
@@ -2608,7 +2804,7 @@ function drawCostChart(fossil, neu) {
     ctx.textBaseline = 'middle';
     for (let g = 0; g <= yMax + step * 0.001; g += step) {
         const gy = Y(g);
-        ctx.strokeStyle = 'rgba(0,0,0,0.06)'; ctx.lineWidth = 1;
+        ctx.strokeStyle = chartPrintMode ? 'rgba(0,0,0,0.20)' : 'rgba(0,0,0,0.06)'; ctx.lineWidth = 1;
         ctx.beginPath(); ctx.moveTo(padL, gy); ctx.lineTo(padL + plotW, gy); ctx.stroke();
         ctx.fillStyle = '#8a8a80'; ctx.textAlign = 'right';
         ctx.fillText(g >= 1000 ? Math.round(g / 1000) + 'k €' : Math.round(g) + ' €', padL - 8, gy);
@@ -2618,18 +2814,25 @@ function drawCostChart(fossil, neu) {
     for (let i = 0; i < n; i += 5) ctx.fillText(String(year0 + i), X(i), padT + plotH + 8);
 
     // Linie + dezente Fläche
-    const drawLine = (arr, color, fill) => {
+    // Im Druck werden die Linien zusätzlich über die Strichart unterschieden:
+    // auf einem S/W-Drucker werden Rot und Grün zu identischen Grautönen.
+    // Die Flächenfüllungen entfallen dort (Tonerersparnis).
+    const drawLine = (arr, color, fill, dashed) => {
         ctx.beginPath();
         arr.forEach((v, i) => { const px = X(i), py = Y(v); i ? ctx.lineTo(px, py) : ctx.moveTo(px, py); });
         ctx.save();
         ctx.strokeStyle = color; ctx.lineWidth = 2.5; ctx.lineJoin = 'round'; ctx.lineCap = 'round';
+        if (chartPrintMode && dashed) ctx.setLineDash([6, 4]);
         ctx.stroke();
-        ctx.lineTo(X(n - 1), Y(0)); ctx.lineTo(X(0), Y(0)); ctx.closePath();
-        ctx.fillStyle = fill; ctx.fill();
+        ctx.setLineDash([]);
+        if (!chartPrintMode) {
+            ctx.lineTo(X(n - 1), Y(0)); ctx.lineTo(X(0), Y(0)); ctx.closePath();
+            ctx.fillStyle = fill; ctx.fill();
+        }
         ctx.restore();
     };
-    drawLine(neu,    '#2E4F3C', 'rgba(46,79,60,0.07)');
-    drawLine(fossil, '#dc2626', 'rgba(220,38,38,0.07)');
+    drawLine(neu,    '#2E4F3C', 'rgba(46,79,60,0.07)', false);
+    drawLine(fossil, '#dc2626', 'rgba(220,38,38,0.07)', true);
 
     // Endwert-Chips (Summe nach 20 Jahren) rechts an den Linienenden – für die Beratung wertvoller als Hover.
     // Liegen die Endwerte dicht beieinander, die Chips vertikal auseinanderschieben (keine Überlappung).
@@ -2658,6 +2861,16 @@ window.addEventListener('resize', () => {
     chartResizeTimer = setTimeout(() => drawCostChart(chartData.fossil, chartData.neu), 150);
 });
 
+// Der Canvas-Renderer misst seine Größe aus dem Container. Im Druck bekommt der
+// Container per Print-CSS eine feste mm-Höhe — ohne Neuzeichnen bliebe das alte
+// Bitmap stehen und würde nur verzerrt skaliert.
+function redrawChartForPrint(on) {
+    chartPrintMode = on;
+    if (chartData) drawCostChart(chartData.fossil, chartData.neu);
+}
+window.addEventListener('beforeprint', () => redrawChartForPrint(true));
+window.addEventListener('afterprint',  () => redrawChartForPrint(false));
+
 // === QUELLEN-TOGGLE ===
 function toggleSources() {
     const btn  = $('sources-btn');
@@ -2679,10 +2892,10 @@ async function submitLead() {
 
     if (!vorname || !nachname || !email || !plz || !consentAnalyse || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
         $('lg-error').textContent = 'Bitte Vorname, Nachname, E-Mail, PLZ und die Analyse-Zustimmung ausfüllen.';
-        $('lg-error').style.display = '';
+        $('lg-error').classList.add('visible');
         return;
     }
-    $('lg-error').style.display = 'none';
+    $('lg-error').classList.remove('visible');
 
     const btn = $('lg-submit-btn');
     btn.disabled = true;
@@ -2711,9 +2924,9 @@ async function submitLead() {
         $('lead-success').style.display   = '';
     } catch (e) {
         btn.disabled = false;
-        btn.textContent = 'Analyse zusenden & PDF freischalten';
+        btn.textContent = 'Analyse per E-Mail zusenden';
         $('lg-error').textContent = e.message || 'Versand fehlgeschlagen – bitte erneut versuchen.';
-        $('lg-error').style.display = '';
+        $('lg-error').classList.add('visible');
     }
 }
 
@@ -2752,9 +2965,9 @@ function resetWizard() {
     ['lg-vorname','lg-nachname','lg-email','lg-phone','lg-plz'].forEach(id => { const el = $(id); if(el) el.value=''; });
     ['lg-consent-analyse','lg-consent-kontakt'].forEach(id => { const el = $(id); if(el) el.checked = false; });
     const lgErr = $('lg-error');
-    if (lgErr) { lgErr.style.display = 'none'; lgErr.textContent = 'Bitte Vorname, Nachname, E-Mail, PLZ und die Analyse-Zustimmung ausfüllen.'; }
+    if (lgErr) { lgErr.classList.remove('visible'); lgErr.textContent = 'Bitte Vorname, Nachname, E-Mail, PLZ und die Analyse-Zustimmung ausfüllen.'; }
     const lgBtn = $('lg-submit-btn');
-    if (lgBtn) { lgBtn.disabled = false; lgBtn.textContent = 'Analyse zusenden & PDF freischalten'; }
+    if (lgBtn) { lgBtn.disabled = false; lgBtn.textContent = 'Analyse per E-Mail zusenden'; }
 
     setElecMode('kwh');
     updateFuelUI();

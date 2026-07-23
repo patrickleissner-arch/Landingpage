@@ -24,11 +24,21 @@ app.use(express.urlencoded({ extended: false }));
 const rateLimitMap = new Map(); // ip → [timestamps]
 const pendingMap   = new Map(); // token → { payload, expiresAt }
 
-// Abgelaufene Pending-Einträge alle 30 min bereinigen
+const RATE_WINDOW = 10 * 60 * 1000; // Zeitfenster des Rate-Limits (10 Min)
+
+// Abgelaufene Pending-Einträge und verwaiste Rate-Limit-Einträge alle 30 min bereinigen.
+// Die IP-Zeitstempel werden beim Lesen zwar gefiltert, der Map-Eintrag selbst blieb aber
+// bis zum Serverneustart bestehen — eine IP ist ein personenbezogenes Datum und soll
+// nicht ohne Zweck liegen bleiben.
 setInterval(() => {
   const now = Date.now();
   for (const [k, v] of pendingMap) {
     if (v.expiresAt < now) pendingMap.delete(k);
+  }
+  for (const [ip, hits] of rateLimitMap) {
+    const fresh = hits.filter(t => now - t < RATE_WINDOW);
+    if (fresh.length) rateLimitMap.set(ip, fresh);
+    else rateLimitMap.delete(ip);
   }
 }, 30 * 60 * 1000);
 
@@ -131,9 +141,8 @@ app.post('/api/contact', async (req, res) => {
   // Rate-Limiting: max. 3 Anfragen pro IP in 10 Minuten
   const ip     = req.ip;
   const now    = Date.now();
-  const WINDOW = 10 * 60 * 1000;
   const MAX    = 3;
-  const hits   = (rateLimitMap.get(ip) || []).filter(t => now - t < WINDOW);
+  const hits   = (rateLimitMap.get(ip) || []).filter(t => now - t < RATE_WINDOW);
   if (hits.length >= MAX) {
     return res.status(429).json({ ok: false, error: 'Zu viele Anfragen. Bitte warten Sie einige Minuten.' });
   }
@@ -279,8 +288,8 @@ app.get('/api/confirm', async (req, res) => {
 app.post('/api/lead', async (req, res) => {
   if (req.body.hp_website) return res.status(400).json({ ok: false, error: 'Bot detected.' });
 
-  const ip = req.ip, now = Date.now(), WINDOW = 10 * 60 * 1000, MAX = 3;
-  const hits = (rateLimitMap.get(ip) || []).filter(t => now - t < WINDOW);
+  const ip = req.ip, now = Date.now(), MAX = 3;
+  const hits = (rateLimitMap.get(ip) || []).filter(t => now - t < RATE_WINDOW);
   if (hits.length >= MAX) return res.status(429).json({ ok: false, error: 'Zu viele Anfragen.' });
   hits.push(now); rateLimitMap.set(ip, hits);
 
