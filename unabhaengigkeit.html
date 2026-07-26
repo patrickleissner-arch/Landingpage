@@ -14,6 +14,131 @@
 
   <link rel="stylesheet" href="style.css">
   <link rel="stylesheet" href="subpage.css">
+
+  <style>
+  /* ===== Detailrechner (eigene Erweiterung – Patricks Marke) ===== */
+  :root { --dr-green:#2E4F3C; --dr-gold:#D0AB3B; --dr-line:#d9dcd6; --dr-muted:#6b7280; }
+
+  /* Trennsektion: linksbündig über die volle Breite – bündig mit iframe (oben)
+     und Detailrechner (unten), damit beide als ein Zusammenhang wirken. */
+  .dr-divider { text-align:left; margin:1.5rem auto 1rem; max-width:1024px; }
+  .dr-divider .dr-eyebrow {
+    display:inline-block; font-size:.72rem; font-weight:700; letter-spacing:.09em;
+    text-transform:uppercase; color:var(--dr-gold); margin-bottom:.4rem;
+  }
+  .dr-divider h2 { color:var(--dr-green); font-size:1.5rem; font-weight:800; line-height:1.2; margin:0 0 .45rem; max-width:none; }
+  .dr-divider p  { color:var(--dr-muted); font-size:.9rem; line-height:1.55; margin:0; max-width:none; }
+  .dr-ownnote {
+    display:block; margin-top:.7rem; font-size:.74rem; color:var(--dr-muted);
+    background:#f4f6f3; border:1px solid var(--dr-line); border-radius:6px; padding:7px 12px;
+  }
+
+  /* Auf dieselbe Breite wie der iframe-Wrapper (max-width:1024px, zentriert) kappen,
+     damit oberer und unterer Rechner fluchten. Unter 1024px fluid bei 100 % → responsive. */
+  .detailrechner { background:#fff; border:1px solid var(--dr-line); border-radius:.75rem; padding:clamp(1.1rem,3vw,1.8rem); max-width:1024px; margin-inline:auto; }
+  .dr-grid { display:block; }
+  @media (min-width:900px){ .dr-grid { display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1fr); gap:2rem; align-items:start; } }
+
+  .dr-sec { margin-bottom:1.4rem; }
+  .dr-sec h3 { font-size:.95rem; font-weight:800; color:var(--dr-green); margin:0 0 .1rem; }
+  .dr-sec .dr-hint { font-size:.78rem; color:var(--dr-muted); line-height:1.5; margin:0 0 .7rem; }
+  .dr-field { margin-bottom:.9rem; }
+  .dr-label { display:block; font-size:.82rem; font-weight:600; color:var(--dr-green); margin-bottom:.35rem; }
+  .dr-inrow { display:flex; align-items:center; gap:8px; }
+  .dr-input, .dr-select {
+    width:100%; padding:10px 12px; border:2px solid #e5e7eb; border-radius:.5rem;
+    font-family:inherit; font-size:1rem; color:#111; background:#fff;
+  }
+  .dr-input:focus, .dr-select:focus { outline:none; border-color:var(--dr-green); }
+  .dr-unit { font-size:.85rem; color:var(--dr-muted); white-space:nowrap; }
+  .dr-wp { max-width:5.5rem; }
+
+  .dr-toggle { display:inline-flex; border:2px solid #e5e7eb; border-radius:.5rem; overflow:hidden; }
+  .dr-toggle button { border:none; background:#fff; font-family:inherit; font-size:.82rem; font-weight:700; padding:8px 14px; cursor:pointer; color:var(--dr-muted); }
+  .dr-toggle button.on { background:var(--dr-green); color:#fff; }
+
+  .dr-chips { display:flex; flex-wrap:wrap; gap:6px; }
+  .dr-chip { border:2px solid #e5e7eb; background:#fff; border-radius:.5rem; font-family:inherit; font-size:.82rem; font-weight:700; padding:7px 12px; cursor:pointer; color:var(--dr-green); }
+  .dr-chip.on { background:var(--dr-green); border-color:var(--dr-green); color:#fff; }
+
+  .dr-surface { border:1px solid var(--dr-line); border-radius:.6rem; padding:.85rem; margin-bottom:.7rem; }
+  .dr-surface-head { display:flex; justify-content:space-between; align-items:center; margin-bottom:.6rem; }
+  .dr-surface-head strong { font-size:.85rem; color:var(--dr-green); }
+  .dr-surface-del { border:none; background:none; color:#b91c1c; font-size:1.1rem; cursor:pointer; line-height:1; padding:2px 6px; }
+  .dr-surface-yield { font-size:.78rem; color:var(--dr-muted); margin-top:.5rem; }
+  .dr-addsurface { border:2px dashed var(--dr-line); background:#fafbfa; color:var(--dr-green); font-family:inherit; font-weight:700; font-size:.85rem; border-radius:.5rem; padding:9px 14px; cursor:pointer; width:100%; }
+  .dr-opt { display:flex; align-items:center; gap:8px; margin-bottom:.5rem; }
+  .dr-opt input[type=checkbox]{ width:18px; height:18px; accent-color:var(--dr-green); }
+  .dr-opt-detail { margin:.2rem 0 .9rem 26px; }
+
+  /* Ergebnis */
+  .dr-results { }
+  .dr-gauges { display:grid; grid-template-columns:1fr 1fr; gap:1rem; margin-bottom:1.2rem; }
+  @media (max-width:420px){ .dr-gauges { grid-template-columns:1fr; } }
+  .dr-gauge { text-align:center; border:1px solid var(--dr-line); border-radius:.6rem; padding:1rem .6rem; }
+  .dr-gauge canvas { width:132px; height:132px; }
+  .dr-gauge .dr-gauge-label { font-size:.78rem; font-weight:700; color:var(--dr-green); margin-top:.4rem; }
+  .dr-gauge .dr-gauge-sub { font-size:.72rem; color:var(--dr-muted); }
+
+  .dr-flow { border:1px solid var(--dr-line); border-radius:.6rem; padding:1rem; margin-bottom:1.2rem; }
+  .dr-flow h4 { font-size:.85rem; color:var(--dr-green); margin:0 0 .7rem; font-weight:800; }
+  .dr-bar { display:flex; height:16px; border-radius:8px; overflow:hidden; margin-bottom:.55rem; border:1px solid var(--dr-line); }
+  .dr-bar .seg-self { background:var(--dr-green); }
+  .dr-bar .seg-grid { background:#c8ccc4; }
+  .dr-figs { display:grid; grid-template-columns:1fr 1fr 1fr; gap:.5rem; }
+  .dr-fig { text-align:left; }
+  .dr-fig .fl { display:block; font-size:.68rem; text-transform:uppercase; letter-spacing:.05em; color:var(--dr-muted); }
+  .dr-fig .fv { display:block; font-size:.95rem; font-weight:800; color:var(--dr-green); }
+
+  /* Überschuss / EMS / Solarspitzengesetz – klar als Regulierung markiert */
+  .dr-surplus { border:1px solid var(--dr-line); border-left:4px solid var(--dr-gold); border-radius:.5rem; padding:1rem; margin-bottom:1.1rem; background:#fffdf6; }
+  .dr-surplus .reg-tag { display:inline-block; font-size:.66rem; font-weight:700; text-transform:uppercase; letter-spacing:.06em; color:var(--dr-muted); margin-bottom:.4rem; }
+  .dr-surplus h4 { font-size:.9rem; color:var(--dr-green); margin:0 0 .5rem; }
+  .dr-surplus .surplus-state { font-size:.86rem; line-height:1.55; color:#333; }
+  .dr-surplus .ok  { color:#166534; font-weight:700; }
+  .dr-surplus .warn{ color:#b45309; font-weight:700; }
+
+  .dr-method { margin-top:1rem; border-top:1px solid var(--dr-line); }
+  .dr-method summary { cursor:pointer; padding:.7rem 0; font-size:.8rem; font-weight:700; color:var(--dr-green); }
+  .dr-method .dr-method-body { font-size:.78rem; color:#444; line-height:1.7; padding-bottom:.7rem; }
+  .dr-method h5 { font-size:.72rem; text-transform:uppercase; letter-spacing:.05em; color:var(--dr-green); margin:.7rem 0 .2rem; }
+  .dr-method a { color:var(--dr-green); }
+
+  .dr-actions { display:flex; flex-wrap:wrap; gap:.7rem; margin-top:1.2rem; }
+  .dr-print-btn { background:var(--dr-green); color:#fff; border:none; border-radius:.5rem; font-family:inherit; font-weight:700; font-size:.9rem; padding:12px 20px; cursor:pointer; }
+  .dr-print-btn:hover { background:#3a6350; }
+  .dr-print-hint { font-size:.72rem; color:var(--dr-muted); margin:.4rem 0 0; line-height:1.5; }
+
+  .dr-print-header, .dr-print-footer { display:none; }
+
+  /* ===== DRUCK: nur Detailergebnis, weißes A4, S/W-tauglich ===== */
+  @media print {
+    @page { size:A4 portrait; margin:12mm 16mm; }
+    .site-header, .sp-back-bar, .rechner-tabs-bar, .sp-hero, footer,
+    .solarisator-frame-wrapper, .solarisator-source, .ec-cta-card,
+    .dr-inputs-col, .dr-divider, .dr-actions, .dr-print-hint { display:none !important; }
+    .dr-method summary::-webkit-details-marker { display:none; }
+    body { background:#fff; }
+    /* Scroll-Reveal im Druck aufheben – sonst bleibt der Rechner unsichtbar,
+       wenn man ohne vorheriges Scrollen druckt. */
+    .reveal { opacity:1 !important; transform:none !important; }
+    .detailrechner { border:none; padding:0; }
+    .dr-grid { display:block !important; }
+    .dr-results { display:block !important; }
+    /* Briefkopf/Fuß je Seite via Tabellenhülle */
+    .dr-sheet { display:table !important; width:100%; }
+    .dr-print-head-group { display:table-header-group !important; }
+    .dr-print-foot-group { display:table-footer-group !important; }
+    .dr-print-header { display:block !important; padding-bottom:5mm; }
+    .dr-print-header img { width:43mm; height:auto; }
+    .dr-print-footer { display:block !important; border-top:.5pt solid var(--dr-green); margin-top:5mm; padding-top:2mm; font-size:8pt; color:#444; }
+    .dr-gauge, .dr-flow, .dr-surplus, .dr-method { break-inside:avoid; }
+    .dr-method[open] .dr-method-body, .dr-method .dr-method-body { display:block !important; }
+    .dr-method summary { list-style:none; color:var(--dr-green); font-weight:700; padding:0 0 .3rem; }
+    .dr-surplus { background:none !important; }
+    * { -webkit-print-color-adjust:exact; }  /* nur für die dünnen Gauge-Ringe; Flächen sind ohnehin hell */
+  }
+  </style>
 </head>
 <body>
 
@@ -89,11 +214,11 @@
       <div class="container sp-hero-content">
         <p class="sp-hero-eyebrow">Interaktiver Rechner</p>
         <h1>Wie unabhängig<br>könntest du sein?</h1>
-        <p>Ermittle, wie viel Strom eine PV-Anlage auf deinem Dach erzeugen könnte und wie viel davon du selbst nutzen könntest. Der Solarisator wurde von der HTW Berlin entwickelt und steht kostenlos zur Verfügung.</p>
+        <p>Ermittle, wie viel Strom eine PV-Anlage auf deinem Dach erzeugen könnte und wie viel davon du selbst nutzen könntest. Oben der wissenschaftliche Solarisator der HTW Berlin – darunter meine erweiterte Einschätzung für mehrere Dachflächen, Wärmepumpe, E-Auto und Speicher.</p>
       </div>
     </section>
 
-    <section class="section-rechner">
+    <section class="section-rechner section-htw-iframe">
       <div class="container">
         <div class="solarisator-frame-wrapper reveal">
           <iframe
@@ -110,6 +235,167 @@
         <p class="solarisator-source">
           Bereitgestellt von der <a href="https://solar.htw-berlin.de" target="_blank" rel="noopener noreferrer">HTW Berlin – Hochschule für Technik und Wirtschaft</a>
         </p>
+
+        <!-- ===================== DETAILRECHNER (eigene Erweiterung) ===================== -->
+        <div class="dr-divider reveal">
+          <span class="dr-eyebrow">Meine erweiterte Einschätzung</span>
+          <h2>Mehrere Dachflächen, Wärmepumpe, E-Auto, Speicher?</h2>
+          <p>Der HTW-Solarisator oben rechnet den Standardfall. Für ein Dach mit mehreren
+             Ausrichtungen (Ost/West/Nord/Süd) und für Wärmepumpe, E-Auto und Batteriespeicher
+             gebe ich dir hier eine erweiterte Einschätzung – am Ende als PDF zum Mitnehmen.</p>
+          <span class="dr-ownnote">Eigene Schätzung von Patrick Leißner in Anlehnung an die HTW-Methodik (PVGIS-Erträge).
+             Kein HTW-Rechenergebnis – die belastbare Referenz ist der Solarisator oben.</span>
+        </div>
+
+        <div class="detailrechner reveal" id="detailrechner">
+          <table class="dr-sheet">
+          <thead class="dr-print-head-group"><tr><td>
+            <div class="dr-print-header">
+              <img src="assets/Logo/Initialien-Name-Positiv-frei.png" alt="Patrick Leißner Energieberatung" width="3257" height="1774">
+            </div>
+          </td></tr></thead>
+          <tfoot class="dr-print-foot-group"><tr><td>
+            <div class="dr-print-footer">
+              Patrick Leißner · Energieberatung · patrickleissner.de · +49 173 4994994 · Unverbindliche Ersteinschätzung (eigene Schätzung, kein HTW-Ergebnis)
+            </div>
+          </td></tr></tfoot>
+          <tbody><tr><td>
+
+          <div class="dr-grid">
+            <!-- EINGABEN -->
+            <div class="dr-inputs-col">
+              <div class="dr-sec">
+                <h3>1 · Standort &amp; Verbrauch</h3>
+                <p class="dr-hint">Deine Postleitzahl bestimmt den regionalen Ertrag; der Jahresstromverbrauch steht auf deiner Stromrechnung.</p>
+                <div class="dr-field">
+                  <label class="dr-label" for="dr-plz">Postleitzahl</label>
+                  <div class="dr-inrow">
+                    <input type="text" id="dr-plz" class="dr-input" inputmode="numeric" maxlength="5" placeholder="z. B. 06766" value="06766">
+                    <span class="dr-unit" id="dr-region">Halle/Dessau</span>
+                  </div>
+                </div>
+                <div class="dr-field">
+                  <label class="dr-label" for="dr-verbrauch">Jahresstromverbrauch Haushalt</label>
+                  <div class="dr-inrow">
+                    <input type="number" id="dr-verbrauch" class="dr-input" inputmode="numeric" min="500" max="50000" placeholder="z. B. 4000" value="4000">
+                    <span class="dr-unit">kWh</span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="dr-sec">
+                <h3>2 · Deine Dachflächen</h3>
+                <p class="dr-hint">Je Fläche: Ausrichtung, Neigung, Anzahl Module. Mehrere Ausrichtungen einfach hinzufügen.</p>
+                <div id="dr-surfaces"></div>
+                <button type="button" class="dr-addsurface" id="dr-add">+ Weitere Dachfläche</button>
+              </div>
+
+              <div class="dr-sec">
+                <h3>3 · Speicher &amp; Energiemanagement</h3>
+                <div class="dr-field">
+                  <label class="dr-label" for="dr-batt">Nutzbare Speicherkapazität</label>
+                  <div class="dr-inrow">
+                    <input type="number" id="dr-batt" class="dr-input" inputmode="numeric" min="0" max="10000" placeholder="0 = ohne Speicher" value="9">
+                    <span class="dr-unit">kWh</span>
+                  </div>
+                </div>
+                <div class="dr-field">
+                  <label class="dr-label">Intelligentes Energiemanagement (EMS)?</label>
+                  <div class="dr-toggle" id="dr-ems" role="group" aria-label="Energiemanagement">
+                    <button type="button" data-ems="ja" class="on">Mit EMS</button>
+                    <button type="button" data-ems="nein">Ohne EMS</button>
+                  </div>
+                </div>
+              </div>
+
+              <div class="dr-sec">
+                <h3>4 · Zusätzliche Verbraucher (optional)</h3>
+                <p class="dr-hint">Wärmepumpe und E-Auto erhöhen den Verbrauch und verändern deine Autarkie.</p>
+                <div class="dr-opt">
+                  <input type="checkbox" id="dr-wp-on">
+                  <label for="dr-wp-on">Wärmepumpe einplanen</label>
+                </div>
+                <div class="dr-opt-detail" id="dr-wp-detail" style="display:none">
+                  <div class="dr-inrow">
+                    <input type="number" id="dr-wp-kwh" class="dr-input" inputmode="numeric" min="0" max="20000" value="3500">
+                    <span class="dr-unit">kWh/Jahr</span>
+                  </div>
+                </div>
+                <div class="dr-opt">
+                  <input type="checkbox" id="dr-ev-on">
+                  <label for="dr-ev-on">E-Auto einplanen</label>
+                </div>
+                <div class="dr-opt-detail" id="dr-ev-detail" style="display:none">
+                  <div class="dr-inrow">
+                    <input type="number" id="dr-ev-km" class="dr-input" inputmode="numeric" min="0" max="80000" value="15000">
+                    <span class="dr-unit">km/Jahr</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- ERGEBNIS -->
+            <div class="dr-results">
+              <div class="dr-gauges">
+                <div class="dr-gauge">
+                  <canvas id="dr-gauge-autark" width="264" height="264" role="img" aria-label="Autarkiegrad"></canvas>
+                  <div class="dr-gauge-label">Autarkiegrad</div>
+                  <div class="dr-gauge-sub">deines Verbrauchs aus eigenem Solarstrom</div>
+                </div>
+                <div class="dr-gauge">
+                  <canvas id="dr-gauge-eigen" width="264" height="264" role="img" aria-label="Eigenverbrauchsanteil"></canvas>
+                  <div class="dr-gauge-label">Eigenverbrauchsanteil</div>
+                  <div class="dr-gauge-sub">deines Solarstroms selbst genutzt</div>
+                </div>
+              </div>
+
+              <div class="dr-flow">
+                <h4>Wohin fließt dein Sonnenstrom?</h4>
+                <div class="dr-bar" role="img" aria-label="Anteil Eigenversorgung gegenüber Netzbezug">
+                  <div class="seg-self" id="dr-seg-self" style="width:0%"></div>
+                  <div class="seg-grid" id="dr-seg-grid" style="width:100%"></div>
+                </div>
+                <div class="dr-figs">
+                  <div class="dr-fig"><span class="fl">Selbst genutzt</span><span class="fv" id="dr-selbst">–</span></div>
+                  <div class="dr-fig"><span class="fl">Ins Netz</span><span class="fv" id="dr-export">–</span></div>
+                  <div class="dr-fig"><span class="fl">Aus dem Netz</span><span class="fv" id="dr-netz">–</span></div>
+                </div>
+                <p class="dr-surface-yield" id="dr-total-yield" style="margin-top:.7rem"></p>
+              </div>
+
+              <div class="dr-surplus" id="dr-surplus">
+                <span class="reg-tag">Regulierung 2025 · kein HTW-Ergebnis</span>
+                <h4>Was passiert mit deinem Überschuss?</h4>
+                <p class="surplus-state" id="dr-surplus-text"></p>
+              </div>
+
+              <details class="dr-method">
+                <summary>Methodik &amp; Quellen</summary>
+                <div class="dr-method-body">
+                  <h5>Wissenschaftliche Grundlage</h5>
+                  Die belastbare Referenz ist der <a href="https://solar.htw-berlin.de/rechner/unabhaengigkeitsrechner/" target="_blank" rel="noopener">Unabhängigkeitsrechner der HTW Berlin</a>
+                  (Forschungsgruppe Prof. Quaschning) – oben als Original eingebunden. Er beruht auf über 25.000 vorsimulierten Systemkonfigurationen.
+                  <h5>Diese erweiterte Einschätzung</h5>
+                  Autarkiegrad und Eigenverbrauchsanteil werden hier mit sättigenden Kurven <em>in Anlehnung an</em> die HTW-Methodik geschätzt (relative PV-Größe und relative Speichergröße).
+                  Der Ertrag je Dachausrichtung/Neigung folgt einer <a href="https://re.jrc.ec.europa.eu/pvg_tools/" target="_blank" rel="noopener">PVGIS</a>-Näherung.
+                  <strong>Keine HTW-Berechnung; eigene Schätzung ohne Gewähr.</strong>
+                  <h5>Grenzen</h5>
+                  Mehrere Ausrichtungen sowie Wärmepumpe/E-Auto verlassen den Standardfall, für den die HTW-Formeln validiert sind – die Werte sind daher orientierende Näherungen, keine Zusage.
+                  Überschuss/Einspeisung (Solarspitzengesetz, §14a EnWG) ist deutsche Regulierung Stand 2025, kein HTW-Ergebnis.
+                </div>
+              </details>
+
+              <div class="dr-actions">
+                <button type="button" class="dr-print-btn" onclick="window.print()">Als PDF speichern / drucken</button>
+              </div>
+              <p class="dr-print-hint">Tipp: Im Druckdialog „Kopf- und Fußzeilen“ abwählen – sonst druckt der Browser zusätzlich URL und Datum.</p>
+            </div>
+          </div>
+
+          </td></tr></tbody>
+          </table>
+        </div>
+        <!-- ===================== /DETAILRECHNER ===================== -->
 
         <div class="ec-cta-card" style="margin-top: 2rem;">
           <h2>Bereit für den nächsten Schritt?</h2>
@@ -180,5 +466,177 @@
   </footer>
 
   <script src="main.js"></script>
+  <script src="assets/js/pv-model.js"></script>
+  <script>
+  (function () {
+    'use strict';
+    var M = window.PVModel;
+    if (!M) return;
+    var $ = function (id) { return document.getElementById(id); };
+
+    // --- State ---
+    var surfaces = [{ orientation:'S', tilt:'mittel', modules:20, modulePower:440, shading:'keine' }];
+    var ems = 'ja';
+
+    var TILT_LABEL = { flach:'flach ≤15°', mittel:'20–35°', steil:'steil ≥40°', vertikal:'Fassade' };
+
+    // --- Dachflächen rendern ---
+    function renderSurfaces() {
+      var wrap = $('dr-surfaces');
+      wrap.innerHTML = '';
+      surfaces.forEach(function (s, i) {
+        var box = document.createElement('div');
+        box.className = 'dr-surface';
+        var canDel = surfaces.length > 1;
+        var chips = M.ORIENT_OPTS.map(function (o) {
+          return '<button type="button" class="dr-chip' + (o === s.orientation ? ' on' : '') +
+                 '" data-i="' + i + '" data-prop="orientation" data-val="' + o + '">' + o + '</button>';
+        }).join('');
+        var tiltOpts = M.TILT_OPTS.map(function (t) {
+          return '<option value="' + t[0] + '"' + (t[0] === s.tilt ? ' selected' : '') + '>' + t[0] + ' (' + t[1] + ')</option>';
+        }).join('');
+        box.innerHTML =
+          '<div class="dr-surface-head"><strong>Fläche ' + (i + 1) + '</strong>' +
+            (canDel ? '<button type="button" class="dr-surface-del" data-del="' + i + '" aria-label="Fläche entfernen">×</button>' : '') +
+          '</div>' +
+          '<div class="dr-field"><label class="dr-label">Ausrichtung</label><div class="dr-chips">' + chips + '</div></div>' +
+          '<div class="dr-field"><label class="dr-label">Neigung</label><select class="dr-select" data-i="' + i + '" data-prop="tilt">' + tiltOpts + '</select></div>' +
+          '<div class="dr-field"><label class="dr-label">Anzahl Module × Modulleistung</label><div class="dr-inrow">' +
+            '<input type="number" class="dr-input" data-i="' + i + '" data-prop="modules" inputmode="numeric" min="0" max="200" value="' + (s.modules || '') + '" aria-label="Anzahl Module">' +
+            '<span class="dr-unit">×</span>' +
+            '<input type="number" class="dr-input dr-wp" data-i="' + i + '" data-prop="modulePower" inputmode="numeric" min="250" max="700" step="5" value="' + s.modulePower + '" aria-label="Modulleistung in Watt-Peak">' +
+            '<span class="dr-unit">Wp</span></div></div>' +
+          '<p class="dr-surface-yield" data-yield="' + i + '"></p>';
+        wrap.appendChild(box);
+      });
+    }
+
+    // --- Eingaben lesen + rechnen + anzeigen ---
+    function recalc() {
+      var plz = $('dr-plz').value;
+      var reg = M.regionForPlz(plz);
+      $('dr-region').textContent = reg.region;
+
+      var consumption = parseFloat($('dr-verbrauch').value) || 0;
+      if ($('dr-wp-on').checked) consumption += Math.max(0, parseFloat($('dr-wp-kwh').value) || 0);
+      if ($('dr-ev-on').checked) consumption += Math.max(0, parseFloat($('dr-ev-km').value) || 0) * M.EV_KWH_PER_KM;
+
+      var kWp = 0, pvYield = 0;
+      surfaces.forEach(function (s, i) {
+        var r = M.surfaceYield(s, reg.yield);
+        kWp += r.kWp; pvYield += r.yield;
+        var el = document.querySelector('[data-yield="' + i + '"]');
+        if (el) el.textContent = r.kWp > 0
+          ? (M.ORIENT_LABEL[s.orientation] + ' · ' + r.kWp.toFixed(1) + ' kWp · ≈ ' + fmt(r.yield) + ' kWh/Jahr')
+          : 'Noch keine Module eingetragen.';
+      });
+
+      var battKwh = Math.max(0, parseFloat($('dr-batt').value) || 0);
+      var res = M.computeIndependence({ consumptionKwh: consumption, kWp: kWp, pvYield: pvYield, battKwh: battKwh, emsOn: ems === 'ja' });
+
+      drawGauge($('dr-gauge-autark'), res.autarkie);
+      drawGauge($('dr-gauge-eigen'), res.eigenverbrauch);
+
+      var selfPct = res.consumption > 0 ? Math.round(res.pvSelbst / res.consumption * 100) : 0;
+      $('dr-seg-self').style.width = selfPct + '%';
+      $('dr-seg-grid').style.width = (100 - selfPct) + '%';
+      $('dr-selbst').textContent = fmt(res.pvSelbst) + ' kWh';
+      $('dr-export').textContent = fmt(res.pvExport) + ' kWh';
+      $('dr-netz').textContent   = fmt(res.netElec) + ' kWh';
+      $('dr-total-yield').textContent = kWp > 0
+        ? ('Gesamt: ' + kWp.toFixed(1) + ' kWp · ≈ ' + fmt(pvYield) + ' kWh/Jahr Ertrag · Standort ' + reg.region + ' (' + reg.yield + ' kWh/kWp)')
+        : 'Trag oben die Anzahl Module ein, dann rechnet das Cockpit live.';
+
+      renderSurplus(res);
+    }
+
+    function renderSurplus(res) {
+      var el = $('dr-surplus-text');
+      if (res.emsOn) {
+        el.innerHTML = '<span class="ok">Mit EMS:</span> Dein Überschuss von ≈ ' + fmt(res.pvExport) +
+          ' kWh/Jahr wird intelligent gesteuert eingespeist – die Einspeisung bleibt gesichert, und der ' +
+          '§14a-Netzentgelt-Vorteil ist nutzbar.';
+      } else {
+        el.innerHTML = '<span class="warn">Ohne EMS:</span> In den ≈ ' + res.negPriceHours +
+          ' Stunden mit negativen Börsenpreisen (2025) kann die Vergütung deines Überschusses von ≈ ' + fmt(res.pvExport) +
+          ' kWh/Jahr anteilig entfallen (<a href="/ratgeber/solarspitzengesetz" target="_blank" rel="noopener">Solarspitzengesetz §51 EEG</a>), ' +
+          'und der §14a-Netzentgelt-Rabatt bleibt ggf. ungenutzt. Ein Energiemanagement sichert die Einspeisung.';
+      }
+    }
+
+    // --- Gauge (Ring) auf Canvas, S/W-tauglich ---
+    function drawGauge(canvas, pct) {
+      if (!canvas || !canvas.getContext) return;
+      var ctx = canvas.getContext('2d');
+      var W = canvas.width, H = canvas.height, cx = W/2, cy = H/2, r = W*0.38, lw = W*0.11;
+      ctx.clearRect(0,0,W,H);
+      // Track
+      ctx.beginPath(); ctx.arc(cx,cy,r,0,Math.PI*2); ctx.lineWidth = lw; ctx.strokeStyle = '#e3e6e0'; ctx.stroke();
+      // Wert-Bogen
+      var frac = Math.max(0, Math.min(1, pct/100));
+      ctx.beginPath(); ctx.arc(cx,cy,r,-Math.PI/2,-Math.PI/2 + frac*Math.PI*2); ctx.lineWidth = lw; ctx.strokeStyle = '#2E4F3C'; ctx.lineCap = 'round'; ctx.stroke();
+      // Text
+      ctx.fillStyle = '#2E4F3C'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+      ctx.font = '700 ' + Math.round(W*0.24) + 'px Outfit, sans-serif';
+      ctx.fillText(Math.round(pct) + '%', cx, cy);
+    }
+
+    function fmt(n) { return Math.round(n).toLocaleString('de-DE'); }
+
+    // --- Events ---
+    $('dr-surfaces').addEventListener('click', function (e) {
+      var chip = e.target.closest('.dr-chip');
+      if (chip) { surfaces[+chip.dataset.i][chip.dataset.prop] = chip.dataset.val; renderSurfaces(); recalc(); return; }
+      var del = e.target.closest('[data-del]');
+      if (del) { surfaces.splice(+del.dataset.del, 1); renderSurfaces(); recalc(); }
+    });
+    $('dr-surfaces').addEventListener('input', function (e) {
+      var t = e.target;
+      if (t.dataset && t.dataset.prop) {
+        var numeric = (t.dataset.prop === 'modules' || t.dataset.prop === 'modulePower');
+        var v = numeric ? (parseInt(t.value) || 0) : t.value;
+        surfaces[+t.dataset.i][t.dataset.prop] = v;
+        // numerische Felder nicht neu rendern → Tippfokus bleibt erhalten
+        if (!numeric) renderSurfaces();
+        recalc();
+      }
+    });
+    $('dr-surfaces').addEventListener('change', function (e) {
+      if (e.target.dataset && e.target.dataset.prop === 'tilt') {
+        surfaces[+e.target.dataset.i].tilt = e.target.value; recalc();
+      }
+    });
+    $('dr-add').addEventListener('click', function () {
+      surfaces.push({ orientation:'O', tilt:'mittel', modules:0, modulePower:440, shading:'keine' });
+      renderSurfaces(); recalc();
+    });
+    $('dr-ems').addEventListener('click', function (e) {
+      var b = e.target.closest('[data-ems]'); if (!b) return;
+      ems = b.dataset.ems;
+      Array.prototype.forEach.call(this.querySelectorAll('button'), function (x) { x.classList.toggle('on', x.dataset.ems === ems); });
+      recalc();
+    });
+    ['dr-plz','dr-verbrauch','dr-batt','dr-wp-kwh','dr-ev-km'].forEach(function (id) {
+      $(id).addEventListener('input', recalc);
+    });
+    $('dr-wp-on').addEventListener('change', function () { $('dr-wp-detail').style.display = this.checked ? '' : 'none'; recalc(); });
+    $('dr-ev-on').addEventListener('change', function () { $('dr-ev-detail').style.display = this.checked ? '' : 'none'; recalc(); });
+
+    // Vor dem Druck: Gauges neu zeichnen und Methodik/Quellen aufklappen
+    // (Wissenschafts-Beleg gehört sichtbar aufs Blatt).
+    var methodEl = document.querySelector('.dr-method');
+    var methodWasOpen = false;
+    window.addEventListener('beforeprint', function () {
+      recalc();
+      if (methodEl) { methodWasOpen = methodEl.open; methodEl.open = true; }
+    });
+    window.addEventListener('afterprint', function () {
+      if (methodEl) methodEl.open = methodWasOpen;
+    });
+
+    renderSurfaces();
+    recalc();
+  })();
+  </script>
 </body>
 </html>
