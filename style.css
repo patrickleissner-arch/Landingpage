@@ -45,7 +45,7 @@
   /* Text (Styleguide: Schwarz = Standard-Schriftfarbe) */
   --color-text-primary:        #000000;
   --color-text-secondary:      #444444;
-  --color-text-muted:          #6b7280;
+  --color-text-muted:          #5c6470;   /* WCAG AA: 5,9:1 auf Weiß, 5,3:1 auf Beige */
   --color-text-on-dark:        #ffffff;
   --color-text-on-dark-muted:  #9ca3af;
 
@@ -586,6 +586,17 @@ p { max-width: 68ch; }
   background-clip: text;
   max-width: 20ch;
   margin-inline: auto;
+}
+
+/* Windows-Kontrastmodus: Verlaufstext würde unsichtbar (text-fill-color
+   transparent bleibt transparent, das Hintergrundbild wird entfernt).
+   Zurück auf Volltonfarbe aus der Systempalette. */
+@media (forced-colors: active) {
+  .hero h1 {
+    background: none;
+    -webkit-text-fill-color: CanvasText;
+    color: CanvasText;
+  }
 }
 
 .hero-headline2 {

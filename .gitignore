@@ -7,3 +7,16 @@ node_modules/
 .agents/
 .firecrawl/
 skills-lock.json
+
+# impeccable — lokales Design-QA-Dev-Tool, NIE deployen
+# (.claude/ und .agents/ decken die Skill-Ordner oben bereits ab)
+.claude/skills/impeccable/
+.impeccable/
+PRODUCT.md
+DESIGN.md
+# Schutz, falls der Installer erneut mit Default-Providern laeuft
+# und wieder nach .github/ und .codex/ schreibt:
+.codex/
+.github/skills/impeccable/
+.github/hooks/impeccable.json
+.github/agents/impeccable-*.agent.md
