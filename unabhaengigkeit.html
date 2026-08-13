@@ -221,15 +221,18 @@
     <section class="section-rechner section-htw-iframe">
       <div class="container">
         <div class="solarisator-frame-wrapper reveal">
-          <iframe
-            src="https://solar.htw-berlin.de/solarisator/"
-            title="Solarisator – Unabhängigkeitsrechner der HTW Berlin"
-            width="1024"
-            height="660"
-            loading="lazy"
-            allow="geolocation"
-            aria-label="Interaktiver PV-Unabhängigkeitsrechner der HTW Berlin"
-          ></iframe>
+          <!-- Two-Click-Consent: iframe wird erst nach ausdrücklichem Klick geladen -->
+          <div id="solarisator-consent" class="embed-consent-placeholder">
+            <p class="embed-consent-text">
+              Dieser Rechner wird von der <strong>HTW Berlin – Hochschule für Technik und Wirtschaft</strong>
+              bereitgestellt (<a href="https://solar.htw-berlin.de" target="_blank" rel="noopener noreferrer">solar.htw-berlin.de</a>).
+              Beim Laden wird eine Verbindung zu deren Servern aufgebaut; dabei können Daten
+              (z.&nbsp;B. deine IP-Adresse) an die HTW Berlin übertragen werden.
+              Weitere Informationen findest du in unserer <a href="/datenschutz">Datenschutzerklärung</a>.
+            </p>
+            <button id="solarisator-consent-btn" class="btn btn-accent">Rechner laden</button>
+          </div>
+          <div id="solarisator-embed" hidden></div>
         </div>
 
         <p class="solarisator-source">
@@ -242,7 +245,7 @@
           <h2>Mehrere Dachflächen, Wärmepumpe, E-Auto, Speicher?</h2>
           <p>Der HTW-Solarisator oben rechnet den Standardfall. Für ein Dach mit mehreren
              Ausrichtungen (Ost/West/Nord/Süd) und für Wärmepumpe, E-Auto und Batteriespeicher
-             gebe ich dir hier eine erweiterte Einschätzung – am Ende als PDF zum Mitnehmen.</p>
+             gebe ich dir hier eine erweiterte Einschätzung – am Ende zum Ausdrucken oder als PDF speichern.</p>
           <span class="dr-ownnote">Eigene Schätzung von Patrick Leißner in Anlehnung an die HTW-Methodik (PVGIS-Erträge).
              Kein HTW-Rechenergebnis – die belastbare Referenz ist der Solarisator oben.</span>
         </div>
@@ -468,6 +471,26 @@
   <script src="main.js"></script>
   <script src="assets/js/pv-model.js"></script>
   <script>
+    // ── HTW-Solarisator Two-Click-Consent ───────────────────────────
+    (function () {
+      const consent = document.getElementById('solarisator-consent');
+      const btn     = document.getElementById('solarisator-consent-btn');
+      const embed   = document.getElementById('solarisator-embed');
+      if (!consent || !btn || !embed) return;
+      btn.addEventListener('click', function () {
+        const iframe = document.createElement('iframe');
+        iframe.src   = 'https://solar.htw-berlin.de/solarisator/';
+        iframe.title = 'Solarisator – Unabhängigkeitsrechner der HTW Berlin';
+        iframe.width  = '1024';
+        iframe.height = '660';
+        iframe.loading = 'lazy';
+        iframe.setAttribute('aria-label', 'Interaktiver PV-Unabhängigkeitsrechner der HTW Berlin');
+        embed.appendChild(iframe);
+        embed.hidden  = false;
+        consent.hidden = true;
+      });
+    })();
+
   (function () {
     'use strict';
     var M = window.PVModel;
