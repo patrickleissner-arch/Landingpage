@@ -2916,7 +2916,8 @@ async function submitLead() {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ hp_website: hp, vorname, nachname, email, phone, plz,
-                                   rechnerdaten, consentAnalyse, consentKontakt }),
+                                   rechnerdaten, interesse: W.interesse || [],
+                                   consentAnalyse, consentKontakt }),
         });
         const data = await resp.json();
         if (!data.ok) throw new Error(data.error || 'Unbekannter Fehler');

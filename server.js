@@ -132,6 +132,71 @@ async function brevoCreateDeal(name, contactId) {
   }
 }
 
+// ── Eigenes Vertriebstool (CRM) über n8n ─────────────────────────
+// Website-Themen auf die Interessen-Schreibweise des CRM abbilden. Aus
+// EasyAppointments kommt "Photovoltaik" – zwei Schreibweisen desselben
+// Themas würden den Interessenfilter in der Leadliste auseinanderreißen.
+const CRM_INTERESSEN = {
+  pv:        'Photovoltaik',
+  wp:        'Wärmepumpe',
+  speicher:  'Batteriespeicher',
+  sonstiges: 'Sonstiges',
+};
+
+const crmInteressen = (werte) =>
+  (werte || []).map(w => CRM_INTERESSEN[w]).filter(Boolean);
+
+// Legt Kontakt, Lead und Verlaufseintrag im eigenen CRM an. Wirft nie:
+// Ein Ausfall des CRM darf weder die Bestätigung des Besuchers noch die
+// Benachrichtigung an MAIL_TO verhindern. Fehler landen sichtbar im Log.
+function crmLead(payload) {
+  const url   = process.env.CRM_WEBHOOK_URL;
+  const token = process.env.CRM_WEBHOOK_TOKEN;
+
+  if (!url || !token) {
+    console.error('CRM NICHT ANGELEGT – CRM_WEBHOOK_URL oder CRM_WEBHOOK_TOKEN fehlt in der .env. Anfrage von:', payload.email);
+    return Promise.resolve(false);
+  }
+
+  return new Promise((resolve) => {
+    let ziel;
+    try { ziel = new URL(url); }
+    catch { console.error('CRM_WEBHOOK_URL ist keine gültige Adresse:', url); return resolve(false); }
+
+    const body = JSON.stringify(payload);
+    const req  = https.request({
+      hostname: ziel.hostname,
+      port:     ziel.port || 443,
+      path:     ziel.pathname + ziel.search,
+      method:   'POST',
+      headers: {
+        'Content-Type':    'application/json',
+        'Content-Length':  Buffer.byteLength(body),
+        'X-Website-Token': token,
+      },
+      timeout: 10000,
+    }, (res) => {
+      let text = '';
+      res.on('data', c => text += c);
+      res.on('end', () => {
+        if (res.statusCode >= 400) {
+          console.error('CRM NICHT ANGELEGT – Webhook antwortete', res.statusCode, text.slice(0, 200), '| Anfrage von:', payload.email);
+          return resolve(false);
+        }
+        resolve(true);
+      });
+    });
+
+    req.on('timeout', () => req.destroy(new Error('Zeitüberschreitung nach 10 s')));
+    req.on('error', (err) => {
+      console.error('CRM NICHT ANGELEGT – Webhook nicht erreichbar:', err.message, '| Anfrage von:', payload.email);
+      resolve(false);
+    });
+    req.write(body);
+    req.end();
+  });
+}
+
 app.post('/api/contact', async (req, res) => {
   // Honeypot: Bots füllen dieses Feld aus, echte Nutzer nicht
   if (req.body.hp_website) {
@@ -172,6 +237,9 @@ app.post('/api/contact', async (req, res) => {
     payload: {
       vorname, nachname, email, phone, strasse, plz, ort, themen, message,
       consentKontakt: consentKontakt === true || consentKontakt === 'true',
+      // Einmal je Absendevorgang, nicht je Versuch: schuetzt im CRM gegen
+      // doppelte Verlaufseintraege, falls die Bestaetigung mehrfach anklickt wird.
+      requestId: crypto.randomUUID(),
     },
     expiresAt: now + 24 * 60 * 60 * 1000,
   });
@@ -223,7 +291,7 @@ app.get('/api/confirm', async (req, res) => {
     return res.redirect('/?confirmed=expired');
   }
 
-  const { vorname, nachname, email, phone, strasse, plz, ort, themen, message, consentKontakt } = entry.payload;
+  const { vorname, nachname, email, phone, strasse, plz, ort, themen, message, consentKontakt, requestId } = entry.payload;
   pendingMap.delete(token);
 
   const name         = `${vorname} ${nachname}`;
@@ -275,6 +343,17 @@ app.get('/api/confirm', async (req, res) => {
       } catch (err) {
         console.error('Brevo event error (contact form):', err.message);
       }
+
+      // Eigenes Vertriebstool. Laeuft vorerst parallel zu Brevo, damit ein
+      // Fehler im neuen Weg keine Anfrage kostet.
+      await crmLead({
+        quelle:     'kontaktformular',
+        vorname, nachname, email, phone,
+        strasse, plz, ort,
+        interessen: crmInteressen(themen),
+        nachricht:  message || '',
+        request_id: requestId || token,
+      });
     }
 
     res.redirect('/?confirmed=true');
@@ -293,7 +372,7 @@ app.post('/api/lead', async (req, res) => {
   if (hits.length >= MAX) return res.status(429).json({ ok: false, error: 'Zu viele Anfragen.' });
   hits.push(now); rateLimitMap.set(ip, hits);
 
-  const { vorname, nachname, email, phone, plz, rechnerdaten, consentAnalyse, consentKontakt } = req.body;
+  const { vorname, nachname, email, phone, plz, rechnerdaten, interesse, consentAnalyse, consentKontakt } = req.body;
 
   if (!vorname || !nachname || !email || !plz || !consentAnalyse) {
     return res.status(400).json({ ok: false, error: 'Pflichtfelder fehlen.' });
@@ -309,7 +388,9 @@ app.post('/api/lead', async (req, res) => {
       phone: String(phone || '').replace(/</g, '&lt;').replace(/>/g, '&gt;'),
       plz:   String(plz).replace(/</g, '&lt;').replace(/>/g, '&gt;'),
       rechnerdaten,
+      interesse: Array.isArray(interesse) ? interesse : [],
       consentKontakt: consentKontakt === true || consentKontakt === 'true',
+      requestId: crypto.randomUUID(),
     },
     expiresAt: now + 24 * 60 * 60 * 1000,
   });
@@ -349,7 +430,7 @@ app.get('/api/lead-confirm', async (req, res) => {
     return res.redirect('/nutzen?confirmed=expired');
   }
 
-  const { vorname, nachname, email, phone, plz, rechnerdaten, consentKontakt } = entry.payload;
+  const { vorname, nachname, email, phone, plz, rechnerdaten, interesse, consentKontakt, requestId } = entry.payload;
   pendingMap.delete(token);
   const name = `${vorname} ${nachname}`;
 
@@ -449,6 +530,16 @@ app.get('/api/lead-confirm', async (req, res) => {
   } catch (err) {
     console.error('Brevo event error:', err.message);
   }
+
+  // Eigenes Vertriebstool. Laeuft vorerst parallel zu Brevo.
+  await crmLead({
+    quelle:     'energierechner',
+    vorname, nachname, email, phone,
+    strasse:    '', plz, ort: '',
+    interessen: crmInteressen(interesse),
+    nachricht:  r.narr || '',
+    request_id: requestId || token,
+  });
 
   res.redirect('/nutzen?confirmed=true');
 });
