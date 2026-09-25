@@ -572,14 +572,23 @@ void main(void){
   let animId = null;
   let inViewport = true; // optimistisch, bis der IntersectionObserver feuert
 
+  // Obergrenze für die gerechneten Bildpunkte. Der Shader rechnet jeden Punkt
+  // einzeln, die Kosten wachsen also mit der Fläche: Auf einem breiten Monitor
+  // waren es über zwei Millionen Punkte pro Bild. Darüber wird kleiner gerechnet
+  // und vom Browser hochskaliert – beim weichen Nebel ist das nicht zu sehen.
+  const MAX_PUNKTE = 1_300_000;
+
   function resize() {
     // opts.dpr erlaubt einen festen, niedrigeren Faktor für den großen,
     // über drei Sektionen durchgehenden Varianten-Canvas (Performance).
-    const dpr = opts.dpr ?? Math.max(1, 0.5 * devicePixelRatio);
     const w = canvas.clientWidth  || window.innerWidth;
     const h = canvas.clientHeight || window.innerHeight;
-    canvas.width  = w * dpr;
-    canvas.height = h * dpr;
+    const dpr = Math.min(
+      opts.dpr ?? Math.max(1, 0.5 * devicePixelRatio),
+      Math.sqrt(MAX_PUNKTE / (w * h)),
+    );
+    canvas.width  = Math.round(w * dpr);
+    canvas.height = Math.round(h * dpr);
     gl.viewport(0, 0, canvas.width, canvas.height);
   }
 
@@ -709,12 +718,25 @@ function initOrbitalTimeline() {
     animId = requestAnimationFrame(animate);
   }
 
-  animate();
+  // Nur drehen, wenn die Sektion sichtbar und der Tab aktiv ist – sonst lief
+  // die Rotation auch oben im Hero mit und konkurrierte mit dem Shader.
+  let imBild = false;
+  function syncRotation() {
+    const laufen = imBild && !document.hidden;
+    if (laufen && animId === null) {
+      animId = requestAnimationFrame(animate);
+    } else if (!laufen && animId !== null) {
+      cancelAnimationFrame(animId);
+      animId = null;
+    }
+  }
 
-  document.addEventListener('visibilitychange', () => {
-    if (document.hidden) cancelAnimationFrame(animId);
-    else animId = requestAnimationFrame(animate);
-  });
+  positionNodes();
+  document.addEventListener('visibilitychange', syncRotation);
+  new IntersectionObserver(([entry]) => {
+    imBild = entry.isIntersecting;
+    syncRotation();
+  }, { threshold: 0 }).observe(wrapper);
 }
 
 /* ── Spotlight Cards (Leistungen) ─────────────────────────── */
