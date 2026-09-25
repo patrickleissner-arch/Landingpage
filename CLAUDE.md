@@ -14,9 +14,9 @@ Landingpage von Patrick Leißner — Energieberatung (Photovoltaik & Wärmepumpe
   - Logik: `main.js` (Navigation, Animationen, Brevo-Consent, Kontaktformular)
 - **Backend:** Node.js + Express + Nodemailer (`server.js`) für den E-Mail-Versand des Kontaktformulars (Double-Opt-in). Config über `dotenv` (`.env`, nicht committen).
 - **Drittdienste:** Brevo — nur noch Kontakt/Deal aus dem Kontaktformular und die Analyse-Mail des Energierechners. Wird abgelöst. Selbst gehostet: chart.js (`assets/vendor/`), Schrift Outfit.
-- **Terminbuchung:** eigenes Easy!Appointments auf einem eigenen VPS, als iframe von `termin.patrickleissner.de` eingebunden (seit 25.09.2026, vorher Brevo Meetings). Die Einbettung funktioniert nur, weil Traefik dort `X-Frame-Options` durch `frame-ancestors 'self' https://patrickleissner.de` ersetzt — Easy!Appointments setzt die Sperre sonst selbst und der iframe bliebe leer.
+- **Terminbuchung:** eigenes Easy!Appointments auf einem eigenen VPS, als iframe von `termin.patrickleissner.de` eingebunden (seit 25.09.2026, vorher Brevo Meetings). Die Einbettung funktioniert nur, weil Traefik dort `X-Frame-Options` durch `frame-ancestors 'self' https://patrickleissner.de` ersetzt — Easy!Appointments setzt die Sperre sonst selbst und der iframe bliebe leer. Höhe: `assets/js/booking-embed.js` übernimmt sie per `postMessage` vom Gegenstück `pl-embed.js` im Container (`/docker/patrick-termin/custom/`).
 - **Eigenes CRM:** Bestätigte Anfragen laufen über einen n8n-Webhook (`CRM_WEBHOOK_URL`/`CRM_WEBHOOK_TOKEN`) in eine eigene PostgreSQL-Kundenverwaltung auf demselben VPS. `crmLead()` in `server.js` wirft nie — ein Ausfall darf weder die Bestätigung des Besuchers noch die Benachrichtigung blockieren.
-- **Server/Deploy:** Apache (`.htaccess`), Node ≥ 18. Deploy: GitHub (`patrickleissner-arch/Landingpage`, Branch `master`) → Hostinger, automatisch bei Push.
+- **Server/Deploy:** Express (`server.js`, Node ≥ 18) liefert alles aus – auch HTML/CSS. `.htaccess` wirkt dort **nicht**: Zugriffssperre (nur öffentliche Dateiendungen, keine Interna) und saubere URLs (`/termin` ohne Schrägstrich, 301 für Varianten) stehen in `server.js`. Deploy: GitHub (`patrickleissner-arch/Landingpage`, Branch `master`) → Hostinger, automatisch bei Push.
 
 ---
 
