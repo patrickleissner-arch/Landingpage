@@ -141,78 +141,6 @@ function createTransporter() {
   });
 }
 
-function brevoPost(apiPath, body) {
-  return new Promise((resolve, reject) => {
-    const data = JSON.stringify(body);
-    const req = https.request({
-      hostname: 'api.brevo.com',
-      path: apiPath,
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'api-key': process.env.BREVO_API_KEY,
-        'Content-Length': Buffer.byteLength(data),
-      },
-    }, (res) => {
-      let buf = '';
-      res.on('data', c => buf += c);
-      res.on('end', () => resolve({ status: res.statusCode, body: buf }));
-    });
-    req.on('error', reject);
-    req.write(data);
-    req.end();
-  });
-}
-
-async function brevoTrackEvent(email, eventName, eventProperties) {
-  const res = await brevoPost('/v3/events', {
-    event_name: eventName,
-    identifiers: { email_id: email },
-    event_properties: eventProperties,
-  });
-  if (res.status >= 400) {
-    throw new Error(`${res.status} ${res.body}`);
-  }
-}
-
-// Legt einen Kontakt an/merged ihn und gibt zuverlässig die numerische
-// Brevo-Kontakt-ID zurück (auch wenn der Kontakt schon existiert).
-async function brevoUpsertContact(email, attributes) {
-  try {
-    const body = { email, attributes, updateEnabled: true, forceMerge: true, getId: true };
-    const res = await brevoPost('/v3/contacts', body);
-    if (res.status >= 400) {
-      console.error('Brevo contact upsert error:', res.status, res.body);
-      return null;
-    }
-    return JSON.parse(res.body).id || null;
-  } catch (err) {
-    console.error('Brevo contact upsert error:', err.message);
-    return null;
-  }
-}
-
-// Legt einen Deal in der konfigurierten Vertriebspipeline an (Art. 6 Abs. 1
-// lit. b DSGVO – digitale Variante der bisherigen Anfragebearbeitung).
-async function brevoCreateDeal(name, contactId) {
-  if (!process.env.BREVO_PIPELINE_ID || !process.env.BREVO_DEAL_STAGE_ID) return;
-  try {
-    const res = await brevoPost('/v3/crm/deals', {
-      name,
-      attributes: {
-        pipeline:   process.env.BREVO_PIPELINE_ID,
-        deal_stage: process.env.BREVO_DEAL_STAGE_ID,
-      },
-      linkedContactsIds: contactId ? [contactId] : [],
-    });
-    if (res.status >= 400) {
-      console.error('Brevo deal creation error:', res.status, res.body);
-    }
-  } catch (err) {
-    console.error('Brevo deal creation error:', err.message);
-  }
-}
-
 // ── Eigenes Vertriebstool (CRM) über n8n ─────────────────────────
 // Website-Themen auf die Interessen-Schreibweise des CRM abbilden. Aus
 // EasyAppointments kommt "Photovoltaik" – zwei Schreibweisen desselben
@@ -423,23 +351,8 @@ app.get('/api/confirm', async (req, res) => {
     });
 
     {
-      // Basis-Kontakt + Deal: immer, unabhängig von consentKontakt (Art. 6 Abs. 1 lit. b)
-      const contactId = await brevoUpsertContact(
-        email,
-        { VORNAME: vorname, NACHNAME: nachname, SMS: phone, STRASSE: strasse, PLZ: plz, STADT: ort, THEMEN: themenText }
-      );
-      await brevoCreateDeal(`${themenText}: ${name}`, contactId);
-
-      // Event immer (consentKontakt als Property) – die Automation in Brevo
-      // entscheidet anhand dieser Property, ob Liste/Welcome-Mail ausgelöst werden.
-      try {
-        await brevoTrackEvent(email, 'kontakt_bestaetigt', { themen: themenText, plz, ort, consentKontakt });
-      } catch (err) {
-        console.error('Brevo event error (contact form):', err.message);
-      }
-
-      // Eigenes Vertriebstool. Laeuft vorerst parallel zu Brevo, damit ein
-      // Fehler im neuen Weg keine Anfrage kostet.
+      // Eigenes Vertriebstool. Schlaegt es fehl, bleibt die Benachrichtigung an
+      // MAIL_TO oben das Sicherheitsnetz - die Anfrage geht nicht verloren.
       await crmLead({
         quelle:     'kontaktformular',
         vorname, nachname, email, phone,
@@ -538,15 +451,15 @@ app.get('/api/lead-confirm', async (req, res) => {
   const fuel  = safe(r.fuel  || '–');
   const DISCLAIMER = 'Unverbindliche Schätzung ohne Gewähr, basierend auf deinen Angaben und Durchschnittswerten. Keine zugesicherte Ersparnis.';
 
-  // (a) Analyse-Mail an Nutzer via Brevo
+  // (a) Analyse-Mail an Nutzer über den eigenen Mailserver
   try {
-    const senderEmail = process.env.BREVO_SENDER || 'info@patrickleissner.de';
-    await brevoPost('/v3/smtp/email', {
-      sender:      { name: 'Patrick Leißner', email: senderEmail },
-      replyTo:     { name: 'Patrick Leißner', email: senderEmail },
-      to:          [{ email, name }],
-      subject:     'Deine unverbindliche Ersteinschätzung – Patrick Leißner Energieberatung',
-      htmlContent: `<!DOCTYPE html><html lang="de"><body style="font-family:Arial,sans-serif;max-width:600px;margin:0 auto;color:#1a1a1a">
+    const transporter = createTransporter();
+    await transporter.sendMail({
+      from:    `"Patrick Leißner Energieberatung" <${process.env.SMTP_USER}>`,
+      replyTo: process.env.SMTP_USER,
+      to:      email,
+      subject: 'Deine unverbindliche Ersteinschätzung – Patrick Leißner Energieberatung',
+      html:    `<!DOCTYPE html><html lang="de"><body style="font-family:Arial,sans-serif;max-width:600px;margin:0 auto;color:#1a1a1a">
 <div style="background:#2E4F3C;padding:28px 32px;border-radius:12px 12px 0 0">
   <p style="color:#D0AB3B;font-weight:800;font-size:1.1rem;margin:0">Patrick Leißner · Energieberatung</p>
   <p style="color:rgba(255,255,255,0.6);margin:4px 0 0;font-size:0.85rem">Deine unverbindliche Ersteinschätzung</p>
@@ -610,22 +523,7 @@ app.get('/api/lead-confirm', async (req, res) => {
     console.error('Lead notify error:', err.message);
   }
 
-  // Basis-Kontakt + Deal: immer, unabhängig von consentKontakt (Art. 6 Abs. 1 lit. b)
-  const contactId = await brevoUpsertContact(
-    email,
-    { VORNAME: safe(vorname), NACHNAME: safe(nachname), SMS: safe(phone) || undefined, PLZ: plz }
-  );
-  await brevoCreateDeal(`Energierechner: ${safe(name)} (${plz})`, contactId);
-
-  // Event immer (consentKontakt als Property) – die Automation in Brevo
-  // entscheidet anhand dieser Property, ob Liste/Welcome-Mail ausgelöst werden.
-  try {
-    await brevoTrackEvent(email, 'energierechner_bestaetigt', { plz, heizung: r.fuel || '', consentKontakt });
-  } catch (err) {
-    console.error('Brevo event error:', err.message);
-  }
-
-  // Eigenes Vertriebstool. Laeuft vorerst parallel zu Brevo.
+  // Eigenes Vertriebstool. Bei einem Fehler bleibt die Benachrichtigung oben.
   await crmLead({
     quelle:     'energierechner',
     vorname, nachname, email, phone,

@@ -11,9 +11,9 @@ Landingpage von Patrick Leißner — Energieberatung (Photovoltaik & Wärmepumpe
 - **Frontend:** Klassisches HTML, CSS, Vanilla JavaScript. KEIN Framework (kein React/Next.js/Tailwind/Framer).
   - Seiten: `index.html` (Start) + Unterseiten (`termin.html`, `impressum.html`, `datenschutz.html` u.a.). Rechner: `nutzen.html` (Nutzen-/Live-Cockpit), `heizkosten.html`, `unabhaengigkeit.html`, `spotpreis.html` (die alten Namen `energierechner.html`/`solarisator.html`/`waermepumpe-rechner.html` wurden am 2026-06-18 umbenannt; unter den alten Pfaden liegen nur noch Meta-Refresh-Weiterleitungen).
   - Styles: `style.css` (global) + `subpage.css` (Unterseiten). Reines CSS mit CSS-Variablen und Media Queries.
-  - Logik: `main.js` (Navigation, Animationen, Brevo-Consent, Kontaktformular)
-- **Backend:** Node.js + Express + Nodemailer (`server.js`) für den E-Mail-Versand des Kontaktformulars (Double-Opt-in). Config über `dotenv` (`.env`, nicht committen).
-- **Drittdienste:** Brevo — nur noch Kontakt/Deal aus dem Kontaktformular und die Analyse-Mail des Energierechners. Wird abgelöst. Selbst gehostet: chart.js (`assets/vendor/`), Schrift Outfit.
+  - Logik: `main.js` (Navigation, Animationen, Kontaktformular)
+- **Backend:** Node.js + Express + Nodemailer (`server.js`) für allen E-Mail-Versand: Double-Opt-in, Benachrichtigung an MAIL_TO und die Analyse-Mail des Energierechners. Config über `dotenv` (`.env`, nicht committen).
+- **Drittdienste:** keine für Formulare, Versand oder CRM. Brevo ist am 25.09.2026 vollständig entfallen — Kontakt, Vertriebsvorgang und Verlauf laufen ins eigene CRM, alle Mails über den eigenen Mailserver bei Hostinger. Selbst gehostet: chart.js (`assets/vendor/`), Schrift Outfit.
 - **Terminbuchung:** eigenes Easy!Appointments auf einem eigenen VPS, als iframe von `termin.patrickleissner.de` eingebunden (seit 25.09.2026, vorher Brevo Meetings). Die Einbettung funktioniert nur, weil Traefik dort `X-Frame-Options` durch `frame-ancestors 'self' https://patrickleissner.de` ersetzt — Easy!Appointments setzt die Sperre sonst selbst und der iframe bliebe leer. Höhe: `assets/js/booking-embed.js` übernimmt sie per `postMessage` vom Gegenstück `pl-embed.js` im Container (`/docker/patrick-termin/custom/`).
 - **Eigenes CRM:** Bestätigte Anfragen laufen über einen n8n-Webhook (`CRM_WEBHOOK_URL`/`CRM_WEBHOOK_TOKEN`) in eine eigene PostgreSQL-Kundenverwaltung auf demselben VPS. `crmLead()` in `server.js` wirft nie — ein Ausfall darf weder die Bestätigung des Besuchers noch die Benachrichtigung blockieren.
 - **Server/Deploy:** Express (`server.js`, Node ≥ 18) liefert alles aus – auch HTML/CSS. `.htaccess` wirkt dort **nicht**: Zugriffssperre (nur öffentliche Dateiendungen, keine Interna) und saubere URLs (`/termin` ohne Schrägstrich, 301 für Varianten) stehen in `server.js`. Deploy: GitHub (`patrickleissner-arch/Landingpage`, Branch `master`) → Hostinger, automatisch bei Push.
@@ -60,8 +60,8 @@ Jeder Push deployt sofort live. Vor jedem Push:
     die Seite `/analyse-vorsorge` ist entfernt und per 301 umgeleitet. Der Schutz sitzt jetzt
     in der Eingangsprüfung von `/api/contact`: `themen` wird gegen `THEMEN_LABELS` gefiltert,
     unbekannte Themen werden verworfen. Das greift auch, wenn jemand mit einer
-    zwischengespeicherten Seite das alte Thema absendet — solche Daten dürfen weder Brevo noch
-    das eigene CRM berühren. Beim Erweitern von `THEMEN_LABELS` diese Wirkung mitbedenken.
+    zwischengespeicherten Seite das alte Thema absendet — solche Daten dürfen das eigene CRM
+    nicht berühren. Beim Erweitern von `THEMEN_LABELS` diese Wirkung mitbedenken.
   - Die Vermittlerangaben nach § 34d stehen weiterhin im **Impressum** und bleiben dort, bis
     anwaltlich geklärt ist, ob sie ohne Vermittlung über die Website entbehrlich sind.
 - Keine externen Ressourcen ohne Consent laden (keine externen Fonts/CDNs/Tracker)
@@ -86,15 +86,8 @@ Jeder Push deployt sofort live. Vor jedem Push:
 - [ ] Content-Refresh auf bestehenden Leistungs-Unterseiten anhand der drei Varianten + Rechtsrahmen 2026
 
 **Sofort umsetzbar:**
-- [x] Datenschutz §5 (Brevo-Terminbuchung): bestätigt, dass der bestehende Brevo-AVV auch „Meetings" abdeckt und die Verarbeitung EU-seitig erfolgt (Migration von Zeeg → Brevo am 2026-06-22)
 - [x] Verwaiste Datei `impressum - Kopie.html` — war nie im Repo, erledigt
 - [x] Kontaktformular SMTP — `.env` fehlte auf Server; GitHub Actions Workflow (`.github/workflows/deploy-env.yml`) schreibt sie jetzt bei jedem Push automatisch via SSH. Bestätigt 2026-06-01.
-- [ ] Brevo-Automation-Workflows in der Brevo-Oberfläche einrichten (2026-06-23): Code liefert bei erteilter Zusatz-Einwilligung (`consentKontakt`) Events `kontakt_bestaetigt` (Kontaktformular, jetzt mit `themen`/`plz`/`ort`) und `energierechner_bestaetigt` (Energierechner) sowie Kontakte in der Liste `BREVO_LIST_ID` — Nachfass-Sequenzen/Willkommens-Mail-Automation darauf aufbauend muss Patrick im Brevo-Dashboard konfigurieren, kein neues Secret nötig (nutzt den bestehenden `BREVO_API_KEY`).
-- [ ] Brevo-Vertriebspipeline einrichten (2026-06-23): Code legt jetzt bei **jeder** bestätigten Anfrage (Kontaktformular + Energierechner, unabhängig von `consentKontakt`) automatisch einen Deal an — vorausgesetzt, Patrick hat:
-  1. Custom-Contact-Attribute `STRASSE`, `PLZ`, `STADT`, `THEMEN` (Typ Text) in Brevo angelegt (Contacts > Einstellungen > Kontaktattribute) — sonst gehen diese Felder beim Speichern verloren (stiller Fehler, bricht aber nichts).
-  2. Eine Pipeline mit mind. einer Stage in Brevo (Sales CRM > Pipelines) angelegt.
-  3. Die zugehörige `pipeline`- und `deal_stage`-ID per `GET /v3/crm/pipeline/details/all` ermittelt und als neue GitHub-Secrets `BREVO_PIPELINE_ID` / `BREVO_DEAL_STAGE_ID` hinterlegt.
-  Ohne diese drei Schritte: kein Fehler im Frontend, Deals werden einfach nicht angelegt (try/catch greift).
 
 ---
 

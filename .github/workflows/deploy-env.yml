@@ -17,12 +17,6 @@ jobs:
           SMTP_USER: ${{ secrets.SMTP_USER }}
           SMTP_PASS: ${{ secrets.SMTP_PASS }}
           MAIL_TO: ${{ secrets.MAIL_TO }}
-          BREVO_API_KEY: ${{ secrets.BREVO_API_KEY }}
-          BREVO_SENDER: ${{ secrets.BREVO_SENDER }}
-          BREVO_NOTIFY: ${{ secrets.BREVO_NOTIFY }}
-          BREVO_LIST_ID: ${{ secrets.BREVO_LIST_ID }}
-          BREVO_PIPELINE_ID: ${{ secrets.BREVO_PIPELINE_ID }}
-          BREVO_DEAL_STAGE_ID: ${{ secrets.BREVO_DEAL_STAGE_ID }}
           CRM_WEBHOOK_URL: ${{ secrets.CRM_WEBHOOK_URL }}
           CRM_WEBHOOK_TOKEN: ${{ secrets.CRM_WEBHOOK_TOKEN }}
         with:
@@ -30,7 +24,7 @@ jobs:
           port: ${{ secrets.SSH_PORT }}
           username: ${{ secrets.SSH_USER }}
           password: ${{ secrets.SSH_PASS }}
-          envs: SMTP_HOST,SMTP_PORT,SMTP_USER,SMTP_PASS,MAIL_TO,BREVO_API_KEY,BREVO_SENDER,BREVO_NOTIFY,BREVO_LIST_ID,BREVO_PIPELINE_ID,BREVO_DEAL_STAGE_ID,CRM_WEBHOOK_URL,CRM_WEBHOOK_TOKEN
+          envs: SMTP_HOST,SMTP_PORT,SMTP_USER,SMTP_PASS,MAIL_TO,CRM_WEBHOOK_URL,CRM_WEBHOOK_TOKEN
           script: |
             APP_PATH=$(find /home -name "server.js" -not -path "*/node_modules/*" -not -path "*/.builds/*" 2>/dev/null | head -1 | xargs -I{} dirname {})
             if [ -z "$APP_PATH" ]; then
@@ -45,8 +39,8 @@ jobs:
             ENV_DIR=$(dirname "$APP_PATH")
             echo "APP_PATH: $APP_PATH"
             echo "ENV_DIR (.env-Zielordner): $ENV_DIR"
-            printf 'SMTP_HOST=%s\nSMTP_PORT=%s\nSMTP_USER=%s\nSMTP_PASS=%s\nMAIL_TO=%s\nBREVO_API_KEY=%s\nBREVO_SENDER=%s\nBREVO_NOTIFY=%s\nBREVO_LIST_ID=%s\nBREVO_PIPELINE_ID=%s\nBREVO_DEAL_STAGE_ID=%s\nCRM_WEBHOOK_URL=%s\nCRM_WEBHOOK_TOKEN=%s\n' \
-              "$SMTP_HOST" "$SMTP_PORT" "$SMTP_USER" "$SMTP_PASS" "$MAIL_TO" "$BREVO_API_KEY" "$BREVO_SENDER" "$BREVO_NOTIFY" "$BREVO_LIST_ID" "$BREVO_PIPELINE_ID" "$BREVO_DEAL_STAGE_ID" "$CRM_WEBHOOK_URL" "$CRM_WEBHOOK_TOKEN" \
+            printf 'SMTP_HOST=%s\nSMTP_PORT=%s\nSMTP_USER=%s\nSMTP_PASS=%s\nMAIL_TO=%s\nCRM_WEBHOOK_URL=%s\nCRM_WEBHOOK_TOKEN=%s\n' \
+              "$SMTP_HOST" "$SMTP_PORT" "$SMTP_USER" "$SMTP_PASS" "$MAIL_TO" "$CRM_WEBHOOK_URL" "$CRM_WEBHOOK_TOKEN" \
               > "$ENV_DIR/.env"
             echo ".env geschrieben nach $ENV_DIR"
             # touch allein reicht bei LiteSpeed (lsnode) nicht zuverlässig: alte Worker-
