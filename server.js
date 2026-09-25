@@ -146,6 +146,15 @@ const CRM_INTERESSEN = {
 const crmInteressen = (werte) =>
   (werte || []).map(w => CRM_INTERESSEN[w]).filter(Boolean);
 
+// Die Einwilligung zur persoenlichen Kontaktaufnahme muss nachweisbar sein
+// (Art. 7 Abs. 1 DSGVO). Sie wandert deshalb in den Verlaufseintrag des Leads:
+// Der ist unveraenderlich und traegt einen Zeitstempel. Bisher stand sie nur in
+// der Benachrichtigungsmail und war damit nicht belastbar dokumentiert.
+const mitEinwilligung = (text, zugestimmt) =>
+  [String(text || '').trim(),
+   `Einwilligung zur persönlichen Kontaktaufnahme: ${zugestimmt ? 'ja' : 'nein'}`]
+    .filter(Boolean).join('\n');
+
 // Legt Kontakt, Lead und Verlaufseintrag im eigenen CRM an. Wirft nie:
 // Ein Ausfall des CRM darf weder die Bestätigung des Besuchers noch die
 // Benachrichtigung an MAIL_TO verhindern. Fehler landen sichtbar im Log.
@@ -351,7 +360,7 @@ app.get('/api/confirm', async (req, res) => {
         vorname, nachname, email, phone,
         strasse, plz, ort,
         interessen: crmInteressen(themen),
-        nachricht:  message || '',
+        nachricht:  mitEinwilligung(message, consentKontakt),
         request_id: requestId || token,
       });
     }
@@ -537,7 +546,7 @@ app.get('/api/lead-confirm', async (req, res) => {
     vorname, nachname, email, phone,
     strasse:    '', plz, ort: '',
     interessen: crmInteressen(interesse),
-    nachricht:  r.narr || '',
+    nachricht:  mitEinwilligung(r.narr, consentKontakt),
     request_id: requestId || token,
   });
 

@@ -2,7 +2,7 @@
 
 Landingpage von Patrick Leißner — Energieberatung (Photovoltaik & Wärmepumpe) und Versicherungsvermittlung.
 
-**Aktualisiert:** 2026-06-23
+**Aktualisiert:** 2026-09-25
 
 ---
 
@@ -13,7 +13,9 @@ Landingpage von Patrick Leißner — Energieberatung (Photovoltaik & Wärmepumpe
   - Styles: `style.css` (global) + `subpage.css` (Unterseiten). Reines CSS mit CSS-Variablen und Media Queries.
   - Logik: `main.js` (Navigation, Animationen, Brevo-Consent, Kontaktformular)
 - **Backend:** Node.js + Express + Nodemailer (`server.js`) für den E-Mail-Versand des Kontaktformulars (Double-Opt-in). Config über `dotenv` (`.env`, nicht committen).
-- **Drittdienste:** Brevo (Terminbuchung via „Meetings", nur nach Consent als iframe von `meet.brevo.com` geladen; zugleich E-Mail-Versand des Kontaktformulars). Selbst gehostet: chart.js (`assets/vendor/`), Schrift Outfit.
+- **Drittdienste:** Brevo — nur noch Kontakt/Deal aus dem Kontaktformular und die Analyse-Mail des Energierechners. Wird abgelöst. Selbst gehostet: chart.js (`assets/vendor/`), Schrift Outfit.
+- **Terminbuchung:** eigenes Easy!Appointments auf einem eigenen VPS, als iframe von `termin.patrickleissner.de` eingebunden (seit 25.09.2026, vorher Brevo Meetings). Die Einbettung funktioniert nur, weil Traefik dort `X-Frame-Options` durch `frame-ancestors 'self' https://patrickleissner.de` ersetzt — Easy!Appointments setzt die Sperre sonst selbst und der iframe bliebe leer.
+- **Eigenes CRM:** Bestätigte Anfragen laufen über einen n8n-Webhook (`CRM_WEBHOOK_URL`/`CRM_WEBHOOK_TOKEN`) in eine eigene PostgreSQL-Kundenverwaltung auf demselben VPS. `crmLead()` in `server.js` wirft nie — ein Ausfall darf weder die Bestätigung des Besuchers noch die Benachrichtigung blockieren.
 - **Server/Deploy:** Apache (`.htaccess`), Node ≥ 18. Deploy: GitHub (`patrickleissner-arch/Landingpage`, Branch `master`) → Hostinger, automatisch bei Push.
 
 ---
@@ -53,11 +55,13 @@ Jeder Push deployt sofort live. Vor jedem Push:
   - Keine Produkt-, Beitrags- oder Renditeversprechen
   - Nichts dem Zufall überlassen — bei Rechtsfragen konservative Variante wählen
   - Unsicherheiten offen kennzeichnen, statt sie zu überspielen
-  - **Harte Regel:** Versicherungsbezogene Anfragen (Thema „Versicherungscheck") dürfen Brevo
-    nie berühren — kein Kontakt, kein Deal, keine Liste, kein Event (`server.js`, `/api/confirm`:
-    Guard `!themen.includes('versicherung')`). Versicherung läuft ausschließlich persönlich über
-    Patrick/p@, getrennt von der Energieberatung der pin-co.de Media UG. Bei jeder Änderung an
-    diesem Code-Pfad diese Trennung erneut prüfen.
+  - **Harte Regel:** Versicherungsbezogene Anfragen (Thema „Versicherungscheck") dürfen weder
+    Brevo noch das eigene CRM berühren — kein Kontakt, kein Deal, kein Lead, kein Verlaufseintrag
+    (`server.js`, `/api/confirm`: Guard `!themen.includes('versicherung')`; beide Aufrufe stehen
+    *innerhalb* dieses Guards). Versicherung läuft ausschließlich persönlich über Patrick/p@,
+    getrennt von der Energieberatung der pin-co.de Media UG. Seit 25.09.2026 ist Patrick dafür
+    auch datenschutzrechtlich eigener Verantwortlicher — siehe Abschnitt 1 der
+    Datenschutzerklärung. Bei jeder Änderung an diesem Code-Pfad diese Trennung erneut prüfen.
 - Keine externen Ressourcen ohne Consent laden (keine externen Fonts/CDNs/Tracker)
 - **Mobile First** — Pflicht, nicht Option
 
