@@ -35,7 +35,7 @@
         "@type": ["LocalBusiness", "ProfessionalService"],
         "@id": "https://patrickleissner.de/#business",
         "name": "Patrick Leißner Energieberatung",
-        "description": "Individuelle Planung von Photovoltaikanlagen und Wärmepumpen. Kostenlose Erstberatung, herstellerunabhängig. Sachkunde nach §34d GewO (IHK).",
+        "description": "Individuelle Planung von Photovoltaikanlagen und Wärmepumpen. Kostenlose Erstberatung, herstellerunabhängig.",
         "url": "https://patrickleissner.de",
         "telephone": "+4901734994994",
         "email": "p@patrickleissner.de",
@@ -53,7 +53,7 @@
           "latitude": 51.6242,
           "longitude": 12.3105
         },
-        "serviceType": ["Photovoltaik-Beratung", "Wärmepumpen-Beratung", "Energieberatung", "Versicherungsvermittlung", "Altersvorsorge"],
+        "serviceType": ["Photovoltaik-Beratung", "Wärmepumpen-Beratung", "Energieberatung"],
         "priceRange": "Kostenlose Erstberatung",
         "founder": { "@id": "https://patrickleissner.de/#person" },
         "hasOfferCatalog": {
@@ -77,15 +77,6 @@
                 "description": "Abstimmung mit Fachpartnern und transparente Darstellung von Schnittstellen und Verantwortlichkeiten.",
                 "url": "https://patrickleissner.de/koordination-netzwerk"
               }
-            },
-            {
-              "@type": "Offer",
-              "itemOffered": {
-                "@type": "Service",
-                "name": "Analyse & Vorsorge",
-                "description": "Bestandsaufnahme der Versorgungs- und Absicherungssituation im Rahmen der Allianz-Vermittlung.",
-                "url": "https://patrickleissner.de/analyse-vorsorge"
-              }
             }
           ]
         }
@@ -94,8 +85,8 @@
         "@type": "Person",
         "@id": "https://patrickleissner.de/#person",
         "name": "Patrick Leißner",
-        "jobTitle": "Energieberater & Versicherungsvermittler",
-        "description": "Unabhängiger Energieberater für Photovoltaik und Wärmepumpen. Sachkunde nach §34d GewO (IHK). Kooperation mit Norman Römling, Allianz Generalvertretung, Bitterfeld-Wolfen.",
+        "jobTitle": "Energieberater",
+        "description": "Unabhängiger Energieberater für Photovoltaik und Wärmepumpen.",
         "telephone": "+4901734994994",
         "email": "p@patrickleissner.de",
         "url": "https://patrickleissner.de",
@@ -235,7 +226,7 @@
         <p class="hero-subline animate-fade-up" style="--delay: 3">
           Steigende Energiepreise, unsichere Versorgung und der Wunsch nach mehr Kontrolle machen eines klar: Wer heute entscheidet, sollte weiterdenken.
           Mit einer individuell geplanten PV-Anlage und Wärmepumpe machst du dein Zuhause fit für morgen.
-          Ich begleite dich dabei persönlich, ehrlich und mit technischem Know-how – und unterstütze dich zusätzlich bei wichtigen Fragen rund um Sicherheit, Vorsorge und den passenden Schutz.
+          Ich begleite dich dabei persönlich, ehrlich und mit technischem Know-how – von der ersten Einschätzung bis zur fertigen Anlage.
           Für mehr Unabhängigkeit. Für mehr Planbarkeit. Für ein Zuhause mit Zukunft.
         </p>
 
@@ -348,23 +339,6 @@
               <h3>Wärmepumpe &amp; Heizlast</h3>
               <p class="leistung-slogan">DIN-konform geplant. KfW-sicher von Anfang an.</p>
               <p>Heizlastberechnung nach DIN, raumweise Gebäudeerfassung und 3D-Aufnahme per LiDAR-Scan als Grundlage für eine fundierte Wärmepumpenplanung.</p>
-            </div>
-          </a>
-
-          <a href="/analyse-vorsorge" class="leistung-card reveal" aria-label="Analyse und Vorsorge">
-            <div class="leistung-img">
-              <span class="leistung-icon" aria-hidden="true">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
-                  <path d="M12 3l7 3v6c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V6z"/>
-                  <path d="M9.5 12l2 2 3.5-4"/>
-                </svg>
-              </span>
-              <img src="assets/Foto/leistung-analyse.jpg" alt="Analyse und Planung am Tablet" loading="lazy" onerror="this.parentElement.classList.add('leistung-img--placeholder')">
-            </div>
-            <div class="leistung-body">
-              <h3>Analyse &amp; Vorsorge</h3>
-              <p class="leistung-slogan">Viele zahlen für Schutz, der längst nicht mehr passt.</p>
-              <p>Prüfung bestehender Versicherungsverträge, individuelle Vorsorge-Beratung und ganzheitliche Vertragsprüfung zu Energie und Absicherung.</p>
             </div>
           </a>
 
@@ -611,7 +585,6 @@
                 <div class="card-grid cols-2" role="group" aria-labelledby="contact-themen-label">
                   <button type="button" class="card-btn multi" data-group="themen" data-value="pv">Photovoltaik</button>
                   <button type="button" class="card-btn multi" data-group="themen" data-value="wp">Wärmepumpe</button>
-                  <button type="button" class="card-btn multi" data-group="themen" data-value="versicherung">Versicherungscheck</button>
                   <button type="button" class="card-btn multi" data-group="themen" data-value="sonstiges">Sonstiges</button>
                 </div>
                 <span class="field-error" id="contact-themen-error" role="alert" aria-live="polite"></span>
@@ -841,7 +814,6 @@
         <a href="/beratung-technik">Beratung und Technik</a>
         <a href="/koordination-netzwerk">Koordination und Netzwerk</a>
         <a href="/waermepumpe-heizlast">Wärmepumpe und Heizlast</a>
-        <a href="/analyse-vorsorge">Analyse und Vorsorge</a>
         <a href="/mieterstrom">Mieterstrom und Objektenergie</a>
       </nav>
       <nav class="footer-col" aria-label="Rechner und Ratgeber">

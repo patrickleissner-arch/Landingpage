@@ -167,7 +167,7 @@ function initContactForm() {
   const themenError    = qs('#contact-themen-error');
 
   // Adresse nur bei Energie-Themen nötig (Standorteinschätzung) –
-  // bei reinem Versicherungscheck/Sonstiges bleibt sie optional (Datenminimierung)
+  // bei reinem Sonstiges bleibt sie optional (Datenminimierung)
   function needsAddress() {
     return selectedThemen.includes('pv') || selectedThemen.includes('wp');
   }

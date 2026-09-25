@@ -55,13 +55,15 @@ Jeder Push deployt sofort live. Vor jedem Push:
   - Keine Produkt-, Beitrags- oder Renditeversprechen
   - Nichts dem Zufall überlassen — bei Rechtsfragen konservative Variante wählen
   - Unsicherheiten offen kennzeichnen, statt sie zu überspielen
-  - **Harte Regel:** Versicherungsbezogene Anfragen (Thema „Versicherungscheck") dürfen weder
-    Brevo noch das eigene CRM berühren — kein Kontakt, kein Deal, kein Lead, kein Verlaufseintrag
-    (`server.js`, `/api/confirm`: Guard `!themen.includes('versicherung')`; beide Aufrufe stehen
-    *innerhalb* dieses Guards). Versicherung läuft ausschließlich persönlich über Patrick/p@,
-    getrennt von der Energieberatung der pin-co.de Media UG. Seit 25.09.2026 ist Patrick dafür
-    auch datenschutzrechtlich eigener Verantwortlicher — siehe Abschnitt 1 der
-    Datenschutzerklärung. Bei jeder Änderung an diesem Code-Pfad diese Trennung erneut prüfen.
+  - **Harte Regel:** Über diese Website werden **keine Versicherungsleistungen vermarktet**
+    (Entscheidung 25.09.2026). Das Thema „Versicherungscheck" gibt es im Formular nicht mehr,
+    die Seite `/analyse-vorsorge` ist entfernt und per 301 umgeleitet. Der Schutz sitzt jetzt
+    in der Eingangsprüfung von `/api/contact`: `themen` wird gegen `THEMEN_LABELS` gefiltert,
+    unbekannte Themen werden verworfen. Das greift auch, wenn jemand mit einer
+    zwischengespeicherten Seite das alte Thema absendet — solche Daten dürfen weder Brevo noch
+    das eigene CRM berühren. Beim Erweitern von `THEMEN_LABELS` diese Wirkung mitbedenken.
+  - Die Vermittlerangaben nach § 34d stehen weiterhin im **Impressum** und bleiben dort, bis
+    anwaltlich geklärt ist, ob sie ohne Vermittlung über die Website entbehrlich sind.
 - Keine externen Ressourcen ohne Consent laden (keine externen Fonts/CDNs/Tracker)
 - **Mobile First** — Pflicht, nicht Option
 

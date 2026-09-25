@@ -46,7 +46,6 @@ setInterval(() => {
 const THEMEN_LABELS = {
   pv:           'Photovoltaikanlage',
   wp:           'Wärmepumpe',
-  versicherung: 'Versicherungscheck',
   sonstiges:    'Sonstiges',
 };
 
@@ -223,14 +222,24 @@ app.post('/api/contact', async (req, res) => {
   hits.push(now);
   rateLimitMap.set(ip, hits);
 
-  const { vorname, nachname, email, phone, strasse, plz, ort, themen, message, consentKontakt } = req.body;
+  const { vorname, nachname, email, phone, strasse, plz, ort, message, consentKontakt } = req.body;
 
-  if (!vorname || !nachname || !email || !phone || !Array.isArray(themen) || !themen.length) {
+  // Nur bekannte Themen zulassen. Das ist zugleich der Schutz, der frueher als
+  // Guard vor dem CRM stand: Versicherung wird ueber diese Website nicht mehr
+  // angeboten (seit 25.09.2026). Jemand mit einer zwischengespeicherten Seite
+  // koennte das alte Thema sonst weiterhin absenden, und es landete in einem
+  // System, das es nach Paragraf 34d GewO nie beruehren darf. Unbekannte Themen
+  // werden verworfen, statt weitergereicht.
+  const themen = Array.isArray(req.body.themen)
+    ? req.body.themen.filter(t => Object.prototype.hasOwnProperty.call(THEMEN_LABELS, t))
+    : [];
+
+  if (!vorname || !nachname || !email || !phone || !themen.length) {
     return res.status(400).json({ ok: false, error: 'Pflichtfelder fehlen.' });
   }
 
   // Adresse nur bei Energie-Themen Pflicht (Standorteinschätzung) –
-  // bei reinem Versicherungscheck/Sonstiges bleibt sie optional (Datenminimierung)
+  // bei reinem „Sonstiges" bleibt sie optional (Datenminimierung)
   const needsAddress = themen.includes('pv') || themen.includes('wp');
   if (needsAddress && (!strasse || !plz || !ort)) {
     return res.status(400).json({ ok: false, error: 'Pflichtfelder fehlen.' });
@@ -331,13 +340,7 @@ app.get('/api/confirm', async (req, res) => {
       `,
     });
 
-    // Versicherungsbezogene Anfragen dürfen Brevo nie berühren (§ 34d GewO –
-    // Patrick handelt Versicherung persönlich, getrennt von der UG/Energie-CRM).
-    // Sobald "versicherung" unter den Themen ist, wird die GESAMTE Anfrage
-    // ausschließlich per E-Mail an MAIL_TO bearbeitet (siehe oben) – kein
-    // Kontakt, kein Deal, keine Liste, kein Event, auch nicht für ggf.
-    // gleichzeitig ausgewählte Energie-Themen.
-    if (!themen.includes('versicherung')) {
+    {
       // Basis-Kontakt + Deal: immer, unabhängig von consentKontakt (Art. 6 Abs. 1 lit. b)
       const contactId = await brevoUpsertContact(
         email,
@@ -598,7 +601,7 @@ app.get('/api/spotprice', async (req, res) => {
 // ── Clean URLs ───────────────────────────────────────────────────
 app.get('/beratung-technik',    (req, res) => res.sendFile(path.join(__dirname, 'beratung-technik.html')));
 app.get('/koordination-netzwerk', (req, res) => res.sendFile(path.join(__dirname, 'koordination-netzwerk.html')));
-app.get('/analyse-vorsorge',    (req, res) => res.sendFile(path.join(__dirname, 'analyse-vorsorge.html')));
+app.get('/analyse-vorsorge',    (req, res) => res.redirect(301, '/'));
 app.get('/unabhaengigkeit',      (req, res) => res.sendFile(path.join(__dirname, 'unabhaengigkeit.html')));
 app.get('/nutzen',               (req, res) => res.sendFile(path.join(__dirname, 'nutzen.html')));
 app.get('/heizkosten',           (req, res) => res.sendFile(path.join(__dirname, 'heizkosten.html')));

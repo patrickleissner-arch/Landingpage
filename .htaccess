@@ -13,6 +13,9 @@ Options -MultiViews
 Redirect 301 /solarisator /unabhaengigkeit
 Redirect 301 /energierechner /nutzen
 Redirect 301 /waermepumpe-rechner /heizkosten
+# Versicherungsseite entfernt (25.09.2026) - kein Vermarkten von
+# Versicherungsleistungen mehr ueber die Website.
+RedirectMatch 301 ^/analyse-vorsorge(\.html)?/?$ /
 
 RewriteEngine On
 RewriteBase /
