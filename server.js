@@ -7,6 +7,7 @@ const express    = require('express');
 const nodemailer = require('nodemailer');
 const crypto     = require('crypto');
 const https      = require('https');
+const fs         = require('fs');
 
 const app  = express();
 const PORT = process.env.PORT || 3000;
@@ -15,6 +16,82 @@ const PORT = process.env.PORT || 3000;
 // ohne trust proxy würde req.ip sonst dessen Adresse statt der echten
 // Besucher-IP liefern und das Rate-Limiting würde alle Besucher gemeinsam treffen.
 app.set('trust proxy', true);
+
+// Nur öffentliche Dateien ausliefern. Die Seite läuft unter Express, nicht
+// Apache – die Sperren in .htaccess greifen hier nicht. Ohne diese Prüfung
+// lieferte express.static das ganze Repo aus: server.js, CLAUDE.md, docs/,
+// .github/ und node_modules/. Geprüft wird der dekodierte, normalisierte Pfad,
+// damit /server%2Ejs oder //server.js nicht vorbeikommen.
+const OEFFENTLICHE_ENDUNGEN = new Set([
+  '.html', '.css', '.js', '.png', '.jpg', '.jpeg', '.webp', '.gif', '.svg', '.ico',
+  '.ttf', '.woff', '.woff2', '.mp4', '.webm', '.pdf', '.xml', '.txt', '.webmanifest',
+]);
+const INTERNE_PFADE = /^\/(?:server\.js$|node_modules(?:\/|$)|docs(?:\/|$))|\/\.(?!well-known\/)/i;
+
+app.use((req, res, next) => {
+  let pfad;
+  try { pfad = path.posix.normalize(decodeURIComponent(req.path)); }
+  catch { return res.status(400).end(); }
+  const endung = path.posix.extname(pfad).toLowerCase();
+  if (INTERNE_PFADE.test(pfad) || (endung && !OEFFENTLICHE_ENDUNGEN.has(endung))) {
+    return res.status(404).end();
+  }
+  next();
+});
+
+// ── Saubere URLs ─────────────────────────────────────────────────
+// Kanonisch ist die Form ohne Schrägstrich am Ende – so stehen die URLs in
+// sitemap.xml und in den canonical-Tags. Diese Weiche steht vor
+// express.static: Das leitete jeden Ordner auf „/…/“ um, und die
+// Platzhalter-Ordner aus der Apache-Zeit (termin/index.html usw.) leiteten
+// per Meta-Refresh weiter – zwei Umwege auf jedem Klick zu „Termin buchen“.
+const SEITEN = {
+  '/beratung-technik':      'beratung-technik.html',
+  '/koordination-netzwerk': 'koordination-netzwerk.html',
+  '/analyse-vorsorge':      'analyse-vorsorge.html',
+  '/unabhaengigkeit':       'unabhaengigkeit.html',
+  '/nutzen':                'nutzen.html',
+  '/heizkosten':            'heizkosten.html',
+  '/waermepumpe-heizlast':  'waermepumpe-heizlast.html',
+  '/mieterstrom':           'mieterstrom.html',
+  '/impressum':             'impressum.html',
+  '/datenschutz':           'datenschutz.html',
+  '/termin':                'termin.html',
+  '/spotpreis':             'spotpreis.html',
+};
+const UMZUEGE = {
+  '/solarisator':         '/unabhaengigkeit',
+  '/energierechner':      '/nutzen',
+  '/waermepumpe-rechner': '/heizkosten',
+};
+
+// Ordner mit eigener index.html (Ratgeber) einmal beim Start einlesen –
+// neue Artikel kommen mit dem nächsten Deploy und damit dem nächsten Start.
+function ordnerSeitenFinden(ordner, basis = '') {
+  const gefunden = {};
+  for (const e of fs.readdirSync(ordner, { withFileTypes: true })) {
+    if (!e.isDirectory() || e.name.startsWith('.') || ['node_modules', 'assets', 'docs'].includes(e.name)) continue;
+    const rel  = basis + '/' + e.name;
+    const voll = path.join(ordner, e.name);
+    if (fs.existsSync(path.join(voll, 'index.html'))) gefunden[rel.toLowerCase()] = path.join(voll, 'index.html');
+    Object.assign(gefunden, ordnerSeitenFinden(voll, rel));
+  }
+  return gefunden;
+}
+const ORDNER_SEITEN = ordnerSeitenFinden(__dirname);
+
+app.use((req, res, next) => {
+  if ((req.method !== 'GET' && req.method !== 'HEAD') || req.path === '/') return next();
+  const query = req.url.slice(req.path.length);
+  const kanon = req.path.replace(/\/+$/, '').toLowerCase();
+
+  if (UMZUEGE[kanon]) return res.redirect(301, UMZUEGE[kanon] + query);
+
+  const datei = SEITEN[kanon] ? path.join(__dirname, SEITEN[kanon]) : ORDNER_SEITEN[kanon];
+  if (!datei) return next();
+  if (req.path !== kanon) return res.redirect(301, kanon + query);
+  res.sendFile(datei);
+});
 
 app.use(express.static(path.join(__dirname)));
 app.use(express.json());
@@ -595,23 +672,7 @@ app.get('/api/spotprice', async (req, res) => {
   }
 });
 
-// ── Clean URLs ───────────────────────────────────────────────────
-app.get('/beratung-technik',    (req, res) => res.sendFile(path.join(__dirname, 'beratung-technik.html')));
-app.get('/koordination-netzwerk', (req, res) => res.sendFile(path.join(__dirname, 'koordination-netzwerk.html')));
-app.get('/analyse-vorsorge',    (req, res) => res.sendFile(path.join(__dirname, 'analyse-vorsorge.html')));
-app.get('/unabhaengigkeit',      (req, res) => res.sendFile(path.join(__dirname, 'unabhaengigkeit.html')));
-app.get('/nutzen',               (req, res) => res.sendFile(path.join(__dirname, 'nutzen.html')));
-app.get('/heizkosten',           (req, res) => res.sendFile(path.join(__dirname, 'heizkosten.html')));
-app.get('/solarisator',          (req, res) => res.redirect(301, '/unabhaengigkeit'));
-app.get('/energierechner',       (req, res) => res.redirect(301, '/nutzen'));
-app.get('/waermepumpe-rechner',  (req, res) => res.redirect(301, '/heizkosten'));
-app.get('/waermepumpe-heizlast', (req, res) => res.sendFile(path.join(__dirname, 'waermepumpe-heizlast.html')));
-app.get('/mieterstrom',          (req, res) => res.sendFile(path.join(__dirname, 'mieterstrom.html')));
-app.get('/impressum',            (req, res) => res.sendFile(path.join(__dirname, 'impressum.html')));
-app.get('/datenschutz',         (req, res) => res.sendFile(path.join(__dirname, 'datenschutz.html')));
-app.get('/termin',              (req, res) => res.sendFile(path.join(__dirname, 'termin.html')));
-app.get('/spotpreis',           (req, res) => res.sendFile(path.join(__dirname, 'spotpreis.html')));
-
+// Unbekannte Pfade → Startseite (Verhalten wie bisher)
 app.get('*', (req, res) => res.sendFile(path.join(__dirname, 'index.html')));
 
 app.listen(PORT, () => console.log(`Server läuft auf Port ${PORT}`));

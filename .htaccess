@@ -1,3 +1,6 @@
+# HINWEIS: Die Website laeuft unter Express (server.js). Diese Datei wird dort
+# NICHT ausgewertet. Sperren und Weiterleitungen stehen in server.js.
+
 Options -MultiViews
 
 # Schutz: interne Entwickler-Dateien nicht oeffentlich ausliefern (403)
