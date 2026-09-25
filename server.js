@@ -60,7 +60,11 @@ const SEITEN = {
 };
 const UMZUEGE = {
   // Versicherung wird ueber diese Website nicht mehr vermarktet (25.09.2026).
-  '/analyse-vorsorge':    '/',
+  // Die .html-Variante muss mit: Ohne sie liefert die Auffangroute unter der
+  // alten Adresse stillschweigend die Startseite aus - fuer Suchmaschinen ein
+  // zweiter Inhalt unter einer Adresse, die es nicht mehr geben soll.
+  '/analyse-vorsorge':      '/',
+  '/analyse-vorsorge.html': '/',
   '/solarisator':         '/unabhaengigkeit',
   '/energierechner':      '/nutzen',
   '/waermepumpe-rechner': '/heizkosten',
