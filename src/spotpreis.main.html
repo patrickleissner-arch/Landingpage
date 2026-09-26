@@ -1,0 +1,52 @@
+<main id="main">
+<section class="sp-hero" aria-label="Spotpreis-Monitor – Einleitung">
+  <nav class="sp-breadcrumb" aria-label="Brotkrumen-Navigation">
+    <div class="sp-breadcrumb-inner">
+      <a href="/">Startseite</a><span class="sp-bc-sep" aria-hidden="true">›</span>
+      <a href="/ratgeber">Ratgeber</a><span class="sp-bc-sep" aria-hidden="true">›</span>
+      <span class="sp-bc-current">Spotpreis-Monitor</span>
+    </div>
+  </nav>
+  <div class="container sp-hero-content">
+    <p class="sp-hero-eyebrow">Daten &amp; Markt · EPEX SPOT DE-LU</p>
+    <h1>Börsenstrompreise, live.</h1>
+    <p>Wenn der Preis unter null fällt, zahlt niemand für deinen Solarstrom. Das Solarspitzengesetz (§&nbsp;51 EEG) macht genau das zur Regel. Hier siehst du, wann das heute passiert.</p>
+  </div>
+</section>
+
+<section class="sp-section sp-section--compact" aria-label="Aktuelle Börsenstrompreise">
+  <div class="container">
+    <div class="sp-stats reveal" id="kvGrid" aria-live="polite"></div>
+    <p id="updateLabel" style="text-align:center; margin-top:var(--space-4); font-size:0.775rem; color:var(--color-text-muted);"></p>
+    <div class="spotpreis-chart-wrap">
+      <canvas id="spotChart" aria-label="Viertelstündliche Day-Ahead-Börsenstrompreise in ct/kWh"></canvas>
+    </div>
+    <div class="spotpreis-fallback" id="fallback" role="alert">
+      <strong>Preisdaten momentan nicht verfügbar.</strong><br>
+      Die Börsendaten konnten nicht geladen werden. Bitte versuche es später erneut.
+    </div>
+    <p class="spotpreis-disclaimer">
+      Marktdaten: EPEX SPOT DE-LU Day-Ahead via <a href="https://www.energy-charts.info" target="_blank" rel="noopener">Fraunhofer ISE Energy-Charts</a>.
+      Preise in ct/kWh brutto. Kein individueller Tarif, keine Empfehlung.
+      Negative Preise nach §&nbsp;51 EEG bedeuten: keine EEG-Einspeisevergütung in dieser Viertelstunde.
+    </p>
+  </div>
+</section>
+
+<section class="sp-section sp-section--dark" aria-label="Bedeutung für PV-Anlage">
+  <div class="container">
+    <div class="sp-section-header reveal">
+      <h2>Negative Preise und was deine Anlage daraus macht.</h2>
+      <p>Bei negativen Börsenstrompreisen erhält eine normale PV-Anlage <strong>null Euro Einspeisevergütung</strong>, ganz egal, wie viel Strom ins Netz geht. Eine Anlage mit intelligentem Energiemanagementsystem (HEMS) erkennt das und lädt in diesen Stunden gezielt den Speicher auf, statt einzuspeisen.</p>
+      <p style="margin-top:var(--space-4);">
+        <a href="/ratgeber/solarspitzengesetz">→ Solarspitzengesetz erklärt (§&nbsp;51 EEG)</a>
+        &ensp;·&ensp;
+        <a href="/beratung-technik#eco">→ Welche Variante reagiert wie?</a>
+      </p>
+    </div>
+    <div style="margin-top:var(--space-8);">
+      <a href="/termin" class="btn btn-accent btn-lg">Termin buchen</a>
+    </div>
+  </div>
+</section>
+</main>

@@ -1,0 +1,184 @@
+
+    /* Map calculator vars → website CI vars (defined after stylesheet links so they win) */
+    :root {
+      --green:      var(--color-brand-primary);
+      --green-l:    #3a6450;
+      --gold:       var(--color-brand-accent);
+      --beige:      var(--color-beige);
+      --white:      #ffffff;
+      --black:      #000000;
+      --gray:       var(--color-text-muted, #6b7280);
+      --gray-l:     var(--color-border, #e2e4e0);
+      --fossil-col: #C0392B;
+      --wp-col:     #4A7B9D;
+      --r:          0.5rem;
+      --sh:         0 2px 10px rgba(0,0,0,0.09);
+    }
+
+    .ec-calc-wrap { max-width: 980px; margin: 0 auto; padding: 2rem 1rem; }
+
+    /* Cards */
+    .card { background: var(--white); border-radius: var(--r); box-shadow: var(--sh); padding: 1.5rem; margin-bottom: 1.5rem; }
+    .card h2 { color: var(--green); font-size: 1rem; font-weight: 700; margin-bottom: 1rem; padding-bottom: .5rem; border-bottom: 2px solid var(--gold); }
+
+    /* Form */
+    .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+    .form-group { display: flex; flex-direction: column; gap: .3rem; }
+    .ec-calc-wrap label { font-size: .82rem; font-weight: 600; color: var(--green); }
+    .ec-calc-wrap input[type=text],
+    .ec-calc-wrap input[type=number] {
+      padding: .7rem 1rem; border: 2px solid var(--gray-l); border-radius: var(--r);
+      font-family: inherit; font-size: .95rem; color: var(--black); background: var(--white); width: 100%; transition: border-color .18s;
+    }
+    .ec-calc-wrap select {
+      padding: .7rem 2.5rem .7rem 1rem; border: 2px solid var(--gray-l); border-radius: var(--r);
+      font-family: inherit; font-size: .95rem; color: var(--black);
+      background: var(--white) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%236b7280' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E") no-repeat right 14px center;
+      -webkit-appearance: none; width: 100%; cursor: pointer; transition: border-color .18s;
+    }
+    .ec-calc-wrap input:focus, .ec-calc-wrap select:focus { outline: none; border-color: var(--green); box-shadow: 0 0 0 3px rgba(46,79,60,.1); }
+    .hint { font-size: .75rem; color: var(--gray); }
+
+    /* Fuel toggle */
+    .fuel-toggle { display: flex; border: 2px solid var(--green); border-radius: var(--r); overflow: hidden; }
+    .fuel-toggle button { flex: 1; padding: .55rem; border: none; background: var(--white); cursor: pointer; font-weight: 600; font-size: .88rem; transition: background-color .2s, border-color .2s, color .2s, box-shadow .2s, transform .2s, opacity .2s; color: var(--green); }
+    .fuel-toggle button.active { background: var(--green); color: var(--white); }
+
+    /* Accordion */
+    .accord-hdr { display: flex; justify-content: space-between; align-items: center; cursor: pointer; user-select: none; padding: 1rem 1.5rem; background: var(--white); border-radius: var(--r); box-shadow: var(--sh); margin-bottom: .5rem; color: var(--green); font-weight: 700; font-size: .95rem; }
+    .accord-hdr:hover { background: #f8f8f4; }
+    .accord-ico { font-size: 1rem; transition: transform .2s; }
+    .accord-ico.open { transform: rotate(180deg); }
+    .accord-body { display: none; background: var(--white); border-radius: var(--r); box-shadow: var(--sh); padding: 1.5rem; margin-bottom: 1.5rem; }
+    .accord-body.open { display: block; }
+    .exp-sec { margin-bottom: 1.5rem; }
+    .exp-sec h3 { font-size: .78rem; color: var(--gray); text-transform: uppercase; letter-spacing: .5px; margin-bottom: .9rem; padding-bottom: .3rem; border-bottom: 1px solid var(--gray-l); }
+
+    /* Auto params */
+    .auto-params { background: var(--beige); border-radius: var(--r); padding: .7rem 1rem; font-size: .8rem; color: var(--gray); display: flex; gap: 1.5rem; flex-wrap: wrap; margin-bottom: 1rem; }
+    .auto-params strong { color: var(--green); }
+
+    /* Sliders */
+    .slider-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+    .s-item { display: flex; flex-direction: column; gap: .3rem; }
+    .s-item label { font-size: .8rem; }
+    .s-row { display: flex; align-items: center; gap: .5rem; }
+    .ec-calc-wrap input[type=range] { flex: 1; height: 5px; -webkit-appearance: none; border: none; background: var(--gray-l); border-radius: 3px; padding: 0; cursor: pointer; }
+    .ec-calc-wrap input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; width: 17px; height: 17px; border-radius: 50%; background: var(--green); cursor: pointer; }
+    .s-val { min-width: 58px; text-align: right; font-weight: 700; font-size: .82rem; color: var(--green); }
+
+    /* CTA button */
+    .btn-calc { background: var(--gold); color: var(--green); border: none; padding: .9rem 2rem; font-size: 1.05rem; font-weight: 800; border-radius: var(--r); cursor: pointer; width: 100%; margin-top: .5rem; transition: background-color .2s, border-color .2s, color .2s, box-shadow .2s, transform .2s, opacity .2s; letter-spacing: .3px; }
+    .btn-calc:hover { background: var(--green); color: var(--white); }
+
+    /* Hero stats */
+    .hero-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; margin-bottom: 1.5rem; }
+    .hero-grid--wirtschaft { grid-template-columns: repeat(2, 1fr); }
+    .hero-card { background: var(--green); border-radius: var(--r); padding: 1.1rem; text-align: center; }
+    .hero-label { font-size: .72rem; color: rgba(255,255,255,.75); margin-bottom: .25rem; }
+    .hero-val { font-size: 1.75rem; font-weight: 800; color: var(--gold); line-height: 1.1; }
+    .hero-unit { font-size: .72rem; color: rgba(255,255,255,.65); margin-top: .15rem; }
+    .invest-note { font-size: .76rem; color: var(--gray); text-align: center; margin: -0.6rem 0 1.5rem; }
+    .soft-contact-cta { text-align: center; font-size: .85rem; color: var(--gray); margin: 0 0 1.2rem; }
+    .soft-contact-cta a { color: var(--green); font-weight: 700; }
+
+    /* Comparison table */
+    .cmp-wrap { overflow-x: auto; }
+    table.cmp { width: 100%; border-collapse: collapse; font-size: .87rem; }
+    table.cmp th { padding: .7rem .8rem; text-align: center; font-size: .82rem; font-weight: 700; }
+    table.cmp th:first-child { text-align: left; }
+    table.cmp th.th-fossil { color: var(--fossil-col); }
+    table.cmp th.th-wp { color: var(--wp-col); }
+    table.cmp th.th-wpv { color: var(--white); background: var(--green); border-radius: 4px 4px 0 0; }
+    table.cmp td { padding: .55rem .8rem; text-align: center; border-bottom: 1px solid var(--beige); }
+    table.cmp td:first-child { text-align: left; font-size: .8rem; color: var(--gray); font-weight: 600; }
+    table.cmp td.td-wpv { background: rgba(46,79,60,.07); font-weight: 700; color: var(--green); }
+    table.cmp tr:nth-child(even) td { background: var(--beige); }
+    table.cmp tr:nth-child(even) td.td-wpv { background: rgba(46,79,60,.13); }
+
+    /* Chart */
+    .chart-wrap { position: relative; height: 300px; }
+
+    /* Pain section – hell, sparsam mit Dunkelgrün */
+    .pain { background: var(--white); border: 1px solid var(--gray-l); border-top: 4px solid var(--gold); border-radius: var(--r); padding: 2rem; margin-bottom: 1.5rem; }
+    .pain h2 { display: flex; align-items: center; gap: .55rem; color: var(--green); font-size: 1.05rem; margin-bottom: 1.2rem; padding-bottom: .5rem; border-bottom: 1px solid var(--gray-l); }
+    .pain h2 svg { color: var(--gold); }
+    .pain-timeline { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; }
+    .pain-card { background: var(--beige); border-radius: var(--r); padding: 1rem; text-align: center; border: 1px solid var(--gray-l); }
+    .pain-card.hl { background: var(--white); border: 2px solid var(--gold); box-shadow: 0 2px 12px rgba(208,171,59,.18); }
+    .pain-yr { font-size: 1.4rem; font-weight: 800; color: var(--gold); }
+    .pain-lbl { font-size: .68rem; color: var(--gray); margin-bottom: .2rem; }
+    .pain-cost { font-size: 1.2rem; font-weight: 700; color: var(--black); margin: .25rem 0; }
+    .pain-co2 { font-size: .78rem; color: var(--gray); }
+    .pain-delta { font-size: .82rem; color: var(--green); font-weight: 600; margin-top: .2rem; }
+    .pain-sum { margin-top: 1.3rem; padding: .9rem 1rem; background: rgba(208,171,59,.1); border-radius: var(--r); border-left: 4px solid var(--gold); display: flex; flex-direction: column; gap: .3rem; font-size: .9rem; }
+    .pain-sum strong { color: var(--green); }
+
+    /* Climate badge */
+    .clim-badge { display: inline-block; background: var(--green); color: var(--white); font-size: .73rem; padding: .18rem .55rem; border-radius: 99px; }
+
+    /* Tech card */
+    .tech-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; }
+    .tech-item { background: var(--beige); border-radius: var(--r); padding: 1rem; border-left: 3px solid var(--gold); }
+    .tech-label { font-size: .73rem; font-weight: 700; color: var(--gray); text-transform: uppercase; letter-spacing: .4px; margin-bottom: .3rem; }
+    .tech-val { font-size: 1.4rem; font-weight: 800; color: var(--green); line-height: 1.1; }
+
+    /* Post-results CTA */
+    .ec-cta-card { background: var(--white); border-radius: var(--r); box-shadow: var(--sh); padding: 2rem; margin-bottom: 1.5rem; display: flex; flex-direction: column; align-items: center; text-align: center; }
+    .ec-cta-card h2 { color: var(--green); font-size: 1.1rem; font-weight: 700; margin-bottom: .5rem; }
+    .ec-cta-card p { color: var(--gray); margin-bottom: 1.5rem; font-size: .9rem; max-width: 52ch; }
+    .btn-calc-cta { display: block; width: fit-content; margin: 0 auto; align-self: center; background: var(--gold); color: var(--green); border: none; padding: .9rem 2.5rem; font-size: 1rem; font-weight: 800; border-radius: var(--r); cursor: pointer; text-decoration: none; transition: background-color .2s, border-color .2s, color .2s, box-shadow .2s, transform .2s, opacity .2s; letter-spacing: .3px; white-space: nowrap; }
+    .btn-calc-cta:hover { background: var(--green); color: var(--white); }
+
+    /* Disclaimer */
+    .ec-calc-wrap .ec-disclaimer { display: block !important; text-align: center !important; width: 100% !important; font-size: .73rem; color: var(--gray); padding: .5rem 1rem 1.5rem; line-height: 1.5; text-wrap: balance; }
+
+    /* SVG icon alignment inside text / buttons */
+    .ec-icon { display: inline-flex; align-items: center; gap: .45rem; }
+    .ec-icon svg { flex-shrink: 0; vertical-align: middle; }
+
+    /* ── Responsive ──────────────────────────────────────────── */
+
+    /* Tablet / großes Handy (≤ 680 px) */
+    @media (max-width: 680px) {
+      .form-grid, .slider-grid, .pain-timeline { grid-template-columns: 1fr; }
+      .hero-grid  { grid-template-columns: 1fr 1fr; }
+      .tech-grid  { grid-template-columns: 1fr 1fr; }
+
+      /* Vergleichstabelle: Label-Spalte auf feste Breite, damit Zahlen nicht zerquetscht werden */
+      table.cmp td:first-child,
+      table.cmp th:first-child { min-width: 130px; }
+    }
+
+    /* Kleines Handy (≤ 480 px) */
+    @media (max-width: 480px) {
+      /* Section hat sp-section padding-block 5 rem – auf mobil reduzieren */
+      #rechner { padding-block: var(--space-12, 3rem); }
+
+      /* Chart: fixe Höhe runter damit er nicht den ganzen Screen frisst */
+      .chart-wrap { height: 220px; }
+
+      /* Ergebnis-Zahlen in den Hero-Cards etwas kleiner */
+      .hero-val { font-size: 1.4rem; }
+
+      /* CTA-Button auf volle Breite für sicheres Tap-Target */
+      .btn-calc-cta { width: 100%; text-align: center; box-sizing: border-box; white-space: normal; }
+
+      /* Accordion-Header umbricht sauber */
+      .accord-hdr { font-size: .88rem; gap: .5rem; }
+
+      /* Auto-params: einzelne Zeilen statt Flex-Reihe */
+      .auto-params { flex-direction: column; gap: .5rem; }
+
+      /* Pain-Karten etwas kompakter */
+      .pain { padding: 1.25rem; }
+      .pain-timeline { gap: .75rem; }
+
+
+    }
+
+    /* Sehr kleines Handy (≤ 360 px) */
+    @media (max-width: 360px) {
+      .ec-calc-wrap { padding-inline: .75rem; }
+      .hero-grid { grid-template-columns: 1fr; }
+    }

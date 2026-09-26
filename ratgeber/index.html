@@ -1,234 +1,192 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Ratgeber für Photovoltaik, Wärmepumpe und Energierecht – fundierte Erklärungen zu Solarspitzengesetz, § 14a EnWG, Heizlastberechnung und Speichervergleich.">
-
-  <meta property="og:title" content="Ratgeber – Patrick Leißner Energieberatung">
-  <meta property="og:description" content="Wissen das hilft: Solarspitzengesetz, § 14a EnWG, Heizlastberechnung, PV-Speicher im Vergleich.">
-  <meta property="og:type" content="website">
-  <meta property="og:url" content="https://patrickleissner.de/ratgeber">
-
-  <title>Ratgeber – Patrick Leißner | Energieberatung</title>
-
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Ratgeber | Patrick Leißner Energieberatung</title>
+  <meta name="description" content="Ratgeber für Photovoltaik, Wärmepumpe und Energierecht: fundierte Erklärungen zu Solarspitzengesetz, § 14a EnWG, Heizlastberechnung und Speichervergleich.">
+  <meta name="theme-color" content="#0f2a23">
   <link rel="canonical" href="https://patrickleissner.de/ratgeber">
-  <link rel="stylesheet" href="../style.css">
-  <link rel="stylesheet" href="../subpage.css">
+
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Ratgeber | Patrick Leißner Energieberatung">
+  <meta property="og:description" content="Ratgeber für Photovoltaik, Wärmepumpe und Energierecht: fundierte Erklärungen zu Solarspitzengesetz, § 14a EnWG, Heizlastberechnung und Speichervergleich.">
+  <meta property="og:image" content="https://patrickleissner.de/assets/img/patrick-1600.webp">
+  <meta property="og:locale" content="de_DE">
+  <link rel="icon" type="image/webp" href="../assets/img/logo-mark.webp">
+  <link rel="preload" href="../assets/fonts/Outfit-Variable.ttf" as="font" type="font/ttf" crossorigin>
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="../css/pages.css">
 </head>
-<body>
+<body class="page page--ratgeber">
+  <a class="skip-link" href="#main">Zum Inhalt springen</a>
 
-  <a href="#main" class="skip-link">Zum Hauptinhalt springen</a>
-
-  <header class="site-header scrolled" role="banner" id="site-header">
-    <nav class="nav-container" aria-label="Hauptnavigation">
-
-      <a href="/" class="nav-logo" aria-label="Patrick Leißner Energieberatung – zur Startseite">
-        <img src="../assets/Logo/Initialien-Name-Positiv-frei.png" alt="Patrick Leißner Energieberatung Logo" height="96" loading="eager" style="width:auto">
+<header class="nav" id="site-header">
+    <div class="nav__inner">
+      <a class="nav__brand" href="/" aria-label="Patrick Leißner, zur Startseite" translate="no">
+        <img src="../assets/img/logo-full-light.webp" width="800" height="375" alt="Patrick Leißner Energieberatung" fetchpriority="high">
       </a>
-
-      <ul class="nav-links" role="list">
-        <li><a href="/#leistungen">Leistungen</a></li>
-        <li><a href="/#ueber-pl">Über mich</a></li>
-        <li><a href="/ratgeber" aria-current="page">Ratgeber</a></li>
-        <li><a href="/termin">Termine</a></li>
-        <li><a href="/#kontakt">Kontakt</a></li>
-      </ul>
-
-      <a href="/termin" class="btn btn-accent nav-cta">Termin buchen</a>
-
-      <button
-        class="hamburger"
-        aria-label="Menü öffnen"
-        aria-expanded="false"
-        aria-controls="mobile-menu"
-        id="hamburger-btn"
-      >
-        <span></span>
-        <span></span>
-        <span></span>
+      <nav class="nav__links" aria-label="Hauptnavigation">
+        <a href="/#leistungen">Leistungen</a>
+        <a href="/#arbeitsweise">Arbeitsweise</a>
+        <a href="/#ueber-mich">Über mich</a>
+        <a href="/ratgeber">Ratgeber</a>
+        <a href="/#kontakt">Kontakt</a>
+      </nav>
+      <a class="btn btn--gold nav__cta" href="/termin">Termin buchen</a>
+      <button class="nav__toggle" type="button" aria-expanded="false" aria-controls="mobile-menu" aria-label="Menü öffnen">
+        <span></span><span></span>
       </button>
-    </nav>
-
-    <div class="mobile-menu" id="mobile-menu" aria-hidden="true" role="dialog" aria-label="Hauptnavigation">
-      <ul role="list">
-        <li><a href="/#leistungen" class="mobile-nav-link">Leistungen</a></li>
-        <li><a href="/#ueber-pl" class="mobile-nav-link">Über mich</a></li>
-        <li><a href="/ratgeber" class="mobile-nav-link">Ratgeber</a></li>
-        <li><a href="/termin" class="mobile-nav-link">Termine</a></li>
-        <li><a href="/#kontakt" class="mobile-nav-link">Kontakt</a></li>
-        <li><a href="/termin" class="btn btn-accent mobile-nav-link">Termin buchen</a></li>
-      </ul>
+    </div>
+    <div class="nav__mobile" id="mobile-menu" hidden>
+      <a href="/#leistungen">Leistungen</a>
+      <a href="/#arbeitsweise">Arbeitsweise</a>
+      <a href="/#ueber-mich">Über mich</a>
+      <a href="/ratgeber">Ratgeber</a>
+      <a href="/#kontakt">Kontakt</a>
+      <a class="btn btn--gold" href="/termin">Termin buchen</a>
     </div>
   </header>
 
-  <div class="sp-back-bar">
-    <div class="container">
-      <a href="/" class="sp-back-link">Zurück zur Startseite</a>
+<main id="main">
+<section class="sp-hero" aria-label="Ratgeber – Einleitung">
+  <nav class="sp-breadcrumb" aria-label="Brotkrumen-Navigation">
+    <div class="sp-breadcrumb-inner">
+      <a href="/">Startseite</a><span class="sp-bc-sep" aria-hidden="true">›</span>
+      <span class="sp-bc-current">Ratgeber</span>
+    </div>
+  </nav>
+  <div class="sp-hero-bg" style="background-image: url('../assets/img/leistung-analyse-1376.webp')" aria-hidden="true"></div>
+  <div class="container sp-hero-content">
+    <p class="sp-hero-eyebrow">Wissen &amp; Ratgeber</p>
+    <h1>Was du wissen solltest, bevor du entscheidest.</h1>
+    <p>Energierecht, Förderbedingungen und Technik entwickeln sich schnell. Hier findest du fundierte Erklärungen zu den Themen, die in der Beratung am häufigsten auftauchen. Ohne Marketingsprache.</p>
+  </div>
+</section>
+
+<section class="sp-section" aria-labelledby="ratgeber-heading">
+  <div class="container">
+    <div class="sp-section-header reveal">
+      <h2 id="ratgeber-heading">Ratgeber-Artikel</h2>
+      <p>Alle Inhalte basieren auf aktuellen Gesetzen, Normen und praktischen Erfahrungen aus dem Beratungsalltag.</p>
+    </div>
+    <div class="sp-features-grid">
+      <article class="sp-feature-box reveal" aria-label="Solarspitzengesetz 2025">
+        <div class="sp-feature-icon" aria-hidden="true"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg></div>
+        <span class="sp-eyebrow">Gesetz &amp; Regelung</span>
+        <h3>Solarspitzengesetz 2025: Was Hauseigentümer jetzt wissen müssen</h3>
+        <p>Seit Februar 2025 entfällt die Einspeisevergütung bei negativen Strompreisen vollständig. Was das für deine PV-Anlage bedeutet und wie ein intelligenter Speicher gegensteuert.</p>
+        <a href="/ratgeber/solarspitzengesetz" class="btn-leistung">Artikel lesen →</a>
+      </article>
+      <article class="sp-feature-box reveal" aria-label="§ 14a EnWG">
+        <div class="sp-feature-icon" aria-hidden="true"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg></div>
+        <span class="sp-eyebrow">Energierecht</span>
+        <h3>§&nbsp;14a EnWG: Wie du den Netzrabatt automatisch abholst</h3>
+        <p>Wer eine Wallbox, Wärmepumpe oder Klimaanlage betreibt, kann dem Netzbetreiber Steuerungsrechte einräumen und bekommt dafür einen dauerhaften Rabatt auf den Netzentgeltanteil.</p>
+        <a href="/ratgeber/14a-enwg" class="btn-leistung">Artikel lesen →</a>
+      </article>
+      <article class="sp-feature-box reveal" aria-label="Heizlastberechnung">
+        <div class="sp-feature-icon" aria-hidden="true"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg></div>
+        <span class="sp-eyebrow">KfW-Förderung</span>
+        <h3>Heizlastberechnung nach DIN: Warum sie Pflicht ist und was falsch läuft</h3>
+        <p>Ohne korrekte Heizlastberechnung droht die Rückzahlung von KfW-Fördergeldern. Was die Norm verlangt, was LiDAR-Scan damit zu tun hat und welche Fehler sich häufig wiederholen.</p>
+        <a href="/ratgeber/heizlastberechnung" class="btn-leistung">Artikel lesen →</a>
+      </article>
+      <article class="sp-feature-box reveal" aria-label="PV-Speicher Vergleich">
+        <div class="sp-feature-icon" aria-hidden="true"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="15" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/><line x1="12" y1="12" x2="12" y2="16"/><line x1="10" y1="14" x2="14" y2="14"/></svg></div>
+        <span class="sp-eyebrow">Technik &amp; Produkte</span>
+        <h3>PV-Speicher im Vergleich: Eco, Sigenergy und Solaris²</h3>
+        <p>Drei grundlegend verschiedene Konzepte für drei grundlegend verschiedene Situationen. Welcher Speicher zu welchem Haushalt passt und was jeder Berater dir sagen müsste.</p>
+        <a href="/ratgeber/pv-speicher-vergleich" class="btn-leistung">Artikel lesen →</a>
+      </article>
+      <article class="sp-feature-box reveal" aria-label="Spotpreis-Monitor">
+        <div class="sp-feature-icon" aria-hidden="true"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></div>
+        <span class="sp-eyebrow">Daten &amp; Markt</span>
+        <h3>Spotpreis-Monitor: EPEX SPOT live</h3>
+        <p>Aktuelle Börsenstrompreise für Deutschland, stündlich aktualisiert. Negative Preisstunden sind direkt sichtbar: genau dann entfällt nach §&nbsp;51 EEG die Einspeisevergütung.</p>
+        <a href="/spotpreis" class="btn-leistung">Spotpreise ansehen →</a>
+      </article>
     </div>
   </div>
+</section>
 
-  <main id="main">
+<section class="sp-section sp-section--beige" aria-label="Erstberatung">
+  <div class="container">
+    <div class="sp-cta-box reveal">
+      <h2>Fragen zu deiner konkreten Situation?</h2>
+      <p>Kein Artikel ersetzt das Gespräch über dein Gebäude, deine Ausgangslage und deine Ziele. Die Erstberatung ist kostenlos und unverbindlich.</p>
+      <a href="/termin" class="btn btn-accent btn-lg">Termin buchen</a>
+    </div>
+  </div>
+</section>
+</main>
 
-    <!-- Hero -->
-    <section class="sp-hero" aria-label="Ratgeber – Einleitung">
-      <div class="container sp-hero-content">
-        <p class="sp-hero-eyebrow">Wissen & Ratgeber</p>
-        <h1>Was du wissen solltest,<br>bevor du entscheidest.</h1>
-        <p>Energierecht, Förderbedingungen und Technik entwickeln sich schnell. Hier findest du fundierte Erklärungen zu den Themen, die in der Beratung am häufigsten auftauchen – ohne Marketingsprache.</p>
-      </div>
-    </section>
-
-    <!-- Artikel-Übersicht -->
-    <section class="sp-section" aria-labelledby="ratgeber-heading">
-      <div class="container">
-        <div class="sp-section-header reveal">
-          <span class="sp-eyebrow">Aktuelle Themen</span>
-          <h2 id="ratgeber-heading">Ratgeber-Artikel</h2>
-          <p>Alle Inhalte basieren auf aktuellen Gesetzen, Normen und praktischen Erfahrungen aus dem Beratungsalltag.</p>
+<footer class="footer">
+    <div class="footer__cta">
+      <div class="container footer__cta-inner">
+        <div>
+          <h2>Erstberatung buchen</h2>
+          <p>30&nbsp;Minuten, kostenfrei und unverbindlich. Online, telefonisch oder vor Ort. Wähle direkt deinen Wunschtermin, kein Account nötig.</p>
         </div>
+        <a class="btn btn--gold btn--lg" href="/termin">Termin buchen</a>
+      </div>
+    </div>
 
-        <div class="sp-features-grid">
-
-          <article class="sp-feature-box reveal" aria-label="Solarspitzengesetz 2025">
-            <div class="sp-feature-icon" aria-hidden="true">
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/>
-                <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
-                <line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/>
-                <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
-              </svg>
-            </div>
-            <span class="sp-eyebrow" style="font-size:0.7rem">Gesetz & Regelung</span>
-            <h3>Solarspitzengesetz 2025 – was Hauseigentümer jetzt wissen müssen</h3>
-            <p>Seit Februar 2025 entfällt die Einspeisevergütung bei negativen Strompreisen vollständig. Was das für deine PV-Anlage bedeutet – und wie ein intelligenter Speicher gegensteuert.</p>
-            <a href="/ratgeber/solarspitzengesetz" class="btn-leistung btn-leistung--secondary" style="margin-top:1rem;display:inline-block">Artikel lesen →</a>
-          </article>
-
-          <article class="sp-feature-box reveal" aria-label="§ 14a EnWG">
-            <div class="sp-feature-icon" aria-hidden="true">
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/>
-              </svg>
-            </div>
-            <span class="sp-eyebrow" style="font-size:0.7rem">Energierecht</span>
-            <h3>§ 14a EnWG – wie du den Netzrabatt automatisch abholst</h3>
-            <p>Wer eine Wallbox, Wärmepumpe oder Klimaanlage betreibt, kann dem Netzbetreiber Steuerungsrechte einräumen – und dafür einen dauerhaften Rabatt auf den Netzentgeltanteil bekommen.</p>
-            <a href="/ratgeber/14a-enwg" class="btn-leistung btn-leistung--secondary" style="margin-top:1rem;display:inline-block">Artikel lesen →</a>
-          </article>
-
-          <article class="sp-feature-box reveal" aria-label="Heizlastberechnung">
-            <div class="sp-feature-icon" aria-hidden="true">
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/>
-              </svg>
-            </div>
-            <span class="sp-eyebrow" style="font-size:0.7rem">KfW-Förderung</span>
-            <h3>Heizlastberechnung nach DIN – warum sie Pflicht ist und was falsch läuft</h3>
-            <p>Ohne korrekte Heizlastberechnung droht die Rückzahlung von KfW-Fördergeldern. Was die Norm verlangt, was LiDAR-Scan damit zu tun hat – und welche Fehler sich häufig wiederholen.</p>
-            <a href="/ratgeber/heizlastberechnung" class="btn-leistung btn-leistung--secondary" style="margin-top:1rem;display:inline-block">Artikel lesen →</a>
-          </article>
-
-          <article class="sp-feature-box reveal" aria-label="PV-Speicher Vergleich">
-            <div class="sp-feature-icon" aria-hidden="true">
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <rect x="2" y="7" width="20" height="15" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/>
-                <line x1="12" y1="12" x2="12" y2="16"/><line x1="10" y1="14" x2="14" y2="14"/>
-              </svg>
-            </div>
-            <span class="sp-eyebrow" style="font-size:0.7rem">Technik & Produkte</span>
-            <h3>PV-Speicher im Vergleich: Eco, Sigenergy und Solaris²</h3>
-            <p>Drei grundlegend verschiedene Konzepte – für drei grundlegend verschiedene Situationen. Welcher Speicher zu welchem Haushalt passt, und was jeder Berater dir sagen müsste.</p>
-            <a href="/ratgeber/pv-speicher-vergleich" class="btn-leistung btn-leistung--secondary" style="margin-top:1rem;display:inline-block">Artikel lesen →</a>
-          </article>
-
-          <article class="sp-feature-box reveal" aria-label="Spotpreis-Monitor">
-            <div class="sp-feature-icon" aria-hidden="true">
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
-              </svg>
-            </div>
-            <span class="sp-eyebrow" style="font-size:0.7rem">Daten & Markt</span>
-            <h3>Spotpreis-Monitor: EPEX SPOT live</h3>
-            <p>Aktuelle Börsenstrompreise für Deutschland – stündlich aktualisiert. Negative Preisstunden sind direkt sichtbar: genau dann entfällt nach §&nbsp;51 EEG die Einspeisevergütung.</p>
-            <a href="/spotpreis" class="btn-leistung btn-leistung--secondary" style="margin-top:1rem;display:inline-block">Spotpreise ansehen →</a>
-          </article>
-
+    <div class="container footer__grid">
+      <div class="footer__brand">
+        <img src="../assets/img/logo-mark.webp" width="400" height="251" alt="" loading="lazy">
+        <p><strong translate="no">Patrick Leißner</strong><br>Frei durch eigene Energie.</p>
+        <div class="footer__social">
+          <a href="https://www.instagram.com/patrickleissner.de" target="_blank" rel="noopener">Instagram</a>
+          <a href="https://www.facebook.com/patrickleissner.de" target="_blank" rel="noopener">Facebook</a>
+          <a href="https://x.com/patrickLeiszner" target="_blank" rel="noopener">X</a>
+          <a href="https://wa.me/491734994994" target="_blank" rel="noopener">WhatsApp</a>
         </div>
       </div>
-    </section>
-
-    <!-- CTA -->
-    <section class="sp-section sp-section--beige" aria-label="Erstberatung">
-      <div class="container">
-        <div class="sp-cta-box reveal">
-          <h2>Fragen zu deiner konkreten Situation?</h2>
-          <p>Kein Artikel ersetzt das Gespräch über dein Gebäude, deine Ausgangslage und deine Ziele. Die Erstberatung ist kostenlos und unverbindlich.</p>
-          <a href="/termin" class="btn btn-accent btn-lg">Termin vereinbaren</a>
-        </div>
-      </div>
-    </section>
-
-  </main>
-
-  <footer class="site-footer" role="contentinfo">
-    <div class="container footer-grid">
-      <div class="footer-brand">
-        <a href="/" class="nav-logo" aria-label="Patrick Leißner Energieberatung – zur Startseite">
-          <img src="/assets/Logo/Initialien-Gold-frei.png" alt="Patrick Leißner Energieberatung Logo" width="36" height="36" loading="lazy">
-          <span class="nav-logo-text">Patrick Leißner</span>
-        </a>
-        <p>Frei durch eigene Energie.</p>
-        <div class="footer-social" aria-label="Social Media">
-          <a href="https://www.instagram.com/patrickleissner.de" target="_blank" rel="noopener" aria-label="Patrick Leißner auf Instagram">
-            <img src="/assets/icons/gold_instagram_icon_frei.png" alt="" width="17" height="17" loading="lazy">
-          </a>
-          <a href="https://www.facebook.com/patrickleissner.de" target="_blank" rel="noopener" aria-label="Patrick Leißner auf Facebook">
-            <img src="/assets/icons/gold_facebook_icon_frei.png" alt="" width="17" height="17" loading="lazy">
-          </a>
-          <a href="https://x.com/patrickLeiszner" target="_blank" rel="noopener" aria-label="Patrick Leißner auf X">
-            <img src="/assets/icons/gold_x_icon_frei.png" alt="" width="17" height="17" loading="lazy">
-          </a>
-          <a href="https://wa.me/491734994994" target="_blank" rel="noopener" aria-label="Patrick Leißner auf WhatsApp">
-            <img src="/assets/icons/gold_whatsapp_icon_frei.png" alt="" width="17" height="17" loading="lazy">
-          </a>
-        </div>
-      </div>
-      <div class="footer-col">
+      <div class="footer__col">
         <h3>Kontakt</h3>
         <a href="tel:+491734994994">0173 499 4994</a>
         <a href="mailto:p@patrickleissner.de">p@patrickleissner.de</a>
-        <span>Bitterfeld-Wolfen</span>
+        <span>Dessauer Allee 52<br>06766 Bitterfeld-Wolfen</span>
       </div>
-      <nav class="footer-col" aria-label="Leistungen">
+      <div class="footer__col">
         <h3>Leistungen</h3>
-        <a href="/beratung-technik">Beratung und Technik</a>
-        <a href="/koordination-netzwerk">Koordination und Netzwerk</a>
-        <a href="/waermepumpe-heizlast">Wärmepumpe und Heizlast</a>
-        <a href="/analyse-vorsorge">Analyse und Vorsorge</a>
-        <a href="/mieterstrom">Mieterstrom und Objektenergie</a>
-      </nav>
-      <nav class="footer-col" aria-label="Rechner und Ratgeber">
+        <a href="/beratung-technik">Beratung &amp; Technik</a>
+        <a href="/koordination-netzwerk">Koordination &amp; Netzwerk</a>
+        <a href="/waermepumpe-heizlast">Wärmepumpe &amp; Heizlast</a>
+        <a href="/mieterstrom">Mieterstrom &amp; Objektenergie</a>
+        <a href="/batteriespeicher">Batteriespeicher &amp; Energiehandel</a>
+      </div>
+      <div class="footer__col">
         <h3>Rechner &amp; Ratgeber</h3>
         <a href="/unabhaengigkeit">Unabhängigkeitsrechner</a>
         <a href="/heizkosten">Heizkosten-Rechner</a>
         <a href="/nutzen">Nutzen-Rechner</a>
         <a href="/spotpreis">Spotpreis-Monitor</a>
+        <a href="/batteriespeicher">Batteriespeicher-Ertragsrechner</a>
         <a href="/ratgeber">Ratgeber</a>
-        <a href="https://ecowattiv.de/dww/" target="_blank" rel="noopener noreferrer">DWW-Wirtschaftlichkeitsrechner ↗</a>
-      </nav>
+      </div>
     </div>
-    <div class="container footer-bottom">
-      <nav class="footer-links" aria-label="Footer-Navigation">
+
+    <div class="container footer__legal">
+      <div>
         <a href="/impressum">Impressum</a>
         <a href="/datenschutz">Datenschutz</a>
-        <a href="#" aria-label="Zurück zum Seitenanfang">Nach oben ↑</a>
-      </nav>
-      <p class="footer-copyright">© 2026 Patrick Leißner. Alle Rechte vorbehalten.</p>
-      <p class="footer-operator">pin-co.de Media UG (haftungsbeschränkt)</p>
+        <a href="/">Nach oben ↑</a>
+        <button type="button" class="motion-toggle" data-motion-toggle aria-pressed="false">Animationen anhalten</button>
+      </div>
+      <p>© 2026 Patrick Leißner. Alle Rechte vorbehalten.</p>
     </div>
   </footer>
 
-  <script src="../main.js"></script>
+<div class="dock" aria-label="Schnellkontakt">
+    <a class="dock__call" href="tel:+491734994994">Anrufen</a>
+    <a class="dock__cta" href="/termin">Termin buchen</a>
+  </div>
+
+  <script src="../assets/vendor/gsap.min.js" defer></script>
+  <script src="../assets/vendor/ScrollTrigger.min.js" defer></script>
+  <script src="../js/main.js" defer></script>
+  <script src="../js/pages.js"></script>
 </body>
 </html>

@@ -1,0 +1,123 @@
+
+  /* ===== Detailrechner (eigene Erweiterung – Patricks Marke) ===== */
+  :root { --dr-green:#2E4F3C; --dr-gold:#D0AB3B; --dr-line:#d9dcd6; --dr-muted:#6b7280; }
+
+  /* Trennsektion: linksbündig über die volle Breite – bündig mit iframe (oben)
+     und Detailrechner (unten), damit beide als ein Zusammenhang wirken. */
+  .dr-divider { text-align:left; margin:1.5rem auto 1rem; max-width:1024px; }
+  .dr-divider .dr-eyebrow {
+    display:inline-block; font-size:.72rem; font-weight:700; letter-spacing:.09em;
+    text-transform:uppercase; color:var(--dr-gold); margin-bottom:.4rem;
+  }
+  .dr-divider h2 { color:var(--dr-green); font-size:1.5rem; font-weight:800; line-height:1.2; margin:0 0 .45rem; max-width:none; }
+  .dr-divider p  { color:var(--dr-muted); font-size:.9rem; line-height:1.55; margin:0; max-width:none; }
+  .dr-ownnote {
+    display:block; margin-top:.7rem; font-size:.74rem; color:var(--dr-muted);
+    background:#f4f6f3; border:1px solid var(--dr-line); border-radius:6px; padding:7px 12px;
+  }
+
+  /* Auf dieselbe Breite wie der iframe-Wrapper (max-width:1024px, zentriert) kappen,
+     damit oberer und unterer Rechner fluchten. Unter 1024px fluid bei 100 % → responsive. */
+  .detailrechner { background:#fff; border:1px solid var(--dr-line); border-radius:.75rem; padding:clamp(1.1rem,3vw,1.8rem); max-width:1024px; margin-inline:auto; }
+  .dr-grid { display:block; }
+  @media (min-width:900px){ .dr-grid { display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1fr); gap:2rem; align-items:start; } }
+
+  .dr-sec { margin-bottom:1.4rem; }
+  .dr-sec h3 { font-size:.95rem; font-weight:800; color:var(--dr-green); margin:0 0 .1rem; }
+  .dr-sec .dr-hint { font-size:.78rem; color:var(--dr-muted); line-height:1.5; margin:0 0 .7rem; }
+  .dr-field { margin-bottom:.9rem; }
+  .dr-label { display:block; font-size:.82rem; font-weight:600; color:var(--dr-green); margin-bottom:.35rem; }
+  .dr-inrow { display:flex; align-items:center; gap:8px; }
+  .dr-input, .dr-select {
+    width:100%; padding:10px 12px; border:2px solid #e5e7eb; border-radius:.5rem;
+    font-family:inherit; font-size:1rem; color:#111; background:#fff;
+  }
+  .dr-input:focus, .dr-select:focus { outline:none; border-color:var(--dr-green); }
+  .dr-unit { font-size:.85rem; color:var(--dr-muted); white-space:nowrap; }
+  .dr-wp { max-width:5.5rem; }
+
+  .dr-toggle { display:inline-flex; border:2px solid #e5e7eb; border-radius:.5rem; overflow:hidden; }
+  .dr-toggle button { border:none; background:#fff; font-family:inherit; font-size:.82rem; font-weight:700; padding:8px 14px; cursor:pointer; color:var(--dr-muted); }
+  .dr-toggle button.on { background:var(--dr-green); color:#fff; }
+
+  .dr-chips { display:flex; flex-wrap:wrap; gap:6px; }
+  .dr-chip { border:2px solid #e5e7eb; background:#fff; border-radius:.5rem; font-family:inherit; font-size:.82rem; font-weight:700; padding:7px 12px; cursor:pointer; color:var(--dr-green); }
+  .dr-chip.on { background:var(--dr-green); border-color:var(--dr-green); color:#fff; }
+
+  .dr-surface { border:1px solid var(--dr-line); border-radius:.6rem; padding:.85rem; margin-bottom:.7rem; }
+  .dr-surface-head { display:flex; justify-content:space-between; align-items:center; margin-bottom:.6rem; }
+  .dr-surface-head strong { font-size:.85rem; color:var(--dr-green); }
+  .dr-surface-del { border:none; background:none; color:#b91c1c; font-size:1.1rem; cursor:pointer; line-height:1; padding:2px 6px; }
+  .dr-surface-yield { font-size:.78rem; color:var(--dr-muted); margin-top:.5rem; }
+  .dr-addsurface { border:2px dashed var(--dr-line); background:#fafbfa; color:var(--dr-green); font-family:inherit; font-weight:700; font-size:.85rem; border-radius:.5rem; padding:9px 14px; cursor:pointer; width:100%; }
+  .dr-opt { display:flex; align-items:center; gap:8px; margin-bottom:.5rem; }
+  .dr-opt input[type=checkbox]{ width:18px; height:18px; accent-color:var(--dr-green); }
+  .dr-opt-detail { margin:.2rem 0 .9rem 26px; }
+
+  /* Ergebnis */
+  .dr-results { }
+  .dr-gauges { display:grid; grid-template-columns:1fr 1fr; gap:1rem; margin-bottom:1.2rem; }
+  @media (max-width:420px){ .dr-gauges { grid-template-columns:1fr; } }
+  .dr-gauge { text-align:center; border:1px solid var(--dr-line); border-radius:.6rem; padding:1rem .6rem; }
+  .dr-gauge canvas { width:132px; height:132px; }
+  .dr-gauge .dr-gauge-label { font-size:.78rem; font-weight:700; color:var(--dr-green); margin-top:.4rem; }
+  .dr-gauge .dr-gauge-sub { font-size:.72rem; color:var(--dr-muted); }
+
+  .dr-flow { border:1px solid var(--dr-line); border-radius:.6rem; padding:1rem; margin-bottom:1.2rem; }
+  .dr-flow h4 { font-size:.85rem; color:var(--dr-green); margin:0 0 .7rem; font-weight:800; }
+  .dr-bar { display:flex; height:16px; border-radius:8px; overflow:hidden; margin-bottom:.55rem; border:1px solid var(--dr-line); }
+  .dr-bar .seg-self { background:var(--dr-green); }
+  .dr-bar .seg-grid { background:#c8ccc4; }
+  .dr-figs { display:grid; grid-template-columns:1fr 1fr 1fr; gap:.5rem; }
+  .dr-fig { text-align:left; }
+  .dr-fig .fl { display:block; font-size:.68rem; text-transform:uppercase; letter-spacing:.05em; color:var(--dr-muted); }
+  .dr-fig .fv { display:block; font-size:.95rem; font-weight:800; color:var(--dr-green); }
+
+  /* Überschuss / EMS / Solarspitzengesetz – klar als Regulierung markiert */
+  .dr-surplus { border:1px solid var(--dr-line); border-left:4px solid var(--dr-gold); border-radius:.5rem; padding:1rem; margin-bottom:1.1rem; background:#fffdf6; }
+  .dr-surplus .reg-tag { display:inline-block; font-size:.66rem; font-weight:700; text-transform:uppercase; letter-spacing:.06em; color:var(--dr-muted); margin-bottom:.4rem; }
+  .dr-surplus h4 { font-size:.9rem; color:var(--dr-green); margin:0 0 .5rem; }
+  .dr-surplus .surplus-state { font-size:.86rem; line-height:1.55; color:#333; }
+  .dr-surplus .ok  { color:#166534; font-weight:700; }
+  .dr-surplus .warn{ color:#b45309; font-weight:700; }
+
+  .dr-method { margin-top:1rem; border-top:1px solid var(--dr-line); }
+  .dr-method summary { cursor:pointer; padding:.7rem 0; font-size:.8rem; font-weight:700; color:var(--dr-green); }
+  .dr-method .dr-method-body { font-size:.78rem; color:#444; line-height:1.7; padding-bottom:.7rem; }
+  .dr-method h5 { font-size:.72rem; text-transform:uppercase; letter-spacing:.05em; color:var(--dr-green); margin:.7rem 0 .2rem; }
+  .dr-method a { color:var(--dr-green); }
+
+  .dr-actions { display:flex; flex-wrap:wrap; gap:.7rem; margin-top:1.2rem; }
+  .dr-print-btn { background:var(--dr-green); color:#fff; border:none; border-radius:.5rem; font-family:inherit; font-weight:700; font-size:.9rem; padding:12px 20px; cursor:pointer; }
+  .dr-print-btn:hover { background:#3a6350; }
+  .dr-print-hint { font-size:.72rem; color:var(--dr-muted); margin:.4rem 0 0; line-height:1.5; }
+
+  .dr-print-header, .dr-print-footer { display:none; }
+
+  /* ===== DRUCK: nur Detailergebnis, weißes A4, S/W-tauglich ===== */
+  @media print {
+    @page { size:A4 portrait; margin:12mm 16mm; }
+    .site-header, .sp-back-bar, .rechner-tabs-bar, .sp-hero, footer,
+    .solarisator-frame-wrapper, .solarisator-source, .ec-cta-card,
+    .dr-inputs-col, .dr-divider, .dr-actions, .dr-print-hint { display:none !important; }
+    .dr-method summary::-webkit-details-marker { display:none; }
+    body { background:#fff; }
+    /* Scroll-Reveal im Druck aufheben – sonst bleibt der Rechner unsichtbar,
+       wenn man ohne vorheriges Scrollen druckt. */
+    .reveal { opacity:1 !important; transform:none !important; }
+    .detailrechner { border:none; padding:0; }
+    .dr-grid { display:block !important; }
+    .dr-results { display:block !important; }
+    /* Briefkopf/Fuß je Seite via Tabellenhülle */
+    .dr-sheet { display:table !important; width:100%; }
+    .dr-print-head-group { display:table-header-group !important; }
+    .dr-print-foot-group { display:table-footer-group !important; }
+    .dr-print-header { display:block !important; padding-bottom:5mm; }
+    .dr-print-header img { width:43mm; height:auto; }
+    .dr-print-footer { display:block !important; border-top:.5pt solid var(--dr-green); margin-top:5mm; padding-top:2mm; font-size:8pt; color:#444; }
+    .dr-gauge, .dr-flow, .dr-surplus, .dr-method { break-inside:avoid; }
+    .dr-method[open] .dr-method-body, .dr-method .dr-method-body { display:block !important; }
+    .dr-method summary { list-style:none; color:var(--dr-green); font-weight:700; padding:0 0 .3rem; }
+    .dr-surplus { background:none !important; }
+    * { -webkit-print-color-adjust:exact; }  /* nur für die dünnen Gauge-Ringe; Flächen sind ohnehin hell */
+  }

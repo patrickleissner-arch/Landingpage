@@ -1,0 +1,547 @@
+<main id="main">
+
+    <!-- Nutzen-Cockpit -->
+    <div class="wizard-wrap">
+
+      <div class="cockpit-intro">
+        <h1>Lohnt sich der Umstieg – rechne es live durch</h1>
+        <p>Alle Angaben auf einen Blick, das Ergebnis rechnet sofort mit. Die entscheidende Frage steht rechts: Was kostet die Finanzierung deiner eigenen Anlage im Monat – gegenüber dem, was du heute Monat für Monat an den Energieversorger zahlst?</p>
+      </div>
+
+      <div class="cockpit-grid">
+
+        <!-- LINKS: Eingaben -->
+        <div class="cockpit-inputs" id="cockpit-inputs">
+
+          <!-- 1 · Standortanalyse -->
+          <section class="cockpit-section" aria-labelledby="h-sec1">
+            <div class="sec-head">
+              <h2 id="h-sec1"><span class="sec-num">1</span> Standortanalyse</h2>
+              <p>Die Postleitzahl bestimmt die Sonneneinstrahlung deiner Region – die Basis dafür, wie viel Strom dein Dach produziert.</p>
+            </div>
+
+            <div class="field-group">
+              <label class="field-label" for="inp-plz">Postleitzahl</label>
+              <input type="text" id="inp-plz" class="er-input" placeholder="z. B. 06766…" maxlength="5" inputmode="numeric" autocomplete="postal-code" name="inp-plz">
+              <div class="plz-feedback" id="plz-feedback" aria-live="polite"> </div>
+            </div>
+          </section>
+
+          <!-- 2 · Stromverbrauch -->
+          <section class="cockpit-section" aria-labelledby="h-sec2">
+            <div class="sec-head">
+              <h2 id="h-sec2"><span class="sec-num">2</span> Stromverbrauch</h2>
+              <p>Deine Ist-Werte laut Stromrechnung – Verbrauch und Preis liest du direkt vom Beleg ab.</p>
+            </div>
+
+            <div class="field-group">
+              <span class="field-label">Wie möchtest du eingeben?</span>
+              <div class="toggle-mode" role="group" aria-label="Eingabemodus Strom">
+                <button type="button" class="active" id="tog-kwh" onclick="setElecMode('kwh')">kWh/Jahr</button>
+                <button type="button" id="tog-abschlag" onclick="setElecMode('abschlag')">Monatlicher Abschlag</button>
+              </div>
+              <div id="grp-kwh">
+                <div class="input-row">
+                  <input type="number" id="inp-elec-kwh" class="er-input" aria-label="Jährlicher Stromverbrauch in kWh" placeholder="z. B. 4000…" min="500" max="50000" inputmode="numeric" name="inp-elec-kwh" autocomplete="off">
+                  <span class="input-unit">kWh/Jahr</span>
+                </div>
+              </div>
+              <div id="grp-abschlag" style="display:none">
+                <div class="input-row">
+                  <input type="number" id="inp-elec-abschlag" class="er-input" aria-label="Monatlicher Stromabschlag in Euro" placeholder="z. B. 110…" min="10" max="2000" inputmode="numeric" name="inp-elec-abschlag" autocomplete="off">
+                  <span class="input-unit">€/Monat</span>
+                </div>
+              </div>
+              <p class="field-sublabel" id="elec-kwh-note" style="margin-top:8px"></p>
+            </div>
+
+            <div class="field-group">
+              <label class="field-label" for="inp-elecprice">Dein Strompreis</label>
+              <span class="field-sublabel">Steht auf deiner Stromrechnung – aktueller Schnitt ca. 32&nbsp;ct/kWh</span>
+              <div class="input-row">
+                <input type="number" id="inp-elecprice" class="er-input" value="32" min="15" max="60" step="0.5" inputmode="decimal" name="inp-elecprice" autocomplete="off">
+                <span class="input-unit">ct/kWh</span>
+              </div>
+              <p class="abschlag-calc" id="elec-abschlag-calc"></p>
+            </div>
+
+            <div class="field-group">
+              <span class="field-label" id="lbl-sektoren-ist">Schon elektrisch – steckt bereits in deiner Rechnung <span class="field-opt">(Kontext, kein Aufpreis)</span></span>
+              <span class="field-sublabel">Was heute schon mit Strom läuft, ist im abgelesenen Verbrauch oben bereits enthalten. Hilft nur, deinen PV-Eigenverbrauch einzuordnen – ändert den Kostenvergleich nicht.</span>
+              <div class="card-grid cols-2" role="group" aria-labelledby="lbl-sektoren-ist">
+                <button type="button" class="card-btn multi" data-group="sektorenIst" data-value="eauto">E-Auto vorhanden</button>
+                <button type="button" class="card-btn multi" data-group="sektorenIst" data-value="klima">Klimaanlage / Split</button>
+                <button type="button" class="card-btn multi" data-group="sektorenIst" data-value="dle">Durchlauferhitzer</button>
+                <button type="button" class="card-btn multi" data-group="sektorenIst" data-value="eheiz">Infrarot / Nachtspeicher</button>
+              </div>
+            </div>
+
+            <div class="field-group">
+              <span class="field-label" id="lbl-sektoren-neu">Künftig geplant – kommt neu dazu <span class="field-opt">(erhöht den künftigen Bedarf)</span></span>
+              <span class="field-sublabel">Noch nicht auf deiner Rechnung. Deine PV deckt einen Teil davon selbst – „heute“ bleibt unverändert, nur das künftige Bild ändert sich.</span>
+              <div class="card-grid cols-2" role="group" aria-labelledby="lbl-sektoren-neu">
+                <button type="button" class="card-btn multi" data-group="sektorenNeu" data-value="eauto">E-Auto / Wallbox</button>
+                <button type="button" class="card-btn multi" data-group="sektorenNeu" data-value="klima">Klimaanlage / Split<span class="btn-sub">Heizen &amp; Kühlen</span></button>
+                <button type="button" class="card-btn multi" data-group="sektorenNeu" data-value="dle">Durchlauferhitzer<span class="btn-sub">Warmwasser elektrisch</span></button>
+                <button type="button" class="card-btn multi" data-group="sektorenNeu" data-value="eheiz">Infrarot / Nachtspeicher</button>
+              </div>
+            </div>
+
+            <div class="field-group" id="grp-ev-km" style="display:none">
+              <label class="field-label" for="inp-ev-km">Fahrleistung des geplanten E-Autos <span class="field-opt">(optional)</span></label>
+              <div class="input-row">
+                <input type="number" id="inp-ev-km" class="er-input" placeholder="z. B. 15000…" min="0" max="80000" inputmode="numeric" name="inp-ev-km" autocomplete="off">
+                <span class="input-unit">km/Jahr</span>
+              </div>
+            </div>
+          </section>
+
+          <!-- 3 · Aktuelle Heizung & Gebäude -->
+          <section class="cockpit-section" aria-labelledby="h-sec3">
+            <div class="sec-head">
+              <h2 id="h-sec3"><span class="sec-num">3</span> Aktuelle Heizung &amp; Gebäude</h2>
+              <p>Deine heutige Heizsituation und die Gebäudedaten – Basis deiner IST-Kosten und der Wärmepumpen-Einschätzung.</p>
+            </div>
+
+            <div class="field-group">
+              <span class="field-label" id="lbl-gebaeude">Gebäudetyp</span>
+              <div class="card-grid cols-4" role="group" aria-labelledby="lbl-gebaeude">
+                <button type="button" class="card-btn selected" data-group="gebaeude" data-value="efh">Einfamilienhaus</button>
+                <button type="button" class="card-btn" data-group="gebaeude" data-value="dhh">Doppelhaushälfte</button>
+                <button type="button" class="card-btn" data-group="gebaeude" data-value="rh">Reihenhaus</button>
+                <button type="button" class="card-btn" data-group="gebaeude" data-value="mfh">Mehrfamilienhaus</button>
+              </div>
+            </div>
+
+            <div class="field-group">
+              <label class="field-label" for="inp-baujahr">Baujahr</label>
+              <span class="field-sublabel">Steht im Grundbuchauszug oder Energieausweis</span>
+              <select id="inp-baujahr" class="er-select" name="inp-baujahr" autocomplete="off">
+                <option value="">Bitte wählen …</option>
+                <option value="vor_1960">Vor 1960</option>
+                <option value="1960_1979">1960 – 1979</option>
+                <option value="1980_1994">1980 – 1994</option>
+                <option value="1995_2009">1995 – 2009</option>
+                <option value="ab_2010">Ab 2010</option>
+              </select>
+            </div>
+
+            <div class="field-group">
+              <label class="field-label" for="inp-area">Beheizte Wohnfläche</label>
+              <span class="field-sublabel">Nur tatsächlich beheizte Fläche – ohne Keller oder Garage</span>
+              <div class="input-row">
+                <input type="number" id="inp-area" class="er-input" placeholder="z. B. 150…" min="40" max="800" inputmode="numeric" name="inp-area" autocomplete="off">
+                <span class="input-unit">m²</span>
+              </div>
+            </div>
+
+            <div class="field-group">
+              <span class="field-label" id="lbl-fuel">Womit heizt du?</span>
+              <div class="card-grid" role="group" aria-labelledby="lbl-fuel">
+                <button type="button" class="card-btn selected" data-group="fuelType" data-value="oil">Heizöl</button>
+                <button type="button" class="card-btn" data-group="fuelType" data-value="gas">Erdgas</button>
+                <button type="button" class="card-btn" data-group="fuelType" data-value="pellets">Pellets</button>
+                <button type="button" class="card-btn" data-group="fuelType" data-value="fernwaerme">Fernwärme</button>
+                <button type="button" class="card-btn" data-group="fuelType" data-value="strom">Strom<span class="btn-sub">Direkt/Nachtspeicher/Infrarot</span></button>
+              </div>
+            </div>
+
+            <div class="field-group">
+              <label class="field-label" for="inp-consumption" id="lbl-consumption">Jahresverbrauch Heizung</label>
+              <span class="field-sublabel" id="consumption-hint">Steht auf deiner Heizöl-Tankrechnung</span>
+              <div class="input-row">
+                <input type="number" id="inp-consumption" class="er-input" placeholder="z. B. 2500…" min="1" max="999999" inputmode="numeric" name="inp-consumption" autocomplete="off">
+                <span class="input-unit" id="consumption-unit">Liter</span>
+              </div>
+            </div>
+
+            <div class="field-group" id="grp-fuelprice">
+              <label class="field-label" for="inp-fuelprice">Was zahlst du aktuell?</label>
+              <span class="field-sublabel">Steht auf deiner letzten Rechnung oder Abrechnung</span>
+              <div class="input-row">
+                <input type="number" id="inp-fuelprice" class="er-input" placeholder="z. B. 0.95…" min="0" max="9999" step="0.01" inputmode="decimal" name="inp-fuelprice" autocomplete="off">
+                <span class="input-unit" id="fuelprice-unit">€/Liter</span>
+              </div>
+            </div>
+
+            <div class="field-group">
+              <label class="field-label" for="inp-heizalter">Alter der Heizungsanlage</label>
+              <select id="inp-heizalter" class="er-select" name="inp-heizalter" autocomplete="off">
+                <option value="">Bitte wählen …</option>
+                <option value="sehr_alt">Älter als 25&nbsp;Jahre</option>
+                <option value="alt">15 – 25&nbsp;Jahre</option>
+                <option value="mittel">10 – 15&nbsp;Jahre</option>
+                <option value="neu">Jünger als 10&nbsp;Jahre</option>
+                <option value="brennwert">Brennwertgerät</option>
+              </select>
+            </div>
+
+            <div class="field-group">
+              <label class="field-label" for="inp-heizabschlag">Monatlicher Heizkosten-Abschlag <span class="field-opt">(optional)</span></label>
+              <span class="field-sublabel">Dein Abschlag an den Versorger – hilft als Plausibilitätsprüfung</span>
+              <div class="input-row">
+                <input type="number" id="inp-heizabschlag" class="er-input" placeholder="z. B. 180…" min="0" max="2000" inputmode="numeric" name="inp-heizabschlag" autocomplete="off">
+                <span class="input-unit">€/Monat</span>
+              </div>
+            </div>
+          </section>
+
+          <!-- 4 · Deine Anlage (Dachflächen) -->
+          <section class="cockpit-section" aria-labelledby="h-sec4">
+            <div class="sec-head">
+              <h2 id="h-sec4"><span class="sec-num">4</span> Deine Anlage &amp; Dachflächen</h2>
+              <p>Zähl je Fläche die Module, die real aufs Dach passen (Störflächen wie Dachfenster/SAT sind so schon berücksichtigt), und gib die Modulleistung an. Ausrichtung und Neigung bestimmen den Ertrag – daraus ergibt sich die Anlagengröße.</p>
+            </div>
+
+            <div class="field-group">
+              <span class="field-label" id="lbl-interesse">Worum geht es? <span class="field-opt">(Mehrfachauswahl)</span></span>
+              <div class="card-grid cols-2" role="group" aria-labelledby="lbl-interesse">
+                <button type="button" class="card-btn multi selected" data-group="interesse" data-value="pv">Photovoltaik</button>
+                <button type="button" class="card-btn multi selected" data-group="interesse" data-value="wp">Wärmepumpe</button>
+              </div>
+            </div>
+
+            <div id="surfaces-container"></div>
+            <button type="button" class="btn-add-surface" id="btn-add-surface">+ Weitere Fläche hinzufügen</button>
+            <p class="anlage-summary" id="anlage-summary"></p>
+          </section>
+
+          <!-- 5 · Speicher & Energiemanagement -->
+          <section class="cockpit-section" aria-labelledby="h-sec5">
+            <div class="sec-head">
+              <h2 id="h-sec5"><span class="sec-num">5</span> Speicher &amp; Energiemanagement</h2>
+              <p>Der Speicher lädt tagsüber mit PV-Strom, den du nachts nutzt. Speichergröße + PV-Größe + intelligentes Management (EMS) bestimmen zusammen deine Unabhängigkeit.</p>
+            </div>
+
+            <div class="field-group">
+              <span class="field-label" id="lbl-speicher">Batteriespeicher</span>
+              <div class="card-grid cols-1" role="group" aria-labelledby="lbl-speicher">
+                <button type="button" class="card-btn multi" data-group="interesse" data-value="speicher">Batteriespeicher einplanen<span class="btn-sub">speichert PV-Strom für die Nacht → mehr Autarkie</span></button>
+              </div>
+            </div>
+
+            <div class="field-group" id="grp-batt" style="display:none">
+              <label class="field-label" for="inp-batt">Speichergröße (Kapazität) <span class="field-opt">(leer = automatisch)</span></label>
+              <span class="field-sublabel">Wie viele kWh der Speicher aufnehmen kann – größer = mehr Nachtstrom aus PV → höhere Autarkie.</span>
+              <div class="input-row">
+                <input type="number" id="inp-batt" class="er-input" placeholder="automatisch…" min="0" max="120" step="0.5" inputmode="decimal" name="inp-batt" autocomplete="off">
+                <span class="input-unit">kWh</span>
+              </div>
+            </div>
+
+            <div class="field-group">
+              <span class="field-label" id="lbl-ems">Intelligentes Energiemanagement (EMS)?</span>
+              <div class="card-grid cols-2" role="group" aria-labelledby="lbl-ems">
+                <button type="button" class="card-btn selected" data-group="ems" data-value="ja">Ja, mit EMS<span class="btn-sub">reagiert auf Strompreise &amp; Netzentgelte</span></button>
+                <button type="button" class="card-btn" data-group="ems" data-value="nein">Normale PV-Anlage<span class="btn-sub">ohne intelligente Steuerung</span></button>
+              </div>
+              <p class="ems-hint">Ohne EMS entfällt bei negativen Strompreisen die Einspeisevergütung anteilig (<a href="/ratgeber/solarspitzengesetz" target="_blank" rel="noopener">Solarspitzengesetz §51 EEG</a>) und der <a href="/ratgeber/14a-enwg" target="_blank" rel="noopener">§14a-Netzentgelt-Rabatt</a> kann ggf. nicht genutzt werden. Mehr im <a href="/ratgeber/pv-speicher-vergleich" target="_blank" rel="noopener">Speicher-Vergleich</a> (Annahmen, keine Zusage).</p>
+            </div>
+          </section>
+
+          <!-- 6 · Deine Unabhängigkeit (Autarkie) -->
+          <section class="cockpit-section" aria-labelledby="h-sec6">
+            <div class="sec-head">
+              <h2 id="h-sec6"><span class="sec-num">6</span> Deine Unabhängigkeit</h2>
+              <p>Ergebnis aus Anlage + Speicher + Standort: Wie viel deines Stroms du selbst deckst, was ins Netz geht – und was dir die Überschusseinspeisung bringt.</p>
+            </div>
+
+            <div class="energy-card" id="energy-card">
+              <div class="energy-head">
+                <h3>Wohin fließt dein Sonnenstrom?</h3>
+                <span class="energy-autarkie" id="energy-autarkie">–</span>
+              </div>
+              <div class="energy-bar" role="img" aria-label="Anteil PV-Eigenstrom gegenüber Netzbezug">
+                <div class="energy-seg self" id="energy-seg-self" style="width:0%"></div>
+                <div class="energy-seg grid" id="energy-seg-grid" style="width:100%"></div>
+              </div>
+              <div class="energy-legend">
+                <span><i class="dot self"></i> Aus eigener PV <b id="energy-self-pct">–</b></span>
+                <span><i class="dot grid"></i> Netzbezug <b id="energy-grid-pct">–</b></span>
+              </div>
+              <div class="energy-figures">
+                <div><span class="ef-label">Selbst genutzt</span><span class="ef-val" id="ef-selbst">–</span></div>
+                <div><span class="ef-label">Ins Netz eingespeist</span><span class="ef-val" id="ef-einspeist">–</span></div>
+                <div><span class="ef-label">Aus dem Netz bezogen</span><span class="ef-val" id="ef-netz">–</span></div>
+              </div>
+              <p class="einspeise-line" id="einspeise"></p>
+              <p class="autarkie-hint" id="autarkie-hint"></p>
+            </div>
+          </section>
+
+          <!-- 7 · Finanzierung -->
+          <section class="cockpit-section" aria-labelledby="h-sec7">
+            <div class="sec-head">
+              <h2 id="h-sec7"><span class="sec-num">7</span> Finanzierung</h2>
+              <p>Gib deinen kalkulierten Anlagenpreis ein; Zinssatz und Laufzeit stellst du rechts direkt am Ergebnis ein – die Rate rechnet live mit.</p>
+            </div>
+
+            <div class="field-group">
+              <span class="field-label" id="lbl-finanz">Wie finanzierst du?</span>
+              <div class="card-grid cols-3" role="group" aria-labelledby="lbl-finanz">
+                <button type="button" class="card-btn" data-group="finanzierung" data-value="eigen">Eigenkapital</button>
+                <button type="button" class="card-btn selected" data-group="finanzierung" data-value="finanz">Finanzierung</button>
+                <button type="button" class="card-btn" data-group="finanzierung" data-value="offen">Noch offen</button>
+              </div>
+            </div>
+
+            <div id="grp-finanzierung-detail">
+              <div class="field-group">
+                <label class="field-label" for="inp-kreditbetrag">Anlagenpreis <span class="field-opt">(dein Angebot, inkl. Speicher/WP)</span></label>
+                <span class="field-sublabel">Gib deinen kalkulierten Angebotspreis ein — daraus rechnet sich die Rate. Leer lassen = grobe Schätzung anhand der Anlagengröße.</span>
+                <div class="input-row">
+                  <input type="number" id="inp-kreditbetrag" class="er-input" placeholder="z. B. 32000…" min="0" max="999999" inputmode="numeric" name="inp-kreditbetrag" autocomplete="off">
+                  <span class="input-unit">€</span>
+                </div>
+              </div>
+
+              <div class="field-group">
+                <label class="field-label" for="inp-sondertilgung">Sondertilgung / Förderung <span class="field-opt">(optional)</span></label>
+                <span class="field-sublabel">Z. B. BEG-Förderung oder KfW-Zuschuss, der nach Bewilligung zurückfließt</span>
+                <div class="input-row">
+                  <input type="number" id="inp-sondertilgung" class="er-input" placeholder="z. B. 7500…" min="0" max="999999" inputmode="numeric" name="inp-sondertilgung" autocomplete="off">
+                  <span class="input-unit">€</span>
+                </div>
+              </div>
+
+              <div class="field-group">
+                <span class="field-label" id="lbl-zinsfrei">Sonderkonditionen</span>
+                <div class="card-grid cols-2" role="group" aria-labelledby="lbl-zinsfrei">
+                  <button type="button" class="card-btn selected" data-group="zinsfreiJahr1" data-value="nein">Standard</button>
+                  <button type="button" class="card-btn" data-group="zinsfreiJahr1" data-value="ja">1.&nbsp;Jahr 0&nbsp;% Zinsen</button>
+                </div>
+              </div>
+            </div>
+          </section>
+
+        </div><!-- .cockpit-inputs -->
+
+        <!-- RECHTS: Live-Ergebnis -->
+        <div class="cockpit-results">
+
+      <!-- ERGEBNIS -->
+      <section class="result-section" id="result-section" aria-labelledby="h-result">
+
+        <!-- Tabellenhülle nur für den Druck: thead/tfoot wiederholt der Browser auf
+             jeder Seite UND reserviert dafür Platz im Textfluss. position:fixed kann
+             das nicht — es wiederholt sich zwar, legt sich ab Seite 2 aber über den
+             Inhalt. Am Bildschirm ist die Tabelle per display:block neutralisiert. -->
+        <table class="print-sheet" role="presentation">
+        <thead class="print-head-group"><tr><td>
+          <div class="print-header">
+            <img src="assets/Logo/Initialien-Name-Positiv-frei.png"
+                 alt="Patrick Leißner Energieberatung" width="3257" height="1774">
+          </div>
+        </td></tr></thead>
+        <tfoot class="print-foot-group"><tr><td>
+          <div class="print-footer">
+            Patrick Leißner · Energieberatung · patrickleissner.de · +49 173 4994994 · Unverbindliche Ersteinschätzung
+          </div>
+        </td></tr></tfoot>
+        <tbody><tr><td class="print-body">
+        <div class="print-flow">
+
+        <div class="fin-hero">
+          <p class="fin-hero-eyebrow" id="h-result">Dein Kosten-Nutzen-Vergleich · <span id="res-location">deine Region</span></p>
+          <div class="fin-compare">
+            <div class="fin-col heute">
+              <span class="fin-label">Heute an den Versorger</span>
+              <span class="fin-amount" id="res-heute">–</span>
+              <span class="fin-sub">€/Monat · Heizung + Strom</span>
+            </div>
+            <div class="fin-col neu">
+              <span class="fin-label">In dein Eigentum</span>
+              <span class="fin-amount" id="res-neu">–</span>
+              <span class="fin-sub" id="res-neu-sub">€/Monat</span>
+            </div>
+          </div>
+          <div class="fin-delta">
+            <span class="fin-delta-badge" id="res-delta">–</span>
+            <span class="fin-delta-text" id="res-delta-text">monatliche Differenz</span>
+          </div>
+          <p class="fin-bilanz">Über 20&nbsp;Jahre schätzungsweise <strong id="res-bilanz20">–</strong> weniger ans Netz.</p>
+
+          <div class="fin-sliders" id="fin-sliders">
+            <div class="s-item">
+              <div class="s-row"><label for="sld-zins">Zinssatz</label><span class="s-val" id="val-zins">3,5&nbsp;% p. a.</span></div>
+              <input type="range" id="sld-zins" min="0" max="8" step="0.1" value="3.5" aria-label="Zinssatz in Prozent pro Jahr" name="sld-zins" autocomplete="off">
+            </div>
+            <div class="s-item">
+              <div class="s-row"><label for="sld-laufzeit">Laufzeit</label><span class="s-val" id="val-laufzeit">20&nbsp;Jahre</span></div>
+              <input type="range" id="sld-laufzeit" min="5" max="30" step="1" value="20" aria-label="Laufzeit in Jahren" name="sld-laufzeit" autocomplete="off">
+            </div>
+          </div>
+          <p class="fin-financed" id="fin-financed"></p>
+          <p class="fin-note" id="fin-note">Investition in dein Eigentum statt Monat für Monat ans Netz. Unverbindliche Beispielrechnung, kein Finanzierungs- oder Kreditangebot.</p>
+        </div>
+
+        <div class="kpi-grid">
+          <div class="kpi-card">
+            <div class="kpi-label">PV-Jahresertrag (geschätzt)</div>
+            <div class="kpi-value" id="kpi-pv">–</div>
+            <div class="kpi-sub" id="kpi-pv-sub">–</div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-label" id="kpi-heiz-label">Heizkosten neu</div>
+            <div class="kpi-value" id="kpi-heiz">–</div>
+            <div class="kpi-sub" id="kpi-heiz-sub">–</div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-label">CO₂-Einsparung</div>
+            <div class="kpi-value" id="kpi-co2">–</div>
+            <div class="kpi-sub">pro Jahr gegenüber heute</div>
+          </div>
+        </div>
+
+        <div class="roof-card" id="roof-card">
+          <div class="roof-card-head">
+            <h3>Dein Dach im Detail</h3>
+            <span class="roof-total-kwp" id="roof-total-kwp">–</span>
+          </div>
+          <div id="roof-breakdown"></div>
+          <p class="roof-hint">Jede Fläche zählt: Ausrichtung, Neigung und Größe bestimmen, wie viel Strom dein Dach erzeugt. Was du selbst verbrauchst (Wärmepumpe, Auto, Warmwasser), sparst du zum vollen Strompreis; Überschuss wird eingespeist.</p>
+        </div>
+
+        <div class="wirtschaft-grid">
+          <div class="kpi-card kpi-card--highlight">
+            <div class="kpi-label">Amortisation (geschätzt)</div>
+            <div class="kpi-value" id="kpi-amort">–</div>
+            <div class="kpi-sub">Bis die Investition durch Energieersparnis ausgeglichen ist</div>
+          </div>
+          <div class="kpi-card kpi-card--highlight">
+            <div class="kpi-label">Ersparnisquote p. a. (geschätzt)</div>
+            <div class="kpi-value" id="kpi-rendite">–</div>
+            <div class="kpi-sub">Rechnerische jährliche Energieersparnis im Verhältnis zur Investition – keine Rendite­zusage, keine Anlageberatung</div>
+          </div>
+        </div>
+
+        <div class="eco-premium-note" id="eco-premium-note">
+          <h3>Mit oder ohne Energiemanagement – warum das heute zählt</h3>
+          <p id="eco-premium-text">–</p>
+          <p class="eco-premium-source">Laut Annahmen, nicht unabhängig geprüft · Quellen: Bundesnetzagentur (Negativpreis-Stunden 2025), pv magazine/ENTSO-E, netze-bw/spotmyenergy (§14a Modul 3). Mehr im <a href="/ratgeber/solarspitzengesetz" target="_blank" rel="noopener">Solarspitzengesetz-Ratgeber</a> und zum <a href="/ratgeber/14a-enwg" target="_blank" rel="noopener">§14a EnWG</a>. Geschätzte Werte, keine Anlageberatung.</p>
+        </div>
+
+        <div class="result-narrative" id="res-narrative"></div>
+
+        <div class="chart-card" id="chart-card">
+          <div class="chart-title">Kumulierte Gesamtausgaben über 20&nbsp;Jahre</div>
+          <div class="chart-subtitle">Was du insgesamt zahlst — der Abstand zwischen den Linien ist dein Vorteil</div>
+          <div class="price-slider">
+            <div class="s-row"><label for="sld-preis">Erwartete Energiepreis-Steigerung</label><span class="s-val" id="val-preis">6,0&nbsp;% / Jahr</span></div>
+            <input type="range" id="sld-preis" min="0" max="12" step="0.5" value="6" aria-label="Erwartete Energiepreis-Steigerung in Prozent pro Jahr" name="sld-preis" autocomplete="off">
+            <p class="price-hint">Annahme für Strom- und Brennstoffpreis (zzgl. separater CO₂-Bepreisung nach BEHG/ETS2). Keine Zusage – zieh den Regler, um verschiedene Szenarien zu sehen.</p>
+          </div>
+          <div class="chart-legend">
+            <div class="legend-item"><div class="legend-dot" style="background:#dc2626"></div> Weiter wie heute</div>
+            <div class="legend-item"><div class="legend-dot" style="background:#2E4F3C"></div> Mit eigener Anlage</div>
+          </div>
+          <div class="chart-canvas-wrap" style="position:relative;height:260px">
+            <canvas id="cost-chart" role="img" aria-label="20-Jahres-Kostenvergleich"></canvas>
+          </div>
+          <p class="price-hint" id="chart-note"></p>
+        </div>
+
+        <div class="result-notice">
+          <strong>Unverbindliche Schätzung ohne Gewähr</strong> – basierend auf deinen Angaben und Durchschnittswerten (DIN EN 12831, PVGIS, BDEW, BEHG). Keine zugesicherte Ersparnis, kein Finanzierungs- oder Kreditangebot. Auch Amortisation, Ersparnisquote und der Energiemanagement-Vergleich sind unverbindliche Schätzungen ohne Gewähr und keine Anlageberatung.
+          Für eine verbindliche Planung komme ich kostenlos zu dir und messe alles vor Ort.
+        </div>
+
+        <p class="result-soft-cta">Lieber erst eine Frage stellen, statt direkt eine Analyse anzufordern? <a href="/#kontakt">Zum Kontaktformular →</a></p>
+
+        <div class="lead-gate" id="lead-gate">
+          <div class="lead-gate-head">
+            <h3>Analyse per E-Mail erhalten</h3>
+            <p>Dein Ergebnis siehst du bereits oben — optional sende ich dir die unverbindliche Ersteinschätzung zusätzlich kostenlos per E-Mail zu, damit du sie in Ruhe lesen oder ausdrucken kannst.</p>
+          </div>
+          <div class="lead-gate-form" id="lead-gate-form">
+            <div class="lead-field-row">
+              <div class="field-group">
+                <label class="field-label" for="lg-vorname">Vorname *</label>
+                <input type="text" id="lg-vorname" class="er-input" placeholder="Vorname…" autocomplete="given-name" name="lg-vorname">
+              </div>
+              <div class="field-group">
+                <label class="field-label" for="lg-nachname">Nachname *</label>
+                <input type="text" id="lg-nachname" class="er-input" placeholder="Nachname…" autocomplete="family-name" name="lg-nachname">
+              </div>
+            </div>
+            <div class="lead-field-row">
+              <div class="field-group">
+                <label class="field-label" for="lg-email">E-Mail *</label>
+                <input type="email" id="lg-email" class="er-input" placeholder="deine@email.de…" autocomplete="email" name="lg-email" spellcheck="false">
+              </div>
+              <div class="field-group">
+                <label class="field-label" for="lg-phone">Telefon (optional)</label>
+                <input type="tel" id="lg-phone" class="er-input" placeholder="+49 …" autocomplete="tel" name="lg-phone">
+              </div>
+            </div>
+            <div class="lead-field-row lead-field-row--half">
+              <div class="field-group">
+                <label class="field-label" for="lg-plz">Postleitzahl *</label>
+                <input type="text" id="lg-plz" class="er-input" placeholder="z. B. 06786…" inputmode="numeric" maxlength="5" name="lg-plz" autocomplete="postal-code">
+              </div>
+            </div>
+            <label class="consent-label">
+              <input type="checkbox" id="lg-consent-analyse" required name="lg-consent-analyse" autocomplete="off">
+              <span><strong>Analyse zusenden *</strong> – Patrick Leißner darf mir meine Ergebnisse per E-Mail zusenden. <a href="/datenschutz" target="_blank">Datenschutzerklärung</a></span>
+            </label>
+            <label class="consent-label" style="margin-top:8px">
+              <input type="checkbox" id="lg-consent-kontakt" name="lg-consent-kontakt" autocomplete="off">
+              <span>Patrick darf mich auch zur persönlichen Beratung kontaktieren / mir relevante Informationen zusenden (optional, jederzeit widerrufbar).</span>
+            </label>
+            <!-- kein Inline-display: .field-error ist per CSS ausgeblendet und wird
+                 über die Klasse .visible eingeblendet. Ein Inline-Stil würde diese
+                 Klassenregel überstimmen und die Meldung dauerhaft unsichtbar machen. -->
+            <div class="field-error" id="lg-error">Bitte Vorname, Nachname, E-Mail, PLZ und die Analyse-Zustimmung ausfüllen.</div>
+            <input type="text" name="hp_website" id="hp_website" style="display:none;visibility:hidden" tabindex="-1" autocomplete="off" aria-hidden="true" aria-label="Bitte leer lassen">
+            <button type="button" class="btn-booking" id="lg-submit-btn" onclick="submitLead()">
+              Analyse per E-Mail zusenden
+            </button>
+          </div>
+          <div class="lead-success" id="lead-success" style="display:none">
+            <div class="lead-success-icon">✓</div>
+            <strong>Fast geschafft — bitte bestätige deine E-Mail!</strong>
+            <p>Wir haben dir eine Bestätigungsmail geschickt. Klicke auf den Link darin, um deine Analyse zu erhalten. (Spam-Ordner prüfen falls nötig.)</p>
+            <button type="button" class="btn-booking" onclick="window.print()">Jetzt drucken / als PDF speichern</button>
+            <p class="print-hint">Tipp: Im Druckdialog „Kopf- und Fußzeilen“ abwählen — sonst druckt der Browser zusätzlich URL und Datum über den Briefkopf.</p>
+            <a href="/termin" class="btn-booking btn-booking-outline" style="margin-top:12px;display:inline-block">Kostenlosen Beratungstermin buchen</a>
+          </div>
+        </div>
+
+        <button type="button" class="btn-new-calc" onclick="resetWizard()" style="display:block;text-align:center;margin:0 auto 32px">Neue Berechnung starten</button>
+
+        <div class="sources-wrap">
+          <button type="button" class="sources-toggle" id="sources-btn" onclick="toggleSources()" aria-expanded="false" aria-controls="sources-body">
+            <span class="sources-chevron" aria-hidden="true">▾</span>
+            Berechnungsgrundlagen &amp; Quellen
+          </button>
+          <div class="sources-body" id="sources-body">
+            <h4>Klimadaten &amp; Heizlast</h4>
+            DIN EN 12831-1:2017 – Norm-Heizlast &nbsp;·&nbsp; DIN/TS 12831-1:2020 – Klimadaten Deutschland &nbsp;·&nbsp; DWD – Norm-Außentemperaturen nach Klimaregion
+            <h4>PV-Ertrag</h4>
+            <a href="https://re.jrc.ec.europa.eu/pvg_tools/" target="_blank" rel="noopener">PVGIS (EU-Kommission)</a> – Globalstrahlung &amp; Ertragskennzahlen &nbsp;·&nbsp; DGS – Ertragsberechnung Photovoltaik
+            <h4>Energiepreise</h4>
+            BDEW – Haushaltsenergiepreise 2025/26 &nbsp;·&nbsp; BAFA – Förderdaten Wärmepumpen
+            <h4>Wärmepumpen &amp; JAZ</h4>
+            Fraunhofer ISE – Feldstudie Wärmepumpen in Bestandsgebäuden &nbsp;·&nbsp; BDH – JAZ-Kennzahlen nach Gebäudetyp
+            <h4>CO₂-Bepreisung</h4>
+            BEHG 2019/2024 – Nationale CO₂-Bepreisung &nbsp;·&nbsp; ETS II (EU ab 2027) &nbsp;·&nbsp; UBA – Emissionsfaktoren Brennstoffe &amp; Strom
+            <h4>Verbrauchskennwerte</h4>
+            GEG 2024 – Energieanforderungen nach Baujahr &nbsp;·&nbsp; BDEW – Jahresverbrauch Privathaushalte
+            <h4>Solarspitzengesetz &amp; §14a EnWG (Eco-vs-Premium-Schätzung)</h4>
+            Bundesnetzagentur – Statistik Negativpreis-Stunden &nbsp;·&nbsp; pv magazine / ENTSO-E – Anteil PV-Erzeugung in Negativpreis-Stunden &nbsp;·&nbsp; netze-bw.de / spotmyenergy.de – §14a-Modul-3-Tarife &nbsp;·&nbsp; Fraunhofer ISE
+            <h4>Vertiefende Analyse</h4>
+            Du willst die Zahlen von der Ertragsseite sehen? Der <a href="/batteriespeicher">Batteriespeicher-Ertragsrechner</a> zeigt, was ein Speicher am Strommarkt erwirtschaftet.
+            <p class="sources-meta">Stand: Januar 2026 &nbsp;·&nbsp; Alle Werte dienen der Orientierung. Verbindliche Berechnungen nach DIN erfordern eine Vor-Ort-Analyse durch einen zertifizierten Energieberater.</p>
+          </div>
+        </div>
+
+        </div><!-- .print-flow -->
+        </td></tr></tbody>
+        </table>
+
+      </section>
+
+        </div><!-- .cockpit-results -->
+      </div><!-- .cockpit-grid -->
+    </div><!-- .wizard-wrap -->
+  </main>

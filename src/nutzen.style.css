@@ -1,0 +1,1139 @@
+
+/* ============================================================
+   ENERGIERECHNER WIZARD — CI Patrick Leißner
+   #2E4F3C · #D0AB3B · #F1F0E9 · Outfit
+   ============================================================ */
+
+/* === CI-Variablen (lokal definiert, unabhängig von style.css) === */
+:root {
+    --pl-green:  #2E4F3C;
+    --pl-gold:   #D0AB3B;
+    --pl-beige:  #F1F0E9;
+    --pl-black:  #1a1a1a;
+    --radius:    0.5rem;
+    --radius-lg: 0.75rem;
+    --shadow:    0 2px 12px rgba(46,79,60,0.10);
+    --gray-100:  #f3f4f6;
+    --gray-200:  #e5e7eb;
+    --gray-300:  #d1d5db;
+    --gray-400:  #9ca3af;
+    --gray-500:  #6b7280;
+    --gray-600:  #4b5563;
+    --danger:    #dc2626;
+}
+
+/* --- Wizard Wrap / Cockpit --- */
+.wizard-wrap {
+    max-width: 1240px;
+    margin: 0 auto;
+    padding: 32px 5% 120px;
+}
+
+/* Intro über dem Cockpit */
+.cockpit-intro { margin: 0 0 22px; }
+.cockpit-intro h1 {
+    font-size: 1.6rem;
+    font-weight: 800;
+    color: var(--pl-green);
+    margin: 0 0 6px;
+    line-height: 1.15;
+}
+.cockpit-intro p {
+    font-size: 0.9rem;
+    color: var(--gray-500);
+    line-height: 1.6;
+    margin: 0;
+    max-width: 62ch;
+}
+
+/* Zwei-Spalten-Cockpit: links Eingaben, rechts Live-Ergebnis */
+.cockpit-grid { display: block; }
+@media (min-width: 900px) {
+    .cockpit-grid {
+        display: grid;
+        grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
+        gap: 30px;
+        align-items: start;
+    }
+    .cockpit-results {
+        position: sticky;
+        top: calc(var(--nav-height, 72px) + 1rem);
+        max-height: calc(100vh - var(--nav-height, 72px) - 2rem);
+        overflow-y: auto;
+        overscroll-behavior: contain;
+        padding-right: 4px;
+    }
+}
+
+/* Eingabe-Sektionen (immer sichtbar, kein Step-Gating) */
+.cockpit-section {
+    border: 1px solid var(--gray-200);
+    border-radius: var(--radius-lg);
+    padding: 20px 22px;
+    margin-bottom: 16px;
+    background: #fff;
+}
+.cockpit-section > .sec-head { margin-bottom: 16px; }
+.sec-head h2 {
+    font-size: 1.05rem;
+    font-weight: 800;
+    color: var(--pl-green);
+    margin: 0 0 3px;
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+}
+.sec-head .sec-num {
+    font-size: 0.72rem;
+    font-weight: 800;
+    color: var(--pl-gold);
+    letter-spacing: 0.06em;
+}
+.sec-head p {
+    font-size: 0.8rem;
+    color: var(--gray-500);
+    line-height: 1.55;
+    margin: 0;
+}
+
+/* --- Mehrere Dachflächen --- */
+.roof-surface {
+    border: 1px solid var(--gray-200);
+    border-radius: var(--radius-lg);
+    padding: 20px;
+    margin-bottom: 16px;
+    background: var(--gray-100);
+}
+.roof-surface-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 16px;
+}
+.roof-surface-header .er-select { flex: 1; margin: 0; }
+.surface-delete {
+    flex-shrink: 0;
+    width: 32px; height: 32px;
+    border: 1px solid var(--gray-300);
+    background: #fff;
+    color: var(--gray-500);
+    border-radius: var(--radius);
+    font-size: 1.1rem;
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+}
+.surface-delete:hover { border-color: var(--danger); color: var(--danger); }
+.btn-add-surface {
+    width: 100%;
+    padding: 12px;
+    border: 2px dashed var(--gray-300);
+    border-radius: var(--radius-lg);
+    background: #fff;
+    color: var(--pl-green);
+    font-weight: 700;
+    font-size: 0.9rem;
+    cursor: pointer;
+    margin-top: 4px;
+}
+.btn-add-surface:hover { border-color: var(--pl-green); background: var(--pl-beige); }
+
+/* --- Finanzierungs-Herzstück (im Ergebnis-Rail) --- */
+.fin-hero {
+    background: var(--pl-green);
+    border-radius: var(--radius-lg);
+    padding: 20px 22px;
+    margin-bottom: 16px;
+    color: #fff;
+}
+.fin-hero-eyebrow {
+    font-size: 0.65rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--pl-gold);
+    margin: 0 0 12px;
+}
+.fin-compare {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+    margin-bottom: 14px;
+}
+.fin-col .fin-label {
+    display: block;
+    font-size: 0.66rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: rgba(255,255,255,0.6);
+    margin-bottom: 6px;
+    min-height: 2.4em;
+}
+.fin-col .fin-amount {
+    font-size: 1.9rem;
+    font-weight: 800;
+    line-height: 1;
+    color: #fff;
+}
+.fin-col.neu .fin-amount { color: var(--pl-gold); }
+.fin-col .fin-sub {
+    display: block;
+    font-size: 0.7rem;
+    color: rgba(255,255,255,0.6);
+    margin-top: 6px;
+    line-height: 1.45;
+}
+.fin-delta {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    background: rgba(208,171,59,0.16);
+    border-radius: var(--radius);
+    padding: 10px 14px;
+    margin-bottom: 14px;
+}
+.fin-delta-badge {
+    background: var(--pl-gold);
+    color: var(--pl-green);
+    font-weight: 800;
+    font-size: 0.95rem;
+    padding: 4px 12px;
+    border-radius: 20px;
+    white-space: nowrap;
+}
+.fin-delta-text { font-size: 0.78rem; color: rgba(255,255,255,0.85); }
+.fin-bilanz {
+    font-size: 0.76rem;
+    color: rgba(255,255,255,0.7);
+    margin: 0 0 16px;
+    line-height: 1.5;
+}
+.fin-bilanz strong { color: var(--pl-gold); font-size: 0.95rem; }
+.fin-financed {
+    font-size: 0.76rem;
+    color: rgba(255,255,255,0.82);
+    line-height: 1.4;
+    margin: 12px 0 0;
+}
+.fin-financed strong { color: var(--pl-gold); font-weight: 800; }
+.fin-note {
+    font-size: 0.68rem;
+    color: rgba(255,255,255,0.5);
+    line-height: 1.5;
+    margin: 8px 0 0;
+}
+
+/* --- Slider (Zins / Laufzeit) --- */
+.fin-sliders { display: grid; gap: 14px; }
+.s-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 6px;
+}
+.s-row label {
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: rgba(255,255,255,0.85);
+}
+.s-val {
+    font-size: 0.85rem;
+    font-weight: 800;
+    color: var(--pl-gold);
+}
+.fin-sliders input[type="range"] {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 100%;
+    height: 5px;
+    border-radius: 3px;
+    background: rgba(255,255,255,0.22);
+    outline: none;
+    margin: 0;
+}
+.fin-sliders input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 20px; height: 20px;
+    border-radius: 50%;
+    background: var(--pl-gold);
+    border: 2px solid #fff;
+    cursor: pointer;
+}
+.fin-sliders input[type="range"]::-moz-range-thumb {
+    width: 20px; height: 20px;
+    border-radius: 50%;
+    background: var(--pl-gold);
+    border: 2px solid #fff;
+    cursor: pointer;
+}
+.fin-sliders input[type="range"]:focus-visible { outline: 2px solid var(--pl-gold); outline-offset: 4px; }
+
+/* --- EMS-Entscheidung --- */
+.ems-hint {
+    font-size: 0.78rem;
+    color: var(--gray-600);
+    line-height: 1.55;
+    margin: 12px 0 0;
+    background: var(--pl-beige);
+    border-left: 3px solid var(--pl-gold);
+    border-radius: 0 var(--radius) var(--radius) 0;
+    padding: 10px 14px;
+}
+.ems-hint a { color: var(--pl-green); font-weight: 700; }
+
+/* --- Mobiles Ergebnis-Dock --- */
+.ergebnis-dock { display: none; }
+@media (max-width: 899px) {
+    .ergebnis-dock {
+        position: fixed;
+        bottom: 0; left: 0; right: 0;
+        z-index: 200;
+        display: flex;
+        align-items: stretch;
+        background: var(--pl-green);
+        box-shadow: 0 -4px 20px rgba(0,0,0,0.18);
+        padding: 10px 4% calc(10px + env(safe-area-inset-bottom));
+        gap: 10px;
+        cursor: pointer;
+        border: none;
+        width: 100%;
+        font-family: inherit;
+        text-align: center;
+    }
+    .dock-col { flex: 1; }
+    .dock-label {
+        display: block;
+        font-size: 0.58rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        color: rgba(255,255,255,0.6);
+    }
+    .dock-amount { font-size: 1.15rem; font-weight: 800; color: #fff; }
+    .dock-col.neu .dock-amount { color: var(--pl-gold); }
+    .dock-arrow { align-self: center; color: rgba(255,255,255,0.7); font-size: 1.2rem; }
+    /* Platz schaffen, damit das fixierte Dock den Footer-Inhalt (Impressum/Datenschutz) nicht überdeckt */
+    .site-footer { padding-bottom: calc(96px + env(safe-area-inset-bottom)); }
+}
+
+@keyframes erSlideIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+
+/* --- Field Groups --- */
+.field-group { margin-bottom: 26px; }
+
+.field-label {
+    display: block;
+    font-size: 0.875rem;
+    font-weight: 700;
+    color: var(--pl-green);
+    margin-bottom: 8px;
+}
+.field-opt {
+    font-size: 0.78rem;
+    font-weight: 400;
+    color: var(--gray-400);
+}
+.field-sublabel {
+    display: block;
+    font-size: 0.8rem;
+    color: var(--gray-500);
+    margin-bottom: 8px;
+    margin-top: -3px;
+}
+.field-error {
+    font-size: 0.8rem;
+    color: var(--danger);
+    margin-top: 6px;
+    display: none;
+}
+.field-error.visible { display: block; }
+
+/* --- Text / Number Inputs --- */
+.er-input {
+    width: 100%;
+    padding: 12px 16px;
+    border: 2px solid var(--gray-200);
+    border-radius: var(--radius);
+    font-family: inherit;
+    font-size: 1rem;
+    color: var(--pl-black);
+    background: #fff;
+    transition: border-color 0.18s, box-shadow 0.18s;
+    -webkit-appearance: none;
+}
+.er-input:focus {
+    outline: none;
+    border-color: var(--pl-green);
+    box-shadow: 0 0 0 3px rgba(46,79,60,0.1);
+}
+.er-input.has-error { border-color: var(--danger); }
+.er-input.valid     { border-color: var(--pl-gold); }
+
+.input-row { display: flex; gap: 10px; align-items: flex-start; }
+.input-row .er-input { flex: 1; }
+.input-unit {
+    padding: 12px 14px;
+    background: var(--gray-100);
+    border: 2px solid var(--gray-200);
+    border-radius: var(--radius);
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: var(--gray-600);
+    white-space: nowrap;
+    line-height: 1.5;
+    flex-shrink: 0;
+}
+
+/* PLZ feedback */
+.plz-feedback {
+    margin-top: 8px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    min-height: 20px;
+    transition: color 0.2s;
+    color: transparent;
+}
+.plz-feedback.found { color: var(--pl-green); }
+.plz-feedback.error { color: var(--danger); }
+
+/* Live berechneter Stromabschlag (Plausibilitätsbrücke zum Kundenbeleg) */
+.abschlag-calc {
+    margin: 8px 0 0;
+    font-size: 0.82rem;
+    font-weight: 700;
+    color: var(--pl-green);
+    background: var(--pl-beige);
+    border-radius: var(--radius);
+    padding: 8px 12px;
+    display: none;
+}
+.abschlag-calc.show { display: block; }
+
+/* Select */
+.er-select {
+    width: 100%;
+    padding: 12px 40px 12px 16px;
+    border: 2px solid var(--gray-200);
+    border-radius: var(--radius);
+    font-family: inherit;
+    font-size: 1rem;
+    color: var(--pl-black);
+    background: #fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%236b7280' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E") no-repeat right 14px center;
+    -webkit-appearance: none;
+    cursor: pointer;
+    transition: border-color 0.18s;
+}
+.er-select:focus {
+    outline: none;
+    border-color: var(--pl-green);
+    box-shadow: 0 0 0 3px rgba(46,79,60,0.1);
+}
+
+/* --- Card Buttons --- */
+.card-grid {
+    display: grid;
+    gap: 10px;
+    grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+}
+.card-grid.cols-2 { grid-template-columns: repeat(2, 1fr); }
+.card-grid.cols-3 { grid-template-columns: repeat(3, 1fr); }
+.card-grid.cols-4 { grid-template-columns: repeat(4, 1fr); }
+.card-grid.cols-5 { grid-template-columns: repeat(5, 1fr); }
+@media (max-width: 600px) {
+    .card-grid.cols-4 { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 500px) {
+    .card-grid.cols-5 { grid-template-columns: repeat(3, 1fr); }
+    .card-grid.cols-3 { grid-template-columns: repeat(2, 1fr); }
+}
+
+.card-btn {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 3px;
+    padding: 14px 10px;
+    min-height: 56px;
+    border: 2px solid var(--gray-300);
+    border-radius: var(--radius);
+    background: var(--pl-beige);
+    font-family: inherit;
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--pl-green);
+    cursor: pointer;
+    text-align: center;
+    line-height: 1.3;
+    transition: background-color 0.16s ease, border-color 0.16s ease, color 0.16s ease, box-shadow 0.16s ease, transform 0.16s ease, opacity 0.16s ease;
+}
+.card-btn:hover {
+    border-color: var(--pl-green);
+    color: var(--pl-green);
+    background: rgba(46,79,60,0.10);
+}
+.card-btn.selected {
+    border-color: var(--pl-green);
+    background: var(--pl-green);
+    color: #fff;
+}
+.card-btn.multi.selected {
+    border-color: var(--pl-gold);
+    background: rgba(208,171,59,0.13);
+    color: var(--pl-green);
+}
+.card-btn:focus-visible {
+    outline: 3px solid var(--pl-gold);
+    outline-offset: 2px;
+}
+.card-btn .btn-sub {
+    font-size: 0.7rem;
+    font-weight: 400;
+    opacity: 0.8;
+}
+
+/* --- Toggle Mode --- */
+.toggle-mode {
+    display: flex;
+    border: 2px solid var(--gray-200);
+    border-radius: var(--radius);
+    overflow: hidden;
+    margin-bottom: 12px;
+}
+.toggle-mode button {
+    flex: 1;
+    padding: 9px 12px;
+    border: none;
+    background: #fff;
+    font-family: inherit;
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: var(--gray-500);
+    cursor: pointer;
+    transition: background-color 0.15s, border-color 0.15s, color 0.15s, box-shadow 0.15s, transform 0.15s, opacity 0.15s;
+}
+.toggle-mode button.active {
+    background: var(--pl-green);
+    color: #fff;
+}
+
+/* (Wizard-Navigations-Buttons entfernt – das Cockpit hat keine Schritt-Navigation) */
+.btn-calc {
+    padding: 15px 40px;
+    border: none;
+    border-radius: var(--radius);
+    background: var(--pl-gold);
+    color: var(--pl-green);
+    font-family: inherit;
+    font-size: 1rem;
+    font-weight: 800;
+    cursor: pointer;
+    letter-spacing: 0.02em;
+    transition: background-color 0.2s, border-color 0.2s, color 0.2s, box-shadow 0.2s, transform 0.2s, opacity 0.2s;
+    margin-left: auto;
+}
+.btn-calc:hover {
+    background: #b8942c;
+    color: #fff;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(208,171,59,0.3);
+}
+
+/* --- Result Section (immer sichtbar im Cockpit) --- */
+.result-section { display: block; }
+
+/* KPI Grid */
+.kpi-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    margin-bottom: 20px;
+}
+@media (max-width: 580px) { .kpi-grid { grid-template-columns: 1fr; } }
+.kpi-card {
+    background: #fff;
+    border: 1px solid var(--gray-200);
+    border-radius: var(--radius-lg);
+    padding: 18px;
+}
+.kpi-label {
+    font-size: 0.68rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--gray-500);
+    margin-bottom: 6px;
+}
+.kpi-value {
+    font-size: 1.4rem;
+    font-weight: 800;
+    color: var(--pl-green);
+    line-height: 1.1;
+}
+.kpi-sub {
+    font-size: 0.75rem;
+    color: var(--gray-500);
+    margin-top: 5px;
+    line-height: 1.4;
+}
+
+/* Wirtschaftlichkeit (Amortisation/Rendite) */
+.wirtschaft-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+    margin-bottom: 20px;
+}
+@media (max-width: 580px) { .wirtschaft-grid { grid-template-columns: 1fr; } }
+.kpi-card--highlight {
+    border-color: var(--pl-gold);
+    background: rgba(208,171,59,0.06);
+}
+.eco-premium-note {
+    background: var(--pl-beige);
+    border-left: 3px solid var(--pl-gold);
+    border-radius: 0 var(--radius) var(--radius) 0;
+    padding: 16px 20px;
+    margin-bottom: 20px;
+}
+.eco-premium-note h3 {
+    font-size: 0.92rem;
+    font-weight: 800;
+    color: var(--pl-green);
+    margin: 0 0 8px;
+}
+.eco-premium-note p {
+    font-size: 0.82rem;
+    color: var(--gray-600);
+    line-height: 1.65;
+    margin: 0 0 6px;
+}
+.eco-premium-note .eco-premium-source {
+    font-size: 0.7rem;
+    color: var(--gray-500);
+    margin: 0;
+}
+.result-soft-cta {
+    text-align: center;
+    font-size: 0.85rem;
+    color: var(--gray-500);
+    margin: 0 0 20px;
+}
+.result-soft-cta a { color: var(--pl-green); font-weight: 700; }
+
+/* Dein Dach im Detail (Pro-Fläche-Aufschlüsselung) */
+.roof-card {
+    background: #fff;
+    border: 1px solid var(--gray-200);
+    border-radius: var(--radius-lg);
+    padding: 18px 20px;
+    margin-bottom: 20px;
+}
+.roof-card-head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-bottom: 14px;
+}
+.roof-card-head h3 { font-size: 0.92rem; font-weight: 800; color: var(--pl-green); margin: 0; }
+.roof-total-kwp { font-size: 0.92rem; font-weight: 800; color: var(--pl-gold); white-space: nowrap; }
+.roof-row { margin-bottom: 12px; }
+.roof-row:last-child { margin-bottom: 0; }
+.roof-row-top {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 10px;
+    margin-bottom: 5px;
+}
+.roof-row-label { font-size: 0.8rem; font-weight: 600; color: var(--pl-green); }
+.roof-row-val { font-size: 0.78rem; color: var(--gray-600); white-space: nowrap; }
+.roof-bar-track { height: 8px; background: var(--gray-100); border-radius: 4px; overflow: hidden; }
+.roof-bar { height: 8px; background: linear-gradient(90deg, var(--pl-green), var(--pl-gold)); border-radius: 4px;  }
+.roof-hint { font-size: 0.74rem; color: var(--gray-500); line-height: 1.55; margin: 14px 0 0; }
+
+/* Energiebilanz: Wohin fließt dein Sonnenstrom? */
+.energy-card {
+    background: #fff;
+    border: 1px solid var(--gray-200);
+    border-radius: var(--radius-lg);
+    padding: 18px 20px;
+    margin-bottom: 20px;
+}
+.energy-head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-bottom: 12px;
+}
+.energy-head h3 { font-size: 0.92rem; font-weight: 800; color: var(--pl-green); margin: 0; }
+.energy-autarkie { font-size: 0.95rem; font-weight: 800; color: var(--pl-gold); white-space: nowrap; }
+.energy-bar { display: flex; height: 14px; border-radius: 7px; overflow: hidden; background: var(--gray-100); }
+.energy-seg { height: 14px;  }
+.energy-seg.self { background: var(--pl-green); }
+.energy-seg.grid { background: var(--gray-300); }
+.energy-legend { display: flex; gap: 18px; flex-wrap: wrap; margin: 10px 0 14px; font-size: 0.76rem; color: var(--gray-600); }
+.energy-legend i.dot { display: inline-block; width: 10px; height: 10px; border-radius: 50%; margin-right: 5px; vertical-align: middle; }
+.energy-legend i.dot.self { background: var(--pl-green); }
+.energy-legend i.dot.grid { background: var(--gray-300); }
+.energy-legend b { font-weight: 800; color: var(--pl-green); }
+.energy-figures { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+@media (max-width: 460px) { .energy-figures { grid-template-columns: 1fr; } }
+.energy-figures > div { background: var(--pl-beige); border-radius: var(--radius); padding: 10px 12px; }
+.ef-label { display: block; font-size: 0.68rem; color: var(--gray-500); margin-bottom: 3px; }
+.ef-val { display: block; font-size: 0.95rem; font-weight: 800; color: var(--pl-green); }
+.einspeise-line { margin: 14px 0 0; font-size: 0.78rem; color: var(--gray-600); line-height: 1.5; border-top: 1px solid var(--gray-200); padding-top: 10px; }
+.einspeise-line strong { color: var(--pl-green); }
+.autarkie-hint { margin: 8px 0 0; font-size: 0.74rem; color: var(--gray-500); line-height: 1.5; }
+.autarkie-hint:empty { display: none; }
+
+/* Anlage-Zusammenfassung (Gesamt-kWp) in Sektion 4 */
+.anlage-summary {
+    margin: 12px 0 0;
+    font-size: 0.85rem;
+    font-weight: 800;
+    color: var(--pl-green);
+    background: rgba(208,171,59,0.13);
+    border-radius: var(--radius);
+    padding: 9px 12px;
+}
+.anlage-summary:empty { display: none; }
+
+/* Preis-Slider am Chart */
+.price-slider { margin-bottom: 16px; }
+.price-slider .s-row { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 6px; }
+.price-slider .s-row label { font-size: 0.78rem; font-weight: 700; color: var(--pl-green); }
+.price-slider .s-val { font-size: 0.82rem; font-weight: 800; color: var(--pl-gold); }
+.price-slider input[type="range"] {
+    -webkit-appearance: none; appearance: none;
+    width: 100%; height: 5px; border-radius: 3px;
+    background: var(--gray-200); outline: none; margin: 0;
+}
+.price-slider input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none; appearance: none;
+    width: 18px; height: 18px; border-radius: 50%;
+    background: var(--pl-green); border: 2px solid #fff; cursor: pointer;
+}
+.price-slider input[type="range"]::-moz-range-thumb {
+    width: 18px; height: 18px; border-radius: 50%;
+    background: var(--pl-green); border: 2px solid #fff; cursor: pointer;
+}
+.price-slider .price-hint { font-size: 0.72rem; color: var(--gray-500); margin: 6px 0 0; }
+
+/* Chart */
+.chart-card {
+    background: #fff;
+    border: 1px solid var(--gray-200);
+    border-radius: var(--radius-lg);
+    padding: 22px;
+    margin-bottom: 20px;
+}
+.chart-title {
+    font-size: 0.88rem;
+    font-weight: 700;
+    color: var(--pl-green);
+    margin-bottom: 3px;
+}
+.chart-subtitle {
+    font-size: 0.75rem;
+    color: var(--gray-500);
+    margin-bottom: 14px;
+}
+.chart-legend {
+    display: flex;
+    gap: 18px;
+    flex-wrap: wrap;
+    margin-bottom: 14px;
+}
+.legend-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.75rem;
+    color: var(--gray-600);
+}
+.legend-dot {
+    width: 10px; height: 10px;
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+#cost-chart { display:block; width:100% !important; height:100% !important; }
+
+/* Notice */
+.result-notice {
+    background: var(--pl-beige);
+    border-left: 3px solid var(--pl-gold);
+    border-radius: 0 var(--radius) var(--radius) 0;
+    padding: 14px 18px;
+    font-size: 0.82rem;
+    color: var(--gray-600);
+    margin-bottom: 20px;
+    line-height: 1.65;
+}
+.result-notice strong { color: var(--pl-green); }
+
+/* CTA Block */
+.result-cta {
+    background: var(--pl-green);
+    border-radius: var(--radius-xl);
+    padding: 32px 26px;
+    text-align: center;
+    margin-bottom: 32px;
+}
+.result-cta h3 {
+    color: #fff;
+    font-size: 1.2rem;
+    font-weight: 800;
+    margin-bottom: 8px;
+}
+.result-cta p {
+    color: rgba(255,255,255,0.72);
+    font-size: 0.88rem;
+    margin-bottom: 22px;
+    line-height: 1.6;
+}
+.btn-booking {
+    display: inline-block;
+    padding: 15px 36px;
+    background: var(--pl-gold);
+    color: var(--pl-green);
+    font-family: inherit;
+    font-size: 0.95rem;
+    font-weight: 800;
+    border: none;
+    border-radius: var(--radius);
+    cursor: pointer;
+    text-decoration: none;
+    transition: background-color 0.2s, border-color 0.2s, color 0.2s, box-shadow 0.2s, transform 0.2s, opacity 0.2s;
+}
+.btn-booking:hover {
+    background: #e0bd40;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(0,0,0,0.18);
+}
+.btn-new-calc {
+    display: block;
+    margin-top: 14px;
+    font-size: 0.8rem;
+    color: rgba(255,255,255,0.5);
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-family: inherit;
+    text-decoration: underline;
+}
+.btn-new-calc:hover { color: rgba(255,255,255,0.8); }
+
+
+/* Persönlicher Fazit-Text */
+.result-narrative {
+    background: var(--pl-beige);
+    border-left: 3px solid var(--pl-green);
+    border-radius: var(--radius-lg);
+    padding: 18px 22px;
+    margin-bottom: 20px;
+    font-size: 0.88rem;
+    color: var(--gray-600);
+    line-height: 1.7;
+}
+
+/* Lead Gate */
+.lead-gate {
+    background: var(--pl-green);
+    border-radius: var(--radius-xl);
+    padding: 32px 26px;
+    margin-bottom: 32px;
+}
+.lead-gate-head h3 { color: #fff; font-size: 1.15rem; font-weight: 800; margin-bottom: 6px; }
+.lead-gate-head p  { color: rgba(255,255,255,0.72); font-size: 0.85rem; margin-bottom: 22px; line-height: 1.6; }
+.lead-field-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 12px;
+}
+@media (max-width: 480px) { .lead-field-row { grid-template-columns: 1fr; } }
+.lead-field-row--half { grid-template-columns: 1fr; max-width: 50%; }
+@media (max-width: 480px) { .lead-field-row--half { max-width: 100%; } }
+.lead-gate .er-input {
+    background: rgba(255,255,255,0.1);
+    border-color: rgba(255,255,255,0.25);
+    color: #fff;
+}
+.lead-gate .er-input::placeholder { color: rgba(255,255,255,0.45); }
+.lead-gate .er-input:focus { border-color: var(--pl-gold); background: rgba(255,255,255,0.15); }
+.lead-gate .field-label { color: rgba(255,255,255,0.8); }
+.consent-label {
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+    color: rgba(255,255,255,0.65);
+    font-size: 0.78rem;
+    line-height: 1.55;
+    margin-bottom: 18px;
+    cursor: pointer;
+}
+.consent-label input[type="checkbox"] { flex-shrink: 0; margin-top: 2px; accent-color: var(--pl-gold); }
+.consent-label a { color: var(--pl-gold); }
+.lead-success { text-align: center; color: #fff; }
+.lead-success-icon { font-size: 2.5rem; margin-bottom: 8px; }
+.lead-success strong { display: block; font-size: 1.2rem; margin-bottom: 6px; }
+.lead-success p { color: rgba(255,255,255,0.7); font-size: 0.85rem; margin-bottom: 20px; }
+.btn-booking-outline {
+    background: transparent;
+    border: 2px solid rgba(255,255,255,0.4);
+    color: #fff;
+}
+.btn-booking-outline:hover { border-color: #fff; background: rgba(255,255,255,0.08); }
+
+/* Druck-Tabellenhülle — am Bildschirm neutralisiert, damit das Layout unverändert
+   bleibt. Erst im Druck wird daraus eine echte Tabelle, deren thead/tfoot der
+   Browser auf jeder Seite wiederholt UND für die er Platz freihält. */
+.print-sheet,
+.print-sheet > tbody,
+.print-sheet > tbody > tr,
+.print-sheet > tbody > tr > td { display: block; width: auto; padding: 0; }
+.print-head-group,
+.print-foot-group { display: none; }
+
+/* Print-Briefkopf und -Fuß (nur sichtbar beim Drucken) */
+.print-header,
+.print-footer { display: none; }
+/* Die Sicherheitszone ist laut Style Guide (S.3) als transparenter Rand in jeder
+   Logodatei enthalten; das sichtbare Logo misst ca. 74 % der Dateibreite.
+   43mm Dateibreite ≈ 32mm sichtbares Logo — die Vorgabe für den A4-Briefbogen (S.4). */
+.print-header img { width: 43mm; height: auto; display: block; }
+
+/* Hinweis unter dem Druckbutton (am Bildschirm sichtbar, nicht im Druck) */
+.print-hint {
+    font-size: 0.72rem;
+    color: rgba(255,255,255,0.55);
+    margin-top: 10px;
+    line-height: 1.5;
+}
+
+/* Sources */
+.sources-wrap { border-top: 1px solid var(--gray-200); }
+.sources-toggle {
+    width: 100%;
+    padding: 12px 16px;
+    background: transparent;
+    border: none;
+    font-family: inherit;
+    font-size: 0.77rem;
+    color: var(--gray-400);
+    cursor: pointer;
+    text-align: left;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: color 0.15s;
+}
+.sources-toggle:hover { color: var(--gray-600); }
+.sources-chevron { transition: transform 0.2s; font-style: normal; }
+.sources-toggle[aria-expanded="true"] .sources-chevron { transform: rotate(180deg); }
+.sources-body {
+    display: none;
+    padding: 4px 16px 20px;
+    font-size: 0.77rem;
+    color: var(--gray-500);
+    line-height: 1.7;
+}
+.sources-body.open { display: block; }
+.sources-body h4 {
+    font-size: 0.72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    color: var(--gray-600);
+    margin: 14px 0 4px;
+}
+.sources-body h4:first-child { margin-top: 0; }
+.sources-body a { color: var(--pl-green); }
+.sources-meta {
+    margin-top: 14px;
+    font-size: 0.7rem;
+    color: var(--gray-400);
+}
+
+/* =========================================================================
+   Print CSS — standardisiert auf weißem A4-Papier.
+   Leitplanken: tonersparend, vollständig S/W-tauglich, Farbe ist nie
+   alleiniger Bedeutungsträger. Browser drucken Hintergründe standardmäßig
+   nicht — deshalb gliedert das Layout ausschließlich über Haarlinien und
+   Weißraum, niemals über gefüllte Flächen.
+   Steht bewusst am Ende des Stylesheets: bei gleicher Spezifität gewinnt
+   die zuletzt notierte Regel.
+   ========================================================================= */
+@media print {
+    @page { size: A4 portrait; margin: 12mm 18mm 12mm; }
+
+    /* --- Was nicht aufs Papier gehört --- */
+    .site-header, footer, .sp-back-bar, .rechner-tabs-bar,
+    .cockpit-intro, .cockpit-inputs, .ergebnis-dock, .fin-sliders,
+    .lead-gate, .btn-new-calc, .result-soft-cta, .print-hint,
+    .sources-chevron { display: none !important; }
+
+    /* --- Container zurücksetzen ---
+       .cockpit-results ist am Bildschirm sticky mit max-height und
+       overflow-y:auto — im Druck würde das den Inhalt auf eine
+       Bildschirmhöhe beschneiden. */
+    .wizard-wrap { padding: 0 !important; max-width: none !important; }
+    .cockpit-grid { display: block !important; }
+    .cockpit-results {
+        position: static !important; top: auto !important;
+        max-height: none !important; overflow: visible !important;
+        padding-right: 0 !important;
+    }
+    .result-section { animation: none !important; transform: none !important; }
+
+    /* --- Briefkopf und Kontaktfuß auf JEDER Seite ---
+       Bewusst über thead/tfoot statt position:fixed: fixierte Elemente werden
+       zwar pro Seite wiederholt, reservieren aber keinen Platz im Textfluss
+       und legen sich ab Seite 2 über den Inhalt (nachgemessen). */
+    .print-sheet { display: table !important; width: 100%; border-collapse: collapse; }
+    .print-sheet > tbody { display: table-row-group !important; }
+    .print-sheet > tbody > tr { display: table-row !important; }
+    .print-body { display: table-cell !important; }
+    .print-head-group { display: table-header-group !important; }
+    .print-foot-group { display: table-footer-group !important; }
+    .print-head-group td, .print-foot-group td { padding: 0; }
+
+    .print-header { display: block !important; text-align: left; padding-bottom: 5mm; }
+    .print-footer {
+        display: block !important;
+        border-top: 0.5pt solid var(--pl-green);
+        margin-top: 5mm; padding-top: 2mm;
+        font-size: 8pt; color: #444;
+    }
+
+    /* --- Reihenfolge: Haftungshinweis direkt unter die Zahlen (§ 34d),
+           ohne das Markup umzubauen --- */
+    .print-flow { display: flex !important; flex-direction: column; }
+    /* Basiswert für ALLE Kinder: Flex-Items ohne eigenes order bekommen sonst 0
+       und rutschen vor den Hero. Jeder Block wird darum explizit einsortiert. */
+    .print-flow > * { order: 50; }
+    .fin-hero          { order: 1; }
+    .result-notice     { order: 2; }   /* Haftungshinweis direkt unter die Zahlen (§ 34d) */
+    .kpi-grid          { order: 3; }
+    .wirtschaft-grid   { order: 4; }
+    .roof-card         { order: 5; }
+    .eco-premium-note  { order: 6; }
+    .result-narrative  { order: 7; }
+    .chart-card        { order: 8; }
+    .sources-wrap      { order: 9; }
+
+    /* --- Umbrüche: kein Block wird je zerrissen ---
+           bewusst auf die einzelne .kpi-card, nicht auf .kpi-grid. */
+    .fin-hero, .kpi-card, .chart-card, .roof-card,
+    .result-notice, .result-narrative, .eco-premium-note { break-inside: avoid; }
+    .roof-card { background: none; border: 0.5pt solid #999; border-radius: 0; }
+    h1, h2, h3, .chart-title, .sources-body h4 { break-after: avoid; }
+    .sources-meta { break-before: avoid; }
+    p { orphans: 3; widows: 3; }
+
+    /* --- Typografie nach Style Guide S.6 ---
+           Basis auf der Root, nicht auf body: alle Größen sind rem-basiert und
+           würden eine body-Angabe schlicht ignorieren. */
+    html { font-size: 12pt; }
+    body { font-size: 10pt; color: #000; }
+    * { text-align: left; }
+    .fin-hero-eyebrow { font-size: 14pt; font-weight: 600; color: var(--pl-green) !important; }
+    .fin-amount { font-size: 20pt; }
+    .kpi-value  { font-size: 13pt; }
+    .fin-label, .kpi-label { font-size: 9pt; }
+    .fin-sub, .kpi-sub, .result-narrative, .sources-body { font-size: 10pt; }
+
+    /* --- Heller Briefbogen statt dunkler Fläche ---
+           Borders drucken zuverlässig, Hintergründe nicht: Gliederung nur über
+           Haarlinien. Kein print-color-adjust — der Ausdruck soll auf jedem
+           S/W-Drucker und mit abgeschalteten Hintergrundgrafiken lesbar sein. */
+    .fin-hero {
+        background: none !important;
+        color: #000 !important;
+        border-radius: 0;
+        padding: 0;
+        margin-bottom: 8mm;
+    }
+    .fin-hero-eyebrow { padding-bottom: 3mm; border-bottom: 0.5pt solid var(--pl-green); }
+    .fin-compare { border-bottom: 0.5pt solid #999; }
+    .fin-col { padding: 4mm 0; }
+    .fin-col.heute { border-right: 0.5pt solid #999; padding-right: 6mm; }
+    .fin-col.neu   { padding-left: 6mm; }
+    /* Gold auf Weiß wird im S/W-Druck zu hellem Grau — der wichtigste Betrag
+       auf dem Blatt wäre dann der schwächste. Deshalb Grün. */
+    .fin-amount,
+    .fin-col.neu .fin-amount { color: var(--pl-green) !important; }
+    .fin-label, .fin-sub, .fin-delta-text, .fin-bilanz,
+    .fin-note, .fin-financed { color: #444 !important; }
+    /* Sämtliche Gold-Texte im Ergebnisbereich auf Grün: Gold auf Weiß wird im
+       S/W-Druck zu hellem Grau — betroffen sind ausgerechnet die Kennzahlen. */
+    .fin-bilanz strong,
+    .fin-financed strong,
+    .roof-total-kwp { color: var(--pl-green) !important; }
+    /* Verlaufsbalken ist eine Hintergrundfläche und druckt ohnehin nicht —
+       als Haarlinie ersetzen, damit die Zeile nicht ins Leere läuft. */
+    .roof-bar { background: none !important; height: 0; border-top: 1pt solid var(--pl-green); border-radius: 0; }
+    .roof-hint, .eco-premium-source { color: #444 !important; }
+    .fin-delta { background: none !important; padding: 4mm 0 0; border-radius: 0; }
+    .fin-delta-badge {
+        background: none !important;
+        border: 1.5pt solid var(--pl-green);
+        border-radius: 0;
+        color: var(--pl-green) !important;
+        padding: 1.5mm 3mm;
+    }
+
+    /* --- Karten und Hinweisblöcke: Rahmen und Linien statt Flächen --- */
+    .kpi-grid { gap: 4mm; margin-bottom: 8mm; }
+    .kpi-card { background: none; border: 0.5pt solid #999; border-radius: 0; padding: 4mm; }
+    .kpi-value { color: var(--pl-green); }
+    .kpi-label, .kpi-sub { color: #444; }
+    .result-narrative, .eco-premium-note {
+        background: none;
+        border-left: 1.5pt solid var(--pl-green);
+        border-radius: 0;
+        color: #000;
+        padding: 0 0 0 5mm;
+        margin-bottom: 8mm;
+    }
+
+    /* --- Haftungshinweis: gehört sichtbar zu den Zahlen (§ 34d GewO) --- */
+    .result-notice {
+        display: block !important;
+        background: none;
+        border: 0.5pt solid #444;
+        border-radius: 0;
+        padding: 3mm;
+        margin-bottom: 8mm;
+        font-size: 9pt;
+        color: #000;
+    }
+
+    /* --- Quellen: Aufklapper im Druck erzwingen, sonst druckt nur die Überschrift --- */
+    .sources-wrap { display: block !important; border-top: 0.5pt solid var(--pl-green); }
+    .sources-body { display: block !important; padding: 2mm 0 0; color: #000; }
+    .sources-toggle { padding: 3mm 0 0; color: var(--pl-green); font-size: 10pt; }
+    .sources-body h4 { color: var(--pl-green); }
+    .sources-body a  { color: #000; text-decoration: none; }
+    .sources-meta    { color: #444; }
+
+    /* --- Chart: feste Höhe in mm, der eigene Renderer zeichnet per beforeprint neu --- */
+    .chart-card { background: none; border: 0.5pt solid #999; border-radius: 0; padding: 4mm; margin-bottom: 8mm; }
+    .chart-canvas-wrap { height: 70mm !important; }
+    /* Legendenpunkte sind Hintergründe und drucken nicht — durch dieselben
+       Strichmuster ersetzen, die der Chart im Druck verwendet. */
+    .legend-dot { width: 7mm; height: 0; border-radius: 0; background: none !important; }
+    .legend-item:nth-child(1) .legend-dot { border-top: 1.5pt dashed #000; }
+    .legend-item:nth-child(2) .legend-dot { border-top: 1.5pt solid var(--pl-green); }
+}

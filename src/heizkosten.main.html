@@ -1,0 +1,340 @@
+<main id="main">
+
+    <!-- ── Hero ── -->
+    <section class="sp-hero" aria-label="Heizkosten-Rechner – Einleitung">
+
+      <nav class="sp-breadcrumb" aria-label="Brotkrumen-Navigation">
+        <div class="sp-breadcrumb-inner">
+          <a href="/">Startseite</a>
+          <span class="sp-bc-sep" aria-hidden="true">›</span>
+          <a href="/#leistungen">Leistungen</a>
+          <span class="sp-bc-sep" aria-hidden="true">›</span>
+          <a href="/waermepumpe-heizlast">Wärmepumpe</a>
+          <span class="sp-bc-sep" aria-hidden="true">›</span>
+          <span class="sp-bc-current">Heizkosten-Rechner</span>
+        </div>
+      </nav>
+
+      <div class="sp-hero-bg" style="background-image: url('assets/Foto/leistung-wp.jpg')" aria-hidden="true"></div>
+
+      <div class="container sp-hero-content">
+        <p class="sp-hero-eyebrow">Kostenanalyse</p>
+        <h1>Was kostet deine Heizung<br>wirklich – heute und 2030?</h1>
+        <p>Öl und Gas werden durch den CO₂-Preis Jahr für Jahr teurer. Berechne jetzt, was du mit fossiler Heizung zahlst – und was eine Wärmepumpe mit PV kostet.</p>
+      </div>
+    </section>
+
+    <!-- ── Rechner ── -->
+    <section id="rechner" class="sp-section sp-section--beige" aria-label="Heizkosten-Rechner">
+      <div class="ec-calc-wrap">
+
+        <!-- BASISDATEN -->
+        <div class="card">
+          <h2>Ihr Gebäude &amp; aktuelle Heizung</h2>
+          <div class="form-grid">
+            <div class="form-group">
+              <label for="plz">Postleitzahl</label>
+              <input type="text" id="plz" maxlength="5" placeholder="z. B. 04109…" name="plz" autocomplete="postal-code">
+              <div id="clim-display" class="hint"></div>
+            </div>
+            <div class="form-group">
+              <label for="area">Wohnfläche (m²)</label>
+              <input type="number" id="area" value="150" min="30" max="1500" name="area" autocomplete="off">
+            </div>
+            <div class="form-group">
+              <label for="buildingYear">Baujahr</label>
+              <select id="buildingYear" name="buildingYear" autocomplete="off">
+                <option value="vor1970">Vor 1970</option>
+                <option value="1970-1978">1970–1978</option>
+                <option value="1979-1983">1979–1983</option>
+                <option value="1984-1994">1984–1994</option>
+                <option value="1995-2001">1995–2001</option>
+                <option value="2002-2015">2002–2015</option>
+                <option value="ab2016">Ab 2016</option>
+                <option value="saniert">Saniert / KfW-Standard</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="heatingAge">Alter der Heizung</label>
+              <select id="heatingAge" name="heatingAge" autocomplete="off">
+                <option value="<5">Unter 5&nbsp;Jahre</option>
+                <option value="5-10">5–10&nbsp;Jahre</option>
+                <option value="10-15" selected>10–15&nbsp;Jahre</option>
+                <option value="15-25">15–25&nbsp;Jahre</option>
+                <option value=">25">Über 25&nbsp;Jahre</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Brennstoffart</label>
+              <div class="fuel-toggle">
+                <button id="btn-oil" class="active" onclick="setFuel('oil')">Heizöl</button>
+                <button id="btn-gas" onclick="setFuel('gas')">Erdgas</button>
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="consumption" id="lbl-consumption">Jahresverbrauch (Liter)</label>
+              <input type="number" id="consumption" value="2000" min="100" name="consumption" autocomplete="off">
+              <div class="hint" id="hint-consumption">Liter Heizöl pro Jahr (Ablesung Tankrechnung)</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- EXPERTENMODUS -->
+        <button type="button" class="accord-hdr" aria-expanded="false" aria-controls="accord-body" onclick="toggleExpert(); this.setAttribute('aria-expanded', String(document.getElementById('accord-body').classList.contains('open')))">
+          <span class="ec-icon">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+            Expertenmodus – Preise &amp; technische Parameter
+          </span>
+          <span class="accord-ico" id="accord-ico" aria-hidden="true">▼</span>
+        </button>
+        <div class="accord-body" id="accord-body">
+
+          <div class="auto-params" id="auto-params">
+            <span>Klimazone: <strong id="ap-zone">–</strong></span>
+            <span>Norm-AT: <strong id="ap-nat">–</strong></span>
+            <span>Vollbenutzungsstunden: <strong id="ap-vbh">–</strong></span>
+            <span>Kesselwirkungsgrad: <strong id="ap-eff">–</strong></span>
+            <span>Geschätzte JAZ WP: <strong id="ap-jaz">–</strong></span>
+            <span>WP-Heizleistung (ber.): <strong id="ap-wpkw">–</strong></span>
+          </div>
+
+          <div class="exp-sec">
+            <h3>Energiepreise</h3>
+            <div class="slider-grid">
+              <div class="s-item"><label for="s-oilPrice">Heizölpreis (ct/L)</label><div class="s-row"><input type="range" id="s-oilPrice" min="60" max="150" value="95" step="1" name="s-oilPrice" autocomplete="off"><span class="s-val" id="v-oilPrice">95&nbsp;ct</span></div></div>
+              <div class="s-item"><label for="s-gasPrice">Erdgaspreis (ct/kWh)</label><div class="s-row"><input type="range" id="s-gasPrice" min="6" max="20" value="12" step="0.5" name="s-gasPrice" autocomplete="off"><span class="s-val" id="v-gasPrice">12&nbsp;ct</span></div></div>
+              <div class="s-item"><label for="s-elecPrice">Allgemeinstrom (ct/kWh)</label><div class="s-row"><input type="range" id="s-elecPrice" min="20" max="50" value="32" step="1" name="s-elecPrice" autocomplete="off"><span class="s-val" id="v-elecPrice">32&nbsp;ct</span></div></div>
+              <div class="s-item"><label for="s-wpTarif">WP-Sondertarif (ct/kWh)</label><div class="s-row"><input type="range" id="s-wpTarif" min="15" max="35" value="22" step="1" name="s-wpTarif" autocomplete="off"><span class="s-val" id="v-wpTarif">22&nbsp;ct</span></div></div>
+              <div class="s-item"><label for="s-gridPrice">Reststrombezug PV+Speicher (ct/kWh)</label><div class="s-row"><input type="range" id="s-gridPrice" min="0" max="25" value="5" step="1" name="s-gridPrice" autocomplete="off"><span class="s-val" id="v-gridPrice">5&nbsp;ct</span></div></div>
+            </div>
+            <label style="display:flex;align-items:center;gap:.5rem;font-size:.82rem;font-weight:400;margin-top:.75rem;cursor:pointer">
+              <input type="checkbox" id="useWpTarif" name="useWpTarif" autocomplete="off">
+              WP-Sondertarif (separater Zähler) für Wärmepumpe verwenden
+            </label>
+          </div>
+
+          <div class="exp-sec">
+            <h3>Jährliche Preissteigerungen</h3>
+            <div class="slider-grid">
+              <div class="s-item"><label for="s-elecInc">Strompreis-Steigerung (%/Jahr)</label><div class="s-row"><input type="range" id="s-elecInc" min="0" max="10" value="6" step="0.5" name="s-elecInc" autocomplete="off"><span class="s-val" id="v-elecInc">6,0&nbsp;%</span></div></div>
+              <div class="s-item"><label for="s-fuelInc">Brennstoff-Steigerung (%/Jahr)</label><div class="s-row"><input type="range" id="s-fuelInc" min="0" max="8" value="4" step="0.5" name="s-fuelInc" autocomplete="off"><span class="s-val" id="v-fuelInc">4,0&nbsp;%</span></div></div>
+            </div>
+          </div>
+
+          <div class="exp-sec">
+            <h3>CO₂-Bepreisung (BEHG / ETS II ab 2027)</h3>
+            <div class="slider-grid">
+              <div class="s-item"><label for="s-co2_26">CO₂-Preis 2026 – BEHG (€/t)</label><div class="s-row"><input type="range" id="s-co2_26" min="50" max="80" value="60" step="5" name="s-co2_26" autocomplete="off"><span class="s-val" id="v-co2_26">60&nbsp;€/t</span></div></div>
+              <div class="s-item"><label for="s-co2_27">CO₂-Preis 2027 – ETS II Start (€/t)</label><div class="s-row"><input type="range" id="s-co2_27" min="50" max="150" value="70" step="5" name="s-co2_27" autocomplete="off"><span class="s-val" id="v-co2_27">70&nbsp;€/t</span></div></div>
+              <div class="s-item"><label for="s-co2Inc">ETS II Preissteigerung (%/Jahr)</label><div class="s-row"><input type="range" id="s-co2Inc" min="5" max="25" value="15" step="1" name="s-co2Inc" autocomplete="off"><span class="s-val" id="v-co2Inc">15&nbsp;%</span></div></div>
+            </div>
+          </div>
+
+          <div class="exp-sec">
+            <h3>PV-Anlage &amp; Betrachtungszeitraum</h3>
+            <div class="slider-grid">
+              <div class="s-item">
+                <label for="s-pvShare">PV-Eigenverbrauchsanteil</label>
+                <div class="s-row"><input type="range" id="s-pvShare" min="0" max="85" value="55" step="1" name="s-pvShare" autocomplete="off"><span class="s-val" id="v-pvShare">55&nbsp;%</span></div>
+                <div class="hint" id="hint-pv">≈ PV-Anlage mit Speicher</div>
+              </div>
+              <div class="s-item">
+                <label for="s-years">Betrachtungszeitraum (Jahre)</label>
+                <div class="s-row"><input type="range" id="s-years" min="10" max="30" value="20" step="1" name="s-years" autocomplete="off"><span class="s-val" id="v-years">20 J</span></div>
+              </div>
+            </div>
+          </div>
+
+        </div><!-- /accord-body -->
+
+        <button class="btn-calc" onclick="calculate()">
+          <span class="ec-icon">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            Energiekosten jetzt berechnen
+          </span>
+        </button>
+
+        <!-- ERGEBNISSE -->
+        <section id="results" style="display:none;margin-top:2rem" aria-live="polite">
+
+          <div class="hero-grid">
+            <div class="hero-card">
+              <div class="hero-label">Ersparnis im 1.&nbsp;Jahr</div>
+              <div class="hero-val" id="r-sav1">–</div>
+              <div class="hero-unit">€ gegenüber fossil</div>
+            </div>
+            <div class="hero-card">
+              <div class="hero-label">Gesamtersparnis <span id="r-yrs-lbl">20</span> Jahre</div>
+              <div class="hero-val" id="r-savTot">–</div>
+              <div class="hero-unit">€ gegenüber fossil</div>
+            </div>
+            <div class="hero-card">
+              <div class="hero-label">Eff. Strompreis WP+PV</div>
+              <div class="hero-val" id="r-effP">–</div>
+              <div class="hero-unit">ct/kWh (Jahr 1)</div>
+            </div>
+            <div class="hero-card">
+              <div class="hero-label">CO₂-Einsparung gesamt</div>
+              <div class="hero-val" id="r-co2sav">–</div>
+              <div class="hero-unit">Tonnen CO₂</div>
+            </div>
+          </div>
+
+          <div class="hero-grid hero-grid--wirtschaft">
+            <div class="hero-card">
+              <div class="hero-label">Amortisation (geschätzt)</div>
+              <div class="hero-val" id="r-amort">–</div>
+              <div class="hero-unit">Jahre bis Investition ausgeglichen</div>
+            </div>
+            <div class="hero-card">
+              <div class="hero-label">Rendite p. a. (geschätzt)</div>
+              <div class="hero-val" id="r-rendite">–</div>
+              <div class="hero-unit">% – keine Anlageberatung</div>
+            </div>
+          </div>
+          <p class="invest-note" id="invest-note">–</p>
+
+          <div class="card">
+            <h2>Technische Auslegung Wärmepumpe</h2>
+            <div class="tech-grid">
+              <div class="tech-item">
+                <div class="tech-label">Benötigte Heizleistung</div>
+                <div class="tech-val"><span id="t-wpkw">–</span> kW</div>
+                <div class="hint">Nennleistung der Wärmepumpe</div>
+              </div>
+              <div class="tech-item">
+                <div class="tech-label">WP-Betriebsstunden</div>
+                <div class="tech-val"><span id="t-vbh">–</span> h/a</div>
+                <div class="hint">Vollbenutzungsstunden (PLZ-Klimadaten)</div>
+              </div>
+              <div class="tech-item">
+                <div class="tech-label">WP-Strombedarf</div>
+                <div class="tech-val"><span id="t-wpelec">–</span> kWh/a</div>
+                <div class="hint">Jahresstromverbrauch der Wärmepumpe</div>
+              </div>
+              <div class="tech-item">
+                <div class="tech-label">JAZ (geschätzt)</div>
+                <div class="tech-val"><span id="t-jaz">–</span></div>
+                <div class="hint">Jahresarbeitszahl (Baujahr + Klimazone)</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="card">
+            <h2>Direktvergleich</h2>
+            <div class="cmp-wrap">
+              <table class="cmp">
+                <thead>
+                  <tr>
+                    <th>Kennzahl</th>
+                    <th class="th-fossil" id="th-fossil">Heizöl</th>
+                    <th class="th-wp">Wärmepumpe</th>
+                    <th class="th-wpv">WP + PV</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>Kosten 1.&nbsp;Jahr</td>
+                    <td id="cf1">–</td><td id="cw1">–</td><td class="td-wpv" id="cp1">–</td>
+                  </tr>
+                  <tr>
+                    <td>Monatlicher Abschlag</td>
+                    <td id="cfm">–</td><td id="cwm">–</td><td class="td-wpv" id="cpm">–</td>
+                  </tr>
+                  <tr>
+                    <td>Kosten pro m²/Jahr</td>
+                    <td id="cfsm">–</td><td id="cwsm">–</td><td class="td-wpv" id="cpsm">–</td>
+                  </tr>
+                  <tr>
+                    <td>Kosten 2030</td>
+                    <td id="cf30">–</td><td id="cw30">–</td><td class="td-wpv" id="cp30">–</td>
+                  </tr>
+                  <tr>
+                    <td>Gesamt <span id="ct-yrs">20</span> Jahre</td>
+                    <td id="cftot">–</td><td id="cwtot">–</td><td class="td-wpv" id="cptot">–</td>
+                  </tr>
+                  <tr>
+                    <td>Ersparnis vs. Fossil</td>
+                    <td>—</td><td id="cwsav">–</td><td class="td-wpv" id="cpsav">–</td>
+                  </tr>
+                  <tr>
+                    <td>Amortisation (geschätzt)</td>
+                    <td>—</td><td id="cwam">–</td><td class="td-wpv" id="cpam">–</td>
+                  </tr>
+                  <tr>
+                    <td>CO₂ pro Jahr</td>
+                    <td id="cfco2">–</td><td id="cwco2">–</td><td class="td-wpv" id="cpco2">–</td>
+                  </tr>
+                  <tr>
+                    <td>CO₂-Kosten gesamt (fossil)</td>
+                    <td id="cfco2c">–</td>
+                    <td colspan="2" style="font-size:.78rem;color:var(--gray)">Strom unterliegt nicht dem BEHG/ETS II</td>
+                  </tr>
+                  <tr>
+                    <td>CO₂-Preis 2030</td>
+                    <td id="cco2p30" colspan="3" style="text-align:center;font-weight:700;color:var(--fossil-col)">–</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <div class="card">
+            <h2>Kostenentwicklung über <span id="chart-yrs">20</span> Jahre</h2>
+            <div class="chart-wrap"><canvas id="myChart"></canvas></div>
+          </div>
+
+          <!-- KOSTENENTWICKLUNG IM VERGLEICH -->
+          <div class="pain">
+            <h2>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 17 9 11 13 15 21 7"/><polyline points="14 7 21 7 21 14"/></svg>
+              Kostenentwicklung 2025–2030 im Vergleich
+            </h2>
+            <div class="pain-timeline">
+              <div class="pain-card">
+                <div class="pain-yr">2025</div>
+                <div class="pain-cost" id="p25-cost">–</div>
+                <div class="pain-co2" id="p25-co2">–</div>
+                <div class="pain-delta" style="color:var(--gray)">Basisjahr</div>
+              </div>
+              <div class="pain-card hl">
+                <div class="pain-yr">2027</div>
+                <div class="pain-lbl">ETS II tritt in Kraft!</div>
+                <div class="pain-cost" id="p27-cost">–</div>
+                <div class="pain-co2" id="p27-co2">–</div>
+                <div class="pain-delta" id="p27-delta">–</div>
+              </div>
+              <div class="pain-card">
+                <div class="pain-yr">2030</div>
+                <div class="pain-cost" id="p30-cost">–</div>
+                <div class="pain-co2" id="p30-co2">–</div>
+                <div class="pain-delta" id="p30-delta">–</div>
+              </div>
+            </div>
+            <div class="pain-sum">
+              <div>Fossile Mehrkosten 2025–2030 vs. WP+PV: <strong id="pain-extra">–</strong></div>
+              <div>Gesamtersparnis bei Umstieg heute: <strong id="pain-savtot">–</strong></div>
+            </div>
+          </div>
+
+          <p class="soft-contact-cta">Lieber erst eine Frage stellen, statt direkt einen Termin zu buchen? <a href="/#kontakt">Zum Kontaktformular →</a></p>
+
+          <!-- POST-RESULTS CTA -->
+          <div class="ec-cta-card">
+            <h2>Nächster Schritt: Persönliche Beratung</h2>
+            <p>Diese Berechnung zeigt das Potenzial – für eine fundierte Auslegung brauchst du eine normgerechte Heizlastberechnung nach DIN EN 12831. Ich helfe dir dabei.</p>
+            <a href="/termin" class="btn-calc-cta">Kostenloses Erstgespräch vereinbaren</a>
+          </div>
+
+        </section><!-- /results -->
+
+        <p class="ec-disclaimer">
+          Alle Angaben ohne Gewähr · Auch Amortisation und Rendite sind unverbindliche Schätzungen, keine Anlageberatung · Preisannahmen: BEHG-Festpreise, ETS-II-Prognose (EU-Kommission), BDEW-Historik ·
+          Reg. D-ABP9-EILM2-37, IHK Halle-Dessau ·
+          Vertiefende Analyse: <a href="/batteriespeicher">Batteriespeicher-Ertragsrechner</a>
+        </p>
+
+      </div><!-- /ec-calc-wrap -->
+    </section>
+
+  </main>

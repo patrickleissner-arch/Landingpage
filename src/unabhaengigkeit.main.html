@@ -1,0 +1,202 @@
+<main id="main">
+
+    <section class="sp-hero" aria-label="Solarisator – PV-Unabhängigkeitsrechner">
+      <div class="sp-hero-bg" style="background-image: url('assets/Foto/leistung-pv.jpg')" aria-hidden="true"></div>
+      <div class="container sp-hero-content">
+        <p class="sp-hero-eyebrow">Interaktiver Rechner</p>
+        <h1>Wie unabhängig<br>könntest du sein?</h1>
+        <p>Ermittle, wie viel Strom eine PV-Anlage auf deinem Dach erzeugen könnte und wie viel davon du selbst nutzen könntest. Oben der wissenschaftliche Solarisator der HTW Berlin – darunter meine erweiterte Einschätzung für mehrere Dachflächen, Wärmepumpe, E-Auto und Speicher.</p>
+      </div>
+    </section>
+
+    <section class="section-rechner section-htw-iframe">
+      <div class="container">
+        <div class="solarisator-frame-wrapper reveal">
+          <!-- Two-Click-Consent: iframe wird erst nach ausdrücklichem Klick geladen -->
+          <div id="solarisator-consent" class="embed-consent-placeholder">
+            <p class="embed-consent-text">
+              Dieser Rechner wird von der <strong>HTW Berlin – Hochschule für Technik und Wirtschaft</strong>
+              bereitgestellt (<a href="https://solar.htw-berlin.de" target="_blank" rel="noopener noreferrer">solar.htw-berlin.de</a>).
+              Beim Laden wird eine Verbindung zu deren Servern aufgebaut; dabei können Daten
+              (z.&nbsp;B. deine IP-Adresse) an die HTW Berlin übertragen werden.
+              Weitere Informationen findest du in unserer <a href="/datenschutz">Datenschutzerklärung</a>.
+            </p>
+            <button id="solarisator-consent-btn" class="btn btn-accent">Rechner laden</button>
+          </div>
+          <div id="solarisator-embed" hidden></div>
+        </div>
+
+        <p class="solarisator-source">
+          Bereitgestellt von der <a href="https://solar.htw-berlin.de" target="_blank" rel="noopener noreferrer">HTW Berlin – Hochschule für Technik und Wirtschaft</a>
+        </p>
+
+        <!-- ===================== DETAILRECHNER (eigene Erweiterung) ===================== -->
+        <div class="dr-divider reveal">
+          <span class="dr-eyebrow">Meine erweiterte Einschätzung</span>
+          <h2>Mehrere Dachflächen, Wärmepumpe, E-Auto, Speicher?</h2>
+          <p>Der HTW-Solarisator oben rechnet den Standardfall. Für ein Dach mit mehreren
+             Ausrichtungen (Ost/West/Nord/Süd) und für Wärmepumpe, E-Auto und Batteriespeicher
+             gebe ich dir hier eine erweiterte Einschätzung – am Ende zum Ausdrucken oder als PDF speichern.</p>
+          <span class="dr-ownnote">Eigene Schätzung von Patrick Leißner in Anlehnung an die HTW-Methodik (PVGIS-Erträge).
+             Kein HTW-Rechenergebnis – die belastbare Referenz ist der Solarisator oben.</span>
+        </div>
+
+        <div class="detailrechner reveal" id="detailrechner">
+          <table class="dr-sheet">
+          <thead class="dr-print-head-group"><tr><td>
+            <div class="dr-print-header">
+              <img src="assets/Logo/Initialien-Name-Positiv-frei.png" alt="Patrick Leißner Energieberatung" width="3257" height="1774">
+            </div>
+          </td></tr></thead>
+          <tfoot class="dr-print-foot-group"><tr><td>
+            <div class="dr-print-footer">
+              Patrick Leißner · Energieberatung · patrickleissner.de · +49 173 4994994 · Unverbindliche Ersteinschätzung (eigene Schätzung, kein HTW-Ergebnis)
+            </div>
+          </td></tr></tfoot>
+          <tbody><tr><td>
+
+          <div class="dr-grid">
+            <!-- EINGABEN -->
+            <div class="dr-inputs-col">
+              <div class="dr-sec">
+                <h3>1 · Standort &amp; Verbrauch</h3>
+                <p class="dr-hint">Deine Postleitzahl bestimmt den regionalen Ertrag; der Jahresstromverbrauch steht auf deiner Stromrechnung.</p>
+                <div class="dr-field">
+                  <label class="dr-label" for="dr-plz">Postleitzahl</label>
+                  <div class="dr-inrow">
+                    <input type="text" id="dr-plz" class="dr-input" inputmode="numeric" maxlength="5" placeholder="z. B. 06766…" value="06766" name="dr-plz" autocomplete="postal-code">
+                    <span class="dr-unit" id="dr-region">Halle/Dessau</span>
+                  </div>
+                </div>
+                <div class="dr-field">
+                  <label class="dr-label" for="dr-verbrauch">Jahresstromverbrauch Haushalt</label>
+                  <div class="dr-inrow">
+                    <input type="number" id="dr-verbrauch" class="dr-input" inputmode="numeric" min="500" max="50000" placeholder="z. B. 4000…" value="4000" name="dr-verbrauch" autocomplete="off">
+                    <span class="dr-unit">kWh</span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="dr-sec">
+                <h3>2 · Deine Dachflächen</h3>
+                <p class="dr-hint">Je Fläche: Ausrichtung, Neigung, Anzahl Module. Mehrere Ausrichtungen einfach hinzufügen.</p>
+                <div id="dr-surfaces"></div>
+                <button type="button" class="dr-addsurface" id="dr-add">+ Weitere Dachfläche</button>
+              </div>
+
+              <div class="dr-sec">
+                <h3>3 · Speicher &amp; Energiemanagement</h3>
+                <div class="dr-field">
+                  <label class="dr-label" for="dr-batt">Nutzbare Speicherkapazität</label>
+                  <div class="dr-inrow">
+                    <input type="number" id="dr-batt" class="dr-input" inputmode="numeric" min="0" max="10000" placeholder="0 = ohne Speicher…" value="9" name="dr-batt" autocomplete="off">
+                    <span class="dr-unit">kWh</span>
+                  </div>
+                </div>
+                <div class="dr-field">
+                  <label class="dr-label">Intelligentes Energiemanagement (EMS)?</label>
+                  <div class="dr-toggle" id="dr-ems" role="group" aria-label="Energiemanagement">
+                    <button type="button" data-ems="ja" class="on">Mit EMS</button>
+                    <button type="button" data-ems="nein">Ohne EMS</button>
+                  </div>
+                </div>
+              </div>
+
+              <div class="dr-sec">
+                <h3>4 · Zusätzliche Verbraucher (optional)</h3>
+                <p class="dr-hint">Wärmepumpe und E-Auto erhöhen den Verbrauch und verändern deine Autarkie.</p>
+                <div class="dr-opt">
+                  <input type="checkbox" id="dr-wp-on" name="dr-wp-on" autocomplete="off">
+                  <label for="dr-wp-on">Wärmepumpe einplanen</label>
+                </div>
+                <div class="dr-opt-detail" id="dr-wp-detail" style="display:none">
+                  <div class="dr-inrow">
+                    <input type="number" id="dr-wp-kwh" class="dr-input" aria-label="Stromverbrauch der Wärmepumpe in kWh pro Jahr" inputmode="numeric" min="0" max="20000" value="3500" name="dr-wp-kwh" autocomplete="off">
+                    <span class="dr-unit">kWh/Jahr</span>
+                  </div>
+                </div>
+                <div class="dr-opt">
+                  <input type="checkbox" id="dr-ev-on" name="dr-ev-on" autocomplete="off">
+                  <label for="dr-ev-on">E-Auto einplanen</label>
+                </div>
+                <div class="dr-opt-detail" id="dr-ev-detail" style="display:none">
+                  <div class="dr-inrow">
+                    <input type="number" id="dr-ev-km" class="dr-input" aria-label="Fahrleistung des E-Autos in km pro Jahr" inputmode="numeric" min="0" max="80000" value="15000" name="dr-ev-km" autocomplete="off">
+                    <span class="dr-unit">km/Jahr</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- ERGEBNIS -->
+            <div class="dr-results">
+              <div class="dr-gauges">
+                <div class="dr-gauge">
+                  <canvas id="dr-gauge-autark" width="264" height="264" role="img" aria-label="Autarkiegrad"></canvas>
+                  <div class="dr-gauge-label">Autarkiegrad</div>
+                  <div class="dr-gauge-sub">deines Verbrauchs aus eigenem Solarstrom</div>
+                </div>
+                <div class="dr-gauge">
+                  <canvas id="dr-gauge-eigen" width="264" height="264" role="img" aria-label="Eigenverbrauchsanteil"></canvas>
+                  <div class="dr-gauge-label">Eigenverbrauchsanteil</div>
+                  <div class="dr-gauge-sub">deines Solarstroms selbst genutzt</div>
+                </div>
+              </div>
+
+              <div class="dr-flow">
+                <h4>Wohin fließt dein Sonnenstrom?</h4>
+                <div class="dr-bar" role="img" aria-label="Anteil Eigenversorgung gegenüber Netzbezug">
+                  <div class="seg-self" id="dr-seg-self" style="width:0%"></div>
+                  <div class="seg-grid" id="dr-seg-grid" style="width:100%"></div>
+                </div>
+                <div class="dr-figs">
+                  <div class="dr-fig"><span class="fl">Selbst genutzt</span><span class="fv" id="dr-selbst">–</span></div>
+                  <div class="dr-fig"><span class="fl">Ins Netz</span><span class="fv" id="dr-export">–</span></div>
+                  <div class="dr-fig"><span class="fl">Aus dem Netz</span><span class="fv" id="dr-netz">–</span></div>
+                </div>
+                <p class="dr-surface-yield" id="dr-total-yield" style="margin-top:.7rem"></p>
+              </div>
+
+              <div class="dr-surplus" id="dr-surplus">
+                <span class="reg-tag">Regulierung 2025 · kein HTW-Ergebnis</span>
+                <h4>Was passiert mit deinem Überschuss?</h4>
+                <p class="surplus-state" id="dr-surplus-text"></p>
+              </div>
+
+              <details class="dr-method">
+                <summary>Methodik &amp; Quellen</summary>
+                <div class="dr-method-body">
+                  <h5>Wissenschaftliche Grundlage</h5>
+                  Die belastbare Referenz ist der <a href="https://solar.htw-berlin.de/rechner/unabhaengigkeitsrechner/" target="_blank" rel="noopener">Unabhängigkeitsrechner der HTW Berlin</a>
+                  (Forschungsgruppe Prof. Quaschning) – oben als Original eingebunden. Er beruht auf über 25.000 vorsimulierten Systemkonfigurationen.
+                  <h5>Diese erweiterte Einschätzung</h5>
+                  Autarkiegrad und Eigenverbrauchsanteil werden hier mit sättigenden Kurven <em>in Anlehnung an</em> die HTW-Methodik geschätzt (relative PV-Größe und relative Speichergröße).
+                  Der Ertrag je Dachausrichtung/Neigung folgt einer <a href="https://re.jrc.ec.europa.eu/pvg_tools/" target="_blank" rel="noopener">PVGIS</a>-Näherung.
+                  <strong>Keine HTW-Berechnung; eigene Schätzung ohne Gewähr.</strong>
+                  <h5>Grenzen</h5>
+                  Mehrere Ausrichtungen sowie Wärmepumpe/E-Auto verlassen den Standardfall, für den die HTW-Formeln validiert sind – die Werte sind daher orientierende Näherungen, keine Zusage.
+                  Überschuss/Einspeisung (Solarspitzengesetz, §14a EnWG) ist deutsche Regulierung Stand 2025, kein HTW-Ergebnis.
+                </div>
+              </details>
+
+              <div class="dr-actions">
+                <button type="button" class="dr-print-btn" onclick="window.print()">Als PDF speichern / drucken</button>
+              </div>
+              <p class="dr-print-hint">Tipp: Im Druckdialog „Kopf- und Fußzeilen“ abwählen – sonst druckt der Browser zusätzlich URL und Datum.</p>
+            </div>
+          </div>
+
+          </td></tr></tbody>
+          </table>
+        </div>
+        <!-- ===================== /DETAILRECHNER ===================== -->
+
+        <div class="ec-cta-card" style="margin-top: 2rem;">
+          <h2>Bereit für den nächsten Schritt?</h2>
+          <p>Der Rechner zeigt das Potenzial – ich berechne, was sich für Ihr Dach konkret lohnt und was es kostet.</p>
+          <a href="/termin" class="btn-calc-cta">Kostenloses Erstgespräch vereinbaren</a>
+        </div>
+      </div>
+    </section><!-- /section-rechner -->
+
+  </main>

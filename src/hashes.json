@@ -1,0 +1,76 @@
+{
+ "unabhaengigkeit": {
+  "main": "a2d8322e9961d95f",
+  "styles": [
+   "2848dd64828573e2"
+  ],
+  "scripts": [
+   "d8a654f55d6d7d68"
+  ]
+ },
+ "heizkosten": {
+  "main": "c36dc80f476d6667",
+  "styles": [
+   "c6f29c7d33e4500f"
+  ],
+  "scripts": [
+   "a5f498b24794b3bc"
+  ]
+ },
+ "nutzen": {
+  "main": "e433611aaaeaa8ad",
+  "styles": [
+   "a76852de8fdd5ce0"
+  ],
+  "scripts": [
+   "69131aac05de244e"
+  ]
+ },
+ "spotpreis": {
+  "main": "45d8a72d2ef7f33c",
+  "styles": [],
+  "scripts": [
+   "fe6faa1119948edc"
+  ]
+ },
+ "termin": {
+  "main": "4eb8d2f391570d15",
+  "styles": [],
+  "scripts": []
+ },
+ "ratgeber": {
+  "main": "4798ea9ea3f6e776",
+  "styles": [],
+  "scripts": []
+ },
+ "koordination-netzwerk": {
+  "main": "c2abe6d903cf0320",
+  "styles": [],
+  "scripts": [
+   "3fbd3d649d01cb9a",
+   "6abeee045f42f64d"
+  ]
+ },
+ "waermepumpe-heizlast": {
+  "main": "350755fc9c19782f",
+  "styles": [],
+  "scripts": [
+   "423e40942f7d75d9"
+  ]
+ },
+ "mieterstrom": {
+  "main": "54315348df891821",
+  "styles": [],
+  "scripts": [
+   "423e40942f7d75d9"
+  ]
+ },
+ "beratung-technik": {
+  "main": "77e46b8752512698",
+  "styles": [],
+  "scripts": [
+   "456066a3796d1620"
+  ]
+ },
+ "_hinweis": "Stand nach Richtlinien-Audit 26.09.2026: nur Anzeigeformat (Intl), Attribute, Platzhalter und explizite Transitions geaendert, keine Rechenformel. Urspruengliche Uebertragungs-Pruefsummen in hashes.original.json. Nachtrag: Typografie-Durchgang (geschuetzte Leerzeichen) in reinen Textseiten termin, ratgeber, koordination-netzwerk, waermepumpe-heizlast, mieterstrom, beratung-technik neu erfasst."
+}
