@@ -1,13 +1,23 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Energiekosten-Rechner von Patrick Leißner – gib deine echten Verbrauchswerte ein und sieh, was PV und Wärmepumpe wirklich für dich bedeuten.">
-    <title>Mein Energierechner | Patrick Leißner</title>
-    <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="subpage.css">
-    <style>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Nutzen-Rechner | Patrick Leißner Energieberatung</title>
+  <meta name="description" content="Energiekosten-Rechner von Patrick Leißner: gib deine echten Verbrauchswerte ein und sieh, was PV und Wärmepumpe wirklich für dich bedeuten.">
+  <meta name="theme-color" content="#0f2a23">
+  <link rel="canonical" href="https://patrickleissner.de/nutzen">
+
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Nutzen-Rechner | Patrick Leißner Energieberatung">
+  <meta property="og:description" content="Energiekosten-Rechner von Patrick Leißner: gib deine echten Verbrauchswerte ein und sieh, was PV und Wärmepumpe wirklich für dich bedeuten.">
+  <meta property="og:image" content="https://patrickleissner.de/assets/img/patrick-1600.webp">
+  <meta property="og:locale" content="de_DE">
+  <link rel="icon" type="image/webp" href="assets/img/logo-mark.webp">
+  <link rel="preload" href="assets/fonts/Outfit-Variable.ttf" as="font" type="font/ttf" crossorigin>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/pages.css">
+  <style>
 /* ============================================================
    ENERGIERECHNER WIZARD — CI Patrick Leißner
    #2E4F3C · #D0AB3B · #F1F0E9 · Outfit
@@ -480,7 +490,7 @@
     cursor: pointer;
     text-align: center;
     line-height: 1.3;
-    transition: all 0.16s ease;
+    transition: background-color 0.16s ease, border-color 0.16s ease, color 0.16s ease, box-shadow 0.16s ease, transform 0.16s ease, opacity 0.16s ease;
 }
 .card-btn:hover {
     border-color: var(--pl-green);
@@ -525,7 +535,7 @@
     font-weight: 600;
     color: var(--gray-500);
     cursor: pointer;
-    transition: all 0.15s;
+    transition: background-color 0.15s, border-color 0.15s, color 0.15s, box-shadow 0.15s, transform 0.15s, opacity 0.15s;
 }
 .toggle-mode button.active {
     background: var(--pl-green);
@@ -544,7 +554,7 @@
     font-weight: 800;
     cursor: pointer;
     letter-spacing: 0.02em;
-    transition: all 0.2s;
+    transition: background-color 0.2s, border-color 0.2s, color 0.2s, box-shadow 0.2s, transform 0.2s, opacity 0.2s;
     margin-left: auto;
 }
 .btn-calc:hover {
@@ -666,7 +676,7 @@
 .roof-row-label { font-size: 0.8rem; font-weight: 600; color: var(--pl-green); }
 .roof-row-val { font-size: 0.78rem; color: var(--gray-600); white-space: nowrap; }
 .roof-bar-track { height: 8px; background: var(--gray-100); border-radius: 4px; overflow: hidden; }
-.roof-bar { height: 8px; background: linear-gradient(90deg, var(--pl-green), var(--pl-gold)); border-radius: 4px; transition: width 0.3s ease; }
+.roof-bar { height: 8px; background: linear-gradient(90deg, var(--pl-green), var(--pl-gold)); border-radius: 4px;  }
 .roof-hint { font-size: 0.74rem; color: var(--gray-500); line-height: 1.55; margin: 14px 0 0; }
 
 /* Energiebilanz: Wohin fließt dein Sonnenstrom? */
@@ -688,7 +698,7 @@
 .energy-head h3 { font-size: 0.92rem; font-weight: 800; color: var(--pl-green); margin: 0; }
 .energy-autarkie { font-size: 0.95rem; font-weight: 800; color: var(--pl-gold); white-space: nowrap; }
 .energy-bar { display: flex; height: 14px; border-radius: 7px; overflow: hidden; background: var(--gray-100); }
-.energy-seg { height: 14px; transition: width 0.3s ease; }
+.energy-seg { height: 14px;  }
 .energy-seg.self { background: var(--pl-green); }
 .energy-seg.grid { background: var(--gray-300); }
 .energy-legend { display: flex; gap: 18px; flex-wrap: wrap; margin: 10px 0 14px; font-size: 0.76rem; color: var(--gray-600); }
@@ -823,7 +833,7 @@
     border-radius: var(--radius);
     cursor: pointer;
     text-decoration: none;
-    transition: all 0.2s;
+    transition: background-color 0.2s, border-color 0.2s, color 0.2s, box-shadow 0.2s, transform 0.2s, opacity 0.2s;
 }
 .btn-booking:hover {
     background: #e0bd40;
@@ -1146,62 +1156,40 @@
     .legend-item:nth-child(1) .legend-dot { border-top: 1.5pt dashed #000; }
     .legend-item:nth-child(2) .legend-dot { border-top: 1.5pt solid var(--pl-green); }
 }
-    </style>
+</style>
 </head>
-<body>
-<a href="#main" class="skip-link">Zum Hauptinhalt springen</a>
+<body class="page page--nutzen">
+  <a class="skip-link" href="#main">Zum Inhalt springen</a>
 
-  <header class="site-header scrolled" role="banner" id="site-header">
-    <nav class="nav-container" aria-label="Hauptnavigation">
-      <a href="/" class="nav-logo" aria-label="Patrick Leißner Energieberatung – zur Startseite">
-        <img src="assets/Logo/Initialien-Name-Positiv-frei.png" alt="Patrick Leißner Energieberatung Logo" height="96" loading="eager" style="width:auto">
+<header class="nav" id="site-header">
+    <div class="nav__inner">
+      <a class="nav__brand" href="/" aria-label="Patrick Leißner, zur Startseite" translate="no">
+        <img src="assets/img/logo-full-light.webp" width="800" height="375" alt="Patrick Leißner Energieberatung" fetchpriority="high">
       </a>
-      <ul class="nav-links" role="list">
-        <li><a href="/#leistungen">Leistungen</a></li>
-        <li><a href="/#ueber-pl">Über mich</a></li>
-        <li><a href="/termin">Termine</a></li>
-        <li><a href="/#kontakt">Kontakt</a></li>
-      </ul>
-      <a href="/termin" class="btn btn-accent nav-cta">Termin buchen</a>
-      <button class="hamburger" aria-label="Menü öffnen" aria-expanded="false" aria-controls="mobile-menu" id="hamburger-btn">
-        <span></span><span></span><span></span>
+      <nav class="nav__links" aria-label="Hauptnavigation">
+        <a href="/#leistungen">Leistungen</a>
+        <a href="/#arbeitsweise">Arbeitsweise</a>
+        <a href="/#ueber-mich">Über mich</a>
+        <a href="/ratgeber">Ratgeber</a>
+        <a href="/#kontakt">Kontakt</a>
+      </nav>
+      <a class="btn btn--gold nav__cta" href="/termin">Termin buchen</a>
+      <button class="nav__toggle" type="button" aria-expanded="false" aria-controls="mobile-menu" aria-label="Menü öffnen">
+        <span></span><span></span>
       </button>
-    </nav>
-    <div class="mobile-menu" id="mobile-menu" aria-hidden="true" role="dialog" aria-label="Hauptnavigation">
-      <ul role="list">
-        <li><a href="/#leistungen" class="mobile-nav-link">Leistungen</a></li>
-        <li><a href="/#ueber-pl" class="mobile-nav-link">Über mich</a></li>
-        <li><a href="/termin" class="mobile-nav-link">Termine</a></li>
-        <li><a href="/#kontakt" class="mobile-nav-link">Kontakt</a></li>
-        <li><a href="/termin" class="btn btn-accent mobile-nav-link">Termin buchen</a></li>
-      </ul>
+    </div>
+    <div class="nav__mobile" id="mobile-menu" hidden>
+      <a href="/#leistungen">Leistungen</a>
+      <a href="/#arbeitsweise">Arbeitsweise</a>
+      <a href="/#ueber-mich">Über mich</a>
+      <a href="/ratgeber">Ratgeber</a>
+      <a href="/#kontakt">Kontakt</a>
+      <a class="btn btn--gold" href="/termin">Termin buchen</a>
     </div>
   </header>
 
-  <div class="sp-back-bar">
-    <div class="container">
-      <a href="/" class="sp-back-link">Zurück zur Startseite</a>
-    </div>
-  </div>
-
-  <div class="rechner-tabs-bar" role="navigation" aria-label="Rechner-Auswahl">
-    <div class="rechner-tabs-inner">
-      <a href="/unabhaengigkeit" class="rechner-tab">
-        <span class="rechner-tab-name">Unabhängigkeit</span>
-        <span class="rechner-tab-sub">Wie viel Strom erzeugt meine PV?</span>
-      </a>
-      <a href="/heizkosten" class="rechner-tab">
-        <span class="rechner-tab-name">Heizkosten</span>
-        <span class="rechner-tab-sub">Was spare ich beim Heizen?</span>
-      </a>
-      <a href="/nutzen" class="rechner-tab active">
-        <span class="rechner-tab-name">Nutzen</span>
-        <span class="rechner-tab-sub">Lohnt sich der Umstieg?</span>
-      </a>
-    </div>
-  </div>
-
-  <main id="main">
+<main id="main">
+<div class="sp-topbar"><div class="container"><nav class="sp-breadcrumb" aria-label="Brotkrumen-Navigation"><div class="sp-breadcrumb-inner"><a href="/">Startseite</a><span class="sp-bc-sep" aria-hidden="true">›</span><a href="/#leistungen">Rechner</a><span class="sp-bc-sep" aria-hidden="true">›</span><span class="sp-bc-current">Nutzen-Rechner</span></div></nav></div></div>
 
     <!-- Nutzen-Cockpit -->
     <div class="wizard-wrap">
@@ -1225,7 +1213,7 @@
 
             <div class="field-group">
               <label class="field-label" for="inp-plz">Postleitzahl</label>
-              <input type="text" id="inp-plz" class="er-input" placeholder="z. B. 06766" maxlength="5" inputmode="numeric" autocomplete="postal-code">
+              <input type="text" id="inp-plz" class="er-input" placeholder="z. B. 06766…" maxlength="5" inputmode="numeric" autocomplete="postal-code" name="inp-plz">
               <div class="plz-feedback" id="plz-feedback" aria-live="polite"> </div>
             </div>
           </section>
@@ -1245,13 +1233,13 @@
               </div>
               <div id="grp-kwh">
                 <div class="input-row">
-                  <input type="number" id="inp-elec-kwh" class="er-input" placeholder="z. B. 4000" min="500" max="50000" inputmode="numeric">
+                  <input type="number" id="inp-elec-kwh" class="er-input" aria-label="Jährlicher Stromverbrauch in kWh" placeholder="z. B. 4000…" min="500" max="50000" inputmode="numeric" name="inp-elec-kwh" autocomplete="off">
                   <span class="input-unit">kWh/Jahr</span>
                 </div>
               </div>
               <div id="grp-abschlag" style="display:none">
                 <div class="input-row">
-                  <input type="number" id="inp-elec-abschlag" class="er-input" placeholder="z. B. 110" min="10" max="2000" inputmode="numeric">
+                  <input type="number" id="inp-elec-abschlag" class="er-input" aria-label="Monatlicher Stromabschlag in Euro" placeholder="z. B. 110…" min="10" max="2000" inputmode="numeric" name="inp-elec-abschlag" autocomplete="off">
                   <span class="input-unit">€/Monat</span>
                 </div>
               </div>
@@ -1260,9 +1248,9 @@
 
             <div class="field-group">
               <label class="field-label" for="inp-elecprice">Dein Strompreis</label>
-              <span class="field-sublabel">Steht auf deiner Stromrechnung – aktueller Schnitt ca. 32 ct/kWh</span>
+              <span class="field-sublabel">Steht auf deiner Stromrechnung – aktueller Schnitt ca. 32&nbsp;ct/kWh</span>
               <div class="input-row">
-                <input type="number" id="inp-elecprice" class="er-input" value="32" min="15" max="60" step="0.5" inputmode="decimal">
+                <input type="number" id="inp-elecprice" class="er-input" value="32" min="15" max="60" step="0.5" inputmode="decimal" name="inp-elecprice" autocomplete="off">
                 <span class="input-unit">ct/kWh</span>
               </div>
               <p class="abschlag-calc" id="elec-abschlag-calc"></p>
@@ -1281,7 +1269,7 @@
 
             <div class="field-group">
               <span class="field-label" id="lbl-sektoren-neu">Künftig geplant – kommt neu dazu <span class="field-opt">(erhöht den künftigen Bedarf)</span></span>
-              <span class="field-sublabel">Noch nicht auf deiner Rechnung. Deine PV deckt einen Teil davon selbst – „heute" bleibt unverändert, nur das künftige Bild ändert sich.</span>
+              <span class="field-sublabel">Noch nicht auf deiner Rechnung. Deine PV deckt einen Teil davon selbst – „heute“ bleibt unverändert, nur das künftige Bild ändert sich.</span>
               <div class="card-grid cols-2" role="group" aria-labelledby="lbl-sektoren-neu">
                 <button type="button" class="card-btn multi" data-group="sektorenNeu" data-value="eauto">E-Auto / Wallbox</button>
                 <button type="button" class="card-btn multi" data-group="sektorenNeu" data-value="klima">Klimaanlage / Split<span class="btn-sub">Heizen &amp; Kühlen</span></button>
@@ -1293,7 +1281,7 @@
             <div class="field-group" id="grp-ev-km" style="display:none">
               <label class="field-label" for="inp-ev-km">Fahrleistung des geplanten E-Autos <span class="field-opt">(optional)</span></label>
               <div class="input-row">
-                <input type="number" id="inp-ev-km" class="er-input" placeholder="z. B. 15000" min="0" max="80000" inputmode="numeric">
+                <input type="number" id="inp-ev-km" class="er-input" placeholder="z. B. 15000…" min="0" max="80000" inputmode="numeric" name="inp-ev-km" autocomplete="off">
                 <span class="input-unit">km/Jahr</span>
               </div>
             </div>
@@ -1319,7 +1307,7 @@
             <div class="field-group">
               <label class="field-label" for="inp-baujahr">Baujahr</label>
               <span class="field-sublabel">Steht im Grundbuchauszug oder Energieausweis</span>
-              <select id="inp-baujahr" class="er-select">
+              <select id="inp-baujahr" class="er-select" name="inp-baujahr" autocomplete="off">
                 <option value="">Bitte wählen …</option>
                 <option value="vor_1960">Vor 1960</option>
                 <option value="1960_1979">1960 – 1979</option>
@@ -1333,7 +1321,7 @@
               <label class="field-label" for="inp-area">Beheizte Wohnfläche</label>
               <span class="field-sublabel">Nur tatsächlich beheizte Fläche – ohne Keller oder Garage</span>
               <div class="input-row">
-                <input type="number" id="inp-area" class="er-input" placeholder="z. B. 150" min="40" max="800" inputmode="numeric">
+                <input type="number" id="inp-area" class="er-input" placeholder="z. B. 150…" min="40" max="800" inputmode="numeric" name="inp-area" autocomplete="off">
                 <span class="input-unit">m²</span>
               </div>
             </div>
@@ -1353,7 +1341,7 @@
               <label class="field-label" for="inp-consumption" id="lbl-consumption">Jahresverbrauch Heizung</label>
               <span class="field-sublabel" id="consumption-hint">Steht auf deiner Heizöl-Tankrechnung</span>
               <div class="input-row">
-                <input type="number" id="inp-consumption" class="er-input" placeholder="z. B. 2500" min="1" max="999999" inputmode="numeric">
+                <input type="number" id="inp-consumption" class="er-input" placeholder="z. B. 2500…" min="1" max="999999" inputmode="numeric" name="inp-consumption" autocomplete="off">
                 <span class="input-unit" id="consumption-unit">Liter</span>
               </div>
             </div>
@@ -1362,19 +1350,19 @@
               <label class="field-label" for="inp-fuelprice">Was zahlst du aktuell?</label>
               <span class="field-sublabel">Steht auf deiner letzten Rechnung oder Abrechnung</span>
               <div class="input-row">
-                <input type="number" id="inp-fuelprice" class="er-input" placeholder="z. B. 0.95" min="0" max="9999" step="0.01" inputmode="decimal">
+                <input type="number" id="inp-fuelprice" class="er-input" placeholder="z. B. 0.95…" min="0" max="9999" step="0.01" inputmode="decimal" name="inp-fuelprice" autocomplete="off">
                 <span class="input-unit" id="fuelprice-unit">€/Liter</span>
               </div>
             </div>
 
             <div class="field-group">
               <label class="field-label" for="inp-heizalter">Alter der Heizungsanlage</label>
-              <select id="inp-heizalter" class="er-select">
+              <select id="inp-heizalter" class="er-select" name="inp-heizalter" autocomplete="off">
                 <option value="">Bitte wählen …</option>
-                <option value="sehr_alt">Älter als 25 Jahre</option>
-                <option value="alt">15 – 25 Jahre</option>
-                <option value="mittel">10 – 15 Jahre</option>
-                <option value="neu">Jünger als 10 Jahre</option>
+                <option value="sehr_alt">Älter als 25&nbsp;Jahre</option>
+                <option value="alt">15 – 25&nbsp;Jahre</option>
+                <option value="mittel">10 – 15&nbsp;Jahre</option>
+                <option value="neu">Jünger als 10&nbsp;Jahre</option>
                 <option value="brennwert">Brennwertgerät</option>
               </select>
             </div>
@@ -1383,7 +1371,7 @@
               <label class="field-label" for="inp-heizabschlag">Monatlicher Heizkosten-Abschlag <span class="field-opt">(optional)</span></label>
               <span class="field-sublabel">Dein Abschlag an den Versorger – hilft als Plausibilitätsprüfung</span>
               <div class="input-row">
-                <input type="number" id="inp-heizabschlag" class="er-input" placeholder="z. B. 180" min="0" max="2000" inputmode="numeric">
+                <input type="number" id="inp-heizabschlag" class="er-input" placeholder="z. B. 180…" min="0" max="2000" inputmode="numeric" name="inp-heizabschlag" autocomplete="off">
                 <span class="input-unit">€/Monat</span>
               </div>
             </div>
@@ -1427,7 +1415,7 @@
               <label class="field-label" for="inp-batt">Speichergröße (Kapazität) <span class="field-opt">(leer = automatisch)</span></label>
               <span class="field-sublabel">Wie viele kWh der Speicher aufnehmen kann – größer = mehr Nachtstrom aus PV → höhere Autarkie.</span>
               <div class="input-row">
-                <input type="number" id="inp-batt" class="er-input" placeholder="automatisch" min="0" max="120" step="0.5" inputmode="decimal">
+                <input type="number" id="inp-batt" class="er-input" placeholder="automatisch…" min="0" max="120" step="0.5" inputmode="decimal" name="inp-batt" autocomplete="off">
                 <span class="input-unit">kWh</span>
               </div>
             </div>
@@ -1493,7 +1481,7 @@
                 <label class="field-label" for="inp-kreditbetrag">Anlagenpreis <span class="field-opt">(dein Angebot, inkl. Speicher/WP)</span></label>
                 <span class="field-sublabel">Gib deinen kalkulierten Angebotspreis ein — daraus rechnet sich die Rate. Leer lassen = grobe Schätzung anhand der Anlagengröße.</span>
                 <div class="input-row">
-                  <input type="number" id="inp-kreditbetrag" class="er-input" placeholder="z. B. 32000" min="0" max="999999" inputmode="numeric">
+                  <input type="number" id="inp-kreditbetrag" class="er-input" placeholder="z. B. 32000…" min="0" max="999999" inputmode="numeric" name="inp-kreditbetrag" autocomplete="off">
                   <span class="input-unit">€</span>
                 </div>
               </div>
@@ -1502,7 +1490,7 @@
                 <label class="field-label" for="inp-sondertilgung">Sondertilgung / Förderung <span class="field-opt">(optional)</span></label>
                 <span class="field-sublabel">Z. B. BEG-Förderung oder KfW-Zuschuss, der nach Bewilligung zurückfließt</span>
                 <div class="input-row">
-                  <input type="number" id="inp-sondertilgung" class="er-input" placeholder="z. B. 7500" min="0" max="999999" inputmode="numeric">
+                  <input type="number" id="inp-sondertilgung" class="er-input" placeholder="z. B. 7500…" min="0" max="999999" inputmode="numeric" name="inp-sondertilgung" autocomplete="off">
                   <span class="input-unit">€</span>
                 </div>
               </div>
@@ -1511,7 +1499,7 @@
                 <span class="field-label" id="lbl-zinsfrei">Sonderkonditionen</span>
                 <div class="card-grid cols-2" role="group" aria-labelledby="lbl-zinsfrei">
                   <button type="button" class="card-btn selected" data-group="zinsfreiJahr1" data-value="nein">Standard</button>
-                  <button type="button" class="card-btn" data-group="zinsfreiJahr1" data-value="ja">1. Jahr 0 % Zinsen</button>
+                  <button type="button" class="card-btn" data-group="zinsfreiJahr1" data-value="ja">1.&nbsp;Jahr 0&nbsp;% Zinsen</button>
                 </div>
               </div>
             </div>
@@ -1562,16 +1550,16 @@
             <span class="fin-delta-badge" id="res-delta">–</span>
             <span class="fin-delta-text" id="res-delta-text">monatliche Differenz</span>
           </div>
-          <p class="fin-bilanz">Über 20 Jahre schätzungsweise <strong id="res-bilanz20">–</strong> weniger ans Netz.</p>
+          <p class="fin-bilanz">Über 20&nbsp;Jahre schätzungsweise <strong id="res-bilanz20">–</strong> weniger ans Netz.</p>
 
           <div class="fin-sliders" id="fin-sliders">
             <div class="s-item">
-              <div class="s-row"><label for="sld-zins">Zinssatz</label><span class="s-val" id="val-zins">3,5 % p. a.</span></div>
-              <input type="range" id="sld-zins" min="0" max="8" step="0.1" value="3.5" aria-label="Zinssatz in Prozent pro Jahr">
+              <div class="s-row"><label for="sld-zins">Zinssatz</label><span class="s-val" id="val-zins">3,5&nbsp;% p. a.</span></div>
+              <input type="range" id="sld-zins" min="0" max="8" step="0.1" value="3.5" aria-label="Zinssatz in Prozent pro Jahr" name="sld-zins" autocomplete="off">
             </div>
             <div class="s-item">
-              <div class="s-row"><label for="sld-laufzeit">Laufzeit</label><span class="s-val" id="val-laufzeit">20 Jahre</span></div>
-              <input type="range" id="sld-laufzeit" min="5" max="30" step="1" value="20" aria-label="Laufzeit in Jahren">
+              <div class="s-row"><label for="sld-laufzeit">Laufzeit</label><span class="s-val" id="val-laufzeit">20&nbsp;Jahre</span></div>
+              <input type="range" id="sld-laufzeit" min="5" max="30" step="1" value="20" aria-label="Laufzeit in Jahren" name="sld-laufzeit" autocomplete="off">
             </div>
           </div>
           <p class="fin-financed" id="fin-financed"></p>
@@ -1627,11 +1615,11 @@
         <div class="result-narrative" id="res-narrative"></div>
 
         <div class="chart-card" id="chart-card">
-          <div class="chart-title">Kumulierte Gesamtausgaben über 20 Jahre</div>
+          <div class="chart-title">Kumulierte Gesamtausgaben über 20&nbsp;Jahre</div>
           <div class="chart-subtitle">Was du insgesamt zahlst — der Abstand zwischen den Linien ist dein Vorteil</div>
           <div class="price-slider">
-            <div class="s-row"><label for="sld-preis">Erwartete Energiepreis-Steigerung</label><span class="s-val" id="val-preis">6,0 % / Jahr</span></div>
-            <input type="range" id="sld-preis" min="0" max="12" step="0.5" value="6" aria-label="Erwartete Energiepreis-Steigerung in Prozent pro Jahr">
+            <div class="s-row"><label for="sld-preis">Erwartete Energiepreis-Steigerung</label><span class="s-val" id="val-preis">6,0&nbsp;% / Jahr</span></div>
+            <input type="range" id="sld-preis" min="0" max="12" step="0.5" value="6" aria-label="Erwartete Energiepreis-Steigerung in Prozent pro Jahr" name="sld-preis" autocomplete="off">
             <p class="price-hint">Annahme für Strom- und Brennstoffpreis (zzgl. separater CO₂-Bepreisung nach BEHG/ETS2). Keine Zusage – zieh den Regler, um verschiedene Szenarien zu sehen.</p>
           </div>
           <div class="chart-legend">
@@ -1660,42 +1648,42 @@
             <div class="lead-field-row">
               <div class="field-group">
                 <label class="field-label" for="lg-vorname">Vorname *</label>
-                <input type="text" id="lg-vorname" class="er-input" placeholder="Vorname" autocomplete="given-name">
+                <input type="text" id="lg-vorname" class="er-input" placeholder="Vorname…" autocomplete="given-name" name="lg-vorname">
               </div>
               <div class="field-group">
                 <label class="field-label" for="lg-nachname">Nachname *</label>
-                <input type="text" id="lg-nachname" class="er-input" placeholder="Nachname" autocomplete="family-name">
+                <input type="text" id="lg-nachname" class="er-input" placeholder="Nachname…" autocomplete="family-name" name="lg-nachname">
               </div>
             </div>
             <div class="lead-field-row">
               <div class="field-group">
                 <label class="field-label" for="lg-email">E-Mail *</label>
-                <input type="email" id="lg-email" class="er-input" placeholder="deine@email.de" autocomplete="email">
+                <input type="email" id="lg-email" class="er-input" placeholder="deine@email.de…" autocomplete="email" name="lg-email" spellcheck="false">
               </div>
               <div class="field-group">
                 <label class="field-label" for="lg-phone">Telefon (optional)</label>
-                <input type="tel" id="lg-phone" class="er-input" placeholder="+49 …" autocomplete="tel">
+                <input type="tel" id="lg-phone" class="er-input" placeholder="+49 …" autocomplete="tel" name="lg-phone">
               </div>
             </div>
             <div class="lead-field-row lead-field-row--half">
               <div class="field-group">
                 <label class="field-label" for="lg-plz">Postleitzahl *</label>
-                <input type="text" id="lg-plz" class="er-input" placeholder="z. B. 06786" inputmode="numeric" maxlength="5">
+                <input type="text" id="lg-plz" class="er-input" placeholder="z. B. 06786…" inputmode="numeric" maxlength="5" name="lg-plz" autocomplete="postal-code">
               </div>
             </div>
             <label class="consent-label">
-              <input type="checkbox" id="lg-consent-analyse" required>
+              <input type="checkbox" id="lg-consent-analyse" required name="lg-consent-analyse" autocomplete="off">
               <span><strong>Analyse zusenden *</strong> – Patrick Leißner darf mir meine Ergebnisse per E-Mail zusenden. <a href="/datenschutz" target="_blank">Datenschutzerklärung</a></span>
             </label>
             <label class="consent-label" style="margin-top:8px">
-              <input type="checkbox" id="lg-consent-kontakt">
+              <input type="checkbox" id="lg-consent-kontakt" name="lg-consent-kontakt" autocomplete="off">
               <span>Patrick darf mich auch zur persönlichen Beratung kontaktieren / mir relevante Informationen zusenden (optional, jederzeit widerrufbar).</span>
             </label>
             <!-- kein Inline-display: .field-error ist per CSS ausgeblendet und wird
                  über die Klasse .visible eingeblendet. Ein Inline-Stil würde diese
                  Klassenregel überstimmen und die Meldung dauerhaft unsichtbar machen. -->
             <div class="field-error" id="lg-error">Bitte Vorname, Nachname, E-Mail, PLZ und die Analyse-Zustimmung ausfüllen.</div>
-            <input type="text" name="hp_website" id="hp_website" style="display:none;visibility:hidden" tabindex="-1" autocomplete="off">
+            <input type="text" name="hp_website" id="hp_website" style="display:none;visibility:hidden" tabindex="-1" autocomplete="off" aria-hidden="true" aria-label="Bitte leer lassen">
             <button type="button" class="btn-booking" id="lg-submit-btn" onclick="submitLead()">
               Analyse per E-Mail zusenden
             </button>
@@ -1733,7 +1721,7 @@
             <h4>Solarspitzengesetz &amp; §14a EnWG (Eco-vs-Premium-Schätzung)</h4>
             Bundesnetzagentur – Statistik Negativpreis-Stunden &nbsp;·&nbsp; pv magazine / ENTSO-E – Anteil PV-Erzeugung in Negativpreis-Stunden &nbsp;·&nbsp; netze-bw.de / spotmyenergy.de – §14a-Modul-3-Tarife &nbsp;·&nbsp; Fraunhofer ISE
             <h4>Vertiefende Analyse</h4>
-            Für eine unabhängige Wirtschaftlichkeitsbetrachtung kannst du zusätzlich den <a href="https://ecowattiv.de/dww/" target="_blank" rel="noopener noreferrer">DWW-Wirtschaftlichkeitsrechner von ecowattiv ↗</a> nutzen (externes Angebot, nicht von uns betrieben).
+            Du willst die Zahlen von der Ertragsseite sehen? Der <a href="/batteriespeicher">Batteriespeicher-Ertragsrechner</a> zeigt, was ein Speicher am Strommarkt erwirtschaftet.
             <p class="sources-meta">Stand: Januar 2026 &nbsp;·&nbsp; Alle Werte dienen der Orientierung. Verbindliche Berechnungen nach DIN erfordern eine Vor-Ort-Analyse durch einen zertifizierten Energieberater.</p>
           </div>
         </div>
@@ -1748,79 +1736,83 @@
       </div><!-- .cockpit-grid -->
     </div><!-- .wizard-wrap -->
   </main>
-
-  <!-- Mobiles Ergebnis-Dock (immer sichtbares Geld-Ergebnis) -->
+<!-- Mobiles Ergebnis-Dock (immer sichtbares Geld-Ergebnis) -->
   <button type="button" class="ergebnis-dock" id="ergebnis-dock" onclick="scrollToResult()" aria-label="Zum vollständigen Ergebnis springen">
-    <span class="dock-col heute">
-      <span class="dock-label">Heute</span>
-      <span class="dock-amount" id="dock-heute">–</span>
-    </span>
-    <span class="dock-col neu">
-      <span class="dock-label">Deine Rate</span>
-      <span class="dock-amount" id="dock-neu">–</span>
-    </span>
+    <span class="dock-col heute"><span class="dock-label">Heute</span><span class="dock-amount" id="dock-heute">–</span></span>
+    <span class="dock-col neu"><span class="dock-label">Deine Rate</span><span class="dock-amount" id="dock-neu">–</span></span>
     <span class="dock-arrow" aria-hidden="true">↑</span>
   </button>
 
-  <footer class="site-footer" role="contentinfo">
-    <div class="container footer-grid">
-      <div class="footer-brand">
-        <a href="/" class="nav-logo" aria-label="Patrick Leißner Energieberatung – zur Startseite">
-          <img src="/assets/Logo/Initialien-Gold-frei.png" alt="Patrick Leißner Energieberatung Logo" width="36" height="36" loading="lazy">
-          <span class="nav-logo-text">Patrick Leißner</span>
-        </a>
-        <p>Frei durch eigene Energie.</p>
-        <div class="footer-social" aria-label="Social Media">
-          <a href="https://www.instagram.com/patrickleissner.de" target="_blank" rel="noopener" aria-label="Patrick Leißner auf Instagram">
-            <img src="/assets/icons/gold_instagram_icon_frei.png" alt="" width="17" height="17" loading="lazy">
-          </a>
-          <a href="https://www.facebook.com/patrickleissner.de" target="_blank" rel="noopener" aria-label="Patrick Leißner auf Facebook">
-            <img src="/assets/icons/gold_facebook_icon_frei.png" alt="" width="17" height="17" loading="lazy">
-          </a>
-          <a href="https://x.com/patrickLeiszner" target="_blank" rel="noopener" aria-label="Patrick Leißner auf X">
-            <img src="/assets/icons/gold_x_icon_frei.png" alt="" width="17" height="17" loading="lazy">
-          </a>
-          <a href="https://wa.me/491734994994" target="_blank" rel="noopener" aria-label="Patrick Leißner auf WhatsApp">
-            <img src="/assets/icons/gold_whatsapp_icon_frei.png" alt="" width="17" height="17" loading="lazy">
-          </a>
+<footer class="footer">
+    <div class="footer__cta">
+      <div class="container footer__cta-inner">
+        <div>
+          <h2>Erstberatung buchen</h2>
+          <p>30&nbsp;Minuten, kostenfrei und unverbindlich. Online, telefonisch oder vor Ort. Wähle direkt deinen Wunschtermin, kein Account nötig.</p>
+        </div>
+        <a class="btn btn--gold btn--lg" href="/termin">Termin buchen</a>
+      </div>
+    </div>
+
+    <div class="container footer__grid">
+      <div class="footer__brand">
+        <img src="assets/img/logo-mark.webp" width="400" height="251" alt="" loading="lazy">
+        <p><strong translate="no">Patrick Leißner</strong><br>Frei durch eigene Energie.</p>
+        <div class="footer__social">
+          <a href="https://www.instagram.com/patrickleissner.de" target="_blank" rel="noopener">Instagram</a>
+          <a href="https://www.facebook.com/patrickleissner.de" target="_blank" rel="noopener">Facebook</a>
+          <a href="https://x.com/patrickLeiszner" target="_blank" rel="noopener">X</a>
+          <a href="https://wa.me/491734994994" target="_blank" rel="noopener">WhatsApp</a>
         </div>
       </div>
-      <div class="footer-col">
+      <div class="footer__col">
         <h3>Kontakt</h3>
         <a href="tel:+491734994994">0173 499 4994</a>
         <a href="mailto:p@patrickleissner.de">p@patrickleissner.de</a>
-        <span>Bitterfeld-Wolfen</span>
+        <span>Dessauer Allee 52<br>06766 Bitterfeld-Wolfen</span>
       </div>
-      <nav class="footer-col" aria-label="Leistungen">
+      <div class="footer__col">
         <h3>Leistungen</h3>
-        <a href="/beratung-technik">Beratung und Technik</a>
-        <a href="/koordination-netzwerk">Koordination und Netzwerk</a>
-        <a href="/waermepumpe-heizlast">Wärmepumpe und Heizlast</a>
-        <a href="/mieterstrom">Mieterstrom und Objektenergie</a>
-      </nav>
-      <nav class="footer-col" aria-label="Rechner und Ratgeber">
+        <a href="/beratung-technik">Beratung &amp; Technik</a>
+        <a href="/koordination-netzwerk">Koordination &amp; Netzwerk</a>
+        <a href="/waermepumpe-heizlast">Wärmepumpe &amp; Heizlast</a>
+        <a href="/mieterstrom">Mieterstrom &amp; Objektenergie</a>
+        <a href="/batteriespeicher">Batteriespeicher &amp; Energiehandel</a>
+      </div>
+      <div class="footer__col">
         <h3>Rechner &amp; Ratgeber</h3>
         <a href="/unabhaengigkeit">Unabhängigkeitsrechner</a>
         <a href="/heizkosten">Heizkosten-Rechner</a>
         <a href="/nutzen">Nutzen-Rechner</a>
         <a href="/spotpreis">Spotpreis-Monitor</a>
+        <a href="/batteriespeicher">Batteriespeicher-Ertragsrechner</a>
         <a href="/ratgeber">Ratgeber</a>
-        <a href="https://ecowattiv.de/dww/" target="_blank" rel="noopener noreferrer">DWW-Wirtschaftlichkeitsrechner ↗</a>
-      </nav>
+      </div>
     </div>
-    <div class="container footer-bottom">
-      <nav class="footer-links" aria-label="Footer-Navigation">
+
+    <div class="container footer__legal">
+      <div>
         <a href="/impressum">Impressum</a>
         <a href="/datenschutz">Datenschutz</a>
-        <a href="#" aria-label="Zurück zum Seitenanfang">Nach oben ↑</a>
-      </nav>
-      <p class="footer-copyright">© 2026 Patrick Leißner. Alle Rechte vorbehalten.</p>
-      <p class="footer-operator">pin-co.de Media UG (haftungsbeschränkt)</p>
+        <a href="/">Nach oben ↑</a>
+        <button type="button" class="motion-toggle" data-motion-toggle aria-pressed="false">Animationen anhalten</button>
+      </div>
+      <p>© 2026 Patrick Leißner. Alle Rechte vorbehalten.</p>
     </div>
   </footer>
 
-  <script src="main.js"></script>
-  <script>
+<div class="dock" aria-label="Schnellkontakt">
+    <a class="dock__call" href="tel:+491734994994">Anrufen</a>
+    <a class="dock__cta" href="/termin">Termin buchen</a>
+  </div>
+
+  <script src="assets/vendor/gsap.min.js" defer></script>
+  <script src="assets/vendor/ScrollTrigger.min.js" defer></script>
+  <script src="js/main.js" defer></script>
+  <script>/* Zahlenanzeige über Intl statt fest verdrahteter Dezimalkomma-Ersetzung */
+var __nfMax1 = new Intl.NumberFormat('de-DE', { maximumFractionDigits: 1 });
+var __nfFix1 = new Intl.NumberFormat('de-DE', { minimumFractionDigits: 1, maximumFractionDigits: 1 });
+
 // ============================================================
 //  ENERGIERECHNER V9 — Wizard-Edition
 //  Patrick Leißner · patrickleissner.de
@@ -2019,7 +2011,7 @@ function renderSurfaces() {
         el.className = 'roof-surface';
         el.innerHTML = `
 <div class="roof-surface-header">
-  <select class="er-select surface-label-sel" data-surf-label="${idx}">
+  <select class="er-select surface-label-sel" data-surf-label="${idx}" name="surface-label-${idx}" aria-label="Bezeichnung der Dachfläche" autocomplete="off">
     ${SURFACE_LABELS.map(l => `<option value="${l}"${l===s.label?' selected':''}>${l}</option>`).join('')}
   </select>
   ${canDel ? `<button type="button" class="surface-delete" data-surf-del="${idx}" aria-label="Fläche entfernen">×</button>` : ''}
@@ -2027,16 +2019,16 @@ function renderSurfaces() {
 <div class="field-group">
   <label class="field-label">Anzahl Module</label>
   <div class="input-row">
-    <input type="number" class="er-input" data-surf-modules="${idx}"
-           value="${s.modules||''}" placeholder="z. B. 18" min="1" max="60" inputmode="numeric">
+    <input type="number" class="er-input" data-surf-modules="${idx}" name="modules-${idx}" aria-label="Anzahl Module" autocomplete="off"
+           value="${s.modules||''}" placeholder="z. B. 18…" min="1" max="60" inputmode="numeric">
     <span class="input-unit">Module</span>
   </div>
 </div>
 <div class="field-group">
   <label class="field-label">Modulleistung</label>
   <div class="input-row">
-    <input type="number" class="er-input" data-surf-wp="${idx}"
-           value="${s.modulePower||''}" placeholder="440" min="250" max="700" step="5" inputmode="numeric">
+    <input type="number" class="er-input" data-surf-wp="${idx}" name="module-power-${idx}" aria-label="Modulleistung in Wp" autocomplete="off"
+           value="${s.modulePower||''}" placeholder="z. B. 440…" min="250" max="700" step="5" inputmode="numeric">
     <span class="input-unit">Wp</span>
   </div>
 </div>
@@ -2233,7 +2225,7 @@ function updateFuelUI() {
     const cfg = FUEL[W.fuelType];
     $('consumption-unit').textContent = cfg.unit;
     $('consumption-hint').textContent = cfg.hint;
-    $('inp-consumption').placeholder = 'z. B. ' + cfg.dflt;
+    $('inp-consumption').placeholder = 'z. B. ' + new Intl.NumberFormat('de-DE').format(cfg.dflt) + '…';
     // Elektroheizung: klarstellen, dass der Heizstrom oben bei der Heizung steht (kein Doppelzählen)
     const elecNote = $('elec-kwh-note');
     if (elecNote) elecNote.textContent = W.fuelType === 'strom'
@@ -2243,7 +2235,7 @@ function updateFuelUI() {
     if (cfg.dispUnit) {
         grp.style.display = '';
         $('fuelprice-unit').textContent = cfg.dispUnit;
-        $('inp-fuelprice').placeholder = cfg.dispDflt;
+        $('inp-fuelprice').placeholder = 'z. B. ' + new Intl.NumberFormat('de-DE').format(+cfg.dispDflt) + '…';
         $('inp-fuelprice').value = '';
         W.fuelPrice = null;
     } else {
@@ -2675,18 +2667,18 @@ function renderResults(m) {
         $('kpi-heiz').textContent   = fmt(Math.round(m.newElecJahr)) + ' €/Jahr';
         $('kpi-heiz-sub').textContent = 'Heizung unverändert (weiter fossil, ' + fmt(Math.round(m.fossilJahr)) + ' €/Jahr)';
     }
-    $('kpi-co2').textContent    = m.co2Jetzt.toFixed(1).replace('.', ',') + ' t';
+    $('kpi-co2').textContent    = __nfFix1.format(m.co2Jetzt) + ' t';
 
-    $('kpi-amort').textContent   = m.amortJahre !== null ? (Math.round(m.amortJahre * 10) / 10).toString().replace('.', ',') + ' Jahre' : '–';
-    $('kpi-rendite').textContent = m.invest > 0 ? (Math.round(m.renditeProzent * 10) / 10).toString().replace('.', ',') + ' %' : '–';
+    $('kpi-amort').textContent   = m.amortJahre !== null ? __nfMax1.format(m.amortJahre) + ' Jahre' : '–';
+    $('kpi-rendite').textContent = m.invest > 0 ? __nfMax1.format(m.renditeProzent) + ' %' : '–';
 
     // Dach im Detail: Pro-Fläche-Zeilen + Gesamt-kWp (visuell, damit der Kunde das Potenzial selbst sieht)
-    $('roof-total-kwp').textContent = 'Gesamt: ' + (Math.round(m.kWp * 10) / 10).toString().replace('.', ',') + ' kWp · ' + fmt(m.pvYield) + ' kWh/Jahr';
+    $('roof-total-kwp').textContent = 'Gesamt: ' + __nfMax1.format(m.kWp) + ' kWp · ' + fmt(m.pvYield) + ' kWh/Jahr';
     const rows = m.surfaceRows || [];
     const maxY = rows.reduce((mx, r) => Math.max(mx, r.yield), 0) || 1;
     $('roof-breakdown').innerHTML = rows.map(r => {
         const pct = Math.max(4, Math.round(r.yield / maxY * 100));
-        const kwpTxt = (Math.round(r.kWp * 10) / 10).toString().replace('.', ',');
+        const kwpTxt = __nfMax1.format(r.kWp);
         return `<div class="roof-row">
           <div class="roof-row-top">
             <span class="roof-row-label">${r.label} · ${ORIENT_LABEL[r.orientation] || r.orientation} · ${r.modules} × ${r.modulePower} Wp</span>
@@ -2723,7 +2715,7 @@ function renderResults(m) {
     const hintEl = $('autarkie-hint');
     if (hintEl) {
         const battTxt = m.hasBattery
-            ? 'Dein Speicher (' + (Math.round(m.battKwh * 10) / 10).toString().replace('.', ',') + ' kWh) verschiebt Tagesstrom in die Nacht → höhere Autarkie. Ein größerer Speicher hebt sie weiter.'
+            ? 'Dein Speicher (' + __nfMax1.format(m.battKwh) + ' kWh) verschiebt Tagesstrom in die Nacht → höhere Autarkie. Ein größerer Speicher hebt sie weiter.'
             : 'Ohne Batteriespeicher wird der Großteil der Produktion eingespeist – direkt genutzt wird nur der zeitgleiche Verbrauch. Ein Speicher hebt deine Autarkie deutlich.';
         const emsTxt = m.emsOn
             ? ' Dein Energiemanagement hebt sie zusätzlich: prognosebasiertes Laden und Lastverschiebung in die Sonnenstunden.'
@@ -2735,7 +2727,7 @@ function renderResults(m) {
     const anlEl = $('anlage-summary');
     if (anlEl) {
         const n = (m.surfaceRows || []).length;
-        anlEl.textContent = 'Deine Anlage: ' + (Math.round(m.kWp * 10) / 10).toString().replace('.', ',')
+        anlEl.textContent = 'Deine Anlage: ' + __nfMax1.format(m.kWp)
             + ' kWp aus ' + n + (n === 1 ? ' Fläche' : ' Flächen') + ' · ' + fmt(m.pvYield) + ' kWh/Jahr Produktion.';
     }
 
@@ -2898,7 +2890,7 @@ async function submitLead() {
 
     const btn = $('lg-submit-btn');
     btn.disabled = true;
-    btn.textContent = 'Wird gesendet …';
+    btn.textContent = 'Wird gesendet…';
 
     const rechnerdaten = {
         heute: $('res-heute').textContent,
@@ -2989,6 +2981,6 @@ if (new URLSearchParams(location.search).get('confirmed') === 'true') {
     if (lgForm) lgForm.style.display = 'none';
     if (lgSucc) lgSucc.style.display = '';
 }
-  </script>
+</script>
 </body>
 </html>

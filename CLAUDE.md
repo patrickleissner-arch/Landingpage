@@ -2,7 +2,7 @@
 
 Landingpage von Patrick Leißner — Energieberatung (Photovoltaik & Wärmepumpe) und Versicherungsvermittlung.
 
-**Aktualisiert:** 2026-09-25
+**Aktualisiert:** 2026-09-26
 
 ---
 
@@ -10,8 +10,10 @@ Landingpage von Patrick Leißner — Energieberatung (Photovoltaik & Wärmepumpe
 
 - **Frontend:** Klassisches HTML, CSS, Vanilla JavaScript. KEIN Framework (kein React/Next.js/Tailwind/Framer).
   - Seiten: `index.html` (Start) + Unterseiten (`termin.html`, `impressum.html`, `datenschutz.html` u.a.). Rechner: `nutzen.html` (Nutzen-/Live-Cockpit), `heizkosten.html`, `unabhaengigkeit.html`, `spotpreis.html` (die alten Namen `energierechner.html`/`solarisator.html`/`waermepumpe-rechner.html` wurden am 2026-06-18 umbenannt; unter den alten Pfaden liegen nur noch Meta-Refresh-Weiterleitungen).
-  - Styles: `style.css` (global) + `subpage.css` (Unterseiten). Reines CSS mit CSS-Variablen und Media Queries.
-  - Logik: `main.js` (Navigation, Animationen, Kontaktformular)
+  - **Relaunch 26.09.2026:** Alle Seiten im neuen Design. Styles: `css/style.css` (global) + `css/pages.css` (Unterseiten). Logik: `js/main.js` (Navigation, GSAP-Animationen, Kontaktformular, Bestätigungs-Banner), `js/pages.js` (Unterseiten, FAQ), `js/scenes3d.js` (Three.js-Szenen, gebündelt und minimiert). GSAP und ScrollTrigger lokal in `assets/vendor/`, Bilder als WebP in `assets/img/`, Schrift `assets/fonts/Outfit-Variable.ttf`.
+  - Neue Seite `/batteriespeicher` (Batteriespeicher & Energiehandel) mit Ertragsrechner auf echten Marktdaten 2026. Herstellerneutral: keine Hersteller- oder Anbieternamen auf der Seite.
+  - Die Seiten werden aus einem Generator außerhalb des Repos gebaut (Google Drive `Website-AI-3D/src/`). Änderungen an Seiten dort vornehmen und neu bauen, sonst gehen sie beim nächsten Relaunch-Build verloren.
+  - Altbestand `style.css`, `subpage.css`, `main.js` im Root wird von den neuen Seiten nicht mehr geladen und kann nach einer Übergangszeit entfallen.
 - **Backend:** Node.js + Express + Nodemailer (`server.js`) für allen E-Mail-Versand: Double-Opt-in, Benachrichtigung an MAIL_TO und die Analyse-Mail des Energierechners. Config über `dotenv` (`.env`, nicht committen).
 - **Drittdienste:** keine für Formulare, Versand oder CRM. Brevo ist am 25.09.2026 vollständig entfallen — Kontakt, Vertriebsvorgang und Verlauf laufen ins eigene CRM, alle Mails über den eigenen Mailserver bei Hostinger. Selbst gehostet: chart.js (`assets/vendor/`), Schrift Outfit.
 - **Terminbuchung:** eigenes Easy!Appointments auf einem eigenen VPS, als iframe von `termin.patrickleissner.de` eingebunden (seit 25.09.2026, vorher Brevo Meetings). Die Einbettung funktioniert nur, weil Traefik dort `X-Frame-Options` durch `frame-ancestors 'self' https://patrickleissner.de` ersetzt — Easy!Appointments setzt die Sperre sonst selbst und der iframe bliebe leer. Höhe: `assets/js/booking-embed.js` übernimmt sie per `postMessage` vom Gegenstück `pl-embed.js` im Container (`/docker/patrick-termin/custom/`).

@@ -57,6 +57,7 @@ const SEITEN = {
   '/datenschutz':           'datenschutz.html',
   '/termin':                'termin.html',
   '/spotpreis':             'spotpreis.html',
+  '/batteriespeicher':      'batteriespeicher.html',
 };
 const UMZUEGE = {
   // Versicherung wird ueber diese Website nicht mehr vermarktet (25.09.2026).
@@ -127,7 +128,9 @@ setInterval(() => {
 // ── Contact form ─────────────────────────────────────────────────
 const THEMEN_LABELS = {
   pv:           'Photovoltaikanlage',
+  speicher:     'Batteriespeicher & Energiehandel',
   wp:           'Wärmepumpe',
+  mieterstrom:  'Mieterstrom',
   sonstiges:    'Sonstiges',
 };
 
@@ -149,6 +152,7 @@ const CRM_INTERESSEN = {
   pv:        'Photovoltaik',
   wp:        'Wärmepumpe',
   speicher:  'Batteriespeicher',
+  mieterstrom: 'Mieterstrom',
   sonstiges: 'Sonstiges',
 };
 
@@ -249,8 +253,9 @@ app.post('/api/contact', async (req, res) => {
   }
 
   // Adresse nur bei Energie-Themen Pflicht (Standorteinschätzung) –
-  // bei reinem „Sonstiges" bleibt sie optional (Datenminimierung)
-  const needsAddress = themen.includes('pv') || themen.includes('wp');
+  // bei reinem „Sonstiges" bleibt sie optional (Datenminimierung).
+  // Muss zu ADRESS_THEMEN in js/main.js und zur Datenschutzerklärung passen.
+  const needsAddress = ['pv', 'wp', 'speicher', 'mieterstrom'].some(t => themen.includes(t));
   if (needsAddress && (!strasse || !plz || !ort)) {
     return res.status(400).json({ ok: false, error: 'Pflichtfelder fehlen.' });
   }

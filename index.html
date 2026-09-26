@@ -1,843 +1,491 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Patrick Leißner – Energieberatung: Individuelle Planung von Photovoltaikanlagen und Wärmepumpen. Frei durch eigene Energie. Kostenlose Erstberatung – jetzt Termin vereinbaren.">
-
-  <!-- Open Graph (Social Media Preview) -->
-  <meta property="og:title" content="Patrick Leißner – Energieberatung | Photovoltaik &amp; Wärmepumpe">
-  <meta property="og:description" content="Frei durch eigene Energie. Individuelle Planung von PV-Anlagen und Wärmepumpen – persönlich, ehrlich, unabhängig.">
-  <meta property="og:type" content="website">
-  <meta property="og:url" content="https://patrickleissner.de/">
-  <meta property="og:image" content="https://patrickleissner.de/assets/og-image.jpg">
-  <meta property="og:image:width" content="1200">
-  <meta property="og:image:height" content="630">
-  <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="Patrick Leißner – Energieberatung | Photovoltaik &amp; Wärmepumpe">
-  <meta name="twitter:description" content="Frei durch eigene Energie. Individuelle Planung von PV-Anlagen und Wärmepumpen – persönlich, ehrlich, unabhängig.">
-  <meta name="twitter:image" content="https://patrickleissner.de/assets/og-image.jpg">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Patrick Leißner | Energieberatung für Photovoltaik und Wärmepumpe</title>
+  <meta name="description" content="Patrick Leißner, Energieberatung in Bitterfeld-Wolfen: Photovoltaik, Batteriespeicher, Wärmepumpen, Klimaanlagen und Infrarotheizungen, individuell geplant und gefördert bis zur fertigen Anlage. Kostenfreie Erstberatung.">
+  <meta name="theme-color" content="#0f2a23">
   <link rel="canonical" href="https://patrickleissner.de/">
-  <meta name="robots" content="index, follow">
-
-  <title>Patrick Leißner – Energieberatung | Photovoltaik &amp; Wärmepumpe</title>
-
-  <!-- Google Fonts (CI: Outfit ist die alleinige Hausschrift) -->
-
-  <link rel="stylesheet" href="style.css">
-
-  <!-- Schema.org Structured Data -->
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Patrick Leißner | Frei durch eigene Energie">
+  <meta property="og:description" content="Photovoltaik, Batteriespeicher, Wärmepumpen, Klimaanlagen und Infrarotheizungen, individuell geplant und herstellerunabhängig beraten. Kostenfreie Erstberatung in Bitterfeld-Wolfen und Umgebung.">
+  <meta property="og:image" content="https://patrickleissner.de/assets/img/patrick-1600.webp">
+  <meta property="og:locale" content="de_DE">
+  <link rel="icon" type="image/webp" href="assets/img/logo-mark.webp">
+  <link rel="preload" href="assets/fonts/Outfit-Variable.ttf" as="font" type="font/ttf" crossorigin>
+  <link rel="stylesheet" href="css/style.css">
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
-    "@graph": [
-      {
-        "@type": ["LocalBusiness", "ProfessionalService"],
-        "@id": "https://patrickleissner.de/#business",
-        "name": "Patrick Leißner Energieberatung",
-        "description": "Individuelle Planung von Photovoltaikanlagen und Wärmepumpen. Kostenlose Erstberatung, herstellerunabhängig.",
-        "url": "https://patrickleissner.de",
-        "telephone": "+491734994994",
-        "email": "p@patrickleissner.de",
-        "address": {
-          "@type": "PostalAddress",
-          "streetAddress": "Dessauer Allee 52",
-          "postalCode": "06766",
-          "addressLocality": "Bitterfeld-Wolfen",
-          "addressCountry": "DE"
-        },
-        "areaServed": "DE",
-        "openingHours": ["Mo-Fr 08:00-18:00"],
-        "geo": {
-          "@type": "GeoCoordinates",
-          "latitude": 51.6242,
-          "longitude": 12.3105
-        },
-        "serviceType": ["Photovoltaik-Beratung", "Wärmepumpen-Beratung", "Energieberatung"],
-        "priceRange": "Kostenlose Erstberatung",
-        "founder": { "@id": "https://patrickleissner.de/#person" },
-        "hasOfferCatalog": {
-          "@type": "OfferCatalog",
-          "name": "Leistungen",
-          "itemListElement": [
-            {
-              "@type": "Offer",
-              "itemOffered": {
-                "@type": "Service",
-                "name": "Beratung & Technik",
-                "description": "Standortanalyse, Wirtschaftlichkeitsrechnung und Umsetzungsbegleitung für PV-Anlagen und Wärmepumpen.",
-                "url": "https://patrickleissner.de/beratung-technik"
-              }
-            },
-            {
-              "@type": "Offer",
-              "itemOffered": {
-                "@type": "Service",
-                "name": "Koordination & Netzwerk",
-                "description": "Abstimmung mit Fachpartnern und transparente Darstellung von Schnittstellen und Verantwortlichkeiten.",
-                "url": "https://patrickleissner.de/koordination-netzwerk"
-              }
-            }
-          ]
-        }
-      },
-      {
-        "@type": "Person",
-        "@id": "https://patrickleissner.de/#person",
-        "name": "Patrick Leißner",
-        "jobTitle": "Energieberater",
-        "description": "Unabhängiger Energieberater für Photovoltaik und Wärmepumpen.",
-        "telephone": "+491734994994",
-        "email": "p@patrickleissner.de",
-        "url": "https://patrickleissner.de",
-        "worksFor": { "@id": "https://patrickleissner.de/#business" },
-        "sameAs": [
-          "https://www.linkedin.com/in/patrickleissner",
-          "https://www.instagram.com/patrickleissner.de",
-          "https://www.facebook.com/patrickleissner.de",
-          "GOOGLE_BUSINESS_URL_HIER_EINTRAGEN"
-        ]
-      },
-      {
-        "@type": "FAQPage",
-        "mainEntity": [
-          {
-            "@type": "Question",
-            "name": "Was kostet eine Erstberatung?",
-            "acceptedAnswer": {
-              "@type": "Answer",
-              "text": "Die Erstberatung ist kostenlos und völlig unverbindlich."
-            }
-          },
-          {
-            "@type": "Question",
-            "name": "Welche Fördermittel gibt es für Photovoltaik?",
-            "acceptedAnswer": {
-              "@type": "Answer",
-              "text": "PV-Anlagen können über den KfW-Kredit 270 zinsgünstig finanziert werden. Zusätzlich gibt es regionale Förderprogramme der Bundesländer sowie die Einspeisevergütung nach EEG."
-            }
-          },
-          {
-            "@type": "Question",
-            "name": "Für welche Region berätst du?",
-            "acceptedAnswer": {
-              "@type": "Answer",
-              "text": "Der Beratungsschwerpunkt liegt in der Region Bitterfeld-Wolfen und Umgebung (Sachsen-Anhalt). Beratungen sind deutschlandweit möglich."
-            }
-          },
-          {
-            "@type": "Question",
-            "name": "Lohnt sich eine Wärmepumpe für mein Haus?",
-            "acceptedAnswer": {
-              "@type": "Answer",
-              "text": "Eine Wärmepumpe lohnt sich besonders bei gut gedämmten Gebäuden und einer Vorlauftemperatur unter 55 °C. In einem kostenlosen Erstgespräch analysiere ich deine individuelle Situation und zeige dir, welche Lösung optimal für dich ist."
-            }
-          }
-        ]
-      }
-    ]
+    "@type": "ProfessionalService",
+    "name": "Patrick Leißner Energieberatung",
+    "url": "https://patrickleissner.de/",
+    "telephone": "+49 173 4994994",
+    "email": "p@patrickleissner.de",
+    "image": "https://patrickleissner.de/assets/img/patrick-1600.webp",
+    "address": {
+      "@type": "PostalAddress",
+      "streetAddress": "Dessauer Allee 52",
+      "postalCode": "06766",
+      "addressLocality": "Bitterfeld-Wolfen",
+      "addressCountry": "DE"
+    },
+    "openingHours": "Mo-Fr 08:00-18:00",
+    "priceRange": "Kostenfreie Erstberatung",
+    "areaServed": "Sachsen-Anhalt"
   }
   </script>
 </head>
 <body>
+  <a class="skip-link" href="#main">Zum Inhalt springen</a>
 
-  <!-- Skip to content (Accessibility) -->
-  <a href="#main" class="skip-link">Zum Hauptinhalt springen</a>
-
-  <!-- ═══════════════════════════════════════════════════════
-       NAVIGATION
-  ═══════════════════════════════════════════════════════ -->
-  <header class="site-header" role="banner" id="site-header">
-    <nav class="nav-container" aria-label="Hauptnavigation">
-
-      <!-- Logo (CI: Negativ-Variante auf Dunkelgrün) -->
-      <!-- Logo-Datei: assets/logo-placeholder.svg → ersetzen durch offizielle Negativ-Logo-Datei -->
-      <a href="#" class="nav-logo" aria-label="Patrick Leißner Energieberatung – zur Startseite">
-        <img src="assets/Logo/Initialien-Name-Positiv-frei.png" alt="Patrick Leißner Energieberatung Logo" height="96" loading="eager" style="width:auto">
+  <header class="nav" id="site-header">
+    <div class="nav__inner">
+      <a class="nav__brand" href="/" aria-label="Patrick Leißner, zur Startseite" translate="no">
+        <img src="assets/img/logo-full-light.webp" width="800" height="375" alt="Patrick Leißner Energieberatung" fetchpriority="high">
       </a>
-
-      <!-- Desktop Nav Links -->
-      <ul class="nav-links" role="list">
-        <li><a href="#leistungen" data-nav>Leistungen</a></li>
-        <li><a href="#ueber-pl" data-nav>Über mich</a></li>
-        <li><a href="/ratgeber">Ratgeber</a></li>
-        <li><a href="#termine" data-nav>Termine</a></li>
-        <li><a href="#kontakt" data-nav>Kontakt</a></li>
-      </ul>
-
-      <!-- Desktop CTA -->
-      <a href="/termin" class="btn btn-accent nav-cta">Termin buchen</a>
-
-      <!-- Mobile Hamburger -->
-      <button
-        class="hamburger"
-        aria-label="Menü öffnen"
-        aria-expanded="false"
-        aria-controls="mobile-menu"
-        id="hamburger-btn"
-      >
-        <span></span>
-        <span></span>
-        <span></span>
+      <nav class="nav__links" aria-label="Hauptnavigation">
+        <a href="#leistungen">Leistungen</a>
+        <a href="#arbeitsweise">Arbeitsweise</a>
+        <a href="#ueber-mich">Über mich</a>
+        <a href="/ratgeber">Ratgeber</a>
+        <a href="#kontakt">Kontakt</a>
+      </nav>
+      <a class="btn btn--gold nav__cta" href="/termin">Termin buchen</a>
+      <button class="nav__toggle" type="button" aria-expanded="false" aria-controls="mobile-menu" aria-label="Menü öffnen">
+        <span></span><span></span>
       </button>
-    </nav>
-
-    <!-- Mobile Menu Overlay -->
-    <div class="mobile-menu" id="mobile-menu" aria-hidden="true" role="dialog" aria-label="Hauptnavigation">
-      <ul role="list">
-        <li><a href="#leistungen" class="mobile-nav-link">Leistungen</a></li>
-        <li><a href="#ueber-pl" class="mobile-nav-link">Über mich</a></li>
-        <li><a href="/ratgeber" class="mobile-nav-link">Ratgeber</a></li>
-        <li><a href="#termine" class="mobile-nav-link">Termine</a></li>
-        <li><a href="#kontakt" class="mobile-nav-link">Kontakt</a></li>
-        <li><a href="/termin" class="btn btn-accent mobile-nav-link">Termin buchen</a></li>
-      </ul>
+    </div>
+    <div class="nav__mobile" id="mobile-menu" hidden>
+      <a href="#leistungen">Leistungen</a>
+      <a href="#arbeitsweise">Arbeitsweise</a>
+      <a href="#ueber-mich">Über mich</a>
+      <a href="/ratgeber">Ratgeber</a>
+      <a href="#kontakt">Kontakt</a>
+      <a class="btn btn--gold" href="/termin">Termin buchen</a>
     </div>
   </header>
 
-  <!-- ═══════════════════════════════════════════════════════
-       MAIN CONTENT
-  ═══════════════════════════════════════════════════════ -->
   <main id="main">
 
-    <!-- ────────────────────────────────────────────────────
-         HERO
-    ──────────────────────────────────────────────────── -->
-    <section id="hero" class="hero" aria-label="Einleitung">
-      <!-- WebGL Shader Background (CI-Gold Nebula) -->
-      <canvas class="hero-canvas" id="heroCanvas" aria-hidden="true"></canvas>
-
-      <div class="container hero-content">
-
-
-        <!-- CI: Großer Titel immer in Gold (Outfit Bold) -->
-        <h1 class="animate-fade-up" style="--delay: 1">
-          Hello Energy!
+    <!-- HERO -->
+    <section class="hero" id="top" data-hero>
+      <div class="hero__scene" aria-hidden="true">
+        <canvas id="hero-canvas"></canvas>
+        <div class="hero__glow"></div>
+      </div>
+      <div class="hero__inner">
+        <h1 class="hero__title">
+          <span class="line"><span>Frei durch</span></span>
+          <span class="line"><span><em>eigene</em> Energie.</span></span>
         </h1>
-
-        <p class="hero-headline2 animate-fade-up" style="--delay: 2">
-          Deine Energie. Deine Freiheit. Deine Sicherheit.
-        </p>
-
-        <p class="hero-bold animate-fade-up" style="--delay: 2">
-          Mit Photovoltaik und Wärmepumpen in die Unabhängigkeit – und mit ganzheitlicher Beratung zu mehr Schutz, Planbarkeit und einem guten Gefühl für die Zukunft.
-        </p>
-
-        <p class="hero-subline animate-fade-up" style="--delay: 3">
-          Steigende Energiepreise, unsichere Versorgung und der Wunsch nach mehr Kontrolle machen eines klar: Wer heute entscheidet, sollte weiterdenken.
-          Mit einer individuell geplanten PV-Anlage und Wärmepumpe machst du dein Zuhause fit für morgen.
-          Ich begleite dich dabei persönlich, ehrlich und mit technischem Know-how – von der ersten Einschätzung bis zur fertigen Anlage.
-          Für mehr Unabhängigkeit. Für mehr Planbarkeit. Für ein Zuhause mit Zukunft.
-        </p>
-
+        <p class="hero__text">Photovoltaik, Batteriespeicher, Wärmepumpen, Klimaanlagen und Infrarotheizungen. Individuell geplant, herstellerunabhängig beraten, von der Förderung bis zur fertigen Anlage.</p>
+        <div class="hero__actions">
+          <a class="btn btn--gold btn--lg" href="/termin">Termin buchen</a>
+          <a class="btn btn--ghost btn--lg" href="#leistungen">Leistungen ansehen</a>
+        </div>
       </div>
-
-      <div class="scroll-indicator" aria-hidden="true">
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M12 5v14M5 12l7 7 7-7"/>
-        </svg>
+      <div class="hero__facts hero__facts--formel" role="group" aria-label="So trägt sich deine Anlage">
+        <div class="fact"><strong>Sparen</strong><span>Weniger Heiz- und Stromkosten mit Photovoltaik, Wärmepumpe, Klimaanlage oder Infrarotheizung</span></div>
+        <a class="fact fact--link" href="/batteriespeicher#handel"><strong><i class="fact__op" aria-hidden="true">+</i>Verdienen</strong><span>Ein Batteriespeicher handelt am Strommarkt, 2026 nachgerechnet ab rund 3.000&nbsp;€ im Jahr</span><b class="fact__more">Ertrag nachrechnen<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8h9M8.5 4.5 12 8l-3.5 3.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></b></a>
+        <div class="fact"><strong><i class="fact__op" aria-hidden="true">=</i>Gegenfinanziert</strong><span>Im Idealfall tragen Ersparnis und Handelsertrag gemeinsam die Investition. Die Erstberatung ist kostenfrei.</span></div>
       </div>
     </section>
 
-    <!-- ────────────────────────────────────────────────────
-         TRUST-STREIFEN (Übergang Hero → Leistungen)
-    ──────────────────────────────────────────────────── -->
-    <section class="trust-strip reveal" aria-label="Auf einen Blick">
-      <div class="container trust-strip-inner">
-        <div class="trust-item">
-          <span class="trust-value">Seit 2021</span>
-          <span class="trust-label">Energieberatung Photovoltaik &amp; Wärmepumpe</span>
-        </div>
-        <div class="trust-item">
-          <span class="trust-value">3 Varianten</span>
-          <span class="trust-label">ehrliche Auswahl statt Einheitsanlage</span>
-        </div>
-        <div class="trust-item">
-          <span class="trust-value">0 €</span>
-          <span class="trust-label">kostenfreie, herstellerunabhängige Erstberatung</span>
-        </div>
+    <!-- INTRO -->
+    <section class="intro">
+      <div class="container intro__inner">
+        <p class="intro__lead" data-split>Steigende Energiepreise und unsichere Versorgung machen eines klar: Wer heute entscheidet, sollte weiterdenken. Ich begleite dich persönlich, ehrlich und mit technischem Know-how zu einem Zuhause, das seine Energie selbst erzeugt.</p>
       </div>
     </section>
 
-    <!-- ────────────────────────────────────────────────────
-         LEISTUNGEN
-    ──────────────────────────────────────────────────── -->
-    <section id="leistungen" class="section-leistungen" aria-labelledby="leistungen-heading">
+    <!-- LEISTUNGEN -->
+    <section class="services" id="leistungen">
       <div class="container">
-        <div class="leistungen-header reveal">
-          <h2 id="leistungen-heading">Leistungen</h2>
+        <div class="section-head">
+          <h2>Leistungen</h2>
+          <p>Sechs Bausteine, ein Ziel: mehr Unabhängigkeit für dein Zuhause. Du wählst, was zu dir passt.</p>
         </div>
 
-        <div class="leistungen-grid">
-
-          <a href="/beratung-technik" class="leistung-card reveal" aria-label="Beratung und Technik">
-            <div class="leistung-img">
-              <span class="leistung-icon" aria-hidden="true">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
-                  <rect x="6" y="4" width="12" height="17" rx="2"/>
-                  <path d="M9 4V3a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v1"/>
-                  <path d="M9 11l2 2 4-4"/>
-                </svg>
-              </span>
-              <img src="assets/Foto/leistung-pv.jpg" alt="Photovoltaikanlage auf Flachdach" loading="lazy" onerror="this.parentElement.classList.add('leistung-img--placeholder')">
-            </div>
-            <div class="leistung-body">
+        <div class="bento">
+          <a class="tile tile--a tile--image" href="/beratung-technik" data-reveal>
+            <picture>
+              <source media="(max-width: 700px)" srcset="assets/img/leistung-pv-800.webp">
+              <img src="assets/img/leistung-pv-1200.webp" width="1200" height="896" alt="Photovoltaikanlage auf einem Flachdach" loading="lazy">
+            </picture>
+            <div class="tile__body">
               <h3>Beratung &amp; Technik</h3>
-              <p class="leistung-slogan">Oft steckt die Rate schon in deinen heutigen Ausgaben.</p>
-              <p>Strukturierte Betrachtung deiner Möglichkeiten im Bereich Photovoltaik und Wärmepumpe. Keine pauschalen Versprechen sondern individuelle Analyse.</p>
+              <p class="tile__claim">Oft steckt die Rate schon in deinen heutigen Ausgaben.</p>
+              <p>Strukturierte Betrachtung deiner Möglichkeiten bei Photovoltaik und Wärmepumpe. Keine pauschalen Versprechen, sondern individuelle Analyse.</p>
+              <span class="tile__link">Mehr erfahren</span>
             </div>
           </a>
 
-          <a href="/koordination-netzwerk" class="leistung-card reveal" aria-label="Koordination und Netzwerk">
-            <div class="leistung-img">
-              <span class="leistung-icon" aria-hidden="true">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
-                  <circle cx="6" cy="6" r="2.4"/>
-                  <circle cx="18" cy="6" r="2.4"/>
-                  <circle cx="12" cy="18" r="2.4"/>
-                  <path d="M8 7.2L10.5 16M16 7.2L13.5 16M8.4 6h7.2"/>
-                </svg>
-              </span>
-              <img src="assets/Foto/Netzwerk_Koordination_Beratung.jpg" alt="Netzwerk und Koordination in der Beratung" loading="lazy" onerror="this.parentElement.classList.add('leistung-img--placeholder')">
-            </div>
-            <div class="leistung-body">
-              <h3>Koordination &amp; Netzwerk</h3>
-              <p class="leistung-slogan">Einer kümmert sich. Du musst nichts koordinieren.</p>
-              <p>Abstimmung mit Fachpartnern und transparente Darstellung von Schnittstellen und Verantwortlichkeiten.</p>
-            </div>
-          </a>
-
-          <a href="/nutzen" class="leistung-card reveal" aria-label="Interaktive Rechner">
-            <div class="leistung-img">
-              <span class="leistung-icon" aria-hidden="true">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
-                  <rect x="5" y="3" width="14" height="18" rx="2"/>
-                  <path d="M8 7h8"/>
-                  <path d="M8 12h1M8 16h1M12 12h1M12 16h1M16 12h1M16 16h1"/>
-                </svg>
-              </span>
-              <img src="assets/Foto/Rechner.jpg" alt="Interaktive Energierechner" loading="lazy" onerror="this.parentElement.classList.add('leistung-img--placeholder')">
-            </div>
-            <div class="leistung-body">
-              <h3>Interaktive Rechner</h3>
-              <p class="leistung-slogan">Zahlen zuerst. Dann entscheiden.</p>
-              <p>Ermittle deinen PV-Eigenverbrauch mit dem Unabhängigkeitsrechner der HTW Berlin oder analysiere deine Energiekosten mit dem Energierechner.</p>
-            </div>
-          </a>
-
-          <a href="/waermepumpe-heizlast" class="leistung-card reveal" aria-label="Wärmepumpe und Heizlast">
-            <div class="leistung-img">
-              <span class="leistung-icon" aria-hidden="true">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
-                  <path d="M14 14.76V5a2 2 0 0 0-4 0v9.76a4 4 0 1 0 4 0z"/>
-                  <circle cx="12" cy="16" r="0.6" fill="currentColor" stroke="none"/>
-                </svg>
-              </span>
-              <img src="assets/Foto/leistung-wp.jpg" alt="Wärmepumpe an Hauswand" loading="lazy" onerror="this.parentElement.classList.add('leistung-img--placeholder')">
-            </div>
-            <div class="leistung-body">
+          <a class="tile tile--b tile--image" href="/waermepumpe-heizlast" data-reveal>
+            <picture>
+              <source media="(max-width: 700px)" srcset="assets/img/leistung-wp-800.webp">
+              <img src="assets/img/leistung-wp-1376.webp" width="1376" height="768" alt="Wärmepumpe an einer Hauswand" loading="lazy">
+            </picture>
+            <div class="tile__body">
               <h3>Wärmepumpe &amp; Heizlast</h3>
-              <p class="leistung-slogan">DIN-konform geplant. KfW-sicher von Anfang an.</p>
-              <p>Heizlastberechnung nach DIN, raumweise Gebäudeerfassung und 3D-Aufnahme per LiDAR-Scan als Grundlage für eine fundierte Wärmepumpenplanung.</p>
+              <p class="tile__claim">DIN-konform geplant. KfW-sicher von Anfang an.</p>
+              <p>Heizlastberechnung nach DIN, raumweise Gebäudeerfassung und 3D-Aufnahme per LiDAR-Scan.</p>
+              <span class="tile__link">Mehr erfahren</span>
             </div>
           </a>
 
-          <a href="/mieterstrom" class="leistung-card reveal" aria-label="Mieterstrom und Objektenergie">
-            <div class="leistung-img">
-              <span class="leistung-icon" aria-hidden="true">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
-                  <rect x="5" y="3" width="14" height="18" rx="1"/>
-                  <path d="M9 7h1M14 7h1M9 11h1M14 11h1"/>
-                  <path d="M10 21v-3a2 2 0 0 1 4 0v3"/>
-                </svg>
-              </span>
-              <img src="assets/Foto/Mieterstrom_Solaranlage_Wohngebaeude.jpg" alt="Mehrfamilienhaus mit Photovoltaikanlage auf dem Dach" loading="lazy" onerror="this.parentElement.classList.add('leistung-img--placeholder')">
+          <a class="tile tile--f tile--market" href="/batteriespeicher" data-reveal>
+            <canvas id="tile-canvas" class="market__canvas" aria-hidden="true"></canvas>
+            <div class="market__chart" aria-hidden="true">
+              <svg viewBox="0 0 360 180" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet">
+                <line class="market__grid" x1="0" y1="160" x2="360" y2="160"></line>
+                <!-- Ladefenster: günstige Mittagsstunden -->
+                <rect x="166" y="20" width="62" height="140" fill="rgba(90,169,140,0.16)" rx="4"></rect>
+                <text class="market__label" x="197" y="176" text-anchor="middle">LADEN</text>
+                <!-- Lieferfenster: teure Abendstunden -->
+                <rect x="262" y="20" width="42" height="140" fill="rgba(211,175,60,0.18)" rx="4"></rect>
+                <text class="market__label" x="283" y="176" text-anchor="middle">LIEFERN</text>
+                <path class="market__curve" d="M 0.0 104.0 C 6.7 106.3 26.7 119.3 40.0 118.0 C 53.3 116.7 67.0 104.0 80.0 96.0 C 93.0 88.0 106.0 69.0 118.0 70.0 C 130.0 71.0 140.7 90.2 152.0 102.0 C 163.3 113.8 174.7 133.7 186.0 141.0 C 197.3 148.3 209.3 150.8 220.0 146.0 C 230.7 141.2 239.7 129.0 250.0 112.0 C 260.3 95.0 271.7 50.3 282.0 44.0 C 292.3 37.7 299.0 64.7 312.0 74.0 C 325.0 83.3 352.0 95.7 360.0 100.0"></path>
+                <circle cx="203" cy="145.5" r="4.5" fill="#5AA98C"></circle>
+                <circle cx="282" cy="44" r="4.5" fill="#D3AF3C"></circle>
+              </svg>
             </div>
-            <div class="leistung-body">
+            <div class="tile__body">
+              <h3>Batteriespeicher &amp; Energiehandel</h3>
+              <p class="tile__claim">Dein Netzanschluss kann verdienen, nicht nur kosten.</p>
+              <p>Ein Speicher nutzt die Preisspanne zwischen Mittag und Abend, ab 30&nbsp;kW Dauerlast wird der Zugang zum Regelenergiemarkt möglich. Rechne im Ertragsrechner nach, was an deinem Anschluss möglich wäre.</p>
+              <span class="tile__link">Mehr erfahren</span>
+            </div>
+          </a>
+
+          <a class="tile tile--c tile--image" href="/koordination-netzwerk" data-reveal>
+            <picture>
+              <source media="(max-width: 700px)" srcset="assets/img/netzwerk-900.webp">
+              <img src="assets/img/netzwerk-1600.webp" width="1600" height="893" alt="Abstimmung mit Fachpartnern bei der Beratung" loading="lazy">
+            </picture>
+            <div class="tile__body">
+              <h3>Koordination &amp; Netzwerk</h3>
+              <p class="tile__claim">Einer kümmert sich. Du musst nichts koordinieren.</p>
+              <span class="tile__link">Mehr erfahren</span>
+            </div>
+          </a>
+
+          <div class="tile tile--d tile--calc" data-reveal>
+            <div class="tile__body">
+              <h3>Interaktive Rechner</h3>
+              <p class="tile__claim">Zahlen zuerst. Dann entscheiden.</p>
+              <ul class="calc-list">
+                <li><a href="/unabhaengigkeit">Unabhängigkeitsrechner</a></li>
+                <li><a href="/heizkosten">Heizkosten-Rechner</a></li>
+                <li><a href="/nutzen">Nutzen-Rechner</a></li>
+                <li><a href="/spotpreis">Spotpreis-Monitor</a></li>
+              </ul>
+            </div>
+          </div>
+
+          <a class="tile tile--e tile--image" href="/mieterstrom" data-reveal>
+            <picture>
+              <source media="(max-width: 700px)" srcset="assets/img/mieterstrom-900.webp">
+              <img src="assets/img/mieterstrom-1600.webp" width="1600" height="893" alt="Mehrfamilienhaus mit Photovoltaikanlage auf dem Dach" loading="lazy">
+            </picture>
+            <div class="tile__body">
               <h3>Mieterstrom &amp; Objektenergie</h3>
-              <p class="leistung-slogan">PV auf dem Dach. Strom an die Mieter. Einnahmen für dich.</p>
-              <p>Beratung, Projektierung und Wirtschaftlichkeitsberechnung für Mieterstrom-Modelle auf Mehrfamilienhäusern und Mietobjekten.</p>
+              <p class="tile__claim">PV auf dem Dach. Strom an die Mieter. Einnahmen für dich.</p>
+              <span class="tile__link">Mehr erfahren</span>
             </div>
           </a>
-
         </div>
       </div>
     </section>
 
+    <!-- ARBEITSWEISE -->
+    <section class="process" id="arbeitsweise">
+      <div class="container process__grid">
+        <div class="process__sticky">
+          <h2>Erst verstehen,<br>dann bewerten.</h2>
+          <p>Bevor ich Empfehlungen ausspreche, nehme ich mir die Zeit, deine Situation genau zu erfassen. So entstehen Lösungen, die zu dir passen.</p>
+          <a class="btn btn--green" href="/termin">Termin buchen</a>
+        </div>
+        <ol class="steps">
+          <li class="step" data-step>
+            <span class="step__num">1</span>
+            <div>
+              <h3>Zuhören</h3>
+              <p>Im kostenfreien Erstgespräch geht es um dich: dein Haus, dein Verbrauch, deine Ziele. Persönlich, telefonisch oder per Videocall.</p>
+            </div>
+          </li>
+          <li class="step" data-step>
+            <span class="step__num">2</span>
+            <div>
+              <h3>Erfassen</h3>
+              <p>Dach, Gebäude, Heizlast und Lastprofil werden sauber aufgenommen, bei Bedarf mit 3D-Scan per LiDAR.</p>
+            </div>
+          </li>
+          <li class="step" data-step>
+            <span class="step__num">3</span>
+            <div>
+              <h3>Bewerten</h3>
+              <p>Du bekommst eine ehrliche Wirtschaftlichkeitsrechnung: was du an Heiz- und Stromkosten sparst, was ein Speicher am Strommarkt verdienen kann und wie beides zusammen die Investition trägt.</p>
+            </div>
+          </li>
+          <li class="step" data-step>
+            <span class="step__num">4</span>
+            <div>
+              <h3>Umsetzen</h3>
+              <p>Ich koordiniere Fachpartner, Schnittstellen und Termine bis zur fertigen Anlage. Du musst dich um nichts kümmern.</p>
+            </div>
+          </li>
+        </ol>
+      </div>
+    </section>
 
-    <!-- ────────────────────────────────────────────────────
-         ÜBER MICH
-    ──────────────────────────────────────────────────── -->
-    <section id="ueber-pl" class="section-ueber" aria-labelledby="ueber-heading">
+    <!-- ÜBER MICH -->
+    <section class="about" id="ueber-mich">
+      <div class="container about__grid">
+        <figure class="about__figure" data-parallax>
+          <picture>
+            <source media="(max-width: 700px)" srcset="assets/img/patrick-portrait-600.webp">
+            <img src="assets/img/patrick-portrait-1000.webp" width="1000" height="1250" alt="Patrick Leißner, Energieberater, mit einem Solarmodul" loading="lazy">
+          </picture>
+        </figure>
+        <div class="about__text">
+          <h2>Über mich</h2>
+          <p class="about__lead">Ich unterstütze Eigenheimbesitzer und Unternehmer dabei, mit individuell geplanten Photovoltaik- und Wärmepumpenlösungen unabhängiger von Energieversorgern, Preissteigerungen und politischen Risiken zu werden.</p>
+          <div class="about__cols">
+            <div>
+              <h3>Vision</h3>
+              <p>Energieunabhängigkeit für jeden Haushalt. Ich helfe Menschen, ihr Zuhause in eine unabhängige, wertsteigernde und sichere Energiequelle zu verwandeln.</p>
+            </div>
+            <div>
+              <h3>Arbeitsweise</h3>
+              <p>Zuhören, Fragen stellen und gemeinsam die relevanten Faktoren finden. Erst dann spreche ich Empfehlungen aus.</p>
+            </div>
+          </div>
+          <blockquote class="about__quote">
+            <p>„Umfassende Beratung, ehrliche Kommunikation und technische Expertise. Das ist mein Anspruch für jedes Projekt.“</p>
+            <cite>Patrick Leißner, Energieberater</cite>
+          </blockquote>
+        </div>
+      </div>
+    </section>
+
+    <!-- PARTNER -->
+    <section class="partners" id="partner">
       <div class="container">
-
-        <!-- Sektion-Header -->
-        <div class="ueber-header reveal">
-          <h2 id="ueber-heading">Über mich</h2>
-          <div class="ueber-intro">
-            <p class="ueber-intro-label">Mein Ansatz basiert auf dem Prinzip:</p>
-            <p class="ueber-pillar ueber-pillar--hero">Erst verstehen, dann bewerten.</p>
-          </div>
+        <div class="section-head section-head--center">
+          <h2>Starke Partner für gute Entscheidungen</h2>
+          <p>Ich arbeite mit erfahrenen Herstellern und verlässlichen Partnern zusammen, die für hohe Standards und langfristige Zuverlässigkeit stehen.</p>
         </div>
-
-        <!-- Content-Grid -->
-        <div class="ueber-layout">
-
-          <!-- Foto (kreisförmig) -->
-          <div class="ueber-photo reveal">
-            <img src="assets/Foto/patrick-leissner.jpg"
-                 alt="Patrick Leißner – Energieberater mit Solarmodul"
-                 width="320" height="320"
-                 loading="lazy">
-          </div>
-
-          <!-- Mission -->
-          <div class="ueber-block ueber-mission reveal">
-            <h3 class="ueber-pillar">Mission</h3>
-            <p>Ich unterstütze Eigenheimbesitzer und Unternehmer dabei, durch individuell geplante Photovoltaik- und Wärmepumpenlösungen unabhängiger von Energieversorgern, Preissteigerungen und politischen Risiken zu werden – mit umfassender Beratung, ehrlicher Kommunikation und technischer Expertise.</p>
-          </div>
-
-          <!-- Vision -->
-          <div class="ueber-block ueber-vision reveal">
-            <p>Energieunabhängigkeit für jeden Haushalt. Ich ermögliche es Menschen, ihr Zuhause in eine unabhängige, wertsteigernde und sichere Energiequelle zu verwandeln – für mehr Freiheit, Stabilität und Nachhaltigkeit.</p>
-            <h3 class="ueber-pillar">Vision</h3>
-          </div>
-
-          <!-- Arbeitsweise -->
-          <div class="ueber-block ueber-arbeitsweise reveal">
-            <h3 class="ueber-pillar">Arbeitsweise</h3>
-            <p>Bevor ich Empfehlungen ausspreche, nehme ich mir die Zeit, deine individuelle Situation genau zu erfassen. Das bedeutet: Zuhören, Fragen stellen und gemeinsam die relevanten Faktoren identifizieren. Nur so entstehen Lösungen, die zu dir passen.</p>
-          </div>
-
+      </div>
+      <div class="marquee" role="region" aria-label="Partnerlogos">
+        <div class="marquee__track">
+          <img src="assets/img/p-dww.webp" width="169" alt="DWW Deutsche Wärmepumpen Werke" height="48" loading="lazy">
+          <img src="assets/img/p-ezs.svg" width="85" alt="EZS Energiezentrum-Services" height="48" loading="lazy">
+          <img src="assets/img/p-allianz.svg" width="187" alt="Allianz Versicherung" height="48" loading="lazy">
+          <img src="assets/img/p-dak.svg" width="89" alt="DAK-Gesundheit" height="48" loading="lazy">
+          <img src="assets/img/p-wuestenrot.webp" width="202" alt="Wüstenrot" height="48" loading="lazy">
+          <img src="assets/img/p-clover.webp" width="220" alt="Clover" height="48" loading="lazy">
+          <img src="assets/img/p-viessmann.webp" width="225" alt="Viessmann" height="48" loading="lazy">
         </div>
       </div>
     </section>
 
-    <!-- ────────────────────────────────────────────────────
-         PARTNER
-    ──────────────────────────────────────────────────── -->
-    <section id="partner" class="section-partner" aria-labelledby="partner-heading">
-      <!-- Background Paths – inserted by JS -->
-
-      <div class="container partner-content">
-        <div class="section-header reveal">
-          <span class="section-label">Vertrauen &amp; Qualität</span>
-          <h2 id="partner-heading">Starke Partner für gute Entscheidungen</h2>
-          <p>Wenn es um dein Zuhause geht, zählen Vertrauen, Qualität und ein sicheres Gefühl.
-          Deshalb arbeite ich mit erfahrenen Herstellern und verlässlichen Partnern zusammen,
-          die für moderne Energielösungen, hohe Standards und langfristige Zuverlässigkeit stehen.
-          So entsteht aus guter Technik eine Lösung, die heute passt und morgen trägt.</p>
-        </div>
-
-        <!-- Orbital Timeline – wird per JS befüllt und animiert -->
-        <div class="orbital-wrapper" id="orbitalWrapper" role="region" aria-label="Partner-Übersicht">
-          <!-- Zentrum -->
-          <div class="orbital-center-orb" aria-hidden="true">
-            <div class="orbital-ping orbital-ping-1"></div>
-            <div class="orbital-ping orbital-ping-2"></div>
-            <div class="orbital-center-dot"></div>
-          </div>
-          <!-- Umlaufbahn -->
-          <div class="orbital-ring" aria-hidden="true"></div>
-          <!-- Partnerknoten und Info-Panel werden per JS eingefügt -->
-        </div>
-
-        <!-- Inline-Popups sind jetzt direkt an den Knoten – kein Panel mehr nötig -->
-      </div>
-    </section>
-
-    <!-- ────────────────────────────────────────────────────
-         TERMINE
-    ──────────────────────────────────────────────────── -->
-    <section id="termine" class="section section-dark" aria-labelledby="termine-heading">
+    <!-- KONTAKT -->
+    <section class="contact" id="kontakt">
       <div class="container">
-        <div class="section-header section-header-light">
-          <span class="section-label">Kostenfrei &amp; unverbindlich</span>
-          <h2 id="termine-heading">Erstberatung buchen</h2>
-          <p>
-            Vereinbare dein kostenloses Erstgespräch –
-            persönlich, telefonisch oder per Videocall.
-          </p>
-        </div>
-
-        <div class="termine-features reveal">
-          <div class="termine-feature">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-            <span>30 Minuten, kein Stress</span>
-          </div>
-          <div class="termine-feature">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.61 3.41 2 2 0 0 1 3.6 1.22h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.81a16 16 0 0 0 6.29 6.29l.95-.95a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
-            <span>Online, telefonisch oder vor Ort</span>
-          </div>
-          <div class="termine-feature">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-            <span>Kostenfrei &amp; unverbindlich</span>
-          </div>
-        </div>
-
-        <div class="termine-cta reveal">
-          <a href="/termin" class="btn btn-accent btn-lg">Termin buchen</a>
-          <p class="termine-hint">Wähle direkt deinen Wunschtermin – kein Account nötig.</p>
-        </div>
-
-      </div>
-    </section>
-
-    <!-- ────────────────────────────────────────────────────
-         KONTAKT
-    ──────────────────────────────────────────────────── -->
-    <section id="kontakt" class="section" aria-labelledby="kontakt-heading">
-      <div class="container">
-        <div class="section-header">
-          <span class="section-label">Lass uns reden</span>
-          <h2 id="kontakt-heading">Kontakt</h2>
+        <div class="section-head">
+          <h2>Kontakt</h2>
           <p>Du hast Fragen oder möchtest ein Projekt besprechen? Ich freue mich auf deine Nachricht.</p>
         </div>
 
-        <div class="contact-grid">
-
-          <!-- Kontaktformular: 3-stufiger Wizard (analog Energierechner) -->
-          <form
-            class="contact-form reveal"
-            id="contactForm"
-            novalidate
-            aria-label="Kontaktformular"
-          >
-            <div class="step-progress-wrap">
-              <p class="step-counter" id="contact-step-counter" aria-live="polite">Schritt 1 von 3 — Deine Kontaktdaten</p>
-              <div class="step-progress"><div class="step-progress-fill" id="contact-step-progress-fill" style="width:33.333%"></div></div>
+        <div class="contact__grid">
+          <form class="form" id="contactForm" novalidate aria-label="Kontaktformular" data-endpoint="/api/contact">
+            <div class="form__progress">
+              <p class="form__counter" id="form-counter" aria-live="polite">Schritt 1 von 3: Deine Kontaktdaten</p>
+              <div class="form__bar"><span id="form-bar-fill" style="--form-progress:.3333"></span></div>
             </div>
 
-            <div class="contact-step active" id="contact-step-1">
-              <h3 class="step-heading" tabindex="-1">Deine Kontaktdaten</h3>
-
-              <div class="form-group-row">
-                <div class="form-group">
-                  <label for="contact-vorname">Vorname <span aria-hidden="true">*</span></label>
-                  <input
-                    type="text"
-                    id="contact-vorname"
-                    name="vorname"
-                    required
-                    autocomplete="given-name"
-                    placeholder="Ihr Vorname"
-                    aria-describedby="contact-vorname-error"
-                    aria-required="true"
-                  >
-                  <span class="field-error" id="contact-vorname-error" role="alert" aria-live="polite"></span>
+            <fieldset class="form__step is-active" data-form-step="1">
+              <legend>Deine Kontaktdaten</legend>
+              <div class="form__row">
+                <div class="field">
+                  <label for="f-vorname">Vorname <span aria-hidden="true">*</span></label>
+                  <input id="f-vorname" name="vorname" type="text" autocomplete="given-name" required>
+                  <p class="field__error" data-error-for="vorname"></p>
                 </div>
-
-                <div class="form-group">
-                  <label for="contact-nachname">Nachname <span aria-hidden="true">*</span></label>
-                  <input
-                    type="text"
-                    id="contact-nachname"
-                    name="nachname"
-                    required
-                    autocomplete="family-name"
-                    placeholder="Ihr Nachname"
-                    aria-describedby="contact-nachname-error"
-                    aria-required="true"
-                  >
-                  <span class="field-error" id="contact-nachname-error" role="alert" aria-live="polite"></span>
+                <div class="field">
+                  <label for="f-nachname">Nachname <span aria-hidden="true">*</span></label>
+                  <input id="f-nachname" name="nachname" type="text" autocomplete="family-name" required>
+                  <p class="field__error" data-error-for="nachname"></p>
                 </div>
               </div>
-
-              <div class="form-group-row">
-                <div class="form-group">
-                  <label for="email">E-Mail <span aria-hidden="true">*</span></label>
-                  <input
-                    type="email"
-                    id="email"
-                    name="email"
-                    required
-                    autocomplete="email"
-                    placeholder="ihre@email.de"
-                    aria-describedby="email-error"
-                    aria-required="true"
-                  >
-                  <span class="field-error" id="email-error" role="alert" aria-live="polite"></span>
+              <div class="form__row">
+                <div class="field">
+                  <label for="f-email">E-Mail <span aria-hidden="true">*</span></label>
+                  <input id="f-email" name="email" type="email" autocomplete="email" inputmode="email" spellcheck="false" required>
+                  <p class="field__error" data-error-for="email"></p>
                 </div>
-
-                <div class="form-group">
-                  <label for="phone">Telefon <span aria-hidden="true">*</span></label>
-                  <input
-                    type="tel"
-                    id="phone"
-                    name="phone"
-                    autocomplete="tel"
-                    placeholder="+49 ..."
-                    required
-                    aria-required="true"
-                    aria-describedby="phone-error"
-                  >
-                  <span class="field-error" id="phone-error" role="alert" aria-live="polite"></span>
+                <div class="field">
+                  <label for="f-phone">Telefon <span aria-hidden="true">*</span></label>
+                  <input id="f-phone" name="phone" type="tel" autocomplete="tel" inputmode="tel" required>
+                  <p class="field__error" data-error-for="phone"></p>
                 </div>
               </div>
+            </fieldset>
+
+            <fieldset class="form__step" data-form-step="2">
+              <legend>Worum geht es?</legend>
+              <div class="chips" role="group" aria-label="Themen auswählen">
+                <button type="button" class="chip" data-thema="pv" aria-pressed="false">Photovoltaik</button>
+                <button type="button" class="chip" data-thema="speicher" aria-pressed="false">Batteriespeicher &amp; Energiehandel</button>
+                <button type="button" class="chip" data-thema="wp" aria-pressed="false">Wärmepumpe</button>
+                <button type="button" class="chip" data-thema="mieterstrom" aria-pressed="false">Mieterstrom</button>
+                <button type="button" class="chip" data-thema="sonstiges" aria-pressed="false">Sonstiges</button>
+              </div>
+              <p class="field__error" data-error-for="themen"></p>
+              <p class="form__hint" data-adresse-hinweis hidden>Für die Standorteinschätzung brauche ich bei diesem Thema deine Adresse.</p>
+              <div class="field">
+                <label for="f-strasse">Straße und Hausnummer <small data-adresse-marke>(optional)</small></label>
+                <input id="f-strasse" name="strasse" type="text" autocomplete="street-address">
+                <p class="field__error" data-error-for="strasse"></p>
+              </div>
+              <div class="form__row form__row--plz">
+                <div class="field">
+                  <label for="f-plz">PLZ <small data-adresse-marke>(optional)</small></label>
+                  <input id="f-plz" name="plz" type="text" inputmode="numeric" autocomplete="postal-code">
+                  <p class="field__error" data-error-for="plz"></p>
+                </div>
+                <div class="field">
+                  <label for="f-ort">Ort <small data-adresse-marke>(optional)</small></label>
+                  <input id="f-ort" name="ort" type="text" autocomplete="address-level2">
+                  <p class="field__error" data-error-for="ort"></p>
+                </div>
+              </div>
+            </fieldset>
+
+            <fieldset class="form__step" data-form-step="3">
+              <legend>Nachricht &amp; Bestätigung</legend>
+              <div class="field">
+                <label for="f-message">Nachricht <small>(optional)</small></label>
+                <textarea id="f-message" name="message" rows="4" autocomplete="off"></textarea>
+              </div>
+              <label class="check">
+                <input type="checkbox" name="datenschutz" autocomplete="off" required>
+                <span>Ich habe die <a href="/datenschutz">Datenschutzerklärung</a> gelesen und stimme der Verarbeitung meiner Daten zu. <span aria-hidden="true">*</span></span>
+              </label>
+              <p class="field__error" data-error-for="datenschutz"></p>
+              <label class="check">
+                <input type="checkbox" name="consentKontakt" autocomplete="off">
+                <span>Patrick darf mich auch telefonisch zur persönlichen Beratung kontaktieren.</span>
+              </label>
+              <div class="hp" aria-hidden="true">
+                <label for="hp_website">Website</label>
+                <input id="hp_website" name="hp_website" type="text" tabindex="-1" autocomplete="off">
+              </div>
+            </fieldset>
+
+            <div class="form__nav">
+              <button type="button" class="btn btn--ghost-dark" id="form-back" hidden>Zurück</button>
+              <button type="button" class="btn btn--green" id="form-next">Weiter</button>
+              <button type="submit" class="btn btn--gold" id="form-submit" hidden>Nachricht senden</button>
             </div>
-
-            <div class="contact-step" id="contact-step-2">
-              <h3 class="step-heading" tabindex="-1">Worum geht es?</h3>
-
-              <div class="form-group">
-                <span class="field-label" id="contact-themen-label">Thema wählen <span aria-hidden="true">*</span></span>
-                <p class="field-sublabel" style="font-size:0.8125rem;color:var(--color-text-muted);margin:0 0 4px">Mehrfachauswahl möglich. Bei Photovoltaik/Wärmepumpe wird zusätzlich deine Adresse für die Standorteinschätzung benötigt.</p>
-                <div class="card-grid cols-2" role="group" aria-labelledby="contact-themen-label">
-                  <button type="button" class="card-btn multi" data-group="themen" data-value="pv">Photovoltaik</button>
-                  <button type="button" class="card-btn multi" data-group="themen" data-value="wp">Wärmepumpe</button>
-                  <button type="button" class="card-btn multi" data-group="themen" data-value="sonstiges">Sonstiges</button>
-                </div>
-                <span class="field-error" id="contact-themen-error" role="alert" aria-live="polite"></span>
-              </div>
-
-              <div class="form-group">
-                <label for="contact-strasse">Straße und Hausnummer
-                  <span class="optional-mark" id="contact-strasse-optional-mark" style="font-weight:400;color:var(--color-text-muted)">(optional)</span>
-                  <span class="req-mark" id="contact-strasse-req-mark" aria-hidden="true" hidden>*</span>
-                </label>
-                <input
-                  type="text"
-                  id="contact-strasse"
-                  name="strasse"
-                  autocomplete="street-address"
-                  placeholder="Musterstraße 1"
-                  aria-describedby="contact-strasse-error"
-                >
-                <span class="field-error" id="contact-strasse-error" role="alert" aria-live="polite"></span>
-              </div>
-
-              <div class="form-group-row">
-                <div class="form-group">
-                  <label for="contact-plz">PLZ
-                    <span class="optional-mark" id="contact-plz-optional-mark" style="font-weight:400;color:var(--color-text-muted)">(optional)</span>
-                    <span class="req-mark" id="contact-plz-req-mark" aria-hidden="true" hidden>*</span>
-                  </label>
-                  <input
-                    type="text"
-                    id="contact-plz"
-                    name="plz"
-                    maxlength="5"
-                    inputmode="numeric"
-                    autocomplete="postal-code"
-                    placeholder="06766"
-                    aria-describedby="contact-plz-error"
-                  >
-                  <span class="field-error" id="contact-plz-error" role="alert" aria-live="polite"></span>
-                </div>
-
-                <div class="form-group">
-                  <label for="contact-ort">Ort
-                    <span class="optional-mark" id="contact-ort-optional-mark" style="font-weight:400;color:var(--color-text-muted)">(optional)</span>
-                    <span class="req-mark" id="contact-ort-req-mark" aria-hidden="true" hidden>*</span>
-                  </label>
-                  <input
-                    type="text"
-                    id="contact-ort"
-                    name="ort"
-                    autocomplete="address-level2"
-                    placeholder="Bitterfeld-Wolfen"
-                    aria-describedby="contact-ort-error"
-                  >
-                  <span class="field-error" id="contact-ort-error" role="alert" aria-live="polite"></span>
-                </div>
-              </div>
-            </div>
-
-            <div class="contact-step" id="contact-step-3">
-              <h3 class="step-heading" tabindex="-1">Nachricht &amp; Bestätigung</h3>
-
-              <div class="form-group">
-                <label for="message">Nachricht <span style="font-weight:400;color:var(--color-text-muted)">(optional)</span></label>
-                <textarea
-                  id="message"
-                  name="message"
-                  rows="4"
-                  placeholder="Beschreibe kurz dein Projekt oder deine Frage…"
-                ></textarea>
-              </div>
-
-              <div class="form-group form-group-checkbox">
-                <input
-                  type="checkbox"
-                  id="datenschutz"
-                  name="datenschutz"
-                  required
-                  aria-describedby="datenschutz-error"
-                  aria-required="true"
-                >
-                <label for="datenschutz">
-                  Ich habe die <a href="/datenschutz">Datenschutzerklärung</a> gelesen und stimme
-                  der Verarbeitung meiner Daten zur Bearbeitung meiner Anfrage zu. <span aria-hidden="true">*</span>
-                </label>
-              </div>
-              <span class="field-error" id="datenschutz-error" role="alert" aria-live="polite"></span>
-
-              <div class="form-group form-group-checkbox">
-                <input
-                  type="checkbox"
-                  id="consentKontakt"
-                  name="consentKontakt"
-                >
-                <label for="consentKontakt">
-                  Patrick darf mich auch zur persönlichen Beratung kontaktieren / mir relevante
-                  Informationen zusenden (optional, jederzeit widerrufbar).
-                </label>
-              </div>
-            </div>
-
-            <!--
-              FORMULAR-ÜBERTRAGUNG (PLATZHALTER):
-              Option A – mailto (kein Server nötig, öffnet E-Mail-Programm):
-                Füge action="mailto:deine@email.de" method="post" enctype="text/plain" zum <form>-Tag hinzu.
-
-              Option B – Formspree (kostenloser Dienst):
-                1. Konto auf formspree.io anlegen
-                2. action="https://formspree.io/f/IHR-FORMULAR-ID" zum <form>-Tag hinzufügen
-                3. Das JS-Handling in main.js entsprechend anpassen.
-            -->
-            <!-- Honeypot: unsichtbar für Menschen, Bots füllen es aus -->
-            <input type="text" name="hp_website" id="hp-website"
-                   autocomplete="off" tabindex="-1" aria-hidden="true"
-                   style="position:absolute;left:-9999px;opacity:0;pointer-events:none;">
-
-            <div class="contact-step-nav">
-              <button type="button" class="btn btn-outline" id="contactBackBtn" hidden>← Zurück</button>
-              <button type="button" class="btn btn-primary" id="contactNextBtn">Weiter →</button>
-              <button type="submit" class="btn btn-primary btn-lg btn-submit" id="submitBtn" hidden>
-                <span class="btn-text">Nachricht senden</span>
-                <span class="btn-loading" aria-hidden="true">Wird gesendet…</span>
-              </button>
-            </div>
-
-            <div class="form-success" id="formSuccess" role="status" aria-live="polite">
-              Vielen Dank! Deine Nachricht wurde gesendet. Ich melde mich innerhalb von 1–2 Werktagen.
-            </div>
+            <p class="form__success" id="form-success" role="status" hidden></p>
           </form>
 
-          <!-- Kontaktdaten -->
-          <aside class="contact-info reveal" aria-label="Direktkontakt">
+          <aside class="direct">
             <h3>Direktkontakt</h3>
-
-            <!-- Telefon -->
-            <div class="contact-item">
-              <div class="contact-item-icon" aria-hidden="true">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.82 11a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.77 0h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8 7.91a16 16 0 0 0 6.08 6.08l1.08-1.07a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/>
-                </svg>
-              </div>
-              <div class="contact-item-text">
-                <span>Mobil</span>
-                <a href="tel:+491734994994">0173 499 4994</a>
-              </div>
+            <a class="direct__item" href="tel:+491734994994">
+              <span class="direct__label">Mobil</span>
+              <span class="direct__value">0173 499 4994</span>
+            </a>
+            <a class="direct__item" href="mailto:p@patrickleissner.de">
+              <span class="direct__label">E-Mail</span>
+              <span class="direct__value">p@patrickleissner.de</span>
+            </a>
+            <a class="direct__item" href="https://maps.google.com/?q=Dessauer+Allee+52,+06766+Bitterfeld-Wolfen" target="_blank" rel="noopener">
+              <span class="direct__label">Büro</span>
+              <span class="direct__value">Dessauer Allee 52<br>06766 Bitterfeld-Wolfen</span>
+            </a>
+            <div class="direct__item direct__item--static">
+              <span class="direct__label">Erreichbarkeit</span>
+              <span class="direct__value">Montag bis Freitag: 08:00 bis 18:00&nbsp;Uhr<br>Samstag: nach Vereinbarung</span>
             </div>
-
-            <!-- E-Mail -->
-            <div class="contact-item">
-              <div class="contact-item-icon" aria-hidden="true">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <rect x="2" y="4" width="20" height="16" rx="2"/>
-                  <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/>
-                </svg>
-              </div>
-              <div class="contact-item-text">
-                <span>E-Mail</span>
-                <a href="mailto:p@patrickleissner.de">p@patrickleissner.de</a>
-              </div>
-            </div>
-
-            <!-- Region -->
-            <div class="contact-item">
-              <div class="contact-item-icon" aria-hidden="true">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <path d="M20 10c0 6-8 12-8 12S4 16 4 10a8 8 0 1 1 16 0z"/>
-                  <circle cx="12" cy="10" r="3"/>
-                </svg>
-              </div>
-              <div class="contact-item-text">
-                <span>Büro</span>
-                <a href="https://maps.google.com/?q=Dessauer+Allee+52,+06766+Bitterfeld-Wolfen"
-                   id="addressNavLink" target="_blank" rel="noopener noreferrer"
-                   aria-label="Route zur Büroadresse planen">
-                  Dessauer Allee 52<br>06766 Bitterfeld-Wolfen
-                </a>
-              </div>
-            </div>
-
-            <!-- Erreichbarkeit -->
-            <div class="contact-hours">
-              <h4>Erreichbarkeit</h4>
-              <p>Montag – Freitag: 08:00 – 18:00 Uhr</p>
-              <p>Samstag: nach Vereinbarung</p>
-            </div>
+            <a class="direct__wa" href="https://wa.me/491734994994" target="_blank" rel="noopener">Per WhatsApp schreiben</a>
           </aside>
-
         </div>
       </div>
     </section>
-
   </main>
 
-  <!-- ═══════════════════════════════════════════════════════
-       FOOTER
-  ═══════════════════════════════════════════════════════ -->
-  <footer class="site-footer" role="contentinfo">
-    <div class="container footer-grid">
-      <div class="footer-brand">
-        <a href="/" class="nav-logo" aria-label="Patrick Leißner Energieberatung – zur Startseite">
-          <img src="/assets/Logo/Initialien-Gold-frei.png" alt="Patrick Leißner Energieberatung Logo" width="36" height="36" loading="lazy">
-          <span class="nav-logo-text">Patrick Leißner</span>
-        </a>
-        <p>Frei durch eigene Energie.</p>
-        <div class="footer-social" aria-label="Social Media">
-          <a href="https://www.instagram.com/patrickleissner.de" target="_blank" rel="noopener" aria-label="Patrick Leißner auf Instagram">
-            <img src="/assets/icons/gold_instagram_icon_frei.png" alt="" width="17" height="17" loading="lazy">
-          </a>
-          <a href="https://www.facebook.com/patrickleissner.de" target="_blank" rel="noopener" aria-label="Patrick Leißner auf Facebook">
-            <img src="/assets/icons/gold_facebook_icon_frei.png" alt="" width="17" height="17" loading="lazy">
-          </a>
-          <a href="https://x.com/patrickLeiszner" target="_blank" rel="noopener" aria-label="Patrick Leißner auf X">
-            <img src="/assets/icons/gold_x_icon_frei.png" alt="" width="17" height="17" loading="lazy">
-          </a>
-          <a href="https://wa.me/491734994994" target="_blank" rel="noopener" aria-label="Patrick Leißner auf WhatsApp">
-            <img src="/assets/icons/gold_whatsapp_icon_frei.png" alt="" width="17" height="17" loading="lazy">
-          </a>
+  <!-- FOOTER mit CTA -->
+  <footer class="footer">
+    <div class="footer__cta">
+      <div class="container footer__cta-inner">
+        <div>
+          <h2>Erstberatung buchen</h2>
+          <p>30&nbsp;Minuten, kostenfrei und unverbindlich. Online, telefonisch oder vor Ort. Wähle direkt deinen Wunschtermin, kein Account nötig.</p>
+        </div>
+        <a class="btn btn--gold btn--lg" href="/termin">Termin buchen</a>
+      </div>
+    </div>
+
+    <div class="container footer__grid">
+      <div class="footer__brand">
+        <img src="assets/img/logo-mark.webp" width="400" height="251" alt="" loading="lazy">
+        <p><strong translate="no">Patrick Leißner</strong><br>Frei durch eigene Energie.</p>
+        <div class="footer__social">
+          <a href="https://www.instagram.com/patrickleissner.de" target="_blank" rel="noopener">Instagram</a>
+          <a href="https://www.facebook.com/patrickleissner.de" target="_blank" rel="noopener">Facebook</a>
+          <a href="https://x.com/patrickLeiszner" target="_blank" rel="noopener">X</a>
+          <a href="https://wa.me/491734994994" target="_blank" rel="noopener">WhatsApp</a>
         </div>
       </div>
-      <div class="footer-col">
+      <div class="footer__col">
         <h3>Kontakt</h3>
         <a href="tel:+491734994994">0173 499 4994</a>
         <a href="mailto:p@patrickleissner.de">p@patrickleissner.de</a>
-        <span>Bitterfeld-Wolfen</span>
+        <span>Dessauer Allee 52<br>06766 Bitterfeld-Wolfen</span>
       </div>
-      <nav class="footer-col" aria-label="Leistungen">
+      <div class="footer__col">
         <h3>Leistungen</h3>
-        <a href="/beratung-technik">Beratung und Technik</a>
-        <a href="/koordination-netzwerk">Koordination und Netzwerk</a>
-        <a href="/waermepumpe-heizlast">Wärmepumpe und Heizlast</a>
-        <a href="/mieterstrom">Mieterstrom und Objektenergie</a>
-      </nav>
-      <nav class="footer-col" aria-label="Rechner und Ratgeber">
+        <a href="/beratung-technik">Beratung &amp; Technik</a>
+        <a href="/koordination-netzwerk">Koordination &amp; Netzwerk</a>
+        <a href="/waermepumpe-heizlast">Wärmepumpe &amp; Heizlast</a>
+        <a href="/mieterstrom">Mieterstrom &amp; Objektenergie</a>
+        <a href="/batteriespeicher">Batteriespeicher &amp; Energiehandel</a>
+      </div>
+      <div class="footer__col">
         <h3>Rechner &amp; Ratgeber</h3>
         <a href="/unabhaengigkeit">Unabhängigkeitsrechner</a>
         <a href="/heizkosten">Heizkosten-Rechner</a>
         <a href="/nutzen">Nutzen-Rechner</a>
         <a href="/spotpreis">Spotpreis-Monitor</a>
+        <a href="/batteriespeicher">Batteriespeicher-Ertragsrechner</a>
         <a href="/ratgeber">Ratgeber</a>
-        <a href="https://ecowattiv.de/dww/" target="_blank" rel="noopener noreferrer">DWW-Wirtschaftlichkeitsrechner ↗</a>
-      </nav>
+      </div>
     </div>
-    <div class="container footer-bottom">
-      <nav class="footer-links" aria-label="Footer-Navigation">
+
+    <div class="container footer__legal">
+      <div>
         <a href="/impressum">Impressum</a>
         <a href="/datenschutz">Datenschutz</a>
-        <a href="#" aria-label="Zurück zum Seitenanfang">Nach oben ↑</a>
-      </nav>
-      <p class="footer-copyright">© 2026 Patrick Leißner. Alle Rechte vorbehalten.</p>
-      <p class="footer-operator">pin-co.de Media UG (haftungsbeschränkt)</p>
+        <a href="#top">Nach oben ↑</a>
+        <button type="button" class="motion-toggle" data-motion-toggle aria-pressed="false">Animationen anhalten</button>
+      </div>
+      <p>© 2026 Patrick Leißner. Alle Rechte vorbehalten.</p>
     </div>
   </footer>
 
-  <script src="main.js"></script>
+  <!-- Mobile: Kontakt immer präsent -->
+  <div class="dock" aria-label="Schnellkontakt">
+    <a class="dock__call" href="tel:+491734994994">Anrufen</a>
+    <a class="dock__cta" href="/termin">Termin buchen</a>
+  </div>
 
+  <script src="assets/vendor/gsap.min.js" defer></script>
+  <script src="assets/vendor/ScrollTrigger.min.js" defer></script>
+  <script src="js/main.js" defer></script>
+  <script src="js/scenes3d.js" defer></script>
 </body>
 </html>

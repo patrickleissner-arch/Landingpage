@@ -1,676 +1,367 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Beratung & Technik – Individuelle Planung von Photovoltaikanlagen. Standortanalyse, Wirtschaftlichkeitsrechnung und Umsetzungsbegleitung durch Patrick Leißner.">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Beratung &amp; Technik | Patrick Leißner Energieberatung</title>
+  <meta name="description" content="Beratung &amp; Technik: individuelle Planung von Photovoltaikanlagen. Standortanalyse, Wirtschaftlichkeitsrechnung und Umsetzungsbegleitung durch Patrick Leißner.">
+  <meta name="theme-color" content="#0f2a23">
+  <link rel="canonical" href="https://patrickleissner.de/beratung-technik">
 
-  <meta property="og:title" content="Beratung & Technik – Patrick Leißner Energieberatung">
-  <meta property="og:description" content="Technisch fundiert, herstellerunabhängig, persönlich: PV-Anlagen individuell geplant.">
   <meta property="og:type" content="website">
-
-  <title>Beratung & Technik – Patrick Leißner | Energieberatung</title>
-
-  <link rel="preload" as="image" href="assets/Foto/leistung-pv.jpg" fetchpriority="high">
-  <link rel="stylesheet" href="style.css">
-  <link rel="stylesheet" href="subpage.css">
+  <meta property="og:title" content="Beratung &amp; Technik | Patrick Leißner Energieberatung">
+  <meta property="og:description" content="Beratung &amp; Technik: individuelle Planung von Photovoltaikanlagen. Standortanalyse, Wirtschaftlichkeitsrechnung und Umsetzungsbegleitung durch Patrick Leißner.">
+  <meta property="og:image" content="https://patrickleissner.de/assets/img/patrick-1600.webp">
+  <meta property="og:locale" content="de_DE">
+  <link rel="icon" type="image/webp" href="assets/img/logo-mark.webp">
+  <link rel="preload" href="assets/fonts/Outfit-Variable.ttf" as="font" type="font/ttf" crossorigin>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/pages.css">
 </head>
-<body>
+<body class="page page--beratung-technik">
+  <a class="skip-link" href="#main">Zum Inhalt springen</a>
 
-  <a href="#main" class="skip-link">Zum Hauptinhalt springen</a>
-
-  <header class="site-header scrolled" role="banner" id="site-header">
-    <nav class="nav-container" aria-label="Hauptnavigation">
-
-      <a href="/" class="nav-logo" aria-label="Patrick Leißner Energieberatung – zur Startseite">
-        <img src="assets/Logo/Initialien-Name-Positiv-frei.png" alt="Patrick Leißner Energieberatung Logo" height="96" loading="eager" style="width:auto">
+<header class="nav" id="site-header">
+    <div class="nav__inner">
+      <a class="nav__brand" href="/" aria-label="Patrick Leißner, zur Startseite" translate="no">
+        <img src="assets/img/logo-full-light.webp" width="800" height="375" alt="Patrick Leißner Energieberatung" fetchpriority="high">
       </a>
-
-      <ul class="nav-links" role="list">
-        <li><a href="/#leistungen">Leistungen</a></li>
-        <li><a href="/#ueber-pl">Über mich</a></li>
-        <li><a href="/termin">Termine</a></li>
-        <li><a href="/#kontakt">Kontakt</a></li>
-      </ul>
-
-      <a href="/termin" class="btn btn-accent nav-cta">Termin buchen</a>
-
-      <button
-        class="hamburger"
-        aria-label="Menü öffnen"
-        aria-expanded="false"
-        aria-controls="mobile-menu"
-        id="hamburger-btn"
-      >
-        <span></span>
-        <span></span>
-        <span></span>
+      <nav class="nav__links" aria-label="Hauptnavigation">
+        <a href="/#leistungen">Leistungen</a>
+        <a href="/#arbeitsweise">Arbeitsweise</a>
+        <a href="/#ueber-mich">Über mich</a>
+        <a href="/ratgeber">Ratgeber</a>
+        <a href="/#kontakt">Kontakt</a>
+      </nav>
+      <a class="btn btn--gold nav__cta" href="/termin">Termin buchen</a>
+      <button class="nav__toggle" type="button" aria-expanded="false" aria-controls="mobile-menu" aria-label="Menü öffnen">
+        <span></span><span></span>
       </button>
-    </nav>
-
-    <div class="mobile-menu" id="mobile-menu" aria-hidden="true" role="dialog" aria-label="Hauptnavigation">
-      <ul role="list">
-        <li><a href="/#leistungen" class="mobile-nav-link">Leistungen</a></li>
-        <li><a href="/#ueber-pl" class="mobile-nav-link">Über mich</a></li>
-        <li><a href="/termin" class="mobile-nav-link">Termine</a></li>
-        <li><a href="/#kontakt" class="mobile-nav-link">Kontakt</a></li>
-        <li><a href="/termin" class="btn btn-accent mobile-nav-link">Termin buchen</a></li>
-      </ul>
+    </div>
+    <div class="nav__mobile" id="mobile-menu" hidden>
+      <a href="/#leistungen">Leistungen</a>
+      <a href="/#arbeitsweise">Arbeitsweise</a>
+      <a href="/#ueber-mich">Über mich</a>
+      <a href="/ratgeber">Ratgeber</a>
+      <a href="/#kontakt">Kontakt</a>
+      <a class="btn btn--gold" href="/termin">Termin buchen</a>
     </div>
   </header>
 
-  <div class="sp-back-bar">
-    <div class="container">
-      <a href="/" class="sp-back-link">Zurück zur Startseite</a>
+<main id="main">
+<section class="sp-hero" aria-label="Beratung und Technik – Einleitung">
+  <nav class="sp-breadcrumb" aria-label="Brotkrumen-Navigation">
+    <div class="sp-breadcrumb-inner">
+      <a href="/">Startseite</a><span class="sp-bc-sep" aria-hidden="true">›</span>
+      <a href="/#leistungen">Leistungen</a><span class="sp-bc-sep" aria-hidden="true">›</span>
+      <span class="sp-bc-current">Beratung &amp; Technik</span>
+    </div>
+  </nav>
+  <div class="sp-hero-bg" style="background-image: url('assets/img/leistung-pv-1200.webp')" aria-hidden="true"></div>
+  <div class="container sp-hero-content">
+    <p class="sp-hero-eyebrow">Technische Beratung</p>
+    <h1>Photovoltaik, individuell geplant.</h1>
+    <p>Von der Standortanalyse bis zur Inbetriebnahme begleite ich dich durch jeden Schritt. Kein Baukastensystem, sondern eine Lösung, die zu deinem Gebäude und deiner Situation passt.</p>
+    <div class="sp-hero-actions">
+      <a href="/termin" class="btn btn-accent btn-lg">Termin buchen</a>
+      <a href="#leistungen-bt" class="btn btn-ghost btn-lg">Leistungsübersicht</a>
     </div>
   </div>
+</section>
 
-  <main id="main">
-
-    <!-- ── Hero ── -->
-    <section class="sp-hero sp-hero--video" aria-label="Beratung und Technik – Einleitung">
-
-      <nav class="sp-breadcrumb" aria-label="Brotkrumen-Navigation">
-        <div class="sp-breadcrumb-inner">
-          <a href="/">Startseite</a>
-          <span class="sp-bc-sep" aria-hidden="true">›</span>
-          <a href="/#leistungen">Leistungen</a>
-          <span class="sp-bc-sep" aria-hidden="true">›</span>
-          <span class="sp-bc-current">Beratung & Technik</span>
-        </div>
-      </nav>
-
-      <div class="sp-hero-bg" style="background-image: url('assets/Foto/leistung-pv.jpg')" aria-hidden="true"></div>
-      <video class="sp-hero-video" autoplay muted loop playsinline aria-hidden="true">
-        <source src="assets/Video/Photovoltaik.mp4" type="video/mp4">
-      </video>
-
-      <div class="container sp-hero-content">
-        <p class="sp-hero-eyebrow">Technische Beratung</p>
-        <h1>Photovoltaik –<br>individuell geplant.</h1>
-        <p>Von der Standortanalyse bis zur Inbetriebnahme begleite ich dich durch jeden Schritt. Kein Baukastensystem – sondern eine Lösung, die wirklich zu deinem Gebäude und deiner Situation passt.</p>
-        <div class="sp-hero-actions">
-          <a href="/termin" class="btn btn-accent btn-lg">Erstberatung vereinbaren</a>
-          <a href="#leistungen-bt" class="btn btn-ghost btn-lg">Leistungsübersicht</a>
-        </div>
-      </div>
-    </section>
-
-    <!-- ── Stats ── -->
-    <section class="sp-section sp-section--compact" aria-label="Kennzahlen">
-      <div class="container">
-        <div class="sp-stats reveal">
-          <div class="sp-stat-item">
-            <div class="sp-stat-number">100%</div>
-            <div class="sp-stat-label">Hersteller&shy;unabhängig</div>
-          </div>
-          <div class="sp-stat-item">
-            <div class="sp-stat-number">Kostenlos</div>
-            <div class="sp-stat-label">Erstgespräch</div>
-          </div>
-          <div class="sp-stat-item">
-            <div class="sp-stat-number">Vor Ort</div>
-            <div class="sp-stat-label">& online</div>
-          </div>
-          <div class="sp-stat-item">
-            <div class="sp-stat-number">1:1</div>
-            <div class="sp-stat-label">Persönliche Beratung</div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- ── Leistungen ── -->
-    <section id="leistungen-bt" class="sp-section sp-section--beige" aria-labelledby="leistungen-bt-heading">
-      <div class="container">
-        <div class="sp-section-header reveal">
-          <span class="sp-eyebrow">Was ich für dich tue</span>
-          <h2 id="leistungen-bt-heading">Leistungsübersicht</h2>
-          <p>Ganzheitliche technische Beratung – von der ersten Analyse bis zur abgeschlossenen Umsetzung.</p>
-        </div>
-
-        <div class="sp-features-grid">
-
-          <article class="sp-feature-box reveal" aria-label="Standortanalyse">
-            <div class="sp-feature-icon" aria-hidden="true">
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
-              </svg>
-            </div>
-            <h3>Standort&shy;analyse & Potenzialermittlung</h3>
-            <p>Detaillierte Begutachtung deines Daches, deiner Ausrichtung und der regionalen Einstrahlungswerte. Ich ermittle realistisch, was an deinem Standort möglich ist.</p>
-          </article>
-
-          <article class="sp-feature-box reveal" aria-label="PV-Anlagenplanung">
-            <div class="sp-feature-icon" aria-hidden="true">
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/>
-              </svg>
-            </div>
-            <h3>PV-Anlagenplanung & Dimensionierung</h3>
-            <p>Berechnung der optimalen Anlagengröße auf Basis deines tatsächlichen Stromverbrauchs – nicht mehr und nicht weniger als du wirklich brauchst.</p>
-          </article>
-
-          <article class="sp-feature-box reveal" aria-label="Energiespeicher">
-            <div class="sp-feature-icon" aria-hidden="true">
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <rect x="2" y="7" width="20" height="15" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/>
-                <line x1="12" y1="12" x2="12" y2="16"/><line x1="10" y1="14" x2="14" y2="14"/>
-              </svg>
-            </div>
-            <h3>Energiespeicher & Eigenverbrauchsoptimierung</h3>
-            <p>Welche Speichergröße macht wirtschaftlich Sinn? Gemeinsam berechnen wir, wie du deinen selbst erzeugten Solarstrom maximal selbst nutzen kannst.</p>
-          </article>
-
-          <article class="sp-feature-box reveal" aria-label="Wirtschaftlichkeitsrechnung">
-            <div class="sp-feature-icon" aria-hidden="true">
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
-              </svg>
-            </div>
-            <h3>Wirtschaftlichkeit & Fördermittelberatung</h3>
-            <p>Ich stelle dir eine realistische Amortisationsrechnung auf und zeige dir, welche KfW-Programme, Bundesförderungen und regionale Zuschüsse für dich relevant sind.</p>
-          </article>
-
-          <article class="sp-feature-box reveal" aria-label="Netzanmeldung">
-            <div class="sp-feature-icon" aria-hidden="true">
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M18 3a3 3 0 0 0-3 3v12a3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3H6a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3V6a3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3h12a3 3 0 0 0 3-3 3 3 0 0 0-3-3z"/>
-              </svg>
-            </div>
-            <h3>Netzeinspeisung & Anmeldebegleitung</h3>
-            <p>Von der Anmeldung beim Netzbetreiber bis zur Marktstammdatenregistrierung: Ich begleite dich durch den bürokratischen Prozess und sorge für reibungslose Abläufe.</p>
-          </article>
-
-        </div>
-      </div>
-    </section>
-
-    <!-- ── Varianten-Intro ── -->
-    <section class="sp-section sp-section--compact" aria-label="Einleitung Varianten">
-      <div class="container variant-intro reveal">
-        <span class="section-label">Drei Wege zu deiner Energie</span>
-        <h2>Es gibt nicht die PV-Anlage.<br>Es gibt deine.</h2>
-        <p>Je nach Dachsituation, Budget und Anspruch passt eine andere Lösung. Hier sind die drei Varianten, zwischen denen ich dich ehrlich berate.</p>
-      </div>
-    </section>
-
-    <!-- ── Varianten: durchgehender Shader-Hintergrund über alle drei Sektionen ── -->
-    <div class="variant-stack">
-      <canvas class="variant-bg" id="variantCanvas" aria-hidden="true"></canvas>
-
-    <!-- ── Eco ── -->
-    <section id="eco" class="section section-dark section-variant" aria-labelledby="eco-heading">
-      <div class="container variant-inner">
-        <div class="section-header section-header-light reveal">
-          <span class="section-label">Variante 1 · Eco</span>
-          <h2 id="eco-heading">Eco</h2>
-          <p>Klassische PV mit Standard-Speicher – der richtige Einstieg, wenn wenige, klar abgegrenzte Bedingungen erfüllt sind.</p>
-        </div>
-
-        <ul class="variant-features reveal">
-          <li>
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-              <line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
-            </svg>
-            <div><strong>Niedrigster Einstiegspreis</strong><span>schnelle Amortisation bei guter Dachsituation</span></div>
-          </li>
-          <li>
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-              <rect x="2" y="7" width="20" height="15" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/>
-            </svg>
-            <div><strong>Konventioneller Speicher</strong><span>kein intelligentes Energiemanagement</span></div>
-          </li>
-          <li>
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
-            </svg>
-            <div><strong>Erfüllt §14a-Pflicht</strong><span>holt Modul-3-Rabatt aber nicht automatisch ab</span></div>
-          </li>
-          <li>
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-              <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
-            </svg>
-            <div><strong>Ehrliche Einschränkung</strong><span>reagiert nicht auf negative Strompreise (Solarspitzengesetz)</span></div>
-          </li>
-        </ul>
-
-        <p class="variant-note">Eco eignet sich vor allem ohne Wallbox, Wärmepumpe oder dynamischen Tarif – dazu beraten wir dich ehrlich im Gespräch.</p>
-
-        <div class="variant-cta reveal">
-          <a href="/termin" class="btn btn-accent btn-lg">Passt Eco zu deiner Situation? Lass uns das prüfen.</a>
-        </div>
-      </div>
-    </section>
-
-    <!-- ── Premium (Sigenergy SigenStor) ── -->
-    <section id="premium" class="section section-dark section-variant" aria-labelledby="premium-heading">
-      <div class="container variant-inner">
-        <div class="section-header section-header-light reveal">
-          <span class="section-label">Variante 2 · Premium</span>
-          <h2 id="premium-heading">Sigenergy SigenStor</h2>
-          <p>Photovoltaik, Speicher und Energiemanagement in einem Turm – für alle, die mehr wollen als Standardtechnik.</p>
-        </div>
-
-        <ul class="variant-features reveal">
-          <li>
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-              <rect x="2" y="7" width="18" height="10" rx="2"/>
-              <line x1="22" y1="10" x2="22" y2="14"/>
-              <line x1="6" y1="10" x2="6" y2="14"/>
-              <line x1="10" y1="10" x2="10" y2="14"/>
-            </svg>
-            <div><strong>314-Ah-Zellen, 100&nbsp;% Entladetiefe</strong><span>Herstellerangabe</span></div>
-          </li>
-          <li>
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-              <path d="M12 3l7 3v6c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V6z"/>
-              <path d="M9 12l2-3 2 3 2-3"/>
-            </svg>
-            <div><strong>IP66 – outdoor-tauglich</strong><span>−20&nbsp;°C bis +55&nbsp;°C</span></div>
-          </li>
-          <li>
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-              <path d="M12 3v4M12 17v4M3 12h4M17 12h4"/>
-              <circle cx="12" cy="12" r="3"/>
-            </svg>
-            <div><strong>GPT-4o-Integration (mySigen-App)</strong><span>Sigen AI Mode &amp; Assistant</span></div>
-          </li>
-          <li>
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-              <path d="M3 13l2-6h10l2 6"/>
-              <rect x="2" y="13" width="16" height="5" rx="1"/>
-              <circle cx="6" cy="20" r="1.4"/>
-              <circle cx="14" cy="20" r="1.4"/>
-              <path d="M19 14l2 2-2 2M21 16h-3"/>
-            </svg>
-            <div><strong>Bidirektionales Laden (V2H/V2G)</strong><span>fahrzeugabhängig, teils per OTA</span></div>
-          </li>
-        </ul>
-
-        <p class="variant-note">Technische Angaben laut Sigenergy, nicht unabhängig geprüft.</p>
-
-        <div class="variant-cta reveal">
-          <a href="/termin" class="btn btn-accent btn-lg">Passt das zu deinem Zuhause? Lass uns sprechen.</a>
-        </div>
-      </div>
-    </section>
-
-    <!-- ── Solaris² + StromKontoPlus ── -->
-    <section id="solaris" class="section section-dark section-variant" aria-labelledby="solaris-heading">
-      <div class="container variant-inner">
-        <div class="section-header section-header-light reveal">
-          <span class="section-label">Variante 3 · Solaris² + StromKontoPlus</span>
-          <h2 id="solaris-heading">Solaris² + StromKontoPlus</h2>
-          <p>Für Dächer mit schlechter Ausrichtung oder wenig Fläche: ein großer Innenspeicher kombiniert mit einem planbaren Stromkonto-Tarif.</p>
-        </div>
-
-        <ul class="variant-features reveal">
-          <li>
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-              <rect x="2" y="7" width="20" height="15" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/>
-            </svg>
-            <div><strong>80,4&nbsp;kWh LFP-Speicher</strong><span>Innenbereich (IP41), nicht outdoor-tauglich</span></div>
-          </li>
-          <li>
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-              <line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
-            </svg>
-            <div><strong>Freimenge: PV-kWp × 1.000 kWh/Jahr</strong><span>darüber 22&nbsp;ct/kWh, ab 25.000&nbsp;kWh 33&nbsp;ct/kWh</span></div>
-          </li>
-          <li>
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-              <circle cx="6" cy="6" r="2.4"/><circle cx="18" cy="6" r="2.4"/><circle cx="12" cy="18" r="2.4"/>
-              <path d="M8 7.2L10.5 16M16 7.2L13.5 16M8.4 6h7.2"/>
-            </svg>
-            <div><strong>Anbieter</strong><span>DWW Deutsche Wärmepumpen Werke (Speicher) + DSG (Stromtarif)</span></div>
-          </li>
-          <li>
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-              <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
-            </svg>
-            <div><strong>Für schwierige Dächer</strong><span>Nord-Ausrichtung, Verschattung, verwinkelte Flächen</span></div>
-          </li>
-        </ul>
-
-        <div class="variant-callout reveal">
-          <strong>Gegenleistung – transparent benannt</strong>
-          <p>Im Gegenzug für die kostenlose Freimenge überlässt du dem Lieferanten zeitlich und mengenmäßig unbegrenzten Zugriff auf deinen Speicher, und die Einspeisevergütung wird abgetreten. Der Lieferant entscheidet, wann eingespeist wird. Das ist ein bewusster Tausch, kein Nachteil im Kleingedruckten – ich erkläre dir im Gespräch genau, was das für dich bedeutet.</p>
-        </div>
-
-        <div class="variant-cta reveal">
-          <a href="/termin" class="btn btn-accent btn-lg">Passt Solaris² zu deinem Dach? Lass uns sprechen.</a>
-        </div>
-      </div>
-    </section>
-
+<section class="sp-section sp-section--compact" aria-label="Kennzahlen">
+  <div class="container">
+    <div class="sp-stats reveal">
+      <div class="sp-stat-item"><div class="sp-stat-number">100&nbsp;%</div><div class="sp-stat-label">Hersteller&shy;unabhängig</div></div>
+      <div class="sp-stat-item"><div class="sp-stat-number">Kostenlos</div><div class="sp-stat-label">Erstgespräch</div></div>
+      <div class="sp-stat-item"><div class="sp-stat-number">Vor Ort</div><div class="sp-stat-label">und online</div></div>
+      <div class="sp-stat-item"><div class="sp-stat-number">1:1</div><div class="sp-stat-label">Persönliche Beratung</div></div>
     </div>
-    <!-- /.variant-stack -->
+  </div>
+</section>
 
-    <!-- ── Vorteile ── -->
-    <section class="sp-section" aria-labelledby="vorteile-bt-heading">
-      <div class="container">
-        <div class="sp-section-header reveal">
-          <span class="sp-eyebrow">Warum mit mir</span>
-          <h2 id="vorteile-bt-heading">Mein Ansatz</h2>
-          <p>Was mich von Pauschalangeboten unterscheidet – und warum das für dich einen Unterschied macht.</p>
-        </div>
+<section id="leistungen-bt" class="sp-section sp-section--beige" aria-labelledby="leistungen-bt-heading">
+  <div class="container">
+    <div class="sp-section-header reveal">
+      <h2 id="leistungen-bt-heading">Leistungsübersicht</h2>
+      <p>Ganzheitliche technische Beratung, von der ersten Analyse bis zur abgeschlossenen Umsetzung.</p>
+    </div>
+    <div class="sp-features-grid">
+      <article class="sp-feature-box reveal" aria-label="Standortanalyse">
+        <div class="sp-feature-icon" aria-hidden="true"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg></div>
+        <h3>Standort&shy;analyse &amp; Potenzialermittlung</h3>
+        <p>Detaillierte Begutachtung deines Daches, deiner Ausrichtung und der regionalen Einstrahlungswerte. Ich ermittle realistisch, was an deinem Standort möglich ist.</p>
+      </article>
+      <article class="sp-feature-box reveal" aria-label="PV-Anlagenplanung">
+        <div class="sp-feature-icon" aria-hidden="true"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg></div>
+        <h3>PV-Anlagenplanung &amp; Dimensionierung</h3>
+        <p>Berechnung der optimalen Anlagengröße auf Basis deines tatsächlichen Stromverbrauchs. Nicht mehr und nicht weniger, als du wirklich brauchst.</p>
+      </article>
+      <article class="sp-feature-box reveal" aria-label="Energiespeicher">
+        <div class="sp-feature-icon" aria-hidden="true"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="15" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/><line x1="12" y1="12" x2="12" y2="16"/><line x1="10" y1="14" x2="14" y2="14"/></svg></div>
+        <h3>Energiespeicher &amp; Eigenverbrauchsoptimierung</h3>
+        <p>Welche Speichergröße ist wirtschaftlich sinnvoll? Gemeinsam berechnen wir, wie du deinen selbst erzeugten Solarstrom maximal selbst nutzen kannst.</p>
+      </article>
+      <article class="sp-feature-box reveal" aria-label="Wirtschaftlichkeitsrechnung">
+        <div class="sp-feature-icon" aria-hidden="true"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></div>
+        <h3>Wirtschaftlichkeit &amp; Fördermittelberatung</h3>
+        <p>Ich stelle dir eine realistische Amortisationsrechnung auf und zeige dir, welche KfW-Programme, Bundesförderungen und regionalen Zuschüsse für dich relevant sind.</p>
+      </article>
+      <article class="sp-feature-box reveal" aria-label="Netzanmeldung">
+        <div class="sp-feature-icon" aria-hidden="true"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 3a3 3 0 0 0-3 3v12a3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3H6a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3V6a3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3h12a3 3 0 0 0 3-3 3 3 0 0 0-3-3z"/></svg></div>
+        <h3>Netzeinspeisung &amp; Anmeldebegleitung</h3>
+        <p>Von der Anmeldung beim Netzbetreiber bis zur Marktstammdatenregistrierung: Ich begleite dich durch den bürokratischen Prozess und sorge für reibungslose Abläufe.</p>
+      </article>
+    </div>
+  </div>
+</section>
 
-        <div class="sp-benefits-grid">
+<section class="sp-section" aria-label="Einleitung Varianten">
+  <div class="container variant-intro reveal">
+    <span class="section-label">Drei Wege zu deiner Energie</span>
+    <h2>Es gibt nicht die PV-Anlage. Es gibt deine.</h2>
+    <p>Je nach Dachsituation, Budget und Anspruch passt eine andere Lösung. Hier sind die drei Varianten, zwischen denen ich dich ehrlich berate.</p>
+  </div>
+</section>
 
-          <div class="sp-benefit-item reveal">
-            <div class="sp-benefit-icon" aria-hidden="true">
-              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
-              </svg>
-            </div>
-            <h3>Herstellerunabhängig</h3>
-            <p>Keine Bindung an bestimmte Marken oder Vertriebsverträge. Meine Empfehlung basiert ausschließlich auf deiner Situation.</p>
-          </div>
-
-          <div class="sp-benefit-item reveal">
-            <div class="sp-benefit-icon" aria-hidden="true">
-              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
-              </svg>
-            </div>
-            <h3>Erst verstehen, dann bewerten</h3>
-            <p>Bevor ich Empfehlungen ausspreche, nehme ich mir Zeit, deine Situation genau zu erfassen – Verbrauch, Gebäude, Ziele und Budget.</p>
-          </div>
-
-          <div class="sp-benefit-item reveal">
-            <div class="sp-benefit-icon" aria-hidden="true">
-              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
-                <polyline points="14 2 14 8 20 8"/>
-                <line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/>
-                <polyline points="10 9 9 9 8 9"/>
-              </svg>
-            </div>
-            <h3>Transparente Kalkulation</h3>
-            <p>Klare Zahlen statt Hochglanzversprechen. Du erhältst eine nachvollziehbare Wirtschaftlichkeitsrechnung ohne versteckte Annahmen.</p>
-          </div>
-
-        </div>
+<div class="variant-stack">
+  <section id="eco" class="section section-dark section-variant" aria-labelledby="eco-heading">
+    <div class="container variant-inner">
+      <div class="section-header section-header-light reveal">
+        <span class="section-label">Variante 1</span>
+        <h2 id="eco-heading">Eco</h2>
+        <p>Klassische PV mit Standard-Speicher: der richtige Einstieg, wenn wenige, klar abgegrenzte Bedingungen erfüllt sind.</p>
       </div>
-    </section>
+      <ul class="variant-features reveal">
+        <li><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg><div><strong>Niedrigster Einstiegspreis</strong><span>schnelle Amortisation bei guter Dachsituation</span></div></li>
+        <li><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="7" width="20" height="15" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/></svg><div><strong>Konventioneller Speicher</strong><span>kein intelligentes Energiemanagement</span></div></li>
+        <li><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg><div><strong>Erfüllt §14a-Pflicht</strong><span>holt den Modul-3-Rabatt aber nicht automatisch ab</span></div></li>
+        <li><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg><div><strong>Ehrliche Einschränkung</strong><span>reagiert nicht auf negative Strompreise (Solarspitzengesetz)</span></div></li>
+      </ul>
+      <p class="variant-note">Eco eignet sich vor allem ohne Wallbox, Wärmepumpe oder dynamischen Tarif. Dazu beraten wir dich ehrlich im Gespräch.</p>
+      <div class="variant-cta reveal"><a href="/termin" class="btn btn-accent btn-lg">Passt Eco zu dir? Lass uns das prüfen.</a></div>
+    </div>
+  </section>
 
-    <!-- ── Solarisator ── -->
-    <section id="solarisator" class="sp-section sp-section--beige" aria-labelledby="rechner-bt-heading">
-      <div class="container">
-        <div class="sp-section-header reveal">
-          <span class="sp-eyebrow">Interaktiver Rechner</span>
-          <h2 id="rechner-bt-heading">Wie viel Unabhängigkeit ist möglich?</h2>
-          <p>Ermittle mit dem Solarisator der HTW Berlin, wie viel Strom eine PV-Anlage auf deinem Dach erzeugen könnte – und welchen Anteil deines Verbrauchs du damit selbst deckst.</p>
-        </div>
+  <section id="premium" class="section section-dark section-variant" aria-labelledby="premium-heading">
+    <div class="container variant-inner">
+      <div class="section-header section-header-light reveal">
+        <span class="section-label">Variante 2</span>
+        <h2 id="premium-heading">Sigenergy SigenStor</h2>
+        <p>Photovoltaik, Speicher und Energiemanagement in einem Turm. Für alle, die mehr wollen als Standardtechnik.</p>
+      </div>
+      <ul class="variant-features reveal">
+        <li><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="7" width="18" height="10" rx="2"/><line x1="22" y1="10" x2="22" y2="14"/><line x1="6" y1="10" x2="6" y2="14"/><line x1="10" y1="10" x2="10" y2="14"/></svg><div><strong>314-Ah-Zellen, 100&nbsp;% Entladetiefe</strong><span>Herstellerangabe</span></div></li>
+        <li><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l7 3v6c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V6z"/><path d="M9 12l2-3 2 3 2-3"/></svg><div><strong>IP66, outdoor-tauglich</strong><span>−20&nbsp;°C bis +55&nbsp;°C</span></div></li>
+        <li><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v4M12 17v4M3 12h4M17 12h4"/><circle cx="12" cy="12" r="3"/></svg><div><strong>GPT-4o-Integration (mySigen-App)</strong><span>Sigen AI Mode &amp; Assistant</span></div></li>
+        <li><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 13l2-6h10l2 6"/><rect x="2" y="13" width="16" height="5" rx="1"/><circle cx="6" cy="20" r="1.4"/><circle cx="14" cy="20" r="1.4"/><path d="M19 14l2 2-2 2M21 16h-3"/></svg><div><strong>Bidirektionales Laden (V2H/V2G)</strong><span>fahrzeugabhängig, teils per OTA</span></div></li>
+      </ul>
+      <p class="variant-note">Technische Angaben laut Sigenergy, nicht unabhängig geprüft.</p>
+      <div class="variant-cta reveal"><a href="/termin" class="btn btn-accent btn-lg">Passt das zu deinem Zuhause? Lass uns sprechen.</a></div>
+    </div>
+  </section>
 
-        <div class="solarisator-frame-wrapper reveal">
-          <!-- Two-Click-Consent: iframe wird erst nach ausdrücklichem Klick geladen -->
-          <div id="solarisator-consent" class="embed-consent-placeholder">
-            <p class="embed-consent-text">
-              Dieser Rechner wird von der <strong>HTW Berlin – Hochschule für Technik und Wirtschaft</strong>
-              bereitgestellt (<a href="https://solar.htw-berlin.de" target="_blank" rel="noopener noreferrer">solar.htw-berlin.de</a>).
-              Beim Laden wird eine Verbindung zu deren Servern aufgebaut; dabei können Daten
-              (z.&nbsp;B. deine IP-Adresse) an die HTW Berlin übertragen werden.
-              Weitere Informationen findest du in unserer <a href="/datenschutz">Datenschutzerklärung</a>.
-            </p>
-            <button id="solarisator-consent-btn" class="btn btn-accent">Rechner laden</button>
-          </div>
-          <div id="solarisator-embed" hidden></div>
-        </div>
-        <p class="solarisator-source">
-          Bereitgestellt von der <a href="https://solar.htw-berlin.de" target="_blank" rel="noopener noreferrer">HTW Berlin – Hochschule für Technik und Wirtschaft</a>
+  <section id="solaris" class="section section-dark section-variant" aria-labelledby="solaris-heading">
+    <div class="container variant-inner">
+      <div class="section-header section-header-light reveal">
+        <span class="section-label">Variante 3</span>
+        <h2 id="solaris-heading">Solaris² + StromKontoPlus</h2>
+        <p>Für Dächer mit schlechter Ausrichtung oder wenig Fläche: ein großer Innenspeicher kombiniert mit einem planbaren Stromkonto-Tarif.</p>
+      </div>
+      <ul class="variant-features reveal">
+        <li><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="7" width="20" height="15" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/></svg><div><strong>80,4&nbsp;kWh LFP-Speicher</strong><span>Innenbereich (IP41), nicht outdoor-tauglich</span></div></li>
+        <li><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg><div><strong>Freimenge: PV-kWp × 1.000&nbsp;kWh/Jahr</strong><span>darüber 22&nbsp;ct/kWh, ab 25.000&nbsp;kWh 33&nbsp;ct/kWh</span></div></li>
+        <li><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="6" cy="6" r="2.4"/><circle cx="18" cy="6" r="2.4"/><circle cx="12" cy="18" r="2.4"/><path d="M8 7.2L10.5 16M16 7.2L13.5 16M8.4 6h7.2"/></svg><div><strong>Anbieter</strong><span>DWW Deutsche Wärmepumpen Werke (Speicher) + DSG (Stromtarif)</span></div></li>
+        <li><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg><div><strong>Für schwierige Dächer</strong><span>Nord-Ausrichtung, Verschattung, verwinkelte Flächen</span></div></li>
+      </ul>
+      <div class="variant-callout reveal">
+        <strong>Gegenleistung, transparent benannt</strong>
+        <p>Im Gegenzug für die kostenlose Freimenge überlässt du dem Lieferanten zeitlich und mengenmäßig unbegrenzten Zugriff auf deinen Speicher, und die Einspeisevergütung wird abgetreten. Der Lieferant entscheidet, wann eingespeist wird. Das ist ein bewusster Tausch, kein Nachteil im Kleingedruckten. Ich erkläre dir im Gespräch genau, was das für dich bedeutet.</p>
+      </div>
+      <div class="variant-cta reveal"><a href="/termin" class="btn btn-accent btn-lg">Passt Solaris² zu deinem Dach? Lass uns sprechen.</a></div>
+    </div>
+  </section>
+</div>
+
+<section class="sp-section" aria-labelledby="vorteile-bt-heading">
+  <div class="container">
+    <div class="sp-section-header reveal">
+      <h2 id="vorteile-bt-heading">Mein Ansatz</h2>
+      <p>Was mich von Pauschalangeboten unterscheidet und warum das für dich einen Unterschied macht.</p>
+    </div>
+    <div class="sp-benefits-grid">
+      <div class="sp-benefit-item reveal">
+        <div class="sp-benefit-icon" aria-hidden="true"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
+        <h3>Herstellerunabhängig</h3>
+        <p>Keine Bindung an bestimmte Marken oder Vertriebsverträge. Meine Empfehlung basiert ausschließlich auf deiner Situation.</p>
+      </div>
+      <div class="sp-benefit-item reveal">
+        <div class="sp-benefit-icon" aria-hidden="true"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div>
+        <h3>Erst verstehen, dann bewerten</h3>
+        <p>Bevor ich Empfehlungen ausspreche, nehme ich mir Zeit, deine Situation genau zu erfassen: Verbrauch, Gebäude, Ziele und Budget.</p>
+      </div>
+      <div class="sp-benefit-item reveal">
+        <div class="sp-benefit-icon" aria-hidden="true"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg></div>
+        <h3>Transparente Kalkulation</h3>
+        <p>Klare Zahlen statt Hochglanzversprechen. Du erhältst eine nachvollziehbare Wirtschaftlichkeitsrechnung ohne versteckte Annahmen.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="solarisator" class="sp-section sp-section--beige" aria-labelledby="rechner-bt-heading">
+  <div class="container">
+    <div class="sp-section-header reveal">
+      <h2 id="rechner-bt-heading">Wie viel Unabhängigkeit ist möglich?</h2>
+      <p>Ermittle mit dem Solarisator der HTW Berlin, wie viel Strom eine PV-Anlage auf deinem Dach erzeugen könnte und welchen Anteil deines Verbrauchs du damit selbst deckst.</p>
+    </div>
+    <div class="solarisator-frame-wrapper reveal">
+      <div id="solarisator-consent" class="embed-consent-placeholder">
+        <p class="embed-consent-text">
+          Dieser Rechner wird von der <strong>HTW Berlin, Hochschule für Technik und Wirtschaft</strong> bereitgestellt (<a href="https://solar.htw-berlin.de" target="_blank" rel="noopener noreferrer">solar.htw-berlin.de</a>).
+          Beim Laden wird eine Verbindung zu deren Servern aufgebaut; dabei können Daten (z.&nbsp;B. deine IP-Adresse) an die HTW Berlin übertragen werden.
+          Weitere Informationen findest du in unserer <a href="/datenschutz">Datenschutzerklärung</a>.
         </p>
+        <button id="solarisator-consent-btn" class="btn btn-accent">Rechner laden</button>
       </div>
-    </section>
+      <div id="solarisator-embed" hidden></div>
+    </div>
+    <p class="solarisator-source">Bereitgestellt von der <a href="https://solar.htw-berlin.de" target="_blank" rel="noopener noreferrer">HTW Berlin, Hochschule für Technik und Wirtschaft</a></p>
+  </div>
+</section>
 
-    <!-- ── Prozess ── -->
-    <section class="sp-section sp-section--beige" aria-labelledby="prozess-bt-heading">
-      <div class="container">
-        <div class="sp-section-header reveal">
-          <span class="sp-eyebrow">Wie es abläuft</span>
-          <h2 id="prozess-bt-heading">Von der Anfrage zur Anlage</h2>
-          <p>Strukturiert, transparent und ohne unerwartete Überraschungen.</p>
-        </div>
+<section class="sp-section" aria-labelledby="prozess-bt-heading">
+  <div class="container">
+    <div class="sp-section-header reveal">
+      <h2 id="prozess-bt-heading">Von der Anfrage zur Anlage</h2>
+      <p>Strukturiert, transparent und ohne unerwartete Überraschungen.</p>
+    </div>
+    <div class="sp-process">
+      <div class="sp-process-step reveal"><div class="sp-process-num" aria-hidden="true">1</div><h3>Kostenloses Erstgespräch</h3><p>Wir sprechen über deine Situation, deine Ziele und deinen Energieverbrauch. Keine Verkaufsabsichten, nur Klarheit darüber, ob und wie ich dir helfen kann.</p></div>
+      <div class="sp-process-step reveal"><div class="sp-process-num" aria-hidden="true">2</div><h3>Detailanalyse &amp; Planung</h3><p>Standortbegehung, Verbrauchsanalyse, Systemauslegung und Wirtschaftlichkeitsberechnung. Du erhältst ein konkretes, individuelles Konzept.</p></div>
+      <div class="sp-process-step reveal"><div class="sp-process-num" aria-hidden="true">3</div><h3>Umsetzungsbegleitung</h3><p>Von der Handwerkerkoordination über Behördengänge bis zur Inbetriebnahme: Ich bin während des gesamten Prozesses dein Ansprechpartner.</p></div>
+    </div>
+  </div>
+</section>
 
-        <div class="sp-process">
+<section class="sp-cta-band" aria-labelledby="cta-bt-heading">
+  <div class="sp-cta-band-bg" style="background-image: url('assets/img/leistung-pv-1200.webp')" aria-hidden="true"></div>
+  <div class="container">
+    <div class="sp-cta-band-inner">
+      <h2 id="cta-bt-heading">Bereit für deine Energiewende?</h2>
+      <p>Vereinbare jetzt dein kostenloses Erstgespräch. Unverbindlich und auf Augenhöhe.</p>
+      <a href="/termin" class="btn btn-accent btn-lg">Termin buchen</a>
+    </div>
+  </div>
+</section>
 
-          <div class="sp-process-step reveal">
-            <div class="sp-process-num" aria-hidden="true">1</div>
-            <h3>Kostenloses Erstgespräch</h3>
-            <p>Wir sprechen über deine Situation, deine Ziele und deinen Energieverbrauch. Keine Verkaufsabsichten – nur Klarheit darüber, ob und wie ich dir helfen kann.</p>
-          </div>
-
-          <div class="sp-process-step reveal">
-            <div class="sp-process-num" aria-hidden="true">2</div>
-            <h3>Detailanalyse & Planung</h3>
-            <p>Standortbegehung, Verbrauchsanalyse, Systemauslegung und Wirtschaftlichkeitsberechnung. Du erhältst ein konkretes, individuelles Konzept.</p>
-          </div>
-
-          <div class="sp-process-step reveal">
-            <div class="sp-process-num" aria-hidden="true">3</div>
-            <h3>Umsetzungsbegleitung</h3>
-            <p>Von der Handwerkerkoordination über Behördengänge bis zur Inbetriebnahme – ich bin während des gesamten Prozesses dein Ansprechpartner.</p>
-          </div>
-
-        </div>
+<section class="sp-section" aria-labelledby="faq-bt-heading">
+  <div class="container">
+    <div class="sp-section-header reveal">
+      <h2 id="faq-bt-heading">Häufige Fragen</h2>
+      <p>Antworten auf die Fragen, die ich am häufigsten höre.</p>
+    </div>
+    <div class="sp-faq-list reveal" role="list">
+      <div class="sp-faq-item" role="listitem">
+        <button class="sp-faq-trigger" aria-expanded="false" aria-controls="faq-bt-1">Ist das Erstgespräch wirklich kostenlos und unverbindlich?<svg class="sp-faq-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></button>
+        <div class="sp-faq-panel" id="faq-bt-1" role="region"><div class="sp-faq-panel-inner"><p>Ja, das Erstgespräch ist vollständig kostenlos und ohne jede Verpflichtung. Es dient dazu, gemeinsam herauszufinden, ob und wie ich dir helfen kann. Du entscheidest danach völlig frei, ob du weitermachen möchtest.</p></div></div>
       </div>
-    </section>
-
-    <!-- ── CTA Band ── -->
-    <section class="sp-cta-band" aria-labelledby="cta-bt-heading">
-      <div class="sp-cta-band-bg" style="background-image: url('assets/Foto/leistung-pv.jpg')" aria-hidden="true"></div>
-      <div class="container">
-        <div class="sp-cta-band-inner">
-          <h2 id="cta-bt-heading">Bereit für deine Energiewende?</h2>
-          <p>Vereinbare jetzt dein kostenloses Erstgespräch. Ich freue mich auf deine Anfrage – unverbindlich und auf Augenhöhe.</p>
-          <a href="/termin" class="btn btn-accent btn-lg">Jetzt Beratung anfordern</a>
-        </div>
+      <div class="sp-faq-item" role="listitem">
+        <button class="sp-faq-trigger" aria-expanded="false" aria-controls="faq-bt-2">Für welche Gebäudetypen ist PV geeignet?<svg class="sp-faq-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></button>
+        <div class="sp-faq-panel" id="faq-bt-2" role="region"><div class="sp-faq-panel-inner"><p>Grundsätzlich lässt sich PV auf nahezu jedem Gebäude installieren: Einfamilienhäuser, Mehrfamilienhäuser, landwirtschaftliche Gebäude, Gewerbeimmobilien und Flachdächer. Entscheidend sind Dachfläche, Ausrichtung und Dachzustand. Im Erstgespräch klären wir, was bei dir möglich ist.</p></div></div>
       </div>
-    </section>
+      <div class="sp-faq-item" role="listitem">
+        <button class="sp-faq-trigger" aria-expanded="false" aria-controls="faq-bt-3">Welche Fördermittel gibt es aktuell?<svg class="sp-faq-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></button>
+        <div class="sp-faq-panel" id="faq-bt-3" role="region"><div class="sp-faq-panel-inner"><p>Die Förderlandschaft ist komplex und ändert sich regelmäßig. Aktuell gibt es KfW-Programme (Kredit und Zuschuss) sowie die Bundesförderung für effiziente Gebäude (BEG). Im Beratungsgespräch schaue ich mit dir konkret, was für deine Situation relevant und beantragbar ist.</p></div></div>
+      </div>
+      <div class="sp-faq-item" role="listitem">
+        <button class="sp-faq-trigger" aria-expanded="false" aria-controls="faq-bt-4">Übernimmst du auch die Montage?<svg class="sp-faq-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></button>
+        <div class="sp-faq-panel" id="faq-bt-4" role="region"><div class="sp-faq-panel-inner"><p>Ich bin Berater, kein Installationsbetrieb. Meine Stärke liegt in der unabhängigen Analyse und Planung. Für die Montage arbeite ich mit einem Netzwerk zuverlässiger Fachpartner zusammen und kann dir geeignete Handwerksbetriebe empfehlen und die Koordination übernehmen.</p></div></div>
+      </div>
+    </div>
+  </div>
+</section>
 
-    <!-- ── FAQ ── -->
-    <section class="sp-section" aria-labelledby="faq-bt-heading">
-      <div class="container">
-        <div class="sp-section-header reveal">
-          <span class="sp-eyebrow">Häufige Fragen</span>
-          <h2 id="faq-bt-heading">Was dich bewegt</h2>
-          <p>Antworten auf die Fragen, die ich am häufigsten höre.</p>
+<section class="sp-section sp-section--beige" aria-labelledby="kontakt-bt-heading">
+  <div class="container">
+    <div class="sp-section-header reveal">
+      <h2 id="kontakt-bt-heading">Fragen? Schreib mir.</h2>
+      <p>Kein Formular-Dschungel. Ich antworte persönlich, innerhalb von 1 bis 2&nbsp;Werktagen.</p>
+    </div>
+    <div class="sp-contact-mini reveal">
+      <div class="sp-contact-card"><h3>Termin vereinbaren</h3><p>Wähle einen Termin für dein kostenloses Erstgespräch: telefonisch, per Video oder persönlich.</p><a href="/termin">Zur Terminbuchung<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a></div>
+      <div class="sp-contact-card"><h3>Direkt Kontakt aufnehmen</h3><p>Du bevorzugst eine direkte Nachricht? Nutze das Kontaktformular auf der Startseite.</p><a href="/#kontakt">Zum Kontaktformular<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a></div>
+    </div>
+  </div>
+</section>
+</main>
+
+<footer class="footer">
+    <div class="footer__cta">
+      <div class="container footer__cta-inner">
+        <div>
+          <h2>Erstberatung buchen</h2>
+          <p>30&nbsp;Minuten, kostenfrei und unverbindlich. Online, telefonisch oder vor Ort. Wähle direkt deinen Wunschtermin, kein Account nötig.</p>
         </div>
+        <a class="btn btn--gold btn--lg" href="/termin">Termin buchen</a>
+      </div>
+    </div>
 
-        <div class="sp-faq-list reveal" role="list">
-
-          <div class="sp-faq-item" role="listitem">
-            <button class="sp-faq-trigger" aria-expanded="false" aria-controls="faq-bt-1">
-              Ist das Erstgespräch wirklich kostenlos und unverbindlich?
-              <svg class="sp-faq-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                <path d="M6 9l6 6 6-6"/>
-              </svg>
-            </button>
-            <div class="sp-faq-panel" id="faq-bt-1" role="region">
-              <div class="sp-faq-panel-inner">
-                <p>Ja, das Erstgespräch ist vollständig kostenlos und ohne jede Verpflichtung. Es dient dazu, gemeinsam herauszufinden, ob und wie ich dir helfen kann. Du entscheidest danach völlig frei, ob du weitermachen möchtest.</p>
-              </div>
-            </div>
-          </div>
-
-          <div class="sp-faq-item" role="listitem">
-            <button class="sp-faq-trigger" aria-expanded="false" aria-controls="faq-bt-2">
-              Für welche Gebäudetypen ist PV geeignet?
-              <svg class="sp-faq-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                <path d="M6 9l6 6 6-6"/>
-              </svg>
-            </button>
-            <div class="sp-faq-panel" id="faq-bt-2" role="region">
-              <div class="sp-faq-panel-inner">
-                <p>Grundsätzlich lässt sich PV auf nahezu jedem Gebäude installieren – Einfamilienhäuser, Mehrfamilienhäuser, landwirtschaftliche Gebäude, Gewerbeimmobilien und Flachdächer. Entscheidend sind Dachfläche, Ausrichtung und Dachzustand. Im Erstgespräch klären wir, was bei dir möglich ist.</p>
-              </div>
-            </div>
-          </div>
-
-          <div class="sp-faq-item" role="listitem">
-            <button class="sp-faq-trigger" aria-expanded="false" aria-controls="faq-bt-3">
-              Welche Fördermittel gibt es aktuell?
-              <svg class="sp-faq-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                <path d="M6 9l6 6 6-6"/>
-              </svg>
-            </button>
-            <div class="sp-faq-panel" id="faq-bt-3" role="region">
-              <div class="sp-faq-panel-inner">
-                <p>Die Förderlandschaft ist komplex und ändert sich regelmäßig. Aktuell gibt es KfW-Programme (Kredit und Zuschuss) sowie die Bundesförderung für effiziente Gebäude (BEG). Im Beratungsgespräch schaue ich mit dir konkret, was für deine Situation relevant und beantragbar ist.</p>
-              </div>
-            </div>
-          </div>
-
-          <div class="sp-faq-item" role="listitem">
-            <button class="sp-faq-trigger" aria-expanded="false" aria-controls="faq-bt-4">
-              Übernimmst du auch die Montage?
-              <svg class="sp-faq-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                <path d="M6 9l6 6 6-6"/>
-              </svg>
-            </button>
-            <div class="sp-faq-panel" id="faq-bt-4" role="region">
-              <div class="sp-faq-panel-inner">
-                <p>Ich bin Berater, kein Installationsbetrieb. Meine Stärke liegt in der unabhängigen Analyse und Planung. Für die Montage arbeite ich mit einem Netzwerk zuverlässiger Fachpartner zusammen und kann dir geeignete Handwerksbetriebe empfehlen und die Koordination übernehmen.</p>
-              </div>
-            </div>
-          </div>
-
+    <div class="container footer__grid">
+      <div class="footer__brand">
+        <img src="assets/img/logo-mark.webp" width="400" height="251" alt="" loading="lazy">
+        <p><strong translate="no">Patrick Leißner</strong><br>Frei durch eigene Energie.</p>
+        <div class="footer__social">
+          <a href="https://www.instagram.com/patrickleissner.de" target="_blank" rel="noopener">Instagram</a>
+          <a href="https://www.facebook.com/patrickleissner.de" target="_blank" rel="noopener">Facebook</a>
+          <a href="https://x.com/patrickLeiszner" target="_blank" rel="noopener">X</a>
+          <a href="https://wa.me/491734994994" target="_blank" rel="noopener">WhatsApp</a>
         </div>
       </div>
-    </section>
-
-    <!-- ── Kontakt CTA ── -->
-    <section class="sp-section sp-section--beige" aria-labelledby="kontakt-bt-heading">
-      <div class="container">
-        <div class="sp-section-header reveal">
-          <span class="sp-eyebrow">Jetzt starten</span>
-          <h2 id="kontakt-bt-heading">Fragen? Schreib mir.</h2>
-          <p>Kein Formular-Dschungel. Ich antworte persönlich, innerhalb von 1–2 Werktagen.</p>
-        </div>
-
-        <div class="sp-contact-mini reveal">
-          <div class="sp-contact-card">
-            <h3>Termin vereinbaren</h3>
-            <p>Wähle einen Termin für dein kostenloses Erstgespräch – telefonisch, per Video oder persönlich.</p>
-            <a href="/termin">
-              Zur Terminbuchung
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                <path d="M5 12h14M12 5l7 7-7 7"/>
-              </svg>
-            </a>
-          </div>
-
-          <div class="sp-contact-card">
-            <h3>Direkt Kontakt aufnehmen</h3>
-            <p>Du bevorzugst eine direkte Nachricht? Nutze das Kontaktformular auf der Hauptseite.</p>
-            <a href="/#kontakt">
-              Zum Kontaktformular
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                <path d="M5 12h14M12 5l7 7-7 7"/>
-              </svg>
-            </a>
-          </div>
-        </div>
-      </div>
-    </section>
-
-  </main>
-
-  <footer class="site-footer" role="contentinfo">
-    <div class="container footer-grid">
-      <div class="footer-brand">
-        <a href="/" class="nav-logo" aria-label="Patrick Leißner Energieberatung – zur Startseite">
-          <img src="/assets/Logo/Initialien-Gold-frei.png" alt="Patrick Leißner Energieberatung Logo" width="36" height="36" loading="lazy">
-          <span class="nav-logo-text">Patrick Leißner</span>
-        </a>
-        <p>Frei durch eigene Energie.</p>
-        <div class="footer-social" aria-label="Social Media">
-          <a href="https://www.instagram.com/patrickleissner.de" target="_blank" rel="noopener" aria-label="Patrick Leißner auf Instagram">
-            <img src="/assets/icons/gold_instagram_icon_frei.png" alt="" width="17" height="17" loading="lazy">
-          </a>
-          <a href="https://www.facebook.com/patrickleissner.de" target="_blank" rel="noopener" aria-label="Patrick Leißner auf Facebook">
-            <img src="/assets/icons/gold_facebook_icon_frei.png" alt="" width="17" height="17" loading="lazy">
-          </a>
-          <a href="https://x.com/patrickLeiszner" target="_blank" rel="noopener" aria-label="Patrick Leißner auf X">
-            <img src="/assets/icons/gold_x_icon_frei.png" alt="" width="17" height="17" loading="lazy">
-          </a>
-          <a href="https://wa.me/491734994994" target="_blank" rel="noopener" aria-label="Patrick Leißner auf WhatsApp">
-            <img src="/assets/icons/gold_whatsapp_icon_frei.png" alt="" width="17" height="17" loading="lazy">
-          </a>
-        </div>
-      </div>
-      <div class="footer-col">
+      <div class="footer__col">
         <h3>Kontakt</h3>
         <a href="tel:+491734994994">0173 499 4994</a>
         <a href="mailto:p@patrickleissner.de">p@patrickleissner.de</a>
-        <span>Bitterfeld-Wolfen</span>
+        <span>Dessauer Allee 52<br>06766 Bitterfeld-Wolfen</span>
       </div>
-      <nav class="footer-col" aria-label="Leistungen">
+      <div class="footer__col">
         <h3>Leistungen</h3>
-        <a href="/beratung-technik">Beratung und Technik</a>
-        <a href="/koordination-netzwerk">Koordination und Netzwerk</a>
-        <a href="/waermepumpe-heizlast">Wärmepumpe und Heizlast</a>
-        <a href="/mieterstrom">Mieterstrom und Objektenergie</a>
-      </nav>
-      <nav class="footer-col" aria-label="Rechner und Ratgeber">
+        <a href="/beratung-technik">Beratung &amp; Technik</a>
+        <a href="/koordination-netzwerk">Koordination &amp; Netzwerk</a>
+        <a href="/waermepumpe-heizlast">Wärmepumpe &amp; Heizlast</a>
+        <a href="/mieterstrom">Mieterstrom &amp; Objektenergie</a>
+        <a href="/batteriespeicher">Batteriespeicher &amp; Energiehandel</a>
+      </div>
+      <div class="footer__col">
         <h3>Rechner &amp; Ratgeber</h3>
         <a href="/unabhaengigkeit">Unabhängigkeitsrechner</a>
         <a href="/heizkosten">Heizkosten-Rechner</a>
         <a href="/nutzen">Nutzen-Rechner</a>
         <a href="/spotpreis">Spotpreis-Monitor</a>
+        <a href="/batteriespeicher">Batteriespeicher-Ertragsrechner</a>
         <a href="/ratgeber">Ratgeber</a>
-        <a href="https://ecowattiv.de/dww/" target="_blank" rel="noopener noreferrer">DWW-Wirtschaftlichkeitsrechner ↗</a>
-      </nav>
+      </div>
     </div>
-    <div class="container footer-bottom">
-      <nav class="footer-links" aria-label="Footer-Navigation">
+
+    <div class="container footer__legal">
+      <div>
         <a href="/impressum">Impressum</a>
         <a href="/datenschutz">Datenschutz</a>
-        <a href="#" aria-label="Zurück zum Seitenanfang">Nach oben ↑</a>
-      </nav>
-      <p class="footer-copyright">© 2026 Patrick Leißner. Alle Rechte vorbehalten.</p>
-      <p class="footer-operator">pin-co.de Media UG (haftungsbeschränkt)</p>
+        <a href="/">Nach oben ↑</a>
+        <button type="button" class="motion-toggle" data-motion-toggle aria-pressed="false">Animationen anhalten</button>
+      </div>
+      <p>© 2026 Patrick Leißner. Alle Rechte vorbehalten.</p>
     </div>
   </footer>
 
-  <script src="main.js"></script>
-  <script>
-    // ── HTW-Solarisator Two-Click-Consent ───────────────────────────
-    (function () {
-      const consent = document.getElementById('solarisator-consent');
-      const btn     = document.getElementById('solarisator-consent-btn');
-      const embed   = document.getElementById('solarisator-embed');
-      if (!consent || !btn || !embed) return;
-      btn.addEventListener('click', function () {
-        const iframe = document.createElement('iframe');
-        iframe.src   = 'https://solar.htw-berlin.de/solarisator/';
-        iframe.title = 'Solarisator – Unabhängigkeitsrechner der HTW Berlin';
-        iframe.width  = '1024';
-        iframe.height = '660';
-        iframe.loading = 'lazy';
-        iframe.setAttribute('aria-label', 'Interaktiver PV-Unabhängigkeitsrechner der HTW Berlin');
-        embed.appendChild(iframe);
-        embed.hidden  = false;
-        consent.hidden = true;
-      });
-    })();
+<div class="dock" aria-label="Schnellkontakt">
+    <a class="dock__call" href="tel:+491734994994">Anrufen</a>
+    <a class="dock__cta" href="/termin">Termin buchen</a>
+  </div>
 
-    // ── FAQ-Akkordeon ────────────────────────────────────────────────
-    document.querySelectorAll('.sp-faq-trigger').forEach(trigger => {
-      trigger.addEventListener('click', () => {
-        const isExpanded = trigger.getAttribute('aria-expanded') === 'true';
-        const panel = trigger.nextElementSibling;
-        document.querySelectorAll('.sp-faq-trigger').forEach(t => {
-          t.setAttribute('aria-expanded', 'false');
-          t.nextElementSibling.style.height = '0';
-        });
-        if (!isExpanded) {
-          trigger.setAttribute('aria-expanded', 'true');
-          panel.style.height = panel.querySelector('.sp-faq-panel-inner').offsetHeight + 'px';
-        }
-      });
-    });
-  </script>
+  <script src="assets/vendor/gsap.min.js" defer></script>
+  <script src="assets/vendor/ScrollTrigger.min.js" defer></script>
+  <script src="js/main.js" defer></script>
+  <script src="js/pages.js"></script>
 </body>
 </html>

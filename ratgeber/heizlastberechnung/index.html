@@ -1,200 +1,188 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Heizlastberechnung nach DIN EN 12831 ist Pflicht für KfW-Förderung der Wärmepumpe. Ohne korrekte Berechnung droht Rückforderung. Was LiDAR-Scan damit zu tun hat und was häufig falsch gemacht wird.">
-
-  <meta property="og:title" content="Heizlastberechnung nach DIN – warum sie Pflicht ist | Patrick Leißner">
-  <meta property="og:description" content="KfW-Förderung für Wärmepumpen setzt eine normgerechte Heizlastberechnung voraus. Was oft schief geht – und wie LiDAR-Scan das absichert.">
-  <meta property="og:type" content="article">
-
-  <title>Heizlastberechnung nach DIN – Pflicht und Praxis | Patrick Leißner Energieberatung</title>
-
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Heizlastberechnung nach DIN | Patrick Leißner Energieberatung</title>
+  <meta name="description" content="Heizlastberechnung nach DIN EN 12831 ist Pflicht für die KfW-Förderung der Wärmepumpe. Ohne korrekte Berechnung droht Rückforderung. Was der LiDAR-Scan damit zu tun hat.">
+  <meta name="theme-color" content="#0f2a23">
   <link rel="canonical" href="https://patrickleissner.de/ratgeber/heizlastberechnung">
-  <link rel="stylesheet" href="../../style.css">
-  <link rel="stylesheet" href="../../subpage.css">
+
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Heizlastberechnung nach DIN | Patrick Leißner Energieberatung">
+  <meta property="og:description" content="Heizlastberechnung nach DIN EN 12831 ist Pflicht für die KfW-Förderung der Wärmepumpe. Ohne korrekte Berechnung droht Rückforderung. Was der LiDAR-Scan damit zu tun hat.">
+  <meta property="og:image" content="https://patrickleissner.de/assets/img/patrick-1600.webp">
+  <meta property="og:locale" content="de_DE">
+  <link rel="icon" type="image/webp" href="../../assets/img/logo-mark.webp">
+  <link rel="preload" href="../../assets/fonts/Outfit-Variable.ttf" as="font" type="font/ttf" crossorigin>
+  <link rel="stylesheet" href="../../css/style.css">
+  <link rel="stylesheet" href="../../css/pages.css">
 </head>
-<body>
+<body class="page page--rat-heizlastberechnung">
+  <a class="skip-link" href="#main">Zum Inhalt springen</a>
 
-  <a href="#main" class="skip-link">Zum Hauptinhalt springen</a>
-
-  <header class="site-header scrolled" role="banner" id="site-header">
-    <nav class="nav-container" aria-label="Hauptnavigation">
-      <a href="/" class="nav-logo" aria-label="Patrick Leißner Energieberatung – zur Startseite">
-        <img src="../../assets/Logo/Initialien-Name-Positiv-frei.png" alt="Patrick Leißner Energieberatung Logo" height="96" loading="eager" style="width:auto">
+<header class="nav" id="site-header">
+    <div class="nav__inner">
+      <a class="nav__brand" href="/" aria-label="Patrick Leißner, zur Startseite" translate="no">
+        <img src="../../assets/img/logo-full-light.webp" width="800" height="375" alt="Patrick Leißner Energieberatung" fetchpriority="high">
       </a>
-      <ul class="nav-links" role="list">
-        <li><a href="/#leistungen">Leistungen</a></li>
-        <li><a href="/#ueber-pl">Über mich</a></li>
-        <li><a href="/ratgeber">Ratgeber</a></li>
-        <li><a href="/termin">Termine</a></li>
-        <li><a href="/#kontakt">Kontakt</a></li>
-      </ul>
-      <a href="/termin" class="btn btn-accent nav-cta">Termin buchen</a>
-      <button class="hamburger" aria-label="Menü öffnen" aria-expanded="false" aria-controls="mobile-menu" id="hamburger-btn">
-        <span></span><span></span><span></span>
+      <nav class="nav__links" aria-label="Hauptnavigation">
+        <a href="/#leistungen">Leistungen</a>
+        <a href="/#arbeitsweise">Arbeitsweise</a>
+        <a href="/#ueber-mich">Über mich</a>
+        <a href="/ratgeber">Ratgeber</a>
+        <a href="/#kontakt">Kontakt</a>
+      </nav>
+      <a class="btn btn--gold nav__cta" href="/termin">Termin buchen</a>
+      <button class="nav__toggle" type="button" aria-expanded="false" aria-controls="mobile-menu" aria-label="Menü öffnen">
+        <span></span><span></span>
       </button>
-    </nav>
-    <div class="mobile-menu" id="mobile-menu" aria-hidden="true" role="dialog" aria-label="Hauptnavigation">
-      <ul role="list">
-        <li><a href="/#leistungen" class="mobile-nav-link">Leistungen</a></li>
-        <li><a href="/#ueber-pl" class="mobile-nav-link">Über mich</a></li>
-        <li><a href="/ratgeber" class="mobile-nav-link">Ratgeber</a></li>
-        <li><a href="/termin" class="mobile-nav-link">Termine</a></li>
-        <li><a href="/#kontakt" class="mobile-nav-link">Kontakt</a></li>
-        <li><a href="/termin" class="btn btn-accent mobile-nav-link">Termin buchen</a></li>
-      </ul>
+    </div>
+    <div class="nav__mobile" id="mobile-menu" hidden>
+      <a href="/#leistungen">Leistungen</a>
+      <a href="/#arbeitsweise">Arbeitsweise</a>
+      <a href="/#ueber-mich">Über mich</a>
+      <a href="/ratgeber">Ratgeber</a>
+      <a href="/#kontakt">Kontakt</a>
+      <a class="btn btn--gold" href="/termin">Termin buchen</a>
     </div>
   </header>
 
-  <div class="sp-back-bar">
-    <div class="container">
-      <a href="/ratgeber" class="sp-back-link">← Zurück zum Ratgeber</a>
+<main id="main">
+<article>
+<section class="sp-hero" aria-label="Artikeleinleitung">
+  <nav class="sp-breadcrumb" aria-label="Brotkrumen-Navigation"><div class="sp-breadcrumb-inner"><a href="/">Startseite</a><span class="sp-bc-sep" aria-hidden="true">›</span><a href="/ratgeber">Ratgeber</a><span class="sp-bc-sep" aria-hidden="true">›</span><span class="sp-bc-current">Heizlastberechnung</span></div></nav>
+  <div class="container sp-hero-content">
+    <p class="sp-hero-eyebrow">KfW-Förderung &amp; Normung</p>
+    <h1>Heizlastberechnung nach DIN: Warum sie Pflicht ist und was falsch läuft</h1>
+    <p>Wer eine Wärmepumpe mit KfW-Förderung einbauen will, braucht zwingend eine normgerechte Heizlastberechnung. Was dabei häufig schiefgeht und wie eine 3D-Erfassung per LiDAR-Scan das Problem löst.</p>
+  </div>
+</section>
+<section class="sp-section" aria-label="Artikel-Inhalt">
+  <div class="container sp-article-body">
+<div>
+<h2>Was ist eine Heizlastberechnung?</h2>
+<p>Die Heizlast eines Gebäudes ist die maximale Wärmeleistung, die eine Heizung bei der kältesten Außentemperatur des Jahres liefern muss, um die gewünschte Raumtemperatur zu halten.</p>
+<p>Die Heizlastberechnung nach <strong>DIN EN 12831</strong> ermittelt diese Zahl raumweise und gebäudescharf, unter Berücksichtigung von Außenwänden, Innenwänden, Fenstern, Decken, Böden, beheizten und unbeheizten Flächen sowie der Gebäudehülle insgesamt.</p>
+<p>Das Ergebnis bestimmt, welche Wärmepumpe du brauchst: zu klein gewählt reicht nicht aus, zu groß gewählt ist überdimensioniert und unwirtschaftlich.</p>
+</div>
+<div>
+<h2>Warum ist sie für die KfW-Förderung Pflicht?</h2>
+<p>Die KfW-Bundesförderung für effiziente Gebäude (BEG), insbesondere die Förderung für Wärmepumpen, setzt eine <strong>normgerechte Heizlastberechnung als Voraussetzung</strong> voraus.</p>
+<p>Der Grund: Die Förderung soll sicherstellen, dass die geförderte Anlage tatsächlich effizient arbeitet. Eine zu groß dimensionierte Wärmepumpe arbeitet ineffizient (Taktbetrieb) und erfüllt die energetischen Anforderungen der Förderung nicht.</p>
+<p><strong>Was passiert bei fehlender oder falscher Berechnung?</strong> Der KfW-Bescheid kann widerrufen werden und der bereits ausgezahlte Förderbetrag muss zurückgezahlt werden, inklusive Zinsen.</p>
+</div>
+<div>
+<h2>Was häufig falsch gemacht wird</h2>
+<p>In der Praxis gibt es drei häufige Fehlerquellen:</p>
+<h3>1. Überschlagsrechnung statt Normberechnung</h3>
+<p>Viele Handwerker überschlagen die Heizlast anhand von Faustformeln (z.&nbsp;B. 100 W/m²). Das ist schnell, aber normwidrig. Für die KfW ist ausschließlich die Berechnung nach DIN EN 12831 anerkannt.</p>
+<h3>2. Falsche Gebäudedaten</h3>
+<p>Wandaufbauten, Dämmstärken, Fensterklassen: Viele Gebäude haben keine vollständigen Baupläne, und Annahmen schleichen sich ein. Wer einen falschen Dämmwert ansetzt, bekommt ein falsches Ergebnis.</p>
+<h3>3. Fehlende Raumbetrachtung</h3>
+<p>Nur eine gebäudeweise Gesamtberechnung genügt nicht immer. Für die Auslegung von Heizkörpern und Flächenheizungen wird die raumweise Heizlast benötigt.</p>
+</div>
+<div>
+<h2>LiDAR-Scan als Lösung</h2>
+<p>Ein LiDAR-Scanner (Light Detection and Ranging) erfasst das Gebäude dreidimensional per Lasermessung, von innen und außen. Das Ergebnis ist ein präzises 3D-Modell des Gebäudes mit allen relevanten Abmessungen.</p>
+<p>Auf Basis dieses Modells kann die Heizlastberechnung mit tatsächlichen Maßen statt Schätzungen durchgeführt werden:</p>
+<ul>
+<li>Exakte Wandflächen und -stärken</li>
+<li>Tatsächliche Fensterflächen und -positionen</li>
+<li>Gebäudehülle vollständig erfasst, keine Annahmen nötig</li>
+<li>Raumweise Erfassung für die DIN-Berechnung</li>
+</ul>
+<p>Das Ergebnis ist eine normkonforme Heizlastberechnung auf Basis gemessener Daten, nicht Schätzungen. KfW-tauglich und revisionssicher.</p>
+</div>
+<div>
+<h2>Zusammenfassung</h2>
+<ul>
+<li>Heizlastberechnung nach DIN EN 12831 ist KfW-Pflicht für Wärmepumpen-Förderung</li>
+<li>Ohne korrekte Berechnung: Rückforderung von Fördergeldern möglich</li>
+<li>Häufige Fehler: Faustformeln, falsche Gebäudedaten, fehlende Raumbetrachtung</li>
+<li>LiDAR-Scan löst das Problem: 3D-Gebäudeerfassung mit tatsächlichen Maßen</li>
+<li>Ergebnis: normkonforme, KfW-taugliche Heizlastberechnung</li>
+</ul>
+</div>
+  </div>
+</section>
+<section class="sp-section sp-section--beige" aria-label="Beratung">
+  <div class="container">
+    <div class="sp-cta-box reveal">
+      <h2>Heizlastberechnung mit LiDAR-Scan</h2>
+      <p>Ich führe die Heizlastberechnung nach DIN EN 12831 mit 3D-LiDAR-Erfassung durch: normkonform, KfW-tauglich und ohne Annahmen. Vereinbare einen Termin für die Vor-Ort-Aufnahme.</p>
+      <a href="/termin" class="btn btn-accent btn-lg">Termin buchen</a>
     </div>
   </div>
+</section>
+</article>
+</main>
 
-  <main id="main">
-
-    <article>
-
-      <section class="sp-hero" aria-label="Artikeleinleitung">
-        <div class="container sp-hero-content">
-          <p class="sp-hero-eyebrow">KfW-Förderung & Normung</p>
-          <h1>Heizlastberechnung nach DIN –<br>warum sie Pflicht ist und was falsch läuft</h1>
-          <p>Wer eine Wärmepumpe mit KfW-Förderung einbauen will, braucht zwingend eine normgerechte Heizlastberechnung. Was dabei häufig schief geht – und wie eine 3D-Erfassung per LiDAR-Scan das Problem löst.</p>
+<footer class="footer">
+    <div class="footer__cta">
+      <div class="container footer__cta-inner">
+        <div>
+          <h2>Erstberatung buchen</h2>
+          <p>30&nbsp;Minuten, kostenfrei und unverbindlich. Online, telefonisch oder vor Ort. Wähle direkt deinen Wunschtermin, kein Account nötig.</p>
         </div>
-      </section>
+        <a class="btn btn--gold btn--lg" href="/termin">Termin buchen</a>
+      </div>
+    </div>
 
-      <section class="sp-section" aria-label="Artikel-Inhalt">
-        <div class="container sp-article-body">
-
-          <div class="reveal">
-            <h2>Was ist eine Heizlastberechnung?</h2>
-            <p>Die Heizlast eines Gebäudes ist die maximale Wärmeleistung, die eine Heizung bei der kältesten Außentemperatur des Jahres liefern muss, um die gewünschte Raumtemperatur zu halten.</p>
-            <p>Die Heizlastberechnung nach <strong>DIN EN 12831</strong> ermittelt diese Zahl raumweise und gebäudescharf – unter Berücksichtigung von Außenwänden, Innenwänden, Fenstern, Decken, Böden, beheizten und unbeheizten Flächen sowie der Gebäudehülle insgesamt.</p>
-            <p>Das Ergebnis bestimmt, welche Wärmepumpe du brauchst: zu klein gewählt → nicht ausreichend, zu groß gewählt → überdimensioniert und unwirtschaftlich.</p>
-          </div>
-
-          <div class="reveal">
-            <h2>Warum ist sie für die KfW-Förderung Pflicht?</h2>
-            <p>Die KfW-Bundesförderung für effiziente Gebäude (BEG) – insbesondere die Förderung für Wärmepumpen – setzt eine <strong>normgerechte Heizlastberechnung als Voraussetzung</strong> voraus.</p>
-            <p>Der Grund: Die Förderung soll sicherstellen, dass die geförderte Anlage tatsächlich effizient arbeitet. Eine zu groß dimensionierte Wärmepumpe arbeitet ineffizient (Taktbetrieb) und erfüllt die energetischen Anforderungen der Förderung nicht.</p>
-            <p><strong>Was passiert bei fehlender oder falscher Berechnung?</strong> Der KfW-Bescheid kann widerrufen werden und der bereits ausgezahlte Förderbetrag muss zurückgezahlt werden – inklusive Zinsen.</p>
-          </div>
-
-          <div class="reveal">
-            <h2>Was häufig falsch gemacht wird</h2>
-            <p>In der Praxis gibt es drei häufige Fehlerquellen:</p>
-
-            <h3>1. Überschlagsrechnung statt Normberechnung</h3>
-            <p>Viele Handwerker überschlagen die Heizlast anhand von Faustformeln (z. B. 100 W/m²). Das ist schnell, aber normwidrig. Für die KfW ist ausschließlich die Berechnung nach DIN EN 12831 anerkannt.</p>
-
-            <h3>2. Falsche Gebäudedaten</h3>
-            <p>Wandaufbauten, Dämmstärken, Fensterklassen – viele Gebäude haben keine vollständigen Baupläne, und Annahmen schleichen sich ein. Wer falschen Dämmwert ansetzt, bekommt ein falsches Ergebnis.</p>
-
-            <h3>3. Fehlende Raumbetrachtung</h3>
-            <p>Nur eine gebäudeweise Gesamtberechnung genügt nicht immer. Für die Auslegung von Heizkörpern und Flächenheizungen wird die raumweise Heizlast benötigt.</p>
-          </div>
-
-          <div class="reveal">
-            <h2>LiDAR-Scan als Lösung</h2>
-            <p>Ein LiDAR-Scanner (Light Detection and Ranging) erfasst das Gebäude dreidimensional per Lasermessung – von innen und außen. Das Ergebnis ist ein präzises 3D-Modell des Gebäudes mit allen relevanten Abmessungen.</p>
-            <p>Auf Basis dieses Modells kann die Heizlastberechnung mit tatsächlichen Maßen statt Schätzungen durchgeführt werden:</p>
-            <ul>
-              <li>Exakte Wandflächen und -stärken</li>
-              <li>Tatsächliche Fensterflächen und -positionen</li>
-              <li>Gebäudehülle vollständig erfasst, keine Annahmen nötig</li>
-              <li>Raumweise Erfassung für die DIN-Berechnung</li>
-            </ul>
-            <p>Das Ergebnis ist eine normkonforme Heizlastberechnung auf Basis gemessener Daten – nicht Schätzungen. KfW-tauglich und revisionssicher.</p>
-          </div>
-
-          <div class="reveal">
-            <h2>Zusammenfassung</h2>
-            <ul>
-              <li>Heizlastberechnung nach DIN EN 12831 ist KfW-Pflicht für Wärmepumpen-Förderung</li>
-              <li>Ohne korrekte Berechnung: Rückforderung von Fördergeldern möglich</li>
-              <li>Häufige Fehler: Faustformeln, falsche Gebäudedaten, fehlende Raumbetrachtung</li>
-              <li>LiDAR-Scan löst das Problem: 3D-Gebäudeerfassung mit tatsächlichen Maßen</li>
-              <li>Ergebnis: normkonforme, KfW-taugliche Heizlastberechnung</li>
-            </ul>
-          </div>
-
-        </div>
-      </section>
-
-      <section class="sp-section sp-section--beige" aria-label="Beratung">
-        <div class="container">
-          <div class="sp-cta-box reveal">
-            <h2>Heizlastberechnung mit LiDAR-Scan</h2>
-            <p>Ich führe die Heizlastberechnung nach DIN EN 12831 mit 3D-LiDAR-Erfassung durch – normkonform, KfW-tauglich und ohne Annahmen. Vereinbare einen Termin für die Vor-Ort-Aufnahme.</p>
-            <a href="/termin" class="btn btn-accent btn-lg">Termin vereinbaren</a>
-          </div>
-        </div>
-      </section>
-
-    </article>
-
-  </main>
-
-  <footer class="site-footer" role="contentinfo">
-    <div class="container footer-grid">
-      <div class="footer-brand">
-        <a href="/" class="nav-logo" aria-label="Patrick Leißner Energieberatung – zur Startseite">
-          <img src="/assets/Logo/Initialien-Gold-frei.png" alt="Patrick Leißner Energieberatung Logo" width="36" height="36" loading="lazy">
-          <span class="nav-logo-text">Patrick Leißner</span>
-        </a>
-        <p>Frei durch eigene Energie.</p>
-        <div class="footer-social" aria-label="Social Media">
-          <a href="https://www.instagram.com/patrickleissner.de" target="_blank" rel="noopener" aria-label="Patrick Leißner auf Instagram">
-            <img src="/assets/icons/gold_instagram_icon_frei.png" alt="" width="17" height="17" loading="lazy">
-          </a>
-          <a href="https://www.facebook.com/patrickleissner.de" target="_blank" rel="noopener" aria-label="Patrick Leißner auf Facebook">
-            <img src="/assets/icons/gold_facebook_icon_frei.png" alt="" width="17" height="17" loading="lazy">
-          </a>
-          <a href="https://x.com/patrickLeiszner" target="_blank" rel="noopener" aria-label="Patrick Leißner auf X">
-            <img src="/assets/icons/gold_x_icon_frei.png" alt="" width="17" height="17" loading="lazy">
-          </a>
-          <a href="https://wa.me/491734994994" target="_blank" rel="noopener" aria-label="Patrick Leißner auf WhatsApp">
-            <img src="/assets/icons/gold_whatsapp_icon_frei.png" alt="" width="17" height="17" loading="lazy">
-          </a>
+    <div class="container footer__grid">
+      <div class="footer__brand">
+        <img src="../../assets/img/logo-mark.webp" width="400" height="251" alt="" loading="lazy">
+        <p><strong translate="no">Patrick Leißner</strong><br>Frei durch eigene Energie.</p>
+        <div class="footer__social">
+          <a href="https://www.instagram.com/patrickleissner.de" target="_blank" rel="noopener">Instagram</a>
+          <a href="https://www.facebook.com/patrickleissner.de" target="_blank" rel="noopener">Facebook</a>
+          <a href="https://x.com/patrickLeiszner" target="_blank" rel="noopener">X</a>
+          <a href="https://wa.me/491734994994" target="_blank" rel="noopener">WhatsApp</a>
         </div>
       </div>
-      <div class="footer-col">
+      <div class="footer__col">
         <h3>Kontakt</h3>
         <a href="tel:+491734994994">0173 499 4994</a>
         <a href="mailto:p@patrickleissner.de">p@patrickleissner.de</a>
-        <span>Bitterfeld-Wolfen</span>
+        <span>Dessauer Allee 52<br>06766 Bitterfeld-Wolfen</span>
       </div>
-      <nav class="footer-col" aria-label="Leistungen">
+      <div class="footer__col">
         <h3>Leistungen</h3>
-        <a href="/beratung-technik">Beratung und Technik</a>
-        <a href="/koordination-netzwerk">Koordination und Netzwerk</a>
-        <a href="/waermepumpe-heizlast">Wärmepumpe und Heizlast</a>
-        <a href="/mieterstrom">Mieterstrom und Objektenergie</a>
-      </nav>
-      <nav class="footer-col" aria-label="Rechner und Ratgeber">
+        <a href="/beratung-technik">Beratung &amp; Technik</a>
+        <a href="/koordination-netzwerk">Koordination &amp; Netzwerk</a>
+        <a href="/waermepumpe-heizlast">Wärmepumpe &amp; Heizlast</a>
+        <a href="/mieterstrom">Mieterstrom &amp; Objektenergie</a>
+        <a href="/batteriespeicher">Batteriespeicher &amp; Energiehandel</a>
+      </div>
+      <div class="footer__col">
         <h3>Rechner &amp; Ratgeber</h3>
         <a href="/unabhaengigkeit">Unabhängigkeitsrechner</a>
         <a href="/heizkosten">Heizkosten-Rechner</a>
         <a href="/nutzen">Nutzen-Rechner</a>
         <a href="/spotpreis">Spotpreis-Monitor</a>
+        <a href="/batteriespeicher">Batteriespeicher-Ertragsrechner</a>
         <a href="/ratgeber">Ratgeber</a>
-        <a href="https://ecowattiv.de/dww/" target="_blank" rel="noopener noreferrer">DWW-Wirtschaftlichkeitsrechner ↗</a>
-      </nav>
+      </div>
     </div>
-    <div class="container footer-bottom">
-      <nav class="footer-links" aria-label="Footer-Navigation">
+
+    <div class="container footer__legal">
+      <div>
         <a href="/impressum">Impressum</a>
         <a href="/datenschutz">Datenschutz</a>
-        <a href="#" aria-label="Zurück zum Seitenanfang">Nach oben ↑</a>
-      </nav>
-      <p class="footer-copyright">© 2026 Patrick Leißner. Alle Rechte vorbehalten.</p>
-      <p class="footer-operator">pin-co.de Media UG (haftungsbeschränkt)</p>
+        <a href="/">Nach oben ↑</a>
+        <button type="button" class="motion-toggle" data-motion-toggle aria-pressed="false">Animationen anhalten</button>
+      </div>
+      <p>© 2026 Patrick Leißner. Alle Rechte vorbehalten.</p>
     </div>
   </footer>
 
-  <script src="../../main.js"></script>
+<div class="dock" aria-label="Schnellkontakt">
+    <a class="dock__call" href="tel:+491734994994">Anrufen</a>
+    <a class="dock__cta" href="/termin">Termin buchen</a>
+  </div>
+
+  <script src="../../assets/vendor/gsap.min.js" defer></script>
+  <script src="../../assets/vendor/ScrollTrigger.min.js" defer></script>
+  <script src="../../js/main.js" defer></script>
 </body>
 </html>
