@@ -17,6 +17,23 @@ const PORT = process.env.PORT || 3000;
 // Besucher-IP liefern und das Rate-Limiting würde alle Besucher gemeinsam treffen.
 app.set('trust proxy', true);
 
+// ── Eine Adresse pro Inhalt: www wegleiten ───────────────────────
+// www.patrickleissner.de und patrickleissner.de lieferten beide Status 200,
+// jede Seite existierte also zweimal. Kanonisch ist die Form ohne www – so
+// stehen die URLs in sitemap.xml und in den canonical-Tags. http → https
+// erledigt der Server davor.
+// Nur GET/HEAD umleiten: Ein 301 auf ein POST lässt den Browser den
+// Formularinhalt verwerfen. Ein Besucher, der über www kommt, landet schon beim
+// Seitenaufruf auf der kanonischen Adresse – das Formular sendet danach
+// ohnehin von dort.
+app.use((req, res, next) => {
+  const host = (req.headers.host || '').toLowerCase();
+  if ((req.method === 'GET' || req.method === 'HEAD') && host.startsWith('www.')) {
+    return res.redirect(301, 'https://' + host.slice(4) + req.originalUrl);
+  }
+  next();
+});
+
 // Nur öffentliche Dateien ausliefern. Die Seite läuft unter Express, nicht
 // Apache – die Sperren in .htaccess greifen hier nicht. Ohne diese Prüfung
 // lieferte express.static das ganze Repo aus: server.js, CLAUDE.md, docs/,
@@ -86,12 +103,26 @@ function ordnerSeitenFinden(ordner, basis = '') {
 }
 const ORDNER_SEITEN = ordnerSeitenFinden(__dirname);
 
+// Umkehrung der beiden Tabellen: Dateiname → kanonische URL. express.static
+// lieferte /nutzen.html direkt mit Status 200 aus, also jede Seite ein zweites
+// Mal unter einer Adresse, die in keiner Sitemap und keinem canonical steht.
+// Diese Varianten gehen jetzt per 301 auf die kurze Form.
+const HTML_KANON = { '/index.html': '/' };
+for (const [url, datei] of Object.entries(SEITEN)) {
+  HTML_KANON['/' + datei.toLowerCase()] = url;
+}
+for (const [url, voll] of Object.entries(ORDNER_SEITEN)) {
+  const rel = path.relative(__dirname, voll).split(path.sep).join('/').toLowerCase();
+  HTML_KANON['/' + rel] = url;
+}
+
 app.use((req, res, next) => {
   if ((req.method !== 'GET' && req.method !== 'HEAD') || req.path === '/') return next();
   const query = req.url.slice(req.path.length);
   const kanon = req.path.replace(/\/+$/, '').toLowerCase();
 
   if (UMZUEGE[kanon]) return res.redirect(301, UMZUEGE[kanon] + query);
+  if (HTML_KANON[kanon]) return res.redirect(301, HTML_KANON[kanon] + query);
 
   const datei = SEITEN[kanon] ? path.join(__dirname, SEITEN[kanon]) : ORDNER_SEITEN[kanon];
   if (!datei) return next();
@@ -583,7 +614,12 @@ app.get('/api/spotprice', async (req, res) => {
   }
 });
 
-// Unbekannte Pfade → Startseite (Verhalten wie bisher)
-app.get('*', (req, res) => res.sendFile(path.join(__dirname, 'index.html')));
+// Unbekannte Pfade → echte 404. Vorher lieferte diese Auffangroute die
+// Startseite mit Status 200 aus: jeder Tippfehler, jeder veraltete Link von
+// außerhalb und jeder Crawler-Versuch erzeugte damit eine indexierbare Kopie
+// der Startseite unter einer beliebigen Adresse.
+app.use((req, res) => {
+  res.status(404).sendFile(path.join(__dirname, '404.html'));
+});
 
 app.listen(PORT, () => console.log(`Server läuft auf Port ${PORT}`));
