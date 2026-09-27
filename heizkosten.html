@@ -17,6 +17,60 @@
   <link rel="preload" href="assets/fonts/Outfit-Variable.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="css/style.css">
   <link rel="stylesheet" href="css/pages.css">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "name": "Startseite",
+        "item": "https://patrickleissner.de/"
+      },
+      {
+        "@type": "ListItem",
+        "position": 2,
+        "name": "Leistungen",
+        "item": "https://patrickleissner.de/#leistungen"
+      },
+      {
+        "@type": "ListItem",
+        "position": 3,
+        "name": "Wärmepumpe",
+        "item": "https://patrickleissner.de/waermepumpe-heizlast"
+      },
+      {
+        "@type": "ListItem",
+        "position": 4,
+        "name": "Heizkosten-Rechner"
+      }
+    ]
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "Heizkosten-Rechner",
+    "description": "Heizkosten-Vergleich: Öl/Gas vs. Wärmepumpe + PV. Berechne Ersparnis, CO₂-ETS-II-Kosten und 20-Jahres-Projektion individuell für dein Gebäude.",
+    "url": "https://patrickleissner.de/heizkosten",
+    "applicationCategory": "UtilitiesApplication",
+    "operatingSystem": "Alle Browser",
+    "browserRequirements": "Benötigt JavaScript",
+    "isAccessibleForFree": true,
+    "inLanguage": "de-DE",
+    "provider": {
+      "@type": "Organization",
+      "name": "Patrick Leißner Energieberatung",
+      "url": "https://patrickleissner.de/",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://patrickleissner.de/assets/img/logo-mark.webp"
+      }
+    }
+  }
+  </script>
   <style>
     /* Map calculator vars → website CI vars (defined after stylesheet links so they win) */
     :root {

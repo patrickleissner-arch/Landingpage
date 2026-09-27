@@ -69,12 +69,16 @@
 .sp-section--dark .sp-section-header h2 { color: var(--bone-50); }
 .sp-section--dark .sp-section-header p { color: rgba(250, 248, 243, 0.75); }
 .sp-section--dark a:not(.btn) { color: var(--gold-400); }
+/* In dunklen Abschnitten waere das dunkle Label-Gold zu kontrastarm. */
+.sp-section--dark .sp-eyebrow,
+.sp-section--dark .sp-col-label,
+.sp-section--dark .section-label { color: var(--gold-400); }
 
 .sp-section-header { max-width: 62ch; margin-bottom: clamp(28px, 4vw, 48px); }
 .sp-section-header h2 { font-size: clamp(30px, 4vw, 48px); color: var(--green-900); }
 .sp-section-header p { margin-top: 14px; font-size: 18px; color: var(--ink-soft); }
 .sp-section-header .sp-eyebrow { display: none; }
-.sp-eyebrow { display: inline-block; font-size: 12.5px; text-transform: uppercase; letter-spacing: .13em; color: var(--gold-600); font-weight: 600; }
+.sp-eyebrow { display: inline-block; font-size: 12.5px; text-transform: uppercase; letter-spacing: .13em; color: var(--gold-700); font-weight: 600; }
 .sp-section-header--center { margin-inline: auto; text-align: center; }
 
 /* ---------- Kennzahlen ---------- */
@@ -139,7 +143,7 @@
   padding: 22px 0; background: none; border: 0; cursor: pointer; font-size: 18px; font-weight: 600; color: var(--green-900); line-height: 1.35;
 }
 .sp-faq-trigger:hover { color: var(--green-700); }
-.sp-faq-icon { width: 22px; height: 22px; flex-shrink: 0; color: var(--gold-600); transition: transform .35s var(--ease); }
+.sp-faq-icon { width: 22px; height: 22px; flex-shrink: 0; color: var(--gold-700); transition: transform .35s var(--ease); }
 .sp-faq-trigger[aria-expanded="true"] .sp-faq-icon { transform: rotate(180deg); }
 .sp-faq-panel { height: 0; overflow: hidden; }
 .sp-faq-panel-inner { padding: 0 0 24px; max-width: 65ch; color: var(--ink-soft); font-size: 16.5px;
@@ -164,7 +168,7 @@
 /* ---------- Zwei Spalten / Listen ---------- */
 .sp-two-col { display: grid; grid-template-columns: 1.2fr 1fr; gap: clamp(32px, 5vw, 72px); align-items: start; }
 @media (max-width: 900px) { .sp-two-col { grid-template-columns: 1fr; } }
-.sp-col-label { display: block; font-size: 12.5px; text-transform: uppercase; letter-spacing: .13em; color: var(--gold-600); font-weight: 600; margin-bottom: 18px; }
+.sp-col-label { display: block; font-size: 12.5px; text-transform: uppercase; letter-spacing: .13em; color: var(--gold-700); font-weight: 600; margin-bottom: 18px; }
 .sp-icon-list { display: grid; gap: 14px; }
 .sp-icon-list-item { display: grid; grid-template-columns: 48px 1fr; gap: 16px; padding: 18px; background: #fff; border-radius: 16px; border: 1px solid var(--bone-200); }
 .sp-icon-list-icon { width: 48px; height: 48px; border-radius: 12px; display: grid; place-items: center; background: var(--green-700); color: var(--gold-400); }
@@ -184,7 +188,7 @@
 
 /* ---------- Varianten (Beratung & Technik) ---------- */
 .variant-intro { max-width: 62ch; }
-.variant-intro .section-label { display: block; font-size: 12.5px; text-transform: uppercase; letter-spacing: .13em; color: var(--gold-600); font-weight: 600; margin-bottom: 14px; }
+.variant-intro .section-label { display: block; font-size: 12.5px; text-transform: uppercase; letter-spacing: .13em; color: var(--gold-700); font-weight: 600; margin-bottom: 14px; }
 .variant-intro h2 { font-size: clamp(30px, 4vw, 48px); color: var(--green-900); }
 .variant-intro p { margin-top: 14px; font-size: 18px; color: var(--ink-soft); }
 .variant-stack { background: var(--green-950); color: var(--bone-100); }
