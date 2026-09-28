@@ -6,9 +6,7 @@
 
 @font-face {
   font-family: "Outfit";
-  src: url("../assets/fonts/Outfit-Variable.woff2") format("woff2-variations"),
-       url("../assets/fonts/Outfit-Variable.woff2") format("woff2"),
-       url("../assets/fonts/Outfit-Variable.ttf") format("truetype-variations"),
+  src: url("../assets/fonts/Outfit-Variable.ttf") format("truetype-variations"),
        url("../assets/fonts/Outfit-Variable.ttf") format("truetype");
   font-weight: 100 900;
   font-display: swap;
@@ -22,9 +20,6 @@
   --green-600: #2f6656;
   --green-100: #dfe8e3;
   --gold-600: #b8952f;
-  /* Gold fuer Text auf hellem Grund: #b8952f erreicht dort nur 2,68 statt der
-     geforderten 4,5. Nur fuer kleine Labels, das Marken-Gold bleibt unberuehrt. */
-  --gold-700: #826921;
   --gold-500: #d3af3c;    /* Logo-Gold */
   --gold-400: #e4c65e;
   --gold-200: #f3e5b5;
@@ -386,7 +381,7 @@ legend { padding: 0; }
 .about__text h2 { font-size: clamp(34px, 4.6vw, 56px); color: var(--green-900); }
 .about__lead { margin-top: 20px; font-size: clamp(19px, 1.7vw, 23px); line-height: 1.45; color: var(--green-800); font-weight: 500; letter-spacing: -0.01em; }
 .about__cols { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; margin-top: 36px; padding-top: 28px; border-top: 1px solid var(--bone-200); }
-.about__cols h3 { font-size: 15px; text-transform: uppercase; letter-spacing: .12em; color: var(--gold-700); font-weight: 600; }
+.about__cols h3 { font-size: 15px; text-transform: uppercase; letter-spacing: .12em; color: var(--gold-600); font-weight: 600; }
 .about__cols p { margin-top: 10px; color: var(--ink-soft); font-size: 16px; }
 .about__quote { margin: 36px 0 0; padding: 24px 28px; border-left: 3px solid var(--gold-500); background: var(--bone-100); border-radius: 0 var(--r-tile) var(--r-tile) 0; }
 .about__quote p { font-size: 18px; line-height: 1.45; color: var(--green-900); font-weight: 500; }
@@ -465,7 +460,7 @@ textarea { resize: vertical; min-height: 110px; }
   background: var(--bone-100); border: 1px solid transparent; transition: border-color .25s, transform .25s var(--ease), background-color .25s;
 }
 a.direct__item:hover { border-color: var(--gold-500); transform: translateY(-2px); background: #fff; }
-.direct__label { font-size: 12.5px; text-transform: uppercase; letter-spacing: .12em; color: var(--gold-700); font-weight: 600; }
+.direct__label { font-size: 12.5px; text-transform: uppercase; letter-spacing: .12em; color: var(--gold-600); font-weight: 600; }
 .direct__value { font-size: 17px; font-weight: 500; color: var(--green-900); line-height: 1.45; }
 .direct__wa {
   margin-top: 6px; display: inline-flex; justify-content: center; align-items: center;
@@ -673,13 +668,3 @@ a, button, summary, .tile, label.check, .chip, .hd-chip { -webkit-tap-highlight-
   .hero__facts--formel .fact strong { min-width: 0; }
   .hero__facts--formel .fact span { max-width: 44ch; }
 }
-
-/* Hinweis im Formular: Adresse bei Energie-Themen Pflicht */
-.form__hint { margin: 6px 0 14px; font-size: 14px; line-height: 1.5; color: var(--ink-soft, #4a5a54); }
-.confirm-banner {
-  margin: 0 0 28px; padding: 16px 20px; border-radius: 14px; font-weight: 500; line-height: 1.5;
-  border: 1px solid; border-left-width: 4px;
-}
-.confirm-banner--ok { background: #e7f3ee; color: #1f4d3f; border-color: #6fae95; }
-.confirm-banner--warn { background: #fbf4dc; color: #6b5313; border-color: var(--gold-500, #D3AF3C); }
-.confirm-banner--err { background: #fbe9e7; color: #8a2d22; border-color: #d98a7f; }

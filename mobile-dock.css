@@ -1,0 +1,24 @@
+/* Shared mobile contact dock, based on the existing website. */
+.dock{display:none;position:fixed;left:max(12px,env(safe-area-inset-left,0px));right:max(12px,env(safe-area-inset-right,0px));bottom:calc(12px + env(safe-area-inset-bottom,0px));z-index:40;gap:8px;padding:8px;border-radius:999px;background:rgba(11,31,25,.92);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);box-shadow:0 16px 40px -14px rgba(0,0,0,.6);transform:none;box-sizing:border-box}
+.dock a{flex:1;min-width:0;min-height:48px;display:inline-flex;justify-content:center;align-items:center;padding:13px 12px;border-radius:999px;font:600 15px/1.3 Outfit,sans-serif;text-decoration:none;box-sizing:border-box;text-align:center}
+.dock__call{color:#faf8f3;border:1.5px solid rgba(250,248,243,.3)}
+.dock__cta{background:#d3af3c;color:#0b1f19;border:1.5px solid transparent}
+.dock a:focus-visible{outline:3px solid #faf8f3;outline-offset:2px}
+@media(max-width:960px){.dock{display:flex}body{padding-bottom:calc(100px + env(safe-area-inset-bottom,0px))}html{scroll-padding-bottom:calc(110px + env(safe-area-inset-bottom,0px))}}
+@media(hover:hover){.dock__call:hover{background:rgba(250,248,243,.12)}.dock__cta:hover{background:#e4c45d}}
+@media print{.dock{display:none}}
+
+/* Contact actions appear once scrolling begins, including on legacy pages. */
+.dock,.dock.is-visible{opacity:0;visibility:hidden;pointer-events:none;transform:translateY(24px);transition:transform .22s ease,opacity .22s ease,visibility .22s}
+.dock-shown .dock{opacity:1;visibility:visible;pointer-events:auto;transform:none}
+@media(prefers-reduced-motion:reduce){.dock,.dock.is-visible{transition:none}}
+
+/* Desktop and tablet visitors can copy the number without a calling app. */
+.contact-copy{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:pointer;text-align:inherit}
+.contact-copy:focus-visible{outline:2px solid currentColor;outline-offset:4px}
+.dock{display:flex}
+.dock .contact-copy{flex:1;min-width:0;min-height:48px;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:8px 12px;border-radius:999px;font:600 15px/1.3 Outfit,sans-serif;text-align:center;color:#faf8f3;border:1.5px solid rgba(250,248,243,.3)}
+.dock .contact-copy small{font-size:11px;font-weight:400;opacity:.8}
+.contact-copy-status:not(:empty){position:fixed;z-index:60;left:50%;bottom:calc(108px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);max-width:calc(100% - 32px);width:max-content;padding:12px 18px;border-radius:14px;background:#102e26;color:#faf8f3;font:500 15px/1.4 Outfit,sans-serif;box-shadow:0 8px 30px #0003;text-align:center}
+@media(min-width:961px){.dock{left:auto;right:24px;bottom:24px;width:390px}body{padding-bottom:110px}html{scroll-padding-bottom:120px}}
+@media print{.dock,.contact-copy-status{display:none!important}}

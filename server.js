@@ -575,43 +575,29 @@ app.get('/api/lead-confirm', async (req, res) => {
 // ── Spotpreis (EPEX SPOT Day-Ahead via Fraunhofer ISE Energy-Charts API) ──
 // Kein API-Key nötig, kostenlos, öffentlich. Serverseitiger Proxy vermeidet
 // Drittanbieter-Anfragen direkt aus dem Browser des Besuchers.
-let spotCache = { data: null, expiresAt: 0 };
+const berlinDate=t=>new Intl.DateTimeFormat('en-CA',{timeZone:'Europe/Berlin',year:'numeric',month:'2-digit',day:'2-digit'}).format(new Date(t));
+let cache=null,pending=null;
+async function prices(){
+ const now=Date.now(),day=berlinDate(now);
+ if(cache&&cache.day===day&&now-cache.fetched<300000)return {...cache.data,cached:false};
+ if(pending)return pending;
+ pending=(async()=>{try{
+  const start=Math.floor(now/1000)-86400,end=Math.floor(now/1000)+86400;
+  const response=await fetch(`https://api.energy-charts.info/price?bzn=DE-LU&start=${start}&end=${end}`,{signal:AbortSignal.timeout(12000)});
+  if(!response.ok)throw new Error(`Source HTTP ${response.status}`);
+  const raw=await response.json();
+  if(!Array.isArray(raw.unix_seconds)||!Array.isArray(raw.price)||!/EUR.*MWh/i.test(raw.unit))throw new Error('Unexpected price format');
+  const rows=raw.unix_seconds.map((t,i)=>({start:t*1000,end:(raw.unix_seconds[i+1]??t+900)*1000,priceCtKwh:typeof raw.price[i]==='number'&&Number.isFinite(raw.price[i])?raw.price[i]/10:null})).filter(p=>berlinDate(p.start)===day);
+  if(!rows.some(p=>p.priceCtKwh!==null))throw new Error('No prices for today');
+  const data={prices:rows,updated:new Date().toISOString(),day,unit:'ct/kWh',license:raw.license_info};
+  cache={day,fetched:Date.now(),data};return {...data,cached:false};
+ }catch(error){if(cache&&cache.day===day)return {...cache.data,cached:true};throw error;}finally{pending=null;}})();
+ return pending;
+}
 
-app.get('/api/spotprice', async (req, res) => {
-  res.setHeader('Access-Control-Allow-Origin', '*');
-
-  if (spotCache.data && Date.now() < spotCache.expiresAt) {
-    return res.json(spotCache.data);
-  }
-
-  try {
-    const raw = await new Promise((resolve, reject) => {
-      const url = 'https://api.energy-charts.info/price?bzn=DE-LU';
-      https.get(url, { headers: { 'Accept': 'application/json' } }, (r) => {
-        let buf = '';
-        r.on('data', c => buf += c);
-        r.on('end', () => {
-          if (r.statusCode !== 200) return reject(new Error(`API ${r.statusCode}`));
-          try { resolve(JSON.parse(buf)); } catch (e) { reject(e); }
-        });
-      }).on('error', reject);
-    });
-
-    const prices = (raw.unix_seconds || []).map((ts, i) => {
-      const priceCtKwh = (raw.price[i] ?? 0) / 10; // EUR/MWh → ct/kWh
-      const d = new Date(ts * 1000);
-      const hh = String(d.getUTCHours()).padStart(2, '0');
-      const mm = String(d.getUTCMinutes()).padStart(2, '0');
-      return { ts, label: `${hh}:${mm}`, priceCtKwh: +priceCtKwh.toFixed(2), negative: priceCtKwh < 0 };
-    });
-
-    const payload = { source: 'Fraunhofer ISE Energy-Charts (EPEX SPOT DE-LU)', updated: new Date().toISOString(), prices };
-    spotCache = { data: payload, expiresAt: Date.now() + 60 * 60 * 1000 }; // 60 min TTL
-    res.json(payload);
-  } catch (err) {
-    console.error('Spotprice API error:', err.message);
-    res.status(503).json({ error: 'Preisdaten momentan nicht verfügbar.', detail: err.message });
-  }
+app.get('/api/spotprice', async(req,res)=>{
+ res.setHeader('Cache-Control','no-store');
+ try{res.json(await prices());}catch{res.status(503).json({error:'Preisdaten momentan nicht verfügbar.'});}
 });
 
 // Unbekannte Pfade → echte 404. Vorher lieferte diese Auffangroute die

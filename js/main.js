@@ -272,18 +272,6 @@
     plz: v => (v.trim() === '' || /^\d{5}$/.test(v.trim())) ? '' : 'Bitte gib eine fünfstellige Postleitzahl ein.'
   };
 
-  // Bei Energie-Themen verlangt der Server die Adresse (Standorteinschätzung).
-  // Die Liste muss zu needsAddress in server.js passen.
-  const ADRESS_THEMEN = ['pv', 'wp', 'speicher', 'mieterstrom'];
-  const brauchtAdresse = () => themen.some(t => ADRESS_THEMEN.indexOf(t) > -1);
-  const adresseAnzeigen = () => {
-    const pflicht = brauchtAdresse();
-    form.querySelectorAll('[data-adresse-marke]').forEach(m => { m.textContent = pflicht ? '*' : '(optional)'; });
-    const hinweis = form.querySelector('[data-adresse-hinweis]');
-    if (hinweis) hinweis.hidden = !pflicht;
-    ['strasse', 'plz', 'ort'].forEach(n => { const el = field(n); if (el) el.toggleAttribute('required', pflicht); });
-  };
-
   const validateStep = n => {
     let ok = true;
     if (n === 1) {
@@ -295,14 +283,8 @@
     if (n === 2) {
       const msg = themen.length ? '' : 'Bitte wähle mindestens ein Thema aus.';
       setError('themen', msg); if (msg) ok = false;
-      const pflicht = brauchtAdresse();
-      const leer = { strasse: 'Bitte gib Straße und Hausnummer ein.', plz: 'Bitte gib deine Postleitzahl ein.', ort: 'Bitte gib deinen Ort ein.' };
-      ['strasse', 'plz', 'ort'].forEach(n => {
-        const v = field(n).value.trim();
-        let m = pflicht && !v ? leer[n] : '';
-        if (!m && n === 'plz') m = validators.plz(v);
-        setError(n, m); if (m) ok = false;
-      });
+      const plzMsg = validators.plz(field('plz').value);
+      setError('plz', plzMsg); if (plzMsg) ok = false;
     }
     if (n === 3) {
       const msg = field('datenschutz').checked ? '' : 'Bitte bestätige die Datenschutzerklärung.';
@@ -331,14 +313,7 @@
       chip.classList.toggle('is-selected', i < 0);
       chip.setAttribute('aria-pressed', i < 0 ? 'true' : 'false');
       if (themen.length) setError('themen', '');
-      adresseAnzeigen();
-      if (!brauchtAdresse()) ['strasse', 'plz', 'ort'].forEach(n => setError(n, ''));
     });
-  });
-
-  ['strasse', 'ort'].forEach(name => {
-    const el = field(name);
-    if (el) el.addEventListener('input', () => { if (el.value.trim()) setError(name, ''); });
   });
 
   Object.keys(validators).forEach(name => {
@@ -406,8 +381,7 @@
       successMsg.hidden = false;
       form.reset();
       themen.length = 0;
-      form.querySelectorAll('.chip.is-selected').forEach(c => { c.classList.remove('is-selected'); c.setAttribute('aria-pressed', 'false'); });
-      adresseAnzeigen();
+      form.querySelectorAll('.chip.is-selected').forEach(c => c.classList.remove('is-selected'));
       stepEls.forEach(s => s.classList.remove('is-active'));
       counter.textContent = 'Anfrage gesendet';
       barFill.style.setProperty('--form-progress', '1');
@@ -421,27 +395,4 @@
       form.appendChild(box);
     }
   });
-})();
-
-/* Rückmeldung nach dem Bestätigungslink (Double-Opt-in).
-   server.js leitet auf /?confirmed=true|expired|error um. */
-(function () {
-  var status = new URLSearchParams(location.search).get('confirmed');
-  if (!status) return;
-  var kontakt = document.getElementById('kontakt');
-  var ziel = kontakt && kontakt.querySelector('.section-head');
-  if (!ziel) return;
-  var art = status === 'true' ? 'ok' : status === 'expired' ? 'warn' : 'err';
-  var texte = {
-    ok: 'Danke, deine Anfrage ist bestätigt und bei mir angekommen. Ich melde mich innerhalb von 1 bis 2 Werktagen.',
-    warn: 'Dein Bestätigungslink ist abgelaufen. Bitte sende das Formular einfach noch einmal.',
-    err: 'Da ist etwas schiefgelaufen. Bitte versuch es noch einmal oder schreib direkt an p@patrickleissner.de.'
-  };
-  var box = document.createElement('p');
-  box.className = 'confirm-banner confirm-banner--' + art;
-  box.setAttribute('role', 'status');
-  box.textContent = texte[art];
-  ziel.after(box);
-  history.replaceState(null, '', location.pathname + location.hash);
-  requestAnimationFrame(function () { kontakt.scrollIntoView({ block: 'start' }); });
 })();
