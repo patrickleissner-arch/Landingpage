@@ -2,7 +2,7 @@
 
 Landingpage von Patrick Leißner — Energieberatung (Photovoltaik & Wärmepumpe) und Versicherungsvermittlung.
 
-**Aktualisiert:** 2026-09-26
+**Aktualisiert:** 2026-10-03
 
 ---
 
@@ -12,13 +12,14 @@ Landingpage von Patrick Leißner — Energieberatung (Photovoltaik & Wärmepumpe
   - Seiten: `index.html` (Start) + Unterseiten (`termin.html`, `impressum.html`, `datenschutz.html` u.a.). Rechner: `nutzen.html` (Nutzen-/Live-Cockpit), `heizkosten.html`, `unabhaengigkeit.html`, `spotpreis.html` (die alten Namen `energierechner.html`/`solarisator.html`/`waermepumpe-rechner.html` wurden am 2026-06-18 umbenannt; unter den alten Pfaden liegen nur noch Meta-Refresh-Weiterleitungen).
   - **Relaunch 26.09.2026:** Alle Seiten im neuen Design. Styles: `css/style.css` (global) + `css/pages.css` (Unterseiten). Logik: `js/main.js` (Navigation, GSAP-Animationen, Kontaktformular, Bestätigungs-Banner), `js/pages.js` (Unterseiten, FAQ), `js/scenes3d.js` (Three.js-Szenen, gebündelt und minimiert). GSAP und ScrollTrigger lokal in `assets/vendor/`, Bilder als WebP in `assets/img/`, Schrift `assets/fonts/Outfit-Variable.ttf`.
   - Neue Seite `/batteriespeicher` (Batteriespeicher & Energiehandel) mit Ertragsrechner auf echten Marktdaten 2026. Herstellerneutral: keine Hersteller- oder Anbieternamen auf der Seite.
-  - Die Seiten werden aus einem Generator außerhalb des Repos gebaut (Google Drive `Website-AI-3D/src/`). Änderungen an Seiten dort vornehmen und neu bauen, sonst gehen sie beim nächsten Relaunch-Build verloren.
+  - Ein Teil der Seiten wird aus einem Generator außerhalb des Repos gebaut (Google Drive `Website-AI-3D/src/`, eigenes `CLAUDE.md` dort). **Der Generator ist hinter diesem Branch** (Stand 03.10.2026): `/klimaanlagen`, `/ratgeber/speichergroesse-waehlen`, `/ratgeber/stromspeicher-nachruesten`, das Kontakt-Dock, `site.js`, `cool-website.js` und die heutige Startseite kennt er nicht. Ein vollständiger Lauf von `src/build.py` würde diesen Stand überschreiben. Also: Änderungen an Rechtstexten und Ratgeberseiten in der Quelle unter `src/` pflegen, die gebaute Datei vor der Übernahme gegen die Live-Fassung vergleichen und nur die beabsichtigten Zeilen übernehmen. Startseite und die neuen Seiten direkt hier pflegen, nicht im Generator.
   - Altbestand `style.css`, `subpage.css`, `main.js` im Root wird von den neuen Seiten nicht mehr geladen und kann nach einer Übergangszeit entfallen.
 - **Backend:** Node.js + Express + Nodemailer (`server.js`) für allen E-Mail-Versand: Double-Opt-in, Benachrichtigung an MAIL_TO und die Analyse-Mail des Energierechners. Config über `dotenv` (`.env`, nicht committen).
-- **Drittdienste:** keine für Formulare, Versand oder CRM. Brevo ist am 25.09.2026 vollständig entfallen — Kontakt, Vertriebsvorgang und Verlauf laufen ins eigene CRM, alle Mails über den eigenen Mailserver bei Hostinger. Selbst gehostet: chart.js (`assets/vendor/`), Schrift Outfit.
+- **Drittdienste:** keine für Formulare, Versand oder CRM. Brevo ist am 25.09.2026 vollständig entfallen — Kontakt, Vertriebsvorgang und Verlauf laufen ins eigene CRM, alle Mails über den eigenen Mailserver bei Hostinger. Die **Reste in den DNS-Einträgen sind am 03.10.2026 abgeräumt**: TXT `brevo-code:…` gelöscht, `_spf.reach.hostinger.com` aus dem SPF entfernt, der DMARC-Empfänger `rua=mailto:rua@dmarc.brevo.com` gestrichen (jetzt nur `v=DMARC1; p=none`) und die vier toten DKIM-CNAMEs `brevo1`, `brevo2`, `reach-a`, `reach-b` gelöscht. Sie widersprachen der Datenschutzerklärung, die einen externen Versanddienstleister ausschließt. Hostingers DKIM (`hostingermail-a/b/c`, `hostingermail1`) ist unverändert. Die MX-Einträge bleiben bei Hostinger (`mx1`/`mx2.hostinger.com`); wer sie ändert, reißt Postfach, Double-Opt-in und Terminbestätigungen mit. Selbst gehostet: chart.js (`assets/vendor/`), Schrift Outfit.
 - **Terminbuchung:** eigenes Easy!Appointments auf einem eigenen VPS, als iframe von `termin.patrickleissner.de` eingebunden (seit 25.09.2026, vorher Brevo Meetings). Die Einbettung funktioniert nur, weil Traefik dort `X-Frame-Options` durch `frame-ancestors 'self' https://patrickleissner.de` ersetzt — Easy!Appointments setzt die Sperre sonst selbst und der iframe bliebe leer. Höhe: `assets/js/booking-embed.js` übernimmt sie per `postMessage` vom Gegenstück `pl-embed.js` im Container (`/docker/patrick-termin/custom/`).
+  **Google-Kalenderabgleich, offener Punkt (03.10.2026):** Der Abgleich läuft auf einem *privaten* Google-Konto. Für ein privates Konto bietet Google keinen Auftragsverarbeitungsvertrag nach Art. 28 DSGVO an, übermittelt werden aber Name, Rufnummer und Anliegen im Titel (eigene Anpassung `custom/Google_sync.php`), die Bemerkungen in der Beschreibung sowie Name und E-Mail-Adresse des Kunden als Teilnehmer (Originalverhalten von Easy!Appointments, Zeilen 226 und 357). Beschlossen ist die Umstellung auf Google Workspace, dessen Cloud Data Processing Addendum den AVV mitbringt. **Erst danach** darf in Abschnitt 5 der Datenschutzerklärung ein AVV erwähnt werden. Bis dahin steht dort bewusst keiner.
 - **Eigenes CRM:** Bestätigte Anfragen laufen über einen n8n-Webhook (`CRM_WEBHOOK_URL`/`CRM_WEBHOOK_TOKEN`) in eine eigene PostgreSQL-Kundenverwaltung auf demselben VPS. `crmLead()` in `server.js` wirft nie — ein Ausfall darf weder die Bestätigung des Besuchers noch die Benachrichtigung blockieren.
-- **Server/Deploy:** Express (`server.js`, Node ≥ 18) liefert alles aus – auch HTML/CSS. `.htaccess` wirkt dort **nicht**: Zugriffssperre (nur öffentliche Dateiendungen, keine Interna) und saubere URLs (`/termin` ohne Schrägstrich, 301 für Varianten) stehen in `server.js`. Deploy: GitHub (`patrickleissner-arch/Landingpage`, Branch `master`) → Hostinger, automatisch bei Push.
+- **Server/Deploy:** Express (`server.js`, Node ≥ 18) liefert alles aus – auch HTML/CSS. `.htaccess` wirkt dort **nicht**: Zugriffssperre (nur öffentliche Dateiendungen, keine Interna) und saubere URLs (`/termin` ohne Schrägstrich, 301 für Varianten) stehen in `server.js`. Deploy: GitHub (`patrickleissner-arch/Landingpage`, Branch **`release/website-relaunch-2026-09-28`**) → Hostinger, automatisch bei jedem Push, direkt ins Document-Root (`/home/u603066873/domains/patrickleissner.de/public_html`). **`master` deployt nicht mehr** und ist seit dem 27.09.2026 inhaltlich hinter Live: dort fehlen Dock, `site.js` und `/klimaanlagen`. Ein Push auf `master` tut nichts; würde die Deploy-Quelle dorthin zurückgestellt, fiele die Seite auf den Stand vom 27.09. zurück. Nachprüfen über die Hostinger-API, Operation `hosting_git_auto-deployment-settings` (Konto `u603066873`). Der Workflow `.github/workflows/deploy-env.yml` deployt die Seite **nicht**, er schreibt nur die `.env` per SSH.
 - **Eine Adresse pro Inhalt** (27.09.2026, nach dem SEO-Audit): `www` geht per 301 auf die Domain ohne `www`, `/seite.html` per 301 auf `/seite` (Tabelle `HTML_KANON` in `server.js`, aus `SEITEN` und den Ratgeber-Ordnern erzeugt). Beide Weichen gelten nur für GET/HEAD – ein 301 auf ein POST würde den Formularinhalt verwerfen.
 - **Unbekannte Pfade → echte 404** mit `404.html` (27.09.2026). Vorher lieferte die Auffangroute die Startseite mit Status 200, wodurch jede falsche Adresse eine indexierbare Kopie der Startseite war. Die Seite selbst kommt wie alle Unterseiten aus dem Generator (`src/404.main.html`, Eintrag mit `canonical=False, absolute=True` – sie wird unter beliebigen Adressen ausgeliefert und braucht daher Wurzel-relative Asset-Pfade und kein Canonical).
 
@@ -55,6 +56,28 @@ Jeder Push deployt sofort live. Vor jedem Push:
 
 - Impressum nach **§ 5 DDG** (Digitale-Dienste-Gesetz — hat 2024 das TMG abgelöst) und § 18 Abs. 2 MStV
 - Datenschutzerklärung **DSGVO + TDDDG**, stets aktuell und mit dem tatsächlichen Verhalten der Seite übereinstimmend
+- **Kein Cookie-Banner, und das soll so bleiben** (geprüft 03.10.2026). Die Seite braucht keines,
+  weil es nichts gibt, worin eingewilligt werden müsste: kein Analytics, kein Tag Manager, kein
+  Pixel, keine Fremdressourcen (Outfit, GSAP und Chart.js liegen in `assets/`), und die
+  Hauptdomain setzt kein einziges Cookie. Cookies kommen nur von `termin.patrickleissner.de`
+  (`ea_session`, `csrf_cookie`) — eigene Subdomain, technisch notwendig, einwilligungsfrei nach
+  § 25 Abs. 2 Nr. 2 TDDDG. Daraus vier Regeln:
+  - **Keine Fremdressourcen.** Keine Google Fonts, kein CDN, kein externes Skript, keine Karte,
+    kein fremdes Video. Bibliotheken kommen nach `assets/vendor/`.
+  - **Keine Cookies außer den notwendigen.** Analytics, Tracking oder Marketing nur nach
+    Einwilligung — und dann braucht die Seite ein Consent-Werkzeug, bei Anzeigen zusätzlich
+    Google Consent Mode v2, plus einen neuen Abschnitt in der Datenschutzerklärung.
+  - **iframes nur mit Zwei-Klick-Lösung**, Vorbild ist der HTW-Solarisator in `js/pages.js`.
+    Ausnahme bleibt `termin.patrickleissner.de`.
+  - **Bei jeder Änderung an Kontaktwegen die Datenschutzerklärung nachziehen.** Dass WhatsApp
+    auf elf Seiten als Kontaktweg eingebaut wurde, ohne den passenden Abschnitt zu ergänzen,
+    war genau dieser Fehler.
+- Messung ist bewusst auf Google Search Console und die Server-Logfiles beschränkt (Entscheidung
+  03.10.2026). Beides braucht keine Einwilligung. Kein Analytics-Werkzeug, solange keine Anzeigen
+  geschaltet werden.
+- Prüfen, ob der saubere Zustand noch gilt: `curl -sI https://patrickleissner.de/ | grep -i set-cookie`
+  darf nichts ausgeben, und `curl -s https://patrickleissner.de/ | grep -oE 'https?://[a-z0-9.-]+' | sort -u`
+  nur eigene Domains, `schema.org`, `w3.org` und Ziele reiner Textlinks.
 - Patrick ist **Versicherungsvermittler nach § 34d GewO** (Reg.-Nr. D-ABP9-EILM2-37, IHK Halle-Dessau) → erhöhte Sorgfalt:
   - Keine Produkt-, Beitrags- oder Renditeversprechen
   - Nichts dem Zufall überlassen — bei Rechtsfragen konservative Variante wählen
