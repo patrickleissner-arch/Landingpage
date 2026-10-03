@@ -131,14 +131,35 @@ app.use((req, res, next) => {
 });
 
 app.use(express.static(path.join(__dirname)));
-app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
+// Groessengrenze: die echten Anfragen liegen unter 4 KB (das groesste Feld ist
+// rechnerdaten.narr aus /nutzen). Der Standardwert von express.json ist 100 KB und
+// damit viel mehr, als irgendein Formular braucht.
+app.use(express.json({ limit: '32kb' }));
+app.use(express.urlencoded({ extended: false, limit: '32kb' }));
 
 // ── In-Memory Stores ─────────────────────────────────────────────
 const rateLimitMap = new Map(); // ip → [timestamps]
 const pendingMap   = new Map(); // token → { payload, expiresAt }
 
 const RATE_WINDOW = 10 * 60 * 1000; // Zeitfenster des Rate-Limits (10 Min)
+
+// ── Laengengrenzen fuer die Felder, die in E-Mail-Kopfzeilen landen ────
+// Ohne Grenze geht eine beliebig lange Zeichenkette aus dem Formular in den
+// Adressparser von Nodemailer, dessen Laufzeit mit der Laenge quadratisch
+// waechst. Die alte Pruefung liess das durch: sie verbot nur Leerzeichen und
+// ein zweites @, nicht die Laenge. Das Rate-Limit begrenzt die Zahl der
+// Anfragen, nicht den Rechenaufwand je Anfrage. Betroffen sind `to: email`
+// und `replyTo: "<name>" <email>`; beide Werte werden geparst.
+const MAX_EMAIL = 254; // RFC 5321, laenger ist keine zustellbare Adresse
+const MAX_NAME  = 100;
+
+const adresseOk = (wert) =>
+  typeof wert === 'string' &&
+  wert.length <= MAX_EMAIL &&
+  /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(wert);
+
+const nameOk = (...werte) =>
+  werte.every(w => String(w == null ? '' : w).length <= MAX_NAME);
 
 // Abgelaufene Pending-Einträge und verwaiste Rate-Limit-Einträge alle 30 min bereinigen.
 // Die IP-Zeitstempel werden beim Lesen zwar gefiltert, der Map-Eintrag selbst blieb aber
@@ -291,8 +312,11 @@ app.post('/api/contact', async (req, res) => {
     return res.status(400).json({ ok: false, error: 'Pflichtfelder fehlen.' });
   }
 
-  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+  if (!adresseOk(email)) {
     return res.status(400).json({ ok: false, error: 'Ungültige E-Mail-Adresse.' });
+  }
+  if (!nameOk(vorname, nachname)) {
+    return res.status(400).json({ ok: false, error: 'Name zu lang.' });
   }
 
   // Double Opt-in: Submission zwischenspeichern und Bestätigungs-E-Mail senden
@@ -420,8 +444,11 @@ app.post('/api/lead', async (req, res) => {
   if (!vorname || !nachname || !email || !plz || !consentAnalyse) {
     return res.status(400).json({ ok: false, error: 'Pflichtfelder fehlen.' });
   }
-  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+  if (!adresseOk(email)) {
     return res.status(400).json({ ok: false, error: 'Ungültige E-Mail-Adresse.' });
+  }
+  if (!nameOk(vorname, nachname)) {
+    return res.status(400).json({ ok: false, error: 'Name zu lang.' });
   }
 
   const token = crypto.randomUUID();
