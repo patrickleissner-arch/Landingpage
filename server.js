@@ -1,8 +1,36 @@
 const path       = require('path');
-// .env liegt eine Ebene über __dirname, AUSSERHALB des von Hostingers
-// Auto-Deploy synchronisierten Ordners – sonst überschreibt/löscht der
-// rsync bei jedem Push die Datei wieder (siehe deploy-env.yml).
-require('dotenv').config({ path: path.join(__dirname, '..', '.env') });
+const fsSync     = require('fs');
+// Die .env liegt ausserhalb des Ordners, den Hostingers Auto-Deploy
+// synchronisiert, sonst loescht der rsync sie bei jedem Push (siehe
+// deploy-env.yml). Wo genau, haengt vom Layout des Hostings ab:
+//   bisher angenommen  .../domains/<domain>/nodejs      -> .env eine Ebene hoeher
+//   tatsaechlich seit   .../domains/<domain>/hbuilds/current/nodejs
+// und `current` ist ein Symlink, den jeder Build auf ein neues Verzeichnis
+// umschaltet. Eine .env darin waere nach dem naechsten Build verwaist -- genau
+// das hat am 03.10.2026 den Mailversand stillgelegt, nachdem die Deploy-Quelle
+// am 28.09. auf den Release-Branch gewechselt war.
+// Deshalb: von __dirname aus nach oben suchen und die erste .env nehmen. Der
+// Ordner .../domains/<domain>/ liegt ueber hbuilds und unter keiner Web-Wurzel,
+// ueberlebt also Builds und ist nicht abrufbar.
+function findeEnv(start, ebenen = 5) {
+  let dir = start;
+  for (let i = 0; i <= ebenen; i++) {
+    const kandidat = path.join(dir, '.env');
+    if (fsSync.existsSync(kandidat)) return kandidat;
+    const oben = path.dirname(dir);
+    if (oben === dir) break; // Dateisystemwurzel erreicht
+    dir = oben;
+  }
+  return null;
+}
+
+const envPfad = findeEnv(path.join(__dirname, '..'));
+if (envPfad) {
+  require('dotenv').config({ path: envPfad });
+  console.log('.env geladen aus', envPfad);
+} else {
+  console.error('WARNUNG: keine .env gefunden. Mailversand und CRM sind ohne Zugangsdaten nicht moeglich.');
+}
 const express    = require('express');
 const nodemailer = require('nodemailer');
 const crypto     = require('crypto');
