@@ -22,7 +22,6 @@
     set('result-kicker',c.summary);set('result-title',c.title);set('result-text',c.text);set('result-region',c.region);
     const list=document.getElementById('result-list');if(list){list.replaceChildren(...c.list.map(s=>{const li=document.createElement('li');li.textContent=s;return li;}));}
     document.querySelectorAll('.saved-summary').forEach(el=>el.textContent=c.summary);
-    document.querySelectorAll('.download-note').forEach(el=>{el.hidden=false;el.href='/notes/'+state.audience+'-'+state.pv+'.txt';});
     set('diagram-source',state.pv==='yes'?'Deine PV':'PV prüfen');set('diagram-use',state.audience==='home'?'Zuhause':state.audience==='business'?'Betrieb / Netz':'Gebäude');
     const network=document.querySelector('.network');if(network){network.dataset.audience=state.audience;network.dataset.pv=state.pv;}
   }
