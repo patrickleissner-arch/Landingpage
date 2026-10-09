@@ -1,0 +1,12 @@
+{
+  "name": "foerderturm-build",
+  "private": true,
+  "description": "Build-Werkzeug für assets/js/foerderturm.js. Wird nicht deployt.",
+  "scripts": {
+    "build": "esbuild foerderturm.src.js --bundle --minify --format=iife --target=es2019 --outfile=../../assets/js/foerderturm.js"
+  },
+  "devDependencies": {
+    "esbuild": "0.24.0",
+    "three": "0.169.0"
+  }
+}
