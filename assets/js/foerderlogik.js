@@ -58,7 +58,7 @@
   }
 
   const kgbSatz = (p) => Math.max(0, REGELN.kgbStart - REGELN.kgbSchritt * p);
-  const hoechst1 = (p) => REGELN.hoechst1Start - REGELN.hoechst1Schritt * p;
+  const hoechst1 = (p) => Math.max(0, REGELN.hoechst1Start - REGELN.hoechst1Schritt * p);
 
   /* Förderhöchstbetrag des Gebäudes für n Wohneinheiten. */
   function hoechstbetrag(n, p) {
@@ -70,18 +70,36 @@
 
   /* Bekommt der Tausch dieser Heizung den Klimageschwindigkeitsbonus?
      Ergebnis: true, false oder null (Angabe fehlt noch). */
-  function heizungMitBonus(heizung, jahr) {
+  function heizungMitBonus(heizung, datum) {
     if (!heizung || !heizung.art) return null;
     if (heizung.laeuft === false) return false;
-    let artOk;
-    if (REGELN.kgbOhneAlter.includes(heizung.art)) artOk = true;
-    else if (REGELN.kgbAb20Jahren.includes(heizung.art)) {
-      if (!heizung.baujahr) return null;
-      artOk = jahr - heizung.baujahr >= REGELN.mindestalter;
-    } else artOk = false;
+    const tag = datum instanceof Date ? datum : new Date(datum, 0, 1);
+    let artOk = REGELN.kgbOhneAlter.includes(heizung.art);
+    if (REGELN.kgbAb20Jahren.includes(heizung.art)) {
+      if (heizung.inbetriebnahme) {
+        const [y,m,d] = heizung.inbetriebnahme.split('-').map(Number);
+        const start = new Date(y,m-1,d);
+        if (!y || !m || !d || start.getFullYear() !== y || start.getMonth() !== m-1 || start.getDate() !== d || start > tag) return null;
+        // Datum statt bloßer Jahresdifferenz; Schaltjahre kalendergenau behandeln.
+        const grenze = new Date(tag.getFullYear()-20,tag.getMonth(),tag.getDate());
+        artOk = start <= grenze;
+      } else if (heizung.baujahr) {
+        const alter = tag.getFullYear()-heizung.baujahr;
+        if (alter === 20) return null;
+        artOk = alter > 20;
+      } else return null;
+    }
     if (!artOk) return false;
-    if (heizung.laeuft == null) return null;
-    return true;
+    return heizung.laeuft == null ? null : true;
+  }
+
+  function einkommensStufe(e) {
+    if (e.einkommen !== undefined) {
+      if (e.einkommen === null || e.einkommen === '' || !Number.isFinite(Number(e.einkommen))) return null;
+      const wert = Number(e.einkommen) - (e.kind === true ? REGELN.familienzuschlag : 0);
+      return REGELN.stufen.findIndex(s => s.bis === null || wert <= s.bis);
+    }
+    return Number.isInteger(e.stufe) && e.stufe >= 0 && e.stufe <= 3 ? e.stufe : null;
   }
 
   /* Hauptrechnung.
@@ -97,22 +115,26 @@
     const jahr = datum.getFullYear();
     const n = Math.max(1, eingabe.einheiten.length);
     const hoechst = hoechstbetrag(n, p);
-    const kosten = Math.max(0, Number(eingabe.kosten) || 0);
-    const foerderfaehig = Math.min(kosten, hoechst);
+    const kosten = Number.isFinite(Number(eingabe.kosten)) ? Math.max(0, Number(eingabe.kosten)) : 0;
+    const ausgeschlossen = eingabe.voraussetzungen === false || kosten < 300;
+    const foerderfaehig = ausgeschlossen ? 0 : Math.min(kosten, hoechst);
     const jeEinheit = foerderfaehig / n;
-    const kgbHeizung = heizungMitBonus(eingabe.heizung, jahr);
+    const kgbHeizung = heizungMitBonus(eingabe.heizung, datum);
     const kgb = kgbSatz(p);
     const offen = new Set();
-    if (kgbHeizung === null) offen.add('heizung');
+    if (kgbHeizung === null && kgb > 0 && eingabe.einheiten.some(e => e.selbst)) offen.add('heizung');
+    if (eingabe.voraussetzungen == null) offen.add('voraussetzungen');
+    if (kosten < 300) offen.add('mindestkosten');
 
     const einheiten = eingabe.einheiten.map((e, i) => {
       if (!e.selbst) {
         return { nr: i + 1, selbst: false, grund: REGELN.grund, kgb: 0, eink: 0, satz: REGELN.grund, deckel: REGELN.deckel, zuschuss: jeEinheit * REGELN.grund / 100 };
       }
       if (e.kind == null) offen.add('kind');
-      if (e.stufe == null) offen.add('einkommen');
+      const ermittelteStufe = einkommensStufe(e);
+      if (ermittelteStufe == null) offen.add('einkommen');
       const k = kgbHeizung ? kgb : 0;
-      const stufe = e.stufe == null ? 3 : e.stufe;
+      const stufe = ermittelteStufe == null ? 3 : ermittelteStufe;
       const roh = REGELN.stufen[stufe].bonus;
       const deckel = stufe === 0 ? REGELN.deckelNiedrig : REGELN.deckel;
       // Deckel greift von oben: zuerst wird der Einkommensbonus gekürzt
@@ -122,11 +144,13 @@
       return { nr: i + 1, selbst: true, grund: REGELN.grund, kgb: kGek, eink: eGek, satz, deckel, gedeckelt: REGELN.grund + k + roh > deckel, zuschuss: jeEinheit * satz / 100 };
     });
 
+    if (ausgeschlossen) einheiten.forEach(e => { e.grund = 0; e.kgb = 0; e.eink = 0; e.satz = 0; e.zuschuss = 0; });
     const zuschuss = einheiten.reduce((s, e) => s + e.zuschuss, 0);
     const mittel = (f) => einheiten.reduce((s, e) => s + e[f], 0) / n;
     const deckel = einheiten.some((e) => e.selbst) ? Math.max(...einheiten.filter((e) => e.selbst).map((e) => e.deckel)) : REGELN.deckel;
 
     return {
+      ausgeschlossen,
       periode: p,
       datum,
       kgbSatz: kgb,
@@ -138,7 +162,7 @@
       jeEinheit,
       einheiten,
       zuschuss,
-      satz: foerderfaehig > 0 ? (zuschuss / foerderfaehig) * 100 : mittel('satz'),
+      satz: mittel('satz'),
       anteil: kosten > 0 ? (zuschuss / kosten) * 100 : 0,
       schichten: { grund: mittel('grund'), kgb: mittel('kgb'), eink: mittel('eink'), deckel },
       offen: [...offen],
@@ -171,7 +195,7 @@
     return [`bis ${f(s[0].bis)}`, `bis ${f(s[1].bis)}`, `bis ${f(s[2].bis)}`, `mehr als ${f(s[2].bis)}`];
   }
 
-  const api = { REGELN, periode, stichtag, kgbSatz, hoechst1, hoechstbetrag, heizungMitBonus, rechne, naechsteAbsenkung, stufenTexte };
+  const api = { REGELN, periode, stichtag, kgbSatz, hoechst1, hoechstbetrag, heizungMitBonus, einkommensStufe, rechne, naechsteAbsenkung, stufenTexte };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   else root.Foerderlogik = api;
 })(typeof window !== 'undefined' ? window : globalThis);

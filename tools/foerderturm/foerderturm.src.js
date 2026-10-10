@@ -20,6 +20,7 @@
 import {
   WebGLRenderer, Scene, PerspectiveCamera, BufferGeometry, BufferAttribute,
   Points, ShaderMaterial, Color, Group, AdditiveBlending, NormalBlending,
+  Mesh, CylinderGeometry, MeshStandardMaterial, HemisphereLight, DirectionalLight, TorusGeometry,
 } from 'three';
 
 const FARBEN = {
@@ -45,8 +46,8 @@ const vertex = /* glsl */`
     float h = aH;
     float lostFrom = uB2 - uLost;
     vec3 col; float a; float s = 1.0;
-    if (h < uB1)            { col = cGrund; a = 0.95; }
-    else if (h < lostFrom)  { col = cKgb;   a = 0.92; }
+    if (h < uB1)            { col = cGrund; a = 0.42; }
+    else if (h < lostFrom)  { col = cKgb;   a = 0.42; }
     else if (h < uB2)       {
       col = cLost; a = 0.75 + 0.25 * sin(uTime * 4.0 + aRand * 20.0);
       // Bröckeln: die Partikel lösen sich leicht nach außen
@@ -54,7 +55,7 @@ const vertex = /* glsl */`
       p.xz *= 1.0 + 0.22 * drift;
       p.y -= 0.06 * drift;
     }
-    else if (h < uB3)       { col = cEink;  a = 0.95; }
+    else if (h < uB3)       { col = cEink;  a = 0.42; }
     else                    { col = cLeer;  a = 0.16; s = 0.6; }
     // leichtes Funkeln
     a *= 0.82 + 0.18 * sin(uTime * 2.0 + aRand * 31.0) * uMotion + 0.18 * (1.0 - uMotion);
@@ -164,6 +165,19 @@ function mount(container) {
   const camera = new PerspectiveCamera(32, 1, 0.1, 50);
   const group = new Group();
   scene.add(group);
+  scene.add(new HemisphereLight(0xf6f5ed, 0x173c2e, 2.4));
+  const light = new DirectionalLight(0xffedbe, 3); light.position.set(-3,5,4); scene.add(light);
+  const layerColors = [FARBEN.grund, FARBEN.kgb, FARBEN.eink];
+  const layers = layerColors.map(color => {
+    const mesh = new Mesh(new CylinderGeometry(RADIUS*.89,RADIUS*.89,1,64),new MeshStandardMaterial({color,metalness:.42,roughness:.3}));
+    group.add(mesh); return mesh;
+  });
+  const foot = new Mesh(new CylinderGeometry(.95,1.02,.12,64),new MeshStandardMaterial({color:0x345444,metalness:.5,roughness:.4}));
+  foot.position.y=-.09; group.add(foot);
+  const rim = new Mesh(new TorusGeometry(.96,.012,8,80),new MeshStandardMaterial({color:0xdbc269,metalness:.5,roughness:.3}));
+  rim.rotation.x=Math.PI/2; rim.position.y=-.02; group.add(rim);
+  const capRing = new Mesh(new TorusGeometry(.86,.008,8,80),new MeshStandardMaterial({color:0xe7e9d8,transparent:true,opacity:.6}));
+  capRing.rotation.x=Math.PI/2; group.add(capRing);
 
   const uniforms = {
     uTime: { value: 0 }, uB1: { value: 0 }, uB2: { value: 0 }, uB3: { value: 0 }, uLost: { value: 0 },
@@ -208,7 +222,7 @@ function mount(container) {
     camera.position.set(0, dist * 0.38, dist);
     camera.lookAt(0, -HOEHE * 0.04, 0);
     camera.updateProjectionMatrix();
-    uniforms.uSize.value = Math.max(16, Math.min(44, h / 9)) * renderer.getPixelRatio();
+    uniforms.uSize.value = Math.max(8, Math.min(22, h / 18)) * renderer.getPixelRatio();
   }
 
   function schritt(t) {
@@ -224,6 +238,14 @@ function mount(container) {
     }
     uniforms.uB1.value = ist.b1; uniforms.uB2.value = ist.b2; uniforms.uB3.value = ist.b3; uniforms.uLost.value = ist.lost;
     plateUniforms.uY.value = ist.deckel * HOEHE;
+    capRing.position.y=ist.deckel*HOEHE;
+    const bounds=[0,ist.b1,ist.b2,ist.b3];
+    layers.forEach((mesh,i)=>{
+      const height=(bounds[i+1]-bounds[i])*HOEHE;
+      mesh.visible=height>.001;
+      mesh.scale.y=Math.max(.001,height-.012);
+      mesh.position.y=(bounds[i]+bounds[i+1])*HOEHE/2;
+    });
     uniforms.uMotion.value = still ? 0 : 1;
     if (!still) { uniforms.uTime.value += dt; winkel += dt * 0.18; }
     group.rotation.y = winkel;
@@ -232,14 +254,14 @@ function mount(container) {
   }
 
   function loop(t) {
-    if (!sichtbar) { laeuft = false; return; }
+    if (!sichtbar || document.hidden) { laeuft = false; return; }
     const bewegt = schritt(t);
     const still = reduced.matches || paused();
     if (still && !bewegt) { laeuft = false; return; }
     requestAnimationFrame(loop);
   }
   function wecken() {
-    if (!laeuft && sichtbar) { laeuft = true; letzte = performance.now(); requestAnimationFrame(loop); }
+    if (!laeuft && sichtbar && !document.hidden) { laeuft = true; letzte = performance.now(); requestAnimationFrame(loop); }
   }
 
   if ('IntersectionObserver' in window) {
@@ -247,6 +269,8 @@ function mount(container) {
   }
   if ('ResizeObserver' in window) new ResizeObserver(() => { groesse(); wecken(); }).observe(container);
   addEventListener('motion:change', wecken);
+  document.addEventListener('visibilitychange', wecken);
+  canvas.addEventListener('webglcontextlost', () => { sichtbar=false; container.classList.remove('is-3d'); });
   reduced.addEventListener?.('change', wecken);
   groesse();
   wecken();
