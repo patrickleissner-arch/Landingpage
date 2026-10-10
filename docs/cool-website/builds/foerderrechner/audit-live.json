@@ -1,0 +1,150 @@
+{
+  "mode": "https://patrickleissner.de",
+  "checkedAt": "2026-10-10",
+  "pages": 23,
+  "uniqueInternalAssets": 41,
+  "internalLinks": 452,
+  "issues": [],
+  "warnings": [],
+  "externalEmbeddedResources": [],
+  "pageDetails": [
+    {
+      "path": "/",
+      "title": "Batteriespeicher & Energielösungen · Patrick Leißner",
+      "description": "Beratung zu Batteriespeichern, PV-Nachrüstung, Photovoltaik und Wärmepumpen. Eigenheim-Umsetzung in Sachsen, Sachsen-Anhalt und Brandenburg. Termin buchen.",
+      "schemaCount": 2
+    },
+    {
+      "path": "/batteriespeicher",
+      "title": "Batteriespeicher & Energiehandel · Patrick Leißner",
+      "description": "Batteriespeicher für Eigenverbrauch und Energiehandel vergleichen. Erfahre, welche Rolle Verbrauch, Anschluss und Vermarktung für dein Projekt spielen.",
+      "schemaCount": 0
+    },
+    {
+      "path": "/beratung-technik",
+      "title": "Photovoltaik-Beratung & Planung · Patrick Leißner",
+      "description": "Photovoltaik gemeinsam planen: Beratung, Qualifizierung und Standortanalyse. Eigenheim-Umsetzung in Sachsen, Sachsen-Anhalt und Brandenburg.",
+      "schemaCount": 1
+    },
+    {
+      "path": "/waermepumpe-heizlast",
+      "title": "Wärmepumpe & Heizlastberechnung · Patrick Leißner",
+      "description": "Beratung zu Wärmepumpen mit Gebäude- und Bedarfsanalyse. Heizlast als Planungsgrundlage. Für dein Eigenheim in Sachsen, Sachsen-Anhalt und Brandenburg.",
+      "schemaCount": 1
+    },
+    {
+      "path": "/klimaanlagen",
+      "title": "Klimaanlagen-Beratung · Patrick Leißner",
+      "description": "Beratung und Standortanalyse für Klimaanlagen im Eigenheim und Gewerbe. Räume, Nutzung und Einbaumöglichkeiten gemeinsam betrachten.",
+      "schemaCount": 1
+    },
+    {
+      "path": "/mieterstrom",
+      "title": "Mieterstrom & Objektenergie · Patrick Leißner",
+      "description": "Beratung zu PV, Speicher und Energieversorgung in gemeinsam genutzten Gebäuden. Ausgangslage qualifizieren und Standortpotenzial analysieren.",
+      "schemaCount": 1
+    },
+    {
+      "path": "/koordination-netzwerk",
+      "title": "Umsetzung & Koordination · Patrick Leißner",
+      "description": "Beratung, Qualifizierung, Standortanalyse und abgestimmte Umsetzung für dein Energieprojekt. Patrick Leißner als persönlicher Ansprechpartner.",
+      "schemaCount": 1
+    },
+    {
+      "path": "/termin",
+      "title": "Termin buchen · Patrick Leißner",
+      "description": "Kostenfreies Erstgespräch zu Batteriespeicher, PV-Nachrüstung, Photovoltaik, Wärmepumpe oder Klimaanlage. Vorhaben und nächste Schritte gemeinsam klären.",
+      "schemaCount": 1
+    },
+    {
+      "path": "/unabhaengigkeit",
+      "title": "Unabhängigkeitsrechner | Patrick Leißner Energieberatung",
+      "description": "Interaktiver Unabhängigkeitsrechner der HTW Berlin: ermittle, wie viel Strom deine PV-Anlage erzeugen könnte und wie viel du selbst nutzen kannst.",
+      "schemaCount": 0
+    },
+    {
+      "path": "/heizkosten",
+      "title": "Heizkosten-Rechner | Patrick Leißner Energieberatung",
+      "description": "Heizkosten-Vergleich: Öl/Gas vs. Wärmepumpe + PV. Berechne Ersparnis, CO₂-ETS-II-Kosten und 20-Jahres-Projektion individuell für dein Gebäude.",
+      "schemaCount": 0
+    },
+    {
+      "path": "/nutzen",
+      "title": "Nutzen-Rechner | Patrick Leißner Energieberatung",
+      "description": "Energiekosten-Rechner von Patrick Leißner: gib deine echten Verbrauchswerte ein und sieh, was PV und Wärmepumpe wirklich für dich bedeuten.",
+      "schemaCount": 0
+    },
+    {
+      "path": "/spotpreis",
+      "title": "Spotpreis-Monitor | Patrick Leißner Energieberatung",
+      "description": "Aktuelle EPEX-SPOT-Day-Ahead-Strompreise für Deutschland live, inklusive negativer Preisstunden, die § 51 EEG (Solarspitzengesetz) auslösen.",
+      "schemaCount": 0
+    },
+    {
+      "path": "/ratgeber",
+      "title": "Ratgeber | Patrick Leißner Energieberatung",
+      "description": "Ratgeber für Photovoltaik, Wärmepumpe und Energierecht: fundierte Erklärungen zu Solarspitzengesetz, § 14a EnWG, Heizlastberechnung und Speichervergleich.",
+      "schemaCount": 0
+    },
+    {
+      "path": "/ratgeber/solarspitzengesetz",
+      "title": "Solarspitzengesetz 2025 | Patrick Leißner Energieberatung",
+      "description": "Solarspitzengesetz: Was negative Strompreise für die PV-Einspeisevergütung bedeuten und welche Rolle Speicher und die Steuerung des Eigenverbrauchs spielen.",
+      "schemaCount": 0
+    },
+    {
+      "path": "/ratgeber/14a-enwg",
+      "title": "§ 14a EnWG: Netzrabatt abholen | Patrick Leißner Energieberatung",
+      "description": "§ 14a EnWG verstehen: Steuerbare Wärmepumpen, Wallboxen und Klimaanlagen, reduzierte Netzentgelte und die Auswahl des passenden Moduls.",
+      "schemaCount": 0
+    },
+    {
+      "path": "/ratgeber/heizlastberechnung",
+      "title": "Heizlast vor dem Wärmepumpenkauf · Patrick Leißner",
+      "description": "Vor dem Wärmepumpenkauf: Heizlast, Heizflächen, Vorlauftemperatur und Gebäudedaten klären. Mit Unterlagenliste und konkreten Fragen zum Angebot.",
+      "schemaCount": 1
+    },
+    {
+      "path": "/ratgeber/pv-speicher-vergleich",
+      "title": "PV-Speicher im Vergleich | Patrick Leißner Energieberatung",
+      "description": "PV-Speicher im Vergleich: Eco, Sigenergy SigenStor und Solaris². Drei grundlegend verschiedene Konzepte für drei verschiedene Situationen, ehrlich gegenübergestellt.",
+      "schemaCount": 0
+    },
+    {
+      "path": "/ratgeber/stromspeicher-nachruesten",
+      "title": "Stromspeicher nachrüsten · Patrick Leißner",
+      "description": "Stromspeicher an bestehender PV nachrüsten: Wechselrichter, Verbrauch, Anschluss und Angebotsumfang prüfen. Mit Unterlagenliste für die Beratung.",
+      "schemaCount": 1
+    },
+    {
+      "path": "/ratgeber/speichergroesse-waehlen",
+      "title": "Passende Speichergröße wählen · Patrick Leißner",
+      "description": "Welche Speichergröße passt? kWh, kW, PV-Ertrag und Verbrauch unterscheiden. Mit Prüffragen zur Auslegung und einer Einordnung von Faustformeln.",
+      "schemaCount": 1
+    },
+    {
+      "path": "/pv-speicher-rechner",
+      "title": "PV & Speicher-Rechner | Patrick Leißner",
+      "description": "Entdecke dein Potenzial mit Photovoltaik und Batteriespeicher: Eigenversorgung, Abendverkauf und langfristige Energiekosten direkt vergleichen.",
+      "schemaCount": 0
+    },
+    {
+      "path": "/foerderrechner-waermepumpe",
+      "title": "Förderrechner Wärmepumpe (KfW 458) · Patrick Leißner",
+      "description": "KfW-Förderung für deine Wärmepumpe berechnen: Zuschuss, Boni, Eigenanteil und Stichtage im Vergleich. Kostenlos, ohne Anmeldung, mit Rechenbeispielen.",
+      "schemaCount": 3
+    },
+    {
+      "path": "/impressum",
+      "title": "Impressum | Patrick Leißner Energieberatung",
+      "description": "Impressum von Patrick Leißner Energieberatung, Bitterfeld-Wolfen. Pflichtangaben nach § 5 DDG.",
+      "schemaCount": 0
+    },
+    {
+      "path": "/datenschutz",
+      "title": "Datenschutz | Patrick Leißner Energieberatung",
+      "description": "Datenschutzerklärung von Patrick Leißner Energieberatung. Informationen zur Verarbeitung personenbezogener Daten gemäß DSGVO.",
+      "schemaCount": 0
+    }
+  ]
+}
