@@ -56,3 +56,6 @@ Rows are append-only. A build that has been superseded stays in the table,
 because the space it occupies is still occupied.
 
 ---
+
+## 2026-10-10 · Unabhängigkeitsrechner
+Grammatik: räumliche Arbeitsfläche mit haftender Ergebnisansicht. Signatur: Tag-/Abend-Energiefluss im Architekturmodell und Speichervergleich. Waldgrün/Creme/Gold, Outfit; bestehende Markenfortführung. Gegenüber Förderrechner: konkrete Energiepfade und Gebäudeteile statt gestapelter Förderschichten. Lokale Three.js-Szene, Originalposter als statischer Ersatz. Desktop und kompakte Mobilansichten geprüft.

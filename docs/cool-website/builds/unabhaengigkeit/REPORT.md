@@ -21,3 +21,7 @@ Echte WebGL-Nichtverfügbarkeit und Betriebssystem-Reduced-Motion nicht emuliert
 
 ## Gestaltung
 Ergebnisfläche statt langer Einstiegsstrecke: das Haus wird zum Bedienkontext. Farb- und Typografiesystem der bestehenden Website übernommen. Eigenständiges Merkmal gegenüber dem Förderturm: gerichtete Strombewegung zwischen konkreten Gebäudeteilen. Bildschirmaufnahmen dienen zugleich als exakte statische Ersatzdarstellung.
+
+## Live-Abschluss
+Veröffentlichtes Commit: 0cce5605286de7bfd8394ab2a320ef203f02270e. Hostinger-Build 01a12760-b557-71af-a662-5499947cd5f3 erfolgreich abgeschlossen.
+Live-Gesamtprüfung: 23 Seiten, 454 interne Verweise, 44 direkt eingebundene interne Ressourcen, keine Befunde im Prüfungsumfang. Live: 3D-Haus geladen, Tag/Abend bedienbar, keine defekten Bilder; statische Mobilansicht zeigt das echte Hausposter und bleibt rechenfähig.
