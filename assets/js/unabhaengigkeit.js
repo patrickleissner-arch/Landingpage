@@ -63,11 +63,13 @@ var __nfFix1 = new Intl.NumberFormat('de-DE', { minimumFractionDigits: 1, maximu
       });
     }
 
+    var lastBatteryCapacity = Math.max(0, parseFloat($('dr-batt').value) || 0);
+
     // --- Eingaben lesen + rechnen + anzeigen ---
     function recalc() {
       var plz = $('dr-plz').value;
       var reg = M.regionForPlz(plz);
-      $('dr-region').textContent = reg.region;
+      $('dr-region').textContent = 'Region ' + reg.region;
 
       var consumption = Math.max(0, parseFloat($('dr-verbrauch').value) || 0);
       if ($('dr-wp-on').checked) consumption += Math.max(0, parseFloat($('dr-wp-kwh').value) || 0);
@@ -84,6 +86,7 @@ var __nfFix1 = new Intl.NumberFormat('de-DE', { minimumFractionDigits: 1, maximu
       });
 
       var battKwh = Math.max(0, parseFloat($('dr-batt').value) || 0);
+      if (battKwh > 0) lastBatteryCapacity = battKwh;
       var res = M.computeIndependence({ consumptionKwh: consumption, kWp: kWp, pvYield: pvYield, battKwh: battKwh, emsOn: ems === 'ja' });
 
       drawGauge($('dr-gauge-autark'), res.autarkie);
@@ -96,15 +99,15 @@ var __nfFix1 = new Intl.NumberFormat('de-DE', { minimumFractionDigits: 1, maximu
       $('dr-export').textContent = fmt(res.pvExport) + '\u00a0kWh';
       $('dr-netz').textContent   = fmt(res.netElec) + '\u00a0kWh';
       $('dr-total-yield').textContent = kWp > 0
-        ? ('Gesamt: ' + __nfFix1.format(kWp) + '\u00a0kWp · ≈ ' + fmt(pvYield) + '\u00a0kWh/Jahr Ertrag · Standort ' + reg.region + ' (' + reg.yield + '\u00a0kWh/kWp)')
+        ? ('Gesamt: ' + __nfFix1.format(kWp) + '\u00a0kWp · ≈ ' + fmt(pvYield) + '\u00a0kWh/Jahr Ertrag · Region ' + reg.region + ' (' + reg.yield + '\u00a0kWh/kWp)')
         : 'Trag oben die Anzahl Module ein, dann rechnet das Cockpit live.';
 
       renderSurplus(res);
-      $('up-print-summary').textContent = 'Autarkie: '+Math.round(res.autarkie)+' % · Eigenverbrauch: '+Math.round(res.eigenverbrauch)+' %\nStandort: '+reg.region+' · PV: '+__nfFix1.format(kWp)+' kWp · Speicher: '+battKwh+' kWh\nVerbrauch gesamt: '+fmt(consumption)+' kWh/Jahr · Wärmepumpe: '+($('dr-wp-on').checked?'ja':'nein')+' · E-Auto: '+($('dr-ev-on').checked?'ja':'nein');
+      $('up-print-summary').textContent = 'Autarkie: '+Math.round(res.autarkie)+' % · Eigenverbrauch: '+Math.round(res.eigenverbrauch)+' %\nRegion: '+reg.region+' · PV: '+__nfFix1.format(kWp)+' kWp · Speicher: '+battKwh+' kWh\nVerbrauch gesamt: '+fmt(consumption)+' kWh/Jahr · Wärmepumpe: '+($('dr-wp-on').checked?'ja':'nein')+' · E-Auto: '+($('dr-ev-on').checked?'ja':'nein');
       $('up-autark').textContent = Math.round(res.autarkie) + ' %';
       $('up-eigen').textContent = Math.round(res.eigenverbrauch) + ' %';
       $('up-mobile-autark').textContent = Math.round(res.autarkie) + ' %';
-      document.querySelectorAll('[data-up-battery]').forEach(b => b.setAttribute('aria-pressed',String(Number(b.dataset.upBattery)===battKwh)));
+      document.querySelectorAll('[data-up-battery]').forEach(b => b.setAttribute('aria-pressed',String(b.dataset.upBattery === 'with' ? battKwh > 0 : battKwh === 0)));
       window.UnabhaengigkeitState = { ...res, kWp, surfaces:surfaces.map(s=>({...s})), heatpump:$('dr-wp-on').checked, car:$('dr-ev-on').checked };
       window.dispatchEvent(new CustomEvent('up:update',{detail:window.UnabhaengigkeitState}));
     }
@@ -187,7 +190,7 @@ var __nfFix1 = new Intl.NumberFormat('de-DE', { minimumFractionDigits: 1, maximu
       if (methodEl) methodEl.open = methodWasOpen;
     });
 
-    document.querySelectorAll('[data-up-battery]').forEach(b=>b.addEventListener('click',()=>{ $('dr-batt').value=b.dataset.upBattery; recalc(); }));
+    document.querySelectorAll('[data-up-battery]').forEach(b=>b.addEventListener('click',()=>{ $('dr-batt').value=b.dataset.upBattery === 'with' ? lastBatteryCapacity : 0; recalc(); }));
     renderSurfaces();
     recalc();
   })();
