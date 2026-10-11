@@ -15,261 +15,32 @@
   <meta property="og:locale" content="de_DE">
   <link rel="icon" type="image/webp" href="/assets/img/logo-mark.webp">
   <link rel="preload" href="/assets/fonts/Outfit-Variable.ttf" as="font" type="font/ttf" crossorigin>
-  <link rel="stylesheet" href="/css/style.css">
-  <link rel="stylesheet" href="/css/pages.css">
-  <style>
-    /* Map calculator vars → website CI vars (defined after stylesheet links so they win) */
-    :root {
-      --green:      var(--color-brand-primary);
-      --green-l:    #3a6450;
-      --gold:       var(--color-brand-accent);
-      --beige:      var(--color-beige);
-      --white:      #ffffff;
-      --black:      #000000;
-      --gray:       var(--color-text-muted, #6b7280);
-      --gray-l:     var(--color-border, #e2e4e0);
-      --fossil-col: #C0392B;
-      --wp-col:     #4A7B9D;
-      --r:          0.5rem;
-      --sh:         0 2px 10px rgba(0,0,0,0.09);
-    }
+  <link rel="stylesheet" href="/cool-website.css">
+  <link rel="stylesheet" href="/site.css">
+  <link rel="stylesheet" href="/heizkosten.css?v=20261011">
+<link rel="stylesheet" href="/mobile-dock.css"><script src="/mobile-dock.js" defer></script><script src="/site.js" defer></script></head>
+<body class="detail-page hk-page">
+  <a class="skip" href="#main">Zum Inhalt springen</a>
 
-    .ec-calc-wrap { max-width: 980px; margin: 0 auto; padding: 2rem 1rem; }
+<header id="site-header" class="header"><a class="brand" href="/" aria-label="Patrick Leißner, Startseite"><img src="/assets/img/logo-mark.webp" width="400" height="251" alt=""><span>Patrick Leißner<small>Frei durch eigene Energie.</small></span></a><nav class="desktop-nav" aria-label="Hauptnavigation"><a href="/#kompass">Dein Vorhaben</a><a href="/#leistungen">Leistungen</a><a href="/#ueber-mich">Über mich</a><a href="/ratgeber">Ratgeber</a></nav><button class="menu-button" aria-label="Menü öffnen" aria-controls="mobile-nav" aria-expanded="false" hidden><span class="hamburger" aria-hidden="true"><i></i><i></i><i></i></span></button><nav id="mobile-nav" class="mobile-nav" aria-label="Mobile Navigation" hidden><a href="/#kompass">Dein Vorhaben</a><span class="menu-label">Unsere Leistungen</span><a href="/batteriespeicher">Batteriespeicher & Energiehandel</a><a href="/beratung-technik">Photovoltaik</a><a href="/waermepumpe-heizlast">Wärmepumpe & Heizlast</a><a href="/klimaanlagen">Klimaanlagen</a><a href="/mieterstrom">Mieterstrom & Objektenergie</a><a href="/koordination-netzwerk">Arbeitsweise & Koordination</a><a href="/#rechner">Interaktive Rechner</a><a href="/foerderrechner-waermepumpe">Förderrechner Wärmepumpe</a><span class="menu-label">Patrick Leißner</span><a href="/#ueber-mich">Über mich</a><a href="/#partner">Partner</a><a href="/ratgeber">Ratgeber</a></nav></header>
 
-    /* Cards */
-    .card { background: var(--white); border-radius: var(--r); box-shadow: var(--sh); padding: 1.5rem; margin-bottom: 1.5rem; }
-    .card h2 { color: var(--green); font-size: 1rem; font-weight: 700; margin-bottom: 1rem; padding-bottom: .5rem; border-bottom: 2px solid var(--gold); }
-
-    /* Form */
-    .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
-    .form-group { display: flex; flex-direction: column; gap: .3rem; }
-    .ec-calc-wrap label { font-size: .82rem; font-weight: 600; color: var(--green); }
-    .ec-calc-wrap input[type=text],
-    .ec-calc-wrap input[type=number] {
-      padding: .7rem 1rem; border: 2px solid var(--gray-l); border-radius: var(--r);
-      font-family: inherit; font-size: .95rem; color: var(--black); background: var(--white); width: 100%; transition: border-color .18s;
-    }
-    .ec-calc-wrap select {
-      padding: .7rem 2.5rem .7rem 1rem; border: 2px solid var(--gray-l); border-radius: var(--r);
-      font-family: inherit; font-size: .95rem; color: var(--black);
-      background: var(--white) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%236b7280' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E") no-repeat right 14px center;
-      -webkit-appearance: none; width: 100%; cursor: pointer; transition: border-color .18s;
-    }
-    .ec-calc-wrap input:focus, .ec-calc-wrap select:focus { outline: none; border-color: var(--green); box-shadow: 0 0 0 3px rgba(46,79,60,.1); }
-    .hint { font-size: .75rem; color: var(--gray); }
-
-    /* Fuel toggle */
-    .fuel-toggle { display: flex; border: 2px solid var(--green); border-radius: var(--r); overflow: hidden; }
-    .fuel-toggle button { flex: 1; padding: .55rem; border: none; background: var(--white); cursor: pointer; font-weight: 600; font-size: .88rem; transition: background-color .2s, border-color .2s, color .2s, box-shadow .2s, transform .2s, opacity .2s; color: var(--green); }
-    .fuel-toggle button.active { background: var(--green); color: var(--white); }
-
-    /* Accordion */
-    .accord-hdr { display: flex; justify-content: space-between; align-items: center; cursor: pointer; user-select: none; padding: 1rem 1.5rem; background: var(--white); border-radius: var(--r); box-shadow: var(--sh); margin-bottom: .5rem; color: var(--green); font-weight: 700; font-size: .95rem; }
-    .accord-hdr:hover { background: #f8f8f4; }
-    .accord-ico { font-size: 1rem; transition: transform .2s; }
-    .accord-ico.open { transform: rotate(180deg); }
-    .accord-body { display: none; background: var(--white); border-radius: var(--r); box-shadow: var(--sh); padding: 1.5rem; margin-bottom: 1.5rem; }
-    .accord-body.open { display: block; }
-    .exp-sec { margin-bottom: 1.5rem; }
-    .exp-sec h3 { font-size: .78rem; color: var(--gray); text-transform: uppercase; letter-spacing: .5px; margin-bottom: .9rem; padding-bottom: .3rem; border-bottom: 1px solid var(--gray-l); }
-
-    /* Auto params */
-    .auto-params { background: var(--beige); border-radius: var(--r); padding: .7rem 1rem; font-size: .8rem; color: var(--gray); display: flex; gap: 1.5rem; flex-wrap: wrap; margin-bottom: 1rem; }
-    .auto-params strong { color: var(--green); }
-
-    /* Sliders */
-    .slider-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
-    .s-item { display: flex; flex-direction: column; gap: .3rem; }
-    .s-item label { font-size: .8rem; }
-    .s-row { display: flex; align-items: center; gap: .5rem; }
-    .ec-calc-wrap input[type=range] { flex: 1; height: 5px; -webkit-appearance: none; border: none; background: var(--gray-l); border-radius: 3px; padding: 0; cursor: pointer; }
-    .ec-calc-wrap input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; width: 17px; height: 17px; border-radius: 50%; background: var(--green); cursor: pointer; }
-    .s-val { min-width: 58px; text-align: right; font-weight: 700; font-size: .82rem; color: var(--green); }
-
-    /* CTA button */
-    .btn-calc { background: var(--gold); color: var(--green); border: none; padding: .9rem 2rem; font-size: 1.05rem; font-weight: 800; border-radius: var(--r); cursor: pointer; width: 100%; margin-top: .5rem; transition: background-color .2s, border-color .2s, color .2s, box-shadow .2s, transform .2s, opacity .2s; letter-spacing: .3px; }
-    .btn-calc:hover { background: var(--green); color: var(--white); }
-
-    /* Hero stats */
-    .hero-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; margin-bottom: 1.5rem; }
-    .hero-grid--wirtschaft { grid-template-columns: repeat(2, 1fr); }
-    .hero-card { background: var(--green); border-radius: var(--r); padding: 1.1rem; text-align: center; }
-    .hero-label { font-size: .72rem; color: rgba(255,255,255,.75); margin-bottom: .25rem; }
-    .hero-val { font-size: 1.75rem; font-weight: 800; color: var(--gold); line-height: 1.1; }
-    .hero-unit { font-size: .72rem; color: rgba(255,255,255,.65); margin-top: .15rem; }
-    .invest-note { font-size: .76rem; color: var(--gray); text-align: center; margin: -0.6rem 0 1.5rem; }
-    .soft-contact-cta { text-align: center; font-size: .85rem; color: var(--gray); margin: 0 0 1.2rem; }
-    .soft-contact-cta a { color: var(--green); font-weight: 700; }
-
-    /* Comparison table */
-    .cmp-wrap { overflow-x: auto; }
-    table.cmp { width: 100%; border-collapse: collapse; font-size: .87rem; }
-    table.cmp th { padding: .7rem .8rem; text-align: center; font-size: .82rem; font-weight: 700; }
-    table.cmp th:first-child { text-align: left; }
-    table.cmp th.th-fossil { color: var(--fossil-col); }
-    table.cmp th.th-wp { color: var(--wp-col); }
-    table.cmp th.th-wpv { color: var(--white); background: var(--green); border-radius: 4px 4px 0 0; }
-    table.cmp td { padding: .55rem .8rem; text-align: center; border-bottom: 1px solid var(--beige); }
-    table.cmp td:first-child { text-align: left; font-size: .8rem; color: var(--gray); font-weight: 600; }
-    table.cmp td.td-wpv { background: rgba(46,79,60,.07); font-weight: 700; color: var(--green); }
-    table.cmp tr:nth-child(even) td { background: var(--beige); }
-    table.cmp tr:nth-child(even) td.td-wpv { background: rgba(46,79,60,.13); }
-
-    /* Chart */
-    .chart-wrap { position: relative; height: 300px; }
-
-    /* Pain section – hell, sparsam mit Dunkelgrün */
-    .pain { background: var(--white); border: 1px solid var(--gray-l); border-top: 4px solid var(--gold); border-radius: var(--r); padding: 2rem; margin-bottom: 1.5rem; }
-    .pain h2 { display: flex; align-items: center; gap: .55rem; color: var(--green); font-size: 1.05rem; margin-bottom: 1.2rem; padding-bottom: .5rem; border-bottom: 1px solid var(--gray-l); }
-    .pain h2 svg { color: var(--gold); }
-    .pain-timeline { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; }
-    .pain-card { background: var(--beige); border-radius: var(--r); padding: 1rem; text-align: center; border: 1px solid var(--gray-l); }
-    .pain-card.hl { background: var(--white); border: 2px solid var(--gold); box-shadow: 0 2px 12px rgba(208,171,59,.18); }
-    .pain-yr { font-size: 1.4rem; font-weight: 800; color: var(--gold); }
-    .pain-lbl { font-size: .68rem; color: var(--gray); margin-bottom: .2rem; }
-    .pain-cost { font-size: 1.2rem; font-weight: 700; color: var(--black); margin: .25rem 0; }
-    .pain-co2 { font-size: .78rem; color: var(--gray); }
-    .pain-delta { font-size: .82rem; color: var(--green); font-weight: 600; margin-top: .2rem; }
-    .pain-sum { margin-top: 1.3rem; padding: .9rem 1rem; background: rgba(208,171,59,.1); border-radius: var(--r); border-left: 4px solid var(--gold); display: flex; flex-direction: column; gap: .3rem; font-size: .9rem; }
-    .pain-sum strong { color: var(--green); }
-
-    /* Climate badge */
-    .clim-badge { display: inline-block; background: var(--green); color: var(--white); font-size: .73rem; padding: .18rem .55rem; border-radius: 99px; }
-
-    /* Tech card */
-    .tech-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; }
-    .tech-item { background: var(--beige); border-radius: var(--r); padding: 1rem; border-left: 3px solid var(--gold); }
-    .tech-label { font-size: .73rem; font-weight: 700; color: var(--gray); text-transform: uppercase; letter-spacing: .4px; margin-bottom: .3rem; }
-    .tech-val { font-size: 1.4rem; font-weight: 800; color: var(--green); line-height: 1.1; }
-
-    /* Post-results CTA */
-    .ec-cta-card { background: var(--white); border-radius: var(--r); box-shadow: var(--sh); padding: 2rem; margin-bottom: 1.5rem; display: flex; flex-direction: column; align-items: center; text-align: center; }
-    .ec-cta-card h2 { color: var(--green); font-size: 1.1rem; font-weight: 700; margin-bottom: .5rem; }
-    .ec-cta-card p { color: var(--gray); margin-bottom: 1.5rem; font-size: .9rem; max-width: 52ch; }
-    .btn-calc-cta { display: block; width: fit-content; margin: 0 auto; align-self: center; background: var(--gold); color: var(--green); border: none; padding: .9rem 2.5rem; font-size: 1rem; font-weight: 800; border-radius: var(--r); cursor: pointer; text-decoration: none; transition: background-color .2s, border-color .2s, color .2s, box-shadow .2s, transform .2s, opacity .2s; letter-spacing: .3px; white-space: nowrap; }
-    .btn-calc-cta:hover { background: var(--green); color: var(--white); }
-
-    /* Disclaimer */
-    .ec-calc-wrap .ec-disclaimer { display: block !important; text-align: center !important; width: 100% !important; font-size: .73rem; color: var(--gray); padding: .5rem 1rem 1.5rem; line-height: 1.5; text-wrap: balance; }
-
-    /* SVG icon alignment inside text / buttons */
-    .ec-icon { display: inline-flex; align-items: center; gap: .45rem; }
-    .ec-icon svg { flex-shrink: 0; vertical-align: middle; }
-
-    /* ── Responsive ──────────────────────────────────────────── */
-
-    /* Tablet / großes Handy (≤ 680 px) */
-    @media (max-width: 680px) {
-      .form-grid, .slider-grid, .pain-timeline { grid-template-columns: 1fr; }
-      .hero-grid  { grid-template-columns: 1fr 1fr; }
-      .tech-grid  { grid-template-columns: 1fr 1fr; }
-
-      /* Vergleichstabelle: Label-Spalte auf feste Breite, damit Zahlen nicht zerquetscht werden */
-      table.cmp td:first-child,
-      table.cmp th:first-child { min-width: 130px; }
-    }
-
-    /* Kleines Handy (≤ 480 px) */
-    @media (max-width: 480px) {
-      /* Section hat sp-section padding-block 5 rem – auf mobil reduzieren */
-      #rechner { padding-block: var(--space-12, 3rem); }
-
-      /* Chart: fixe Höhe runter damit er nicht den ganzen Screen frisst */
-      .chart-wrap { height: 220px; }
-
-      /* Ergebnis-Zahlen in den Hero-Cards etwas kleiner */
-      .hero-val { font-size: 1.4rem; }
-
-      /* CTA-Button auf volle Breite für sicheres Tap-Target */
-      .btn-calc-cta { width: 100%; text-align: center; box-sizing: border-box; white-space: normal; }
-
-      /* Accordion-Header umbricht sauber */
-      .accord-hdr { font-size: .88rem; gap: .5rem; }
-
-      /* Auto-params: einzelne Zeilen statt Flex-Reihe */
-      .auto-params { flex-direction: column; gap: .5rem; }
-
-      /* Pain-Karten etwas kompakter */
-      .pain { padding: 1.25rem; }
-      .pain-timeline { gap: .75rem; }
-
-
-    }
-
-    /* Sehr kleines Handy (≤ 360 px) */
-    @media (max-width: 360px) {
-      .ec-calc-wrap { padding-inline: .75rem; }
-      .hero-grid { grid-template-columns: 1fr; }
-    }
-</style>
-<link rel="stylesheet" href="/mobile-dock.css"><script src="/mobile-dock.js" defer></script><script src="/calculator-preview.js" defer></script></head>
-<body class="page page--heizkosten">
-  <a class="skip-link" href="#main">Zum Inhalt springen</a>
-
-<header class="nav" id="site-header">
-    <div class="nav__inner">
-      <a class="nav__brand" href="/" aria-label="Patrick Leißner, zur Startseite" translate="no">
-        <img src="/assets/img/logo-full-light.webp" width="800" height="375" alt="Patrick Leißner Energieberatung" fetchpriority="high">
-      </a>
-      <nav class="nav__links" aria-label="Hauptnavigation">
-        <a href="/#leistungen">Leistungen</a>
-        <a href="/#arbeitsweise">Arbeitsweise</a>
-        <a href="/#ueber-mich">Über mich</a>
-        <a href="/ratgeber">Ratgeber</a>
-        <a href="/#kontakt">Kontakt</a>
-      </nav>
-      
-      <button class="nav__toggle" type="button" aria-expanded="false" aria-controls="mobile-menu" aria-label="Menü öffnen">
-        <span></span><span></span>
-      </button>
-    </div>
-    <div class="nav__mobile" id="mobile-menu" hidden>
-      <a href="/#leistungen">Leistungen</a>
-      <a href="/#arbeitsweise">Arbeitsweise</a>
-      <a href="/#ueber-mich">Über mich</a>
-      <a href="/ratgeber">Ratgeber</a>
-      <a href="/#kontakt">Kontakt</a>
-      
-    </div>
-  </header>
-
-<main id="main"><div class="container" style="padding-top:100px;padding-bottom:16px"><a href="/#rechner">← Alle interaktiven Rechner</a></div>
-
-    <!-- ── Hero ── -->
-    <section class="sp-hero" aria-label="Heizkosten-Rechner – Einleitung">
-
-      <nav class="sp-breadcrumb" aria-label="Brotkrumen-Navigation">
-        <div class="sp-breadcrumb-inner">
-          <a href="/">Startseite</a>
-          <span class="sp-bc-sep" aria-hidden="true">›</span>
-          <a href="/#leistungen">Leistungen</a>
-          <span class="sp-bc-sep" aria-hidden="true">›</span>
-          <a href="/waermepumpe-heizlast">Wärmepumpe</a>
-          <span class="sp-bc-sep" aria-hidden="true">›</span>
-          <span class="sp-bc-current">Heizkosten-Rechner</span>
-        </div>
-      </nav>
-
-      <div class="sp-hero-bg" style="background-image: url('/assets/img/leistung-wp-1376.webp')" aria-hidden="true"></div>
-
-      <div class="container sp-hero-content">
-        <p class="sp-hero-eyebrow">Kostenanalyse</p>
-        <h1>Was kostet deine Heizung<br>wirklich – heute und 2030?</h1>
-        <p>Öl und Gas werden durch den CO₂-Preis Jahr für Jahr teurer. Berechne jetzt, was du mit fossiler Heizung zahlst – und was eine Wärmepumpe mit PV kostet.</p>
-      </div>
-    </section>
-
+<main id="main">
+<section class="hk-hero wrap" aria-labelledby="hk-title">
+<div class="hk-intro"><a class="hk-back" href="/#rechner">← Alle Rechner</a><p class="eyebrow">Heizkostenrechner · Dein Zuhause</p><h1 id="hk-title">Wärme bleibt.<br><em>Was kostet sie?</em></h1><p class="hk-lede">Deine Heizung im Vergleich: Entdecke, wie sich Öl, Gas und eine Wärmepumpe mit Solarstrom auf deine Energiekosten auswirken.</p><a class="button" href="#rechner">Deine Heizkosten vergleichen ↓</a><p class="hk-meta">Ohne Anmeldung · Berechnung in deinem Browser</p></div>
+<div class="hk-scene-card"><div class="hk-scene-top"><span>WÄRME NEU DENKEN</span><button id="hk-motion" type="button" aria-pressed="false">Animation pausieren</button></div>
+<div class="hk-scene" role="img" aria-label="Räumliche Illustration einer Wärmepumpe: Aus Umgebungsluft und Strom wird Wärme für dein Zuhause."><div class="hk-orbit"></div><div class="hk-machine"><div class="hk-machine-top"></div><div class="hk-machine-side"></div><div class="hk-machine-front"><span class="hk-machine-label">DEINE WÄRMEPUMPE</span><div class="hk-fan"><i></i><i></i><i></i><i></i></div><div class="hk-grille"></div><span class="hk-led"></span></div><div class="hk-feet"></div></div><span class="hk-air">UMGEBUNGSLUFT</span><span class="hk-heat">WÄRME FÜR DEIN ZUHAUSE ↗</span></div>
+<div class="hk-principle"><span>Umweltwärme</span><b>+</b><span>Strom</span><b>→</b><span>Heizwärme</span></div><p class="hk-scene-note">Schematische Illustration · keine Produktempfehlung</p></div></section>
     <!-- ── Rechner ── -->
     <section id="rechner" class="sp-section sp-section--beige" aria-label="Heizkosten-Rechner">
-      <div class="ec-calc-wrap">
+      <div class="ec-calc-wrap"><div class="hk-section-head"><p class="eyebrow">01 / Deine Ausgangslage</p><h2>Wie heizt du heute?</h2><p>Starte mit deinem Gebäude und Verbrauch. Preise und Annahmen kannst du anschließend anpassen.</p></div><div class="hk-input-layout"><div class="hk-input-main">
 
         <!-- BASISDATEN -->
         <div class="card">
-          <h2>Ihr Gebäude &amp; aktuelle Heizung</h2>
+          <h2>Dein Gebäude &amp; deine Heizung</h2>
           <div class="form-grid">
             <div class="form-group">
               <label for="plz">Postleitzahl</label>
-              <input type="text" id="plz" maxlength="5" placeholder="z. B. 04109…" name="plz" autocomplete="postal-code">
+              <input type="text" id="plz" inputmode="numeric" maxlength="5" placeholder="z. B. 04109…" name="plz" autocomplete="postal-code">
               <div id="clim-display" class="hint"></div>
             </div>
             <div class="form-group">
@@ -301,9 +72,9 @@
             </div>
             <div class="form-group">
               <label>Brennstoffart</label>
-              <div class="fuel-toggle">
-                <button id="btn-oil" class="active" onclick="setFuel('oil')">Heizöl</button>
-                <button id="btn-gas" onclick="setFuel('gas')">Erdgas</button>
+              <div class="fuel-toggle" role="group" aria-label="Brennstoffart">
+                <button id="btn-oil" aria-pressed="true" class="active" onclick="setFuel('oil')">Heizöl</button>
+                <button id="btn-gas" aria-pressed="false" onclick="setFuel('gas')">Erdgas</button>
               </div>
             </div>
             <div class="form-group">
@@ -314,11 +85,12 @@
           </div>
         </div>
 
+</div><aside class="hk-input-note"><p class="eyebrow">Ein fairer Vergleich</p><h3>Deine Angaben.<br>Drei Möglichkeiten.</h3><p>Vergleiche die laufenden Energiekosten deiner bisherigen Heizung mit einer Wärmepumpe – mit und ohne Solarstrom.</p><ol><li>Gebäude und Jahresverbrauch eintragen</li><li>Bei Bedarf Preise und PV-Anteil anpassen</li><li>Ergebnisse und Modellannahmen vergleichen</li></ol><p class="hk-model-note">Modellzeitraum ab 2025. Preise und CO₂-Annahmen sind anpassbare Modellwerte, keine aktuellen Angebote oder Preisprognosen.</p></aside></div>
         <!-- EXPERTENMODUS -->
         <button type="button" class="accord-hdr" aria-expanded="false" aria-controls="accord-body" onclick="toggleExpert(); this.setAttribute('aria-expanded', String(document.getElementById('accord-body').classList.contains('open')))">
           <span class="ec-icon">
             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
-            Expertenmodus – Preise &amp; technische Parameter
+            Preise &amp; Annahmen anpassen
           </span>
           <span class="accord-ico" id="accord-ico" aria-hidden="true">▼</span>
         </button>
@@ -390,7 +162,9 @@
         </button>
 
         <!-- ERGEBNISSE -->
-        <section id="results" style="display:none;margin-top:2rem" aria-live="polite">
+        <section id="results" style="display:none;margin-top:2rem" aria-live="polite" aria-label="Dein Heizkostenvergleich">
+<div class="hk-section-head"><p class="eyebrow">02 / Dein Vergleich</p><h2>Was verändert sich für dich?</h2><p>Energiekosten im ersten Modelljahr (2025), auf Basis deiner Angaben.</p></div>
+<div class="hk-comparison"><div class="hk-bars" aria-hidden="true"><div class="hk-bar" id="hk-bar-f"><i></i></div><div class="hk-bar" id="hk-bar-w"><i></i></div><div class="hk-bar" id="hk-bar-v"><i></i></div></div><div class="hk-bar-labels"><div><span id="hk-fuel-name">Heizöl</span><strong id="hk-cost-f">–</strong><small>pro Jahr</small></div><div><span>Wärmepumpe</span><strong id="hk-cost-w">–</strong><small>pro Jahr</small></div><div><span>Wärmepumpe + PV</span><strong id="hk-cost-v">–</strong><small>pro Jahr</small></div></div></div>
 
           <div class="hero-grid">
             <div class="hero-card">
@@ -558,7 +332,7 @@
           <div class="ec-cta-card">
             <h2>Nächster Schritt: Persönliche Beratung</h2>
             <p>Diese Berechnung zeigt das Potenzial – für eine fundierte Auslegung brauchst du eine normgerechte Heizlastberechnung nach DIN EN 12831. Ich helfe dir dabei.</p>
-            
+
           </div>
 
         </section><!-- /results -->
@@ -574,537 +348,14 @@
 
   </main>
 
-<footer class="footer">
-    <div class="container footer__grid">
-      <div class="footer__brand">
-        <img src="/assets/img/logo-mark.webp" width="400" height="251" alt="" loading="lazy">
-        <p><strong translate="no">Patrick Leißner</strong><br>Frei durch eigene Energie.</p>
-        <div class="footer__social">
-          <a href="https://www.instagram.com/patrickleissner.de" target="_blank" rel="noopener">Instagram</a>
-          <a href="https://www.facebook.com/patrickleissner.de" target="_blank" rel="noopener">Facebook</a>
-          <a href="https://x.com/patrickLeiszner" target="_blank" rel="noopener">X</a>
-          <a href="https://maps.google.com/?cid=10661354644526358299" target="_blank" rel="noopener">Google</a>
-          <a href="https://wa.me/491734994994" target="_blank" rel="noopener">WhatsApp</a>
-        </div>
-      </div>
-      <div class="footer__col">
-        <h3>Kontakt</h3>
-        <a href="tel:+491734994994">0173 499 4994</a>
-        <a href="mailto:p@patrickleissner.de">p@patrickleissner.de</a>
-        <span>Dessauer Allee 52<br>06766 Bitterfeld-Wolfen</span>
-      </div>
-      <div class="footer__col">
-        <h3>Leistungen</h3>
-        <a href="/beratung-technik">Beratung &amp; Technik</a>
-        <a href="/koordination-netzwerk">Koordination &amp; Netzwerk</a>
-        <a href="/waermepumpe-heizlast">Wärmepumpe &amp; Heizlast</a>
-        <a href="/mieterstrom">Mieterstrom &amp; Objektenergie</a>
-        <a href="/batteriespeicher">Batteriespeicher &amp; Energiehandel</a>
-      </div>
-      <div class="footer__col">
-        <h3>Rechner &amp; Ratgeber</h3>
-        <a href="/unabhaengigkeit">Unabhängigkeitsrechner</a>
-        <a href="/heizkosten">Heizkosten-Rechner</a>
-        <a href="/nutzen">Nutzen-Rechner</a>
-        <a href="/spotpreis">Spotpreis-Monitor</a>
-        <a href="/batteriespeicher">Batteriespeicher-Ertragsrechner</a>
-        <a href="/ratgeber">Ratgeber</a>
-      </div>
-    </div>
+<footer class="footer"><div class="footer-top"><a class="brand" href="/"><img src="/assets/img/logo-mark.webp" width="400" height="251" alt=""><span>Patrick Leißner<small>Frei durch eigene Energie.</small></span></a><p>Eigenheim: Umsetzung in Sachsen,<br>Sachsen-Anhalt und Brandenburg.<br>Gewerbe & Investoren: Betreuung bundesweit.</p><div><a href="tel:+491734994994">0173 499 4994</a><a href="mailto:p@patrickleissner.de">p@patrickleissner.de</a><a href="https://maps.google.com/?cid=10661354644526358299" target="_blank" rel="noopener">Google-Profil &amp; Bewertungen</a></div></div><div class="footer-bottom"><span>© 2026 Patrick Leißner</span><button class="motion-toggle" type="button" aria-pressed="false" hidden>Animationen anhalten</button><a href="/ratgeber">Ratgeber</a><a href="https://patrickleissner.de/impressum">Impressum</a><a href="https://patrickleissner.de/datenschutz">Datenschutz</a><a href="#main">Zum Seitenanfang ↑</a></div></footer>
 
-    <div class="container footer__legal">
-      <div>
-        <a href="https://patrickleissner.de/impressum">Impressum</a>
-        <a href="https://patrickleissner.de/datenschutz">Datenschutz</a>
-        <a href="/">Nach oben ↑</a>
-        <button type="button" class="motion-toggle" data-motion-toggle aria-pressed="false">Animationen anhalten</button>
-      </div>
-      <p>© 2026 Patrick Leißner. Alle Rechte vorbehalten.</p>
-    </div>
-  </footer>
 
-<div class="dock" aria-label="Schnellkontakt">
-    <a class="dock__call" href="tel:+491734994994">Anrufen</a>
-    <a class="dock__cta" href="/termin">Termin buchen</a>
-  </div>
 
-  <script src="/assets/vendor/gsap.min.js" defer></script>
-  <script src="/assets/vendor/ScrollTrigger.min.js" defer></script>
-  <script src="/js/main.js" defer></script>
+
+
+
   <script src="/assets/vendor/chart.umd.js"></script>
-  <script>
-// ─────────────────────────────────────────────
-// DATA
-// ─────────────────────────────────────────────
-const JAZ = {
-  'vor1970':2.5,'1970-1978':2.7,'1979-1983':2.8,
-  '1984-1994':2.9,'1995-2001':3.1,'2002-2015':3.3,
-  'ab2016':3.7,'saniert':3.5
-};
-
-const BOILER = { '<5':0.95,'5-10':0.92,'10-15':0.90,'15-25':0.87,'>25':0.82 };
-
-// PLZ-Präfix (2-stellig) → DIN EN 12831 Klimadaten
-const PLZ_DATEN = {
-  "01":{ region:"Dresden/Meißen",              normTemp:-14, vbh:1850 },
-  "02":{ region:"Görlitz/Bautzen",             normTemp:-16, vbh:1950 },
-  "03":{ region:"Cottbus/Lausitz",             normTemp:-14, vbh:1850 },
-  "04":{ region:"Leipzig",                     normTemp:-14, vbh:1800 },
-  "06":{ region:"Halle/Dessau",                normTemp:-14, vbh:1850 },
-  "07":{ region:"Gera/Jena",                   normTemp:-14, vbh:1880 },
-  "08":{ region:"Zwickau/Plauen",              normTemp:-16, vbh:1950 },
-  "09":{ region:"Chemnitz/Erzgebirge",         normTemp:-16, vbh:1950 },
-  "10":{ region:"Berlin Mitte",                normTemp:-14, vbh:1750 },
-  "11":{ region:"Berlin",                      normTemp:-14, vbh:1750 },
-  "12":{ region:"Berlin Süd",                  normTemp:-14, vbh:1750 },
-  "13":{ region:"Berlin Nord",                 normTemp:-14, vbh:1750 },
-  "14":{ region:"Potsdam/Brandenburg",         normTemp:-14, vbh:1800 },
-  "15":{ region:"Frankfurt (Oder)",            normTemp:-14, vbh:1850 },
-  "16":{ region:"Oranienburg/Eberswalde",      normTemp:-14, vbh:1850 },
-  "17":{ region:"Neubrandenburg/Greifswald",   normTemp:-14, vbh:1900 },
-  "18":{ region:"Rostock/Stralsund",           normTemp:-10, vbh:2000 },
-  "19":{ region:"Schwerin/Ludwigslust",        normTemp:-10, vbh:1950 },
-  "20":{ region:"Hamburg Mitte",               normTemp:-10, vbh:1900 },
-  "21":{ region:"Hamburg Süd/Lüneburg",        normTemp:-10, vbh:1900 },
-  "22":{ region:"Hamburg Nord/West",           normTemp:-10, vbh:1900 },
-  "23":{ region:"Lübeck/Wismar",               normTemp:-10, vbh:1950 },
-  "24":{ region:"Kiel/Flensburg",              normTemp:-12, vbh:2050 },
-  "25":{ region:"Westküste/Sylt",              normTemp:-8,  vbh:2100 },
-  "26":{ region:"Oldenburg/Emden",             normTemp:-10, vbh:1950 },
-  "27":{ region:"Bremerhaven/Cuxhaven",        normTemp:-10, vbh:2000 },
-  "28":{ region:"Bremen",                      normTemp:-10, vbh:1900 },
-  "29":{ region:"Celle/Uelzen",                normTemp:-12, vbh:1880 },
-  "30":{ region:"Hannover",                    normTemp:-12, vbh:1850 },
-  "31":{ region:"Hameln/Hildesheim",           normTemp:-12, vbh:1880 },
-  "32":{ region:"Herford/Minden",              normTemp:-12, vbh:1880 },
-  "33":{ region:"Bielefeld/Paderborn",         normTemp:-12, vbh:1880 },
-  "34":{ region:"Kassel",                      normTemp:-12, vbh:1900 },
-  "35":{ region:"Gießen/Marburg",              normTemp:-12, vbh:1850 },
-  "36":{ region:"Fulda/Bad Hersfeld",          normTemp:-14, vbh:1950 },
-  "37":{ region:"Göttingen/Eschwege",          normTemp:-12, vbh:1900 },
-  "38":{ region:"Braunschweig/Wolfsburg",      normTemp:-12, vbh:1850 },
-  "39":{ region:"Magdeburg/Stendal",           normTemp:-14, vbh:1900 },
-  "40":{ region:"Düsseldorf",                  normTemp:-10, vbh:1700 },
-  "41":{ region:"Mönchengladbach/Neuss",       normTemp:-10, vbh:1700 },
-  "42":{ region:"Wuppertal/Solingen",          normTemp:-10, vbh:1750 },
-  "44":{ region:"Dortmund/Bochum",             normTemp:-12, vbh:1780 },
-  "45":{ region:"Essen/Gelsenkirchen",         normTemp:-10, vbh:1750 },
-  "46":{ region:"Oberhausen/Wesel",            normTemp:-10, vbh:1750 },
-  "47":{ region:"Duisburg/Krefeld",            normTemp:-10, vbh:1720 },
-  "48":{ region:"Münster/Coesfeld",            normTemp:-10, vbh:1780 },
-  "49":{ region:"Osnabrück/Lingen",            normTemp:-10, vbh:1800 },
-  "50":{ region:"Köln",                        normTemp:-10, vbh:1700 },
-  "51":{ region:"Köln Ost/Leverkusen",         normTemp:-10, vbh:1700 },
-  "52":{ region:"Aachen/Düren",                normTemp:-10, vbh:1750 },
-  "53":{ region:"Bonn/Siegburg",               normTemp:-10, vbh:1720 },
-  "54":{ region:"Trier/Bitburg",               normTemp:-12, vbh:1850 },
-  "55":{ region:"Mainz/Bad Kreuznach",         normTemp:-10, vbh:1720 },
-  "56":{ region:"Koblenz/Neuwied",             normTemp:-12, vbh:1780 },
-  "57":{ region:"Siegen/Olpe",                 normTemp:-12, vbh:1880 },
-  "58":{ region:"Hagen/Iserlohn",              normTemp:-12, vbh:1800 },
-  "59":{ region:"Hamm/Arnsberg",               normTemp:-12, vbh:1820 },
-  "60":{ region:"Frankfurt am Main",           normTemp:-10, vbh:1700 },
-  "61":{ region:"Bad Homburg/Friedberg",       normTemp:-10, vbh:1720 },
-  "63":{ region:"Aschaffenburg/Hanau",         normTemp:-10, vbh:1720 },
-  "64":{ region:"Darmstadt",                   normTemp:-10, vbh:1720 },
-  "65":{ region:"Wiesbaden/Limburg",           normTemp:-10, vbh:1720 },
-  "66":{ region:"Saarbrücken/Homburg",         normTemp:-12, vbh:1800 },
-  "67":{ region:"Ludwigshafen/Kaiserslautern", normTemp:-10, vbh:1680 },
-  "68":{ region:"Mannheim",                    normTemp:-10, vbh:1680 },
-  "69":{ region:"Heidelberg",                  normTemp:-10, vbh:1700 },
-  "70":{ region:"Stuttgart",                   normTemp:-12, vbh:1750 },
-  "71":{ region:"Stuttgart/Ludwigsburg",       normTemp:-12, vbh:1750 },
-  "72":{ region:"Tübingen/Reutlingen",         normTemp:-12, vbh:1800 },
-  "73":{ region:"Göppingen/Esslingen",         normTemp:-12, vbh:1780 },
-  "74":{ region:"Heilbronn/Schwäbisch Hall",   normTemp:-12, vbh:1750 },
-  "75":{ region:"Pforzheim/Calw",              normTemp:-12, vbh:1780 },
-  "76":{ region:"Karlsruhe/Baden-Baden",       normTemp:-10, vbh:1700 },
-  "77":{ region:"Offenburg/Lahr",              normTemp:-12, vbh:1750 },
-  "78":{ region:"Villingen-Schwenningen",      normTemp:-14, vbh:1900 },
-  "79":{ region:"Freiburg/Lörrach",            normTemp:-12, vbh:1720 },
-  "80":{ region:"München",                     normTemp:-14, vbh:1850 },
-  "81":{ region:"München Süd/Ost",             normTemp:-14, vbh:1850 },
-  "82":{ region:"Garmisch/Starnberg",          normTemp:-16, vbh:2000 },
-  "83":{ region:"Rosenheim/Traunstein",        normTemp:-14, vbh:1900 },
-  "84":{ region:"Landshut/Dingolfing",         normTemp:-14, vbh:1880 },
-  "85":{ region:"Ingolstadt/Freising",         normTemp:-14, vbh:1880 },
-  "86":{ region:"Augsburg/Donauwörth",         normTemp:-14, vbh:1880 },
-  "87":{ region:"Kempten/Allgäu",              normTemp:-18, vbh:2100 },
-  "88":{ region:"Friedrichshafen/Ravensburg",  normTemp:-14, vbh:1900 },
-  "89":{ region:"Ulm/Heidenheim",              normTemp:-14, vbh:1880 },
-  "90":{ region:"Nürnberg/Fürth",              normTemp:-14, vbh:1880 },
-  "91":{ region:"Erlangen/Ansbach",            normTemp:-14, vbh:1880 },
-  "92":{ region:"Amberg/Weiden",               normTemp:-16, vbh:1950 },
-  "93":{ region:"Regensburg/Cham",             normTemp:-14, vbh:1900 },
-  "94":{ region:"Passau/Straubing",            normTemp:-14, vbh:1900 },
-  "95":{ region:"Hof/Bayreuth",                normTemp:-18, vbh:2050 },
-  "96":{ region:"Bamberg/Coburg",              normTemp:-14, vbh:1900 },
-  "97":{ region:"Würzburg/Schweinfurt",        normTemp:-12, vbh:1800 },
-  "98":{ region:"Suhl/Ilmenau",                normTemp:-16, vbh:2000 },
-  "99":{ region:"Erfurt/Weimar",               normTemp:-14, vbh:1920 }
-};
-const PLZ_DEFAULT = { region:'Deutschland (Mittel)', normTemp:-12, vbh:1900 };
-
-const EF     = { oil:0.2663, gas:0.2017 }; // kg CO₂/kWh
-const EF_EL  = 0.380;                       // kg CO₂/kWh Bundesmix
-const PV_EPC = 0.08;                        // €/kWh PV Gestehungskosten
-
-// Grobe Investitionsschätzung für Amortisation/Rendite (keine Anlagenplanung)
-const WP_INVEST_BASE = 9000;  // € Basiskosten Wärmepumpe inkl. Installation
-const WP_INVEST_KW   = 1200;  // €/kW Leistungspreis
-const PV_YIELD_KWP    = 950;   // kWh/kWp/Jahr DE-Mittel (PVGIS)
-const PV_PRICE_KWP    = 1450;  // €/kWp inkl. Montage
-
-// ─────────────────────────────────────────────
-// STATE
-// ─────────────────────────────────────────────
-const S = {
-  plz:'', buildingYear:'vor1970', area:150,
-  fuelType:'oil', consumption:2000, heatingAge:'10-15',
-  plzData:null,
-  oilPrice:95, gasPrice:12, elecPrice:32, wpTarif:22, gridPrice:5,
-  elecInc:6, fuelInc:4,
-  co2_26:60, co2_27:70, co2Inc:15,
-  useWpTarif:false, pvShare:55, years:20
-};
-
-// ─────────────────────────────────────────────
-// DERIVED
-// ─────────────────────────────────────────────
-const boilerEff = () => BOILER[S.heatingAge] || 0.90;
-const jaz = () => {
-  const pd = S.plzData || PLZ_DEFAULT;
-  const dJaz = (pd.normTemp + 12) * 0.1;
-  return Math.max(1.5, +((JAZ[S.buildingYear]||3.0) + dJaz).toFixed(1));
-};
-const fuelKwh    = () => S.fuelType==='oil' ? S.consumption*10 : S.consumption;
-const heatDemand = () => fuelKwh() * boilerEff();
-const wpElec     = () => heatDemand() / jaz();
-// Benötigte WP-Heizleistung: Jahreswärmebedarf ÷ Vollbenutzungsstunden
-const wpKw = () => {
-  const vbh = (S.plzData || PLZ_DEFAULT).vbh;
-  return Math.round(heatDemand() / vbh * 10) / 10;
-};
-
-// ─────────────────────────────────────────────
-// PRICE FUNCTIONS
-// ─────────────────────────────────────────────
-function co2Price(yr){
-  if(yr<=2025) return 55;
-  if(yr===2026) return S.co2_26;
-  return S.co2_27 * Math.pow(1+S.co2Inc/100, yr-2027);
-}
-
-function co2PerKwh(yr){ return EF[S.fuelType]*co2Price(yr)/1000; }
-
-function fuelKwhPrice(){ return S.fuelType==='oil' ? S.oilPrice/100/10 : S.gasPrice/100; }
-
-function fuelPriceT(t){
-  const base = Math.max(0.005, fuelKwhPrice()-co2PerKwh(2025));
-  return base*Math.pow(1+S.fuelInc/100,t) + co2PerKwh(2025+t);
-}
-
-function wpPriceT(t){
-  return ((S.useWpTarif?S.wpTarif:S.elecPrice)/100) * Math.pow(1+S.elecInc/100,t);
-}
-
-function pvPriceT(t){
-  const eigen=S.pvShare/100, rest=1-eigen;
-  return rest*(S.gridPrice/100)*Math.pow(1+S.elecInc/100,t) + eigen*PV_EPC;
-}
-
-function yearCosts(t){
-  const fk=fuelKwh(), we=wpElec();
-  return { fossil:fk*fuelPriceT(t), wp:we*wpPriceT(t), wpv:we*pvPriceT(t) };
-}
-
-function co2Fossil(){ return fuelKwh()*EF[S.fuelType]/1000; }
-function co2WP()    { return wpElec()*EF_EL/1000; }
-function co2WPV()   { return wpElec()*(1-S.pvShare/100)*EF_EL/1000; }
-
-// Grobe Investitionsschätzung (keine Anlagenplanung) – Basis für Amortisation/Rendite
-function investEstimate(){
-  const wpInvest = WP_INVEST_BASE + wpKw()*WP_INVEST_KW;
-  const impliedKwp = S.pvShare>0 ? (wpElec()*S.pvShare/100)/PV_YIELD_KWP : 0;
-  const pvInvest = impliedKwp*PV_PRICE_KWP;
-  return { wpInvest, pvInvest, total: wpInvest+pvInvest };
-}
-
-// Erstes Jahr, in dem die kumulierte Ersparnis die Investition ausgleicht (statische Schätzung)
-function amortYears(investSum, diffArr){
-  if (!(investSum>0)) return null;
-  let cum=0;
-  for(let t=0;t<diffArr.length;t++){
-    const prev=cum; cum+=diffArr[t];
-    if (cum>=investSum) return t + (investSum-prev)/diffArr[t];
-  }
-  return null;
-}
-
-// ─────────────────────────────────────────────
-// CALCULATE
-// ─────────────────────────────────────────────
-let chart = null;
-
-function calculate(){
-  readState();
-
-  const n=S.years;
-  const lbls=[], dF=[], dW=[], dV=[];
-  let sumF=0,sumW=0,sumV=0,co2FossilCostTot=0;
-
-  for(let t=0;t<n;t++){
-    const c=yearCosts(t);
-    lbls.push(2025+t);
-    dF.push(Math.round(c.fossil)); dW.push(Math.round(c.wp)); dV.push(Math.round(c.wpv));
-    sumF+=c.fossil; sumW+=c.wp; sumV+=c.wpv;
-    co2FossilCostTot += fuelKwh()*co2PerKwh(2025+t);
-  }
-
-  const c0=yearCosts(0);
-  const sav1=c0.fossil-c0.wpv;
-  const savTot=sumF-sumV;
-  const effP=(pvPriceT(0)*100);
-  const co2save=(co2Fossil()-co2WPV())*n;
-
-  // Hero cards
-  set('r-sav1', fmt(sav1));
-  set('r-savTot', fmt(savTot));
-  set('r-effP', effP.toFixed(1));
-  set('r-co2sav', co2save.toFixed(0));
-  set('r-yrs-lbl', n);
-  set('ct-yrs', n); set('chart-yrs', n);
-
-  // Amortisation & Rendite (grobe, sichtbar gekennzeichnete Investitionsschätzung)
-  const inv = investEstimate();
-  const diffWP = [], diffWPV = [];
-  for (let t=0;t<n;t++){ diffWP.push(dF[t]-dW[t]); diffWPV.push(dF[t]-dV[t]); }
-  const amortWP  = amortYears(inv.wpInvest, diffWP);
-  const amortWPV = amortYears(inv.total, diffWPV);
-  const renditeWPV = inv.total>0 ? (diffWPV[0]/inv.total*100) : 0;
-
-  set('r-amort',  amortWPV!==null ? amortWPV.toFixed(1)+' Jahre' : '–');
-  set('r-rendite', inv.total>0 ? renditeWPV.toFixed(1)+' %' : '–');
-  set('cwam', amortWP!==null  ? amortWP.toFixed(1)+' Jahre'  : '–');
-  set('cpam', amortWPV!==null ? amortWPV.toFixed(1)+' Jahre' : '–');
-  set('invest-note', 'Angenommene Investition: ca. ' + fmt(Math.round(inv.total))
-      + ' € (Wärmepumpe inkl. Installation' + (inv.pvInvest>0 ? ' + anteilige PV-Anlage bei ' + S.pvShare + '% Deckung' : '')
-      + ') – grobe Schätzung, keine Anlagenplanung.');
-
-  // Technische Auslegung
-  const pd = S.plzData || PLZ_DEFAULT;
-  set('t-wpkw',   wpKw().toFixed(1));
-  set('t-vbh',    pd.vbh.toLocaleString('de-DE'));
-  set('t-wpelec', Math.round(wpElec()).toLocaleString('de-DE'));
-  set('t-jaz',    jaz().toFixed(1));
-
-  // Table header
-  set('th-fossil', S.fuelType==='oil'?'Heizöl':'Erdgas');
-
-  const c30=yearCosts(2030-2025);
-  set('cf1',  fmte(c0.fossil));   set('cw1',  fmte(c0.wp));   set('cp1',  fmte(c0.wpv));
-  set('cfm',  fmte(c0.fossil/12));set('cwm',  fmte(c0.wp/12));set('cpm',  fmte(c0.wpv/12));
-  set('cfsm', (c0.fossil/S.area).toFixed(1)+' €');
-  set('cwsm', (c0.wp/S.area).toFixed(1)+' €');
-  set('cpsm', (c0.wpv/S.area).toFixed(1)+' €');
-  set('cf30', fmte(c30.fossil));  set('cw30', fmte(c30.wp));  set('cp30', fmte(c30.wpv));
-  set('cftot',fmte(sumF));        set('cwtot',fmte(sumW));    set('cptot',fmte(sumV));
-  set('cwsav','+'+fmt(sumF-sumW)+' €'); set('cpsav','+'+fmt(sumF-sumV)+' €');
-  set('cfco2', co2Fossil().toFixed(1)+' t/a');
-  set('cwco2', co2WP().toFixed(1)+' t/a');
-  set('cpco2', co2WPV().toFixed(1)+' t/a');
-  set('cfco2c', fmte(co2FossilCostTot));
-  set('cco2p30', co2Price(2030).toFixed(0)+' €/t CO₂ im Jahr 2030');
-
-  // Pain section
-  [2025,2027,2030].forEach(yr=>{
-    const t=yr-2025, c=yearCosts(t);
-    const pfx='p'+String(yr).slice(-2);
-    set(pfx+'-cost', fmt(c.fossil)+' €/Jahr');
-    set(pfx+'-co2',  'CO₂-Preis: '+co2Price(yr).toFixed(0)+' €/t');
-  });
-  const base=yearCosts(0).fossil;
-  set('p27-delta', '+'+fmt(yearCosts(2).fossil-base)+' € mehr als 2025');
-  set('p30-delta', '+'+fmt(yearCosts(5).fossil-base)+' € mehr als 2025');
-
-  let sumF6=0,sumV6=0;
-  for(let t=0;t<=5;t++){const c=yearCosts(t);sumF6+=c.fossil;sumV6+=c.wpv;}
-  set('pain-extra',   fmt(sumF6-sumV6)+' €');
-  set('pain-savtot', fmt(savTot)+' € in '+n+' Jahren');
-
-  renderChart(lbls, dF, dW, dV);
-
-  g('results').style.display='block';
-  g('results').scrollIntoView({behavior:'smooth'});
-  refreshAutoParams();
-}
-
-// ─────────────────────────────────────────────
-// CHART
-// ─────────────────────────────────────────────
-function renderChart(lbls,fossil,wp,wpv){
-  if(chart) chart.destroy();
-  chart = new Chart(g('myChart').getContext('2d'),{
-    type:'line',
-    data:{
-      labels:lbls,
-      datasets:[
-        { label:S.fuelType==='oil'?'Heizöl':'Erdgas', data:fossil,
-          borderColor:'#C0392B', backgroundColor:'rgba(192,57,43,.07)',
-          borderWidth:2.5, tension:.3, pointRadius:2 },
-        { label:'Wärmepumpe', data:wp,
-          borderColor:'#4A7B9D', backgroundColor:'rgba(74,123,157,.07)',
-          borderWidth:2.5, tension:.3, pointRadius:2 },
-        { label:'WP + PV', data:wpv,
-          borderColor:'#2E4F3C', backgroundColor:'rgba(46,79,60,.1)',
-          borderWidth:3, tension:.3, pointRadius:2, fill:true }
-      ]
-    },
-    options:{
-      responsive:true, maintainAspectRatio:false,
-      interaction:{mode:'index',intersect:false},
-      plugins:{
-        legend:{position:'top'},
-        tooltip:{callbacks:{label:ctx=>ctx.dataset.label+': '+fmt(ctx.parsed.y)+' €/Jahr'}}
-      },
-      scales:{
-        y:{ticks:{callback:v=>fmt(v)+' €'},grid:{color:'rgba(0,0,0,.05)'}},
-        x:{grid:{display:false}}
-      }
-    }
-  });
-}
-
-// ─────────────────────────────────────────────
-// STATE SYNC
-// ─────────────────────────────────────────────
-function readState(){
-  S.plz         = g('plz').value.trim();
-  S.buildingYear= g('buildingYear').value;
-  S.area        = +g('area').value || 150;
-  S.consumption = +g('consumption').value || 2000;
-  S.heatingAge  = g('heatingAge').value;
-  S.useWpTarif  = g('useWpTarif').checked;
-  S.oilPrice    = +g('s-oilPrice').value;
-  S.gasPrice    = +g('s-gasPrice').value;
-  S.elecPrice   = +g('s-elecPrice').value;
-  S.wpTarif     = +g('s-wpTarif').value;
-  S.gridPrice   = +g('s-gridPrice').value;
-  S.elecInc     = +g('s-elecInc').value;
-  S.fuelInc     = +g('s-fuelInc').value;
-  S.co2_26      = +g('s-co2_26').value;
-  S.co2_27      = +g('s-co2_27').value;
-  S.co2Inc      = +g('s-co2Inc').value;
-  S.pvShare     = +g('s-pvShare').value;
-  S.years       = +g('s-years').value;
-  if(S.plz.length>=2){
-    S.plzData = PLZ_DATEN[S.plz.slice(0,2)] || null;
-  }
-}
-
-function refreshAutoParams(){
-  const pd = S.plzData || PLZ_DEFAULT;
-  set('ap-zone', pd.region);
-  set('ap-nat',  pd.normTemp+' °C');
-  set('ap-vbh',  pd.vbh+' h');
-  set('ap-eff',   (boilerEff()*100).toFixed(0)+' %');
-  set('ap-jaz',   jaz().toFixed(1));
-  if(S.plz.length>=2 || S.consumption>0){
-    set('ap-wpkw', wpKw().toFixed(1)+' kW');
-  }
-  if(S.plz.length>=2){
-    const label = S.plzData ? pd.region : 'Unbekannte PLZ – Standardwerte';
-    g('clim-display').innerHTML='<span class="clim-badge">'+label+' · JAZ ≈ '+jaz().toFixed(1)+'</span>';
-  }
-}
-
-// ─────────────────────────────────────────────
-// UI HELPERS
-// ─────────────────────────────────────────────
-const g   = id => document.getElementById(id);
-const set = (id,v) => { const el=g(id); if(el) el.textContent=v; };
-const fmt = n => Math.round(n).toLocaleString('de-DE');
-const fmte= n => fmt(n)+' €';
-
-function setFuel(t){
-  S.fuelType=t;
-  g('btn-oil').classList.toggle('active',t==='oil');
-  g('btn-gas').classList.toggle('active',t==='gas');
-  g('lbl-consumption').textContent  = t==='oil'?'Jahresverbrauch (Liter)':'Jahresverbrauch (kWh)';
-  g('hint-consumption').textContent = t==='oil'?'Liter Heizöl pro Jahr (Tankrechnung)':'kWh Erdgas pro Jahr (Jahresabrechnung)';
-  g('th-fossil').textContent = t==='oil'?'Heizöl':'Erdgas';
-  liveUpdate();
-}
-
-function toggleExpert(){
-  const b=g('accord-body'), i=g('accord-ico');
-  const wasOpen=b.classList.contains('open');
-  b.classList.toggle('open',!wasOpen);
-  i.classList.toggle('open',!wasOpen);
-  if(!wasOpen) liveUpdate();
-}
-
-// Zentraler Update-Handler: DOM → S → Panel → ggf. Ergebnisse
-function liveUpdate(){
-  readState();
-  refreshAutoParams();
-  if(g('results').style.display!=='none') calculate();
-}
-
-// ─────────────────────────────────────────────
-// SLIDER INIT
-// ─────────────────────────────────────────────
-const SLIDER_CFG = {
-  'oilPrice':  { unit:' ct',   dec:0 },
-  'gasPrice':  { unit:' ct',   dec:1 },
-  'elecPrice': { unit:' ct',   dec:0 },
-  'wpTarif':   { unit:' ct',   dec:0 },
-  'gridPrice': { unit:' ct',   dec:0 },
-  'elecInc':   { unit:' %',    dec:1 },
-  'fuelInc':   { unit:' %',    dec:1 },
-  'co2_26':    { unit:' €/t',  dec:0 },
-  'co2_27':    { unit:' €/t',  dec:0 },
-  'co2Inc':    { unit:' %',    dec:0 },
-  'pvShare':   { unit:' %',    dec:0 },
-  'years':     { unit:' J',    dec:0 }
-};
-
-function initSliders(){
-  Object.entries(SLIDER_CFG).forEach(([k,c])=>{
-    const el=g('s-'+k), vEl=g('v-'+k);
-    if(!el) return;
-    el.addEventListener('input',()=>{
-      const v=parseFloat(el.value);
-      vEl.textContent = new Intl.NumberFormat('de-DE',{minimumFractionDigits:c.dec,maximumFractionDigits:c.dec}).format(v)+c.unit;
-      if(k==='pvShare') updatePvHint(v);
-      liveUpdate();
-    });
-  });
-}
-
-function updatePvHint(v){
-  const map=[[0,'Kein PV (WP allein)'],[25,'Kleine PV-Anlage'],[55,'PV-Anlage + Speicher'],[85,'PV + Großspeicher']];
-  const [,lbl]=map.reduce((a,b)=>Math.abs(b[0]-v)<Math.abs(a[0]-v)?b:a);
-  g('hint-pv').textContent='≈ '+lbl;
-}
-
-// PLZ – Ziffernfilter, dann liveUpdate (refreshAutoParams übernimmt Badge)
-g('plz').addEventListener('input',()=>{
-  const p=g('plz').value.replace(/\D/g,'').slice(0,5);
-  g('plz').value=p;
-  liveUpdate();
-});
-
-// Alle übrigen Felder
-['buildingYear','heatingAge'].forEach(id=>{
-  g(id).addEventListener('change', liveUpdate);
-});
-['area','consumption'].forEach(id=>{
-  g(id).addEventListener('input', liveUpdate);
-});
-g('useWpTarif').addEventListener('change', liveUpdate);
-
-initSliders();
-</script>
+  <script src="/assets/js/heizkosten.js?v=20261011"></script>
 </body>
 </html>
