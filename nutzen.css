@@ -1146,3 +1146,10 @@
 @media(max-width:600px){.nu-page .wizard-wrap{padding-top:105px}.nu-intro{grid-template-columns:1fr;gap:25px}.nu-intro h1{font-size:2.9rem}.nu-lede{font-size:.96rem}.nu-guide{padding:23px 0}.nu-guide h2{font-size:1.6rem}.nu-guide ol{display:grid;gap:15px}.nu-guide li{margin:0;gap:16px}.nu-guide-note{margin-top:20px}.nu-page .cockpit-section{padding:24px 17px}.nu-page .sec-head h2{font-size:1.05rem;gap:10px}.nu-page .sec-head p{font-size:.78rem}.nu-page .card-btn{font-size:.8rem;padding:10px 8px}.nu-page .field-label{font-size:.8rem}.nu-page .input-unit{max-width:70px;white-space:normal}.nu-page .roof-surface{padding:18px 12px}.nu-page .fin-hero{padding:24px 18px}.nu-page .fin-col .fin-amount{font-size:2.2rem}.nu-page .fin-sub{font-size:.65rem}.nu-page .kpi-grid{grid-template-columns:1fr 1fr}.nu-page .kpi-card{padding:17px 12px}.nu-page .nu-spatial{height:145px;padding-inline:16px}.nu-page .nu-bars{gap:35px}.nu-next h3{font-size:1.5rem}.nu-page .nu-next{padding:24px 18px}}
 @media(prefers-reduced-motion:reduce){.nu-bar{transition:none}}
 @media print{.nu-intro,.nu-next,.nu-spatial,.nu-chart-note,.ergebnis-dock,.header,.footer,.dock{display:none!important}.nu-page .cockpit-results{position:static;max-height:none;overflow:visible}.nu-page .fin-hero{background:white;color:black}.nu-page .wizard-wrap{width:100%;padding:0}}
+/* Auswahlfelder richten sich nach der schmalen Rechner-Spalte, nicht der Fensterbreite. */
+.nu-page .cockpit-inputs,.nu-page .cockpit-section,.nu-page .field-group{min-width:0}
+.nu-page .card-btn{min-width:0;max-width:100%;white-space:normal;overflow-wrap:anywhere;hyphens:auto}
+.nu-page .card-btn .btn-sub{max-width:100%;overflow-wrap:anywhere}
+.nu-page [aria-labelledby="lbl-gebaeude"]{grid-template-columns:repeat(2,minmax(0,1fr))}
+.nu-page [aria-labelledby="lbl-fuel"]{grid-template-columns:repeat(auto-fit,minmax(min(100%,140px),1fr))}
+@media(max-width:380px){.nu-page [aria-labelledby="lbl-gebaeude"]{grid-template-columns:minmax(0,1fr)}}
