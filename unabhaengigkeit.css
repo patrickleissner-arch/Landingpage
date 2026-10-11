@@ -36,7 +36,7 @@
   .dr-unit { font-size:.85rem; color:var(--dr-muted); white-space:nowrap; }
   .dr-wp { max-width:5.5rem; }
 
-  .dr-toggle { display:inline-flex; border:2px solid #e5e7eb; border-radius:.5rem; overflow:hidden; }
+  .dr-toggle { display:inline-grid; grid-template-columns:repeat(2,minmax(0,1fr)); max-width:100%; border:2px solid #e5e7eb; border-radius:.5rem; overflow:hidden; }
   .dr-toggle button { border:none; background:#fff; font-family:inherit; font-size:.82rem; font-weight:700; padding:8px 14px; cursor:pointer; color:var(--dr-muted); }
   .dr-toggle button.on { background:var(--dr-green); color:#fff; }
 
