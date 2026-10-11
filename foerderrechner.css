@@ -279,7 +279,7 @@ html.motion-paused .fr-pump{transition:none;transform:rotateX(-12deg) rotateY(-2
 @media print{.fr-hero-grid{display:block}.fr-product,.fr-route,.fr-hero-copy .button,.fr-privacy{display:none!important}.fr-hero h1{font-size:24pt!important}.fr-hero h1 em{color:#000}.fr-result__grid{display:block}.fr-countdown{margin-top:16pt}.fr-stand{border:0}.fr-sum__list div{break-inside:avoid}.fr-result h2{font-size:22pt!important}}
 
 /* Der Rechner hat eigene Ergebnis- und Kontaktaktionen. */
-.fr-page .dock{display:none!important}
+
 .fr-legend__lost{font-size:11px!important;gap:5px!important}
 
 @media(max-width:600px){
