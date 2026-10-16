@@ -86,6 +86,7 @@ nav{display:flex;justify-content:space-between;gap:20px;padding:12px 0 35px;font
 body{font-family:Outfit,system-ui,sans-serif}.card{background:linear-gradient(160deg,#1d4235,#15372d)}.status{background:#253c2a;border-color:#6c7240}.seg button,input[type=number],select,.res{background:#102e26}.seg button[aria-pressed=true]{background:#2e4f3c}.stage{background:radial-gradient(ellipse at 50% 30%,#315846,#0a211b 75%)}.tile .n{background:linear-gradient(#345441,#18382b);border-color:#536b46}.btn{background:#d0ab3b;color:#142e22;box-shadow:0 8px 24px #0003}.cta{background:linear-gradient(100deg,#204b38,#3d3d20);border-color:#5f734e}.src a{color:#d9c57f}.skip{position:absolute;top:-100px;color:#102e26;background:#f1f0e9;padding:10px;z-index:10}.skip:focus{top:0}footer{display:flex;flex-wrap:wrap;gap:20px;padding:30px 0;font-size:.85rem}footer a{color:var(--muted)}
 .countdown .tile .n,.countdown .tile small{color:#d0ab3b}.countdown .tile .n{border-color:#d0ab3b}
 </style>
+<link rel="stylesheet" href="/mobile-dock.css"><script src="/mobile-dock.js" defer></script>
 </head>
 <body><a class="skip" href="#calculator">Zum Rechner springen</a>
 <div class="wrap"><nav><a href="https://patrickleissner.de">Patrick Leißner · Frei durch eigene Energie.</a><a href="https://patrickleissner.de/#rechner">Zur Website ↗</a></nav>
@@ -175,7 +176,6 @@ body{font-family:Outfit,system-ui,sans-serif}.card{background:linear-gradient(16
 
   </main><div class="cta">
     <p><b>Dein nächster Schritt: Projekt und Befreiungsmöglichkeit prüfen lassen.</b> Kläre jetzt Anschlusskonzept, Investitionsentscheidung und Inbetriebnahmetermin. Die Kontaktaufnahme ist noch kein Befreiungsantrag und keine endgültige Investitionsentscheidung.</p>
-    <a class="btn" id="cta" href="https://patrickleissner.de">Projekt jetzt prüfen lassen</a>
   </div>
 
   <section class="steps"><h2>Was jetzt vorbereitet werden sollte.</h2><ol><li><b>Projekt einordnen.</b> Nutzung, Standort, Anschlusskapazität und Netzbetreiber klären.</li><li><b>Entscheidung belastbar machen.</b> Voraussetzungen und Nachweise einer endgültigen Investitionsentscheidung (FID) prüfen.</li><li><b>Umsetzung und Befreiung abstimmen.</b> Inbetriebnahme bis spätestens 04.08.2029 und Anwendbarkeit von § 118 Abs. 6 EnWG prüfen. Kein automatischer Anspruch durch dieses Formular.</li></ol></section><div class="src">
@@ -194,10 +194,8 @@ body{font-family:Outfit,system-ui,sans-serif}.card{background:linear-gradient(16
 <script>
 (function(){
   // ---------- Konfiguration ----------
-  var CTA_URL = 'mailto:p@patrickleissner.de?subject=AgNes%20%E2%80%93%20Speicherprojekt%20pr%C3%BCfen';   // Ziel des Buttons anpassen (z. B. Kontaktseite)
   var DEADLINE = new Date('2027-01-01T00:00:00+01:00');
   var START = new Date('2026-10-16T00:00:00+02:00');
-  document.getElementById('cta').href = CTA_URL;
 
   var $ = function(id){return document.getElementById(id)};
   var fmtEUR = new Intl.NumberFormat('de-DE',{style:'currency',currency:'EUR',maximumFractionDigits:0});
@@ -344,7 +342,6 @@ body{font-family:Outfit,system-ui,sans-serif}.card{background:linear-gradient(16
     $('stage').hidden=false;
     var r=calc(), T=TXT.s;
     $('formula').textContent='Rechenweg: '+num('kw').toLocaleString('de-DE')+' kW × '+num('a-sp').toLocaleString('de-DE')+' €/kW/Jahr × '+r.yrs+' Jahre. Dein Jahresverbrauch: '+num('mwh').toLocaleString('de-DE')+' kWh (Kontext, kein Rechenfaktor).';
-    $('cta').href=CTA_URL+'&body='+encodeURIComponent('Hallo Patrick, ich möchte mein Speicherprojekt und eine mögliche Befreiung prüfen lassen.\nJahresverbrauch: '+num('mwh')+' kWh\nAngenommene Anschlusskapazität: '+num('kw')+' kW\nStandort / Netzbetreiber: \nGeplante Inbetriebnahme: \nStand der Investitionsentscheidung: ');
     var mx=Math.max(r.alt,r.neu,1);
     target.a=MAXH*r.alt/mx;target.b=MAXH*r.neu/mx;
     if(!hasGL){$('fba').style.height=(280*r.alt/mx)+'px';$('fbb').style.height=(280*r.neu/mx)+'px';}
@@ -367,7 +364,7 @@ body{font-family:Outfit,system-ui,sans-serif}.card{background:linear-gradient(16
   function setSeg(s){
     state.seg=s;
     $('seg-s').setAttribute('aria-pressed',s==='s');$('seg-i').setAttribute('aria-pressed',s==='i');
-    $('capacity-inputs').hidden=(s==='i');$('cta').href=CTA_URL;
+    $('capacity-inputs').hidden=(s==='i');
     $('mwh-hint').textContent=s==='i'?'Dein Haushalts- oder Betriebsverbrauch ist keine pauschal befreite Strommenge.':TXT.s.h;
     update();
   }
@@ -378,5 +375,5 @@ body{font-family:Outfit,system-ui,sans-serif}.card{background:linear-gradient(16
   update();
 })();
 </script>
-<footer class="wrap"><span>© 2026 Patrick Leißner</span><a href="/impressum">Impressum</a><a href="/datenschutz">Datenschutz</a><a href="/termin">Termin buchen</a></footer></body>
+<footer class="wrap"><span>© 2026 Patrick Leißner</span><a href="/impressum">Impressum</a><a href="/datenschutz">Datenschutz</a></footer><nav class="dock" aria-label="Schnellkontakt"><a class="dock__call" href="tel:+491734994994">Anrufen</a><a class="dock__cta" href="/termin">Termin buchen</a></nav></body>
 </html>

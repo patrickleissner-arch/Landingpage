@@ -34,8 +34,8 @@ verlängern. FID, tatsächliches Inkrafttreten, Inbetriebnahme bis 04.08.2029,
 ## Technik und Prüfung
 
 Three.js r128 einschließlich MIT-Lizenz lokal in assets/vendor. Keine neuen
-Drittabrufe, Cookies oder Tracking. Anfrage per bestehendem E-Mail-Kontakt;
-kein automatischer Versand. Reduced motion und Pausentaste werden unterstützt.
+Drittabrufe, Cookies oder Tracking. Kontakt über das gemeinsame Website-Dock: Anruf bzw. Nummer kopieren und
+Terminbuchung. Kein separater Anfrage-Button und kein automatischer Versand. Reduced motion und Pausentaste werden unterstützt.
 Bei fehlendem WebGL oder Bibliotheksfehler bleiben Vergleichswerte und
 zweidimensionale Balken verfügbar.
 
