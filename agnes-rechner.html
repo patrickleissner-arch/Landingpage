@@ -134,6 +134,7 @@ body{font-family:Outfit,system-ui,sans-serif}.card{background:linear-gradient(16
         <p class="hint">10 € ist ein frei gewähltes Rechenbeispiel, kein veröffentlichter AgNes-Tarif. Ändere den Wert für deine Sensitivitätsanalyse.</p>
       </div>
 
+      <div id="comparison-settings">
       <label for="yrs">Betrachtungszeitraum ab 2029</label>
       <select id="yrs">
         <option value="1">1 Jahr</option>
@@ -145,6 +146,7 @@ body{font-family:Outfit,system-ui,sans-serif}.card{background:linear-gradient(16
       <details><summary>Was vergleicht der Rechner?</summary>
       <p class="hint">Nur den angenommenen jährlichen Kapazitätspreis eines eigenständigen Speichers: kW × €/kW/Jahr. Im Vergleichsfall mit anwendbarer Vollbefreiung setzen wir diesen Bestandteil mit 0 € an. Normale Netzentgelte deines Verbrauchs, Baukostenzuschüsse, Steuern, Betriebskosten, dynamische Entgelte und Erlöse sind nicht enthalten.</p>
       <p class="hint">Die Mehrjahresrechnung unterstellt konstante Preise und eine Befreiung während des gesamten gewählten Zeitraums. Keine Abzinsung oder Renditeberechnung.</p></details>
+      </div>
       <p id="input-error" role="alert" hidden>Bitte gib gültige, nicht negative Werte innerhalb der angegebenen Grenzen ein.</p>
     </div>
 
@@ -155,7 +157,15 @@ body{font-family:Outfit,system-ui,sans-serif}.card{background:linear-gradient(16
         <div class="lbl b" id="lb"><b>0 €</b><span>ohne Bestandsschutz</span></div>
         <div class="fallback" id="fallback"><div class="fb" id="fba" style="background:var(--teal)"></div><div class="fb" id="fbb" style="background:var(--orange)"></div></div>
       </div>
-      <div class="results" aria-live="polite" aria-atomic="true">
+      <section class="card" id="home-advice" aria-live="polite" hidden>
+        <p class="eyebrow">DEIN HEIMSPEICHER</p>
+        <h2>Eigenverbrauch braucht einen anderen Vergleich.</h2>
+        <p>Für Heimspeicher sieht der hier zugrunde gelegte BNetzA-Zwischenstand kein gesondertes Speichernetzentgelt vor. Deshalb gibt es hier keinen Euro-Vergleich „mit oder ohne Befreiung“.</p>
+        <p>Für dein Zuhause sind PV-Erzeugung, Stromverbrauch und die Nutzung deines Speichers entscheidend. Diese Größen kannst du im PV- und Speicher-Rechner vergleichen.</p>
+        <a class="btn" href="/pv-speicher-rechner">PV &amp; Speicher vergleichen ↗</a>
+        <p class="hint">Gemischte Gewerbe- und Eigenverbrauchskonzepte prüfen wir individuell. Dein gesamter Stromverbrauch wird durch einen Speicher nicht pauschal von Netzentgelten befreit.</p>
+      </section>
+      <div class="results" id="comparison-results" aria-live="polite" aria-atomic="true">
         <div class="res a"><small id="ta">Mit Bestandsschutz / Jahr</small><b id="ra">0 €</b></div>
         <div class="res b"><small id="tb">Ohne Bestandsschutz / Jahr</small><b id="rb">0 €</b></div>
         <div class="res d"><small id="td">Differenz im Zeitraum</small><b id="rd">0 €</b></div>
@@ -274,6 +284,7 @@ body{font-family:Outfit,system-ui,sans-serif}.card{background:linear-gradient(16
 
     function resize(){
       var w=stage.clientWidth,h=stage.clientHeight;
+      if(!w || !h)return;
       renderer.setSize(w,h,false);camera.aspect=w/h;camera.updateProjectionMatrix();
     }
     resize();
@@ -291,6 +302,7 @@ body{font-family:Outfit,system-ui,sans-serif}.card{background:linear-gradient(16
       el.style.top=((-v3.y*0.5+0.5)*hh)+'px';
     }
     (function loop(now){
+      if(stage.hidden || document.hidden){requestAnimationFrame(loop);return;}
       var t=(now-t0)/1000;
       cur.a=reduce?target.a:cur.a+(target.a-cur.a)*0.06;cur.b=reduce?target.b:cur.b+(target.b-cur.b)*0.06;
       var ha=Math.max(0.04,cur.a),hb=Math.max(0.04,cur.b);
@@ -316,6 +328,10 @@ body{font-family:Outfit,system-ui,sans-serif}.card{background:linear-gradient(16
     h:'Dein Verbrauch dient der Projekteinschätzung. Die folgende Kapazitätspreisrechnung hängt von kW ab, nicht von verbrauchten kWh.'}};
   function update(){
     var home=state.seg==='i';
+    $('home-advice').hidden=!home;
+    $('comparison-results').hidden=home;
+    $('comparison-settings').hidden=home;
+    $('explain').hidden=home;
     var valid=['mwh'].concat(home?[]:['kw','a-sp']).every(function(id){return $(id).value!=='' && $(id).checkValidity() && Number.isFinite(Number($(id).value));});
     $('input-error').hidden=valid;
     if(!valid || home){
