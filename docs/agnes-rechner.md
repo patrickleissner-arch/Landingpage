@@ -42,3 +42,18 @@ zweidimensionale Balken verfügbar.
 `node tools/agnes.test.cjs` prüft Berechnung, Verbrauchsunabhängigkeit,
 Eingabegrenzen, Umschaltung und Fristablauf. Separat mit echtem Chromium auf
 1440 px und 390 px geprüft, einschließlich WebGL und reduzierter Bewegung.
+
+
+## Gewerbe und Industrie
+
+Eigener Modus: Leistung = Jahresnetzbezug / Benutzungsstunden; Regelentgelt =
+kWh × Arbeitspreis ct/kWh / 100 + kW × Leistungspreis €/kW/Jahr.
+Zwei frei einstellbare prozentuale Entlastungen auf diese Summe; keine
+Anspruchsprüfung nach §19, keine automatische Rabattzuweisung anhand der Stunden.
+Startwerte 4.000 h, 1,5 ct/kWh, 70 €/kW/Jahr, 20 % / 0 % sind illustrativ.
+Benutzungsstunden sind keine Betriebsstunden. Passendes Netzbetreiber-Preisblatt
+verwenden. Keine automatische Tarifanpassung beim Wechsel der Stundenklasse.
+Konstante Mehrjahresszenarien sind keine Nachbildung von Übergangsrechten.
+Speicher-Countdown und Speicher-FID-Hinweise werden in diesem Modus ausgeblendet.
+Quelle für getrennte Betrachtung: BNetzA AgNes-Verfahren und Zwischenstand
+https://www.bundesnetzagentur.de/1107474 (27.05.2026).

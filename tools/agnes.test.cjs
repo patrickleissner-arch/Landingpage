@@ -22,3 +22,15 @@ e['seg-s'].events.click();assert.equal(e.stage.hidden,false);assert.equal(e['hom
 e.mwh.value='';e.mwh.events.input();assert.equal(e['input-error'].hidden,false);
 let expired=run('2027-01-02T00:00:00+01:00');assert.match(expired.other['.cd-title'].textContent,/erreicht/);assert.equal(expired.els['cd-d'].textContent,'00');
 console.log('PASS: baseline, consumption independence, capacity sensitivity, zero tariff, invalid and empty inputs, segment switching, deadline expiration, no-WebGL fallback.');
+
+const g=run().els;g['seg-g'].events.click();
+assert.match(g.rb.textContent,/65.000/);assert.match(g.ra.textContent,/52.000/);assert.match(g.rd.textContent,/65.000/);
+assert.equal(g['storage-countdown'].hidden,true);assert.equal(g['business-inputs'].hidden,false);
+g.hours.value='8000';g.hours.events.input();assert.match(g.rb.textContent,/47.500/);
+g.hours.value='0';g.hours.events.input();assert.equal(g['input-error'].hidden,false);
+g.hours.value='8761';g.hours.events.input();assert.equal(g['input-error'].hidden,false);
+g.hours.value='4000';g['discount-a'].value='101';g.hours.events.input();assert.equal(g['input-error'].hidden,false);
+g['discount-a'].value='0';g['discount-b'].value='20';g.hours.events.input();assert.match(g.rd.textContent,/-13.000|−13.000|-65.000|−65.000/);
+g.mwh.value='0';g.mwh.events.input();assert.match(g.rb.textContent,/^0/);
+g['seg-s'].events.click();assert.equal(g['storage-countdown'].hidden,false);assert.equal(g['business-inputs'].hidden,true);
+console.log('PASS: commercial tariff arithmetic, hours sensitivity and bounds, discount bounds, reversed savings, zero consumption and switching.');
