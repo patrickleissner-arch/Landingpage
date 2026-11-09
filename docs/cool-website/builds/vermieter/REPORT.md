@@ -16,3 +16,6 @@ Quellen: https://www.kfw.de/458 und https://www.kfw.de/459 sowie die dort verlin
 Aktuelle Remote-Änderungen einschließlich AgNes vor Veröffentlichung zusammengeführt; Startseiten- und Sitemap-Links beider Änderungen erhalten.
 
 Liveprüfung nach Veröffentlichung: 25 Seiten, 53 Assets, 481 interne Links ohne Befunde. Browser: Gesellschaft zu KfW 459 und vollständiger Ablauf mit 30.000 EUR Ergebnis verifiziert.
+
+## Countdown ergänzt am 09.11.2026
+Countdown vor den Eingabeschritten: Tage, Stunden und Minuten bis zum nächsten 1. Februar/1. August, erstmals Februar 2027. Deutsche Ortszeit einschließlich Sommerzeit; automatischer Wechsel beim Stichtag, kein negativer Zähler. Keine Fortschreibung außerhalb der hinterlegten Regelperiode bis 2028. Kostengrenze vorher/nachher und bis zu 225 EUR geringere Basisförderung erklärt; keine garantierte individuelle Einbuße. 27 Tests bestanden einschließlich Grenzsekunde, Stichtagswechsel und Sommerzeit. Mobile Ansicht bei 390 Pixeln ohne horizontalen Überlauf geprüft.

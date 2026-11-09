@@ -19,5 +19,12 @@
  return {program,errors,blocks,pending,first,totalCap,cap,net,eligible,grant,period:p,rate:RULES.rate};
  }
  function classify(property,scope,apartment){if(property==='private'||property==='company')return property;if(property==='community'&&scope==='shared')return 'weg';if(property==='community'&&scope==='individual'&&['private','company'].includes(apartment))return apartment;return ''; }
- const api={RULES,period,calculate,classify};if(typeof module!=='undefined'&&module.exports)module.exports=api;else root.RentalFunding=api;
+ function countdown(now=Date.now()){
+  const time=Number(now);if(!Number.isFinite(time))return null;
+  for(let year=2027;year<=2028;year++)for(const month of ['02','08']){
+   const date=year+'-'+month+'-01',target=Date.parse(date+'T00:00:00'+(month==='02'?'+01:00':'+02:00'));
+   if(target>time){const minutes=Math.floor((target-time)/60000),p=period(date);return {date,target,days:Math.floor(minutes/1440),hours:Math.floor(minutes/60)%24,minutes:minutes%60,before:RULES.first-(p-1)*RULES.reduction,after:RULES.first-p*RULES.reduction};}
+  }return null;
+ }
+ const api={RULES,period,calculate,classify,countdown};if(typeof module!=='undefined'&&module.exports)module.exports=api;else root.RentalFunding=api;
 })(typeof window!=='undefined'?window:globalThis);

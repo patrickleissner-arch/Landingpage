@@ -13,4 +13,10 @@ form.addEventListener('click',e=>{const b=e.target.closest('button');if(!b)retur
 $('back').addEventListener('click',()=>showStep(Math.max(0,step-1)));
 $('next').addEventListener('click',()=>{update();const invalid=[...panels[step].querySelectorAll('input,select')].find(el=>!el.checkValidity());if(invalid){$('step-error').textContent='Bitte prüfe das markierte Feld, bevor du weitergehst.';invalid.focus();invalid.reportValidity();return;}if(step===2&&Number($('vat').value)>Number($('cost').value)){$('step-error').textContent='Die abziehbare Vorsteuer darf nicht höher als die Bruttokosten sein.';$('vat').focus();return;}if(step<3)showStep(step+1);else document.querySelector('.vf-result').scrollIntoView({behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'instant':'smooth',block:'start'});});
 window.addEventListener('beforeprint',()=>panels.forEach(p=>p.hidden=false));window.addEventListener('afterprint',()=>panels.forEach((p,i)=>p.hidden=i!==step));
+function tickCountdown(){const c=RentalFunding.countdown();if(!c){document.querySelector('.vf-clock').hidden=true;$('deadline').textContent='Bitte die aktuellen Förderstichtage bei der KfW prüfen.';$('countdown-impact').textContent='Der hinterlegte Zeitraum ist abgelaufen. Es wird kein neuer Stichtag vorausgesetzt.';return;}
+for(const key of ['days','hours','minutes'])$(key).textContent=String(c[key]).padStart(2,'0');
+$('deadline').textContent='Nächste Absenkung: '+new Intl.DateTimeFormat('de-DE',{day:'numeric',month:'long',year:'numeric',timeZone:'Europe/Berlin'}).format(new Date(c.target))+' · 00:00 Uhr, deutsche Zeit';
+$('countdown-impact').textContent='Die Kostengrenze für die erste Wohneinheit sinkt von '+euro.format(c.before)+' auf '+euro.format(c.after)+'. Bei 30 % Basisförderung sind das bis zu 225 € weniger Zuschuss für das gesamte Gebäude; bei Teilmaßnahmen anteilig.';
+}
+tickCountdown();setInterval(()=>{if(!document.hidden)tickCountdown();},1000);document.addEventListener('visibilitychange',()=>{if(!document.hidden)tickCountdown();});
 update();})();

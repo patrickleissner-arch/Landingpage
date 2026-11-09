@@ -26,3 +26,7 @@ test('discovery classifies private and company ownership',()=>{assert.equal(clas
 test('community heating belongs to WEG regardless of apartment owner',()=>assert.equal(classify('community','shared','company'),'weg'));
 test('individual heating follows apartment ownership',()=>{assert.equal(classify('community','individual','private'),'private');assert.equal(classify('community','individual','company'),'company');});
 test('incomplete discovery does not assign a program',()=>{for(const args of [[],['community'],['community','individual'],['invalid']])assert.equal(classify(...args),'');});
+const {countdown}=require('../assets/js/vermieter-foerderlogik.js');
+test('countdown targets German midnight with whole remaining days and hours',()=>{const c=countdown(Date.parse('2027-01-30T22:00:00Z'));assert.equal(c.days,1);assert.equal(c.hours,1);assert.equal(c.before,28000);assert.equal(c.after,27250);});
+test('countdown switches at deadline and respects summer time',()=>{const c=countdown(Date.parse('2027-01-31T23:00:00Z'));assert.equal(c.date,'2027-08-01');assert.equal(c.target,Date.parse('2027-07-31T22:00:00Z'));assert.equal(c.before,27250);assert.equal(c.after,26500);});
+test('countdown never runs negative or invents dates after supported rules',()=>{assert.equal(countdown(Date.parse('2028-07-31T22:00:00Z')),null);const c=countdown(Date.parse('2027-01-31T22:59:59Z'));assert.equal(c.days,0);assert.equal(c.hours,0);assert.equal(c.minutes,0);});
