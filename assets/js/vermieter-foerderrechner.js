@@ -15,8 +15,8 @@ $('next').addEventListener('click',()=>{update();const invalid=[...panels[step].
 window.addEventListener('beforeprint',()=>panels.forEach(p=>p.hidden=false));window.addEventListener('afterprint',()=>panels.forEach((p,i)=>p.hidden=i!==step));
 function tickCountdown(){const c=RentalFunding.countdown();if(!c){document.querySelector('.vf-clock').hidden=true;$('deadline').textContent='Bitte die aktuellen Förderstichtage bei der KfW prüfen.';$('countdown-impact').textContent='Der hinterlegte Zeitraum ist abgelaufen. Es wird kein neuer Stichtag vorausgesetzt.';return;}
 for(const key of ['days','hours','minutes'])$(key).textContent=String(c[key]).padStart(2,'0');
-$('deadline').textContent='Nächste Absenkung: '+new Intl.DateTimeFormat('de-DE',{day:'numeric',month:'long',year:'numeric',timeZone:'Europe/Berlin'}).format(new Date(c.target))+' · 00:00 Uhr, deutsche Zeit';
-$('countdown-impact').textContent='Die Kostengrenze für die erste Wohneinheit sinkt von '+euro.format(c.before)+' auf '+euro.format(c.after)+'. Bei 30 % Basisförderung sind das bis zu 225 € weniger Zuschuss für das gesamte Gebäude; bei Teilmaßnahmen anteilig.';
+$('deadline').textContent='Kürzung der Fördergrenze: '+new Intl.DateTimeFormat('de-DE',{day:'numeric',month:'long',year:'numeric',timeZone:'Europe/Berlin'}).format(new Date(c.target))+' · 00:00 Uhr, deutsche Zeit';
+$('countdown-impact').textContent='Die KfW berücksichtigt für die erste Wohneinheit künftig höchstens '+euro.format(c.after)+' statt '+euro.format(c.before)+' an förderfähigen Kosten. Das senkt nicht den Preis der Heizung. Bei 30 % Basisförderung sind das bis zu 225 € weniger Zuschuss für das gesamte Gebäude; bei Teilmaßnahmen anteilig.';
 }
 tickCountdown();setInterval(()=>{if(!document.hidden)tickCountdown();},1000);document.addEventListener('visibilitychange',()=>{if(!document.hidden)tickCountdown();});
 update();})();
