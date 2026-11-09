@@ -91,6 +91,7 @@ app.use((req, res, next) => {
 // Platzhalter-Ordner aus der Apache-Zeit (termin/index.html usw.) leiteten
 // per Meta-Refresh weiter – zwei Umwege auf jedem Klick zu „Termin buchen“.
 const SEITEN = {
+  '/agnes-rechner':         'agnes-rechner.html',
   '/beratung-technik':      'beratung-technik.html',
   '/koordination-netzwerk': 'koordination-netzwerk.html',
   '/unabhaengigkeit':       'unabhaengigkeit.html',
