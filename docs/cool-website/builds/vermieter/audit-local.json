@@ -1,9 +1,9 @@
 {
   "mode": "files",
   "checkedAt": "2026-11-09",
-  "pages": 24,
-  "uniqueInternalAssets": 52,
-  "internalLinks": 473,
+  "pages": 25,
+  "uniqueInternalAssets": 53,
+  "internalLinks": 481,
   "issues": [],
   "warnings": [],
   "externalEmbeddedResources": [],
@@ -133,6 +133,12 @@
       "title": "Förderrechner Wärmepumpe (KfW 458) · Patrick Leißner",
       "description": "KfW-Förderung für deine Wärmepumpe berechnen: Zuschuss, Boni, Eigenanteil und Stichtage im Vergleich. Kostenlos, ohne Anmeldung, mit Rechenbeispielen.",
       "schemaCount": 3
+    },
+    {
+      "path": "/agnes-rechner",
+      "title": "AgNes-Rechner für Speicher & Gewerbe · Patrick Leißner",
+      "description": "AgNes-Szenariorechner für Speicher, Gewerbe und Industrie: Jahresbezug, Benutzungsstunden, Netzentgelte und mögliche Entlastungen transparent vergleichen.",
+      "schemaCount": 0
     },
     {
       "path": "/foerderrechner-vermietete-immobilie",

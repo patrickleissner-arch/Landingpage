@@ -11,4 +11,8 @@ KfW-Merkblätter 458/459, Stand September 2026, gültig seit 24.09.2026; Produkt
 Quellen: https://www.kfw.de/458 und https://www.kfw.de/459 sowie die dort verlinkten Merkblätter 6000005131_M_458.pdf und 6000005132_M_459.pdf. Vollständige direkte Quellenlinks im Rechner.
 
 ## Prüfung
-24 Node-Tests bestanden: Eigentümerzweige, Stichtage, Staffelung, Teilmaßnahmen, Vorsteuer, Mindestbetrag, ungültige Eingaben und Ausschlussgründe. Lokaler Website-Audit: 24 Seiten, 52 Assets, 473 interne Links; keine Befunde. Browser: alle Eigentümerzweige, vollständiger Ablauf, 100.000 EUR / sechs Wohnungen = 30.000 EUR, Desktop 1440 und mobile Breiten 390/360 geprüft. Keine horizontale Überbreite bei 360/390 Pixeln.
+24 Node-Tests bestanden: Eigentümerzweige, Stichtage, Staffelung, Teilmaßnahmen, Vorsteuer, Mindestbetrag, ungültige Eingaben und Ausschlussgründe. Lokaler Website-Audit: 25 Seiten, 53 Assets, 481 interne Links; keine Befunde. Browser: alle Eigentümerzweige, vollständiger Ablauf, 100.000 EUR / sechs Wohnungen = 30.000 EUR, Desktop 1440 und mobile Breiten 390/360 geprüft. Keine horizontale Überbreite bei 360/390 Pixeln.
+
+Aktuelle Remote-Änderungen einschließlich AgNes vor Veröffentlichung zusammengeführt; Startseiten- und Sitemap-Links beider Änderungen erhalten.
+
+Liveprüfung nach Veröffentlichung: 25 Seiten, 53 Assets, 481 interne Links ohne Befunde. Browser: Gesellschaft zu KfW 459 und vollständiger Ablauf mit 30.000 EUR Ergebnis verifiziert.
