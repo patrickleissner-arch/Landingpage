@@ -1,0 +1,1660 @@
+{
+  "version": 1,
+  "unit": "index",
+  "baseYear": 2020,
+  "endMonth": "2026-09",
+  "source": "Statistisches Bundesamt (Destatis)",
+  "sourceUrl": "https://www.destatis.de/DE/Themen/Wirtschaft/Preise/Publikationen/Energiepreise/statistischer-bericht-energiepreisentwicklung-5619001.html",
+  "sourceReport": "Daten zur Energiepreisentwicklung, September 2026",
+  "license": "Datenlizenz Deutschland – Namensnennung – Version 2.0",
+  "series": {
+    "electricity": {
+      "name": "Strom",
+      "code": "CC13-0451010000",
+      "description": "Strom für private Haushalte",
+      "months": [
+        {
+          "month": "2020-01",
+          "index": 99.6,
+          "sourceCell": "csv-61241-14!G1453"
+        },
+        {
+          "month": "2020-02",
+          "index": 100.7,
+          "sourceCell": "csv-61241-14!G1465"
+        },
+        {
+          "month": "2020-03",
+          "index": 100.9,
+          "sourceCell": "csv-61241-14!G1477"
+        },
+        {
+          "month": "2020-04",
+          "index": 101.1,
+          "sourceCell": "csv-61241-14!G1489"
+        },
+        {
+          "month": "2020-05",
+          "index": 101.1,
+          "sourceCell": "csv-61241-14!G1501"
+        },
+        {
+          "month": "2020-06",
+          "index": 101.1,
+          "sourceCell": "csv-61241-14!G1513"
+        },
+        {
+          "month": "2020-07",
+          "index": 99.3,
+          "sourceCell": "csv-61241-14!G1525"
+        },
+        {
+          "month": "2020-08",
+          "index": 99.4,
+          "sourceCell": "csv-61241-14!G1537"
+        },
+        {
+          "month": "2020-09",
+          "index": 99.3,
+          "sourceCell": "csv-61241-14!G1549"
+        },
+        {
+          "month": "2020-10",
+          "index": 99.3,
+          "sourceCell": "csv-61241-14!G1561"
+        },
+        {
+          "month": "2020-11",
+          "index": 99.2,
+          "sourceCell": "csv-61241-14!G1573"
+        },
+        {
+          "month": "2020-12",
+          "index": 99.1,
+          "sourceCell": "csv-61241-14!G1585"
+        },
+        {
+          "month": "2021-01",
+          "index": 100.8,
+          "sourceCell": "csv-61241-14!G1597"
+        },
+        {
+          "month": "2021-02",
+          "index": 100.9,
+          "sourceCell": "csv-61241-14!G1609"
+        },
+        {
+          "month": "2021-03",
+          "index": 100.9,
+          "sourceCell": "csv-61241-14!G1621"
+        },
+        {
+          "month": "2021-04",
+          "index": 100.8,
+          "sourceCell": "csv-61241-14!G1633"
+        },
+        {
+          "month": "2021-05",
+          "index": 100.9,
+          "sourceCell": "csv-61241-14!G1645"
+        },
+        {
+          "month": "2021-06",
+          "index": 101,
+          "sourceCell": "csv-61241-14!G1657"
+        },
+        {
+          "month": "2021-07",
+          "index": 100.9,
+          "sourceCell": "csv-61241-14!G1669"
+        },
+        {
+          "month": "2021-08",
+          "index": 101.2,
+          "sourceCell": "csv-61241-14!G1681"
+        },
+        {
+          "month": "2021-09",
+          "index": 101.3,
+          "sourceCell": "csv-61241-14!G1693"
+        },
+        {
+          "month": "2021-10",
+          "index": 101.9,
+          "sourceCell": "csv-61241-14!G1705"
+        },
+        {
+          "month": "2021-11",
+          "index": 102.4,
+          "sourceCell": "csv-61241-14!G1717"
+        },
+        {
+          "month": "2021-12",
+          "index": 102.9,
+          "sourceCell": "csv-61241-14!G1729"
+        },
+        {
+          "month": "2022-01",
+          "index": 110.5,
+          "sourceCell": "csv-61241-14!G1741"
+        },
+        {
+          "month": "2022-02",
+          "index": 113.4,
+          "sourceCell": "csv-61241-14!G1753"
+        },
+        {
+          "month": "2022-03",
+          "index": 118.4,
+          "sourceCell": "csv-61241-14!G1765"
+        },
+        {
+          "month": "2022-04",
+          "index": 120,
+          "sourceCell": "csv-61241-14!G1777"
+        },
+        {
+          "month": "2022-05",
+          "index": 122.3,
+          "sourceCell": "csv-61241-14!G1789"
+        },
+        {
+          "month": "2022-06",
+          "index": 123.4,
+          "sourceCell": "csv-61241-14!G1801"
+        },
+        {
+          "month": "2022-07",
+          "index": 115.3,
+          "sourceCell": "csv-61241-14!G1813"
+        },
+        {
+          "month": "2022-08",
+          "index": 116.7,
+          "sourceCell": "csv-61241-14!G1825"
+        },
+        {
+          "month": "2022-09",
+          "index": 121.9,
+          "sourceCell": "csv-61241-14!G1837"
+        },
+        {
+          "month": "2022-10",
+          "index": 127.9,
+          "sourceCell": "csv-61241-14!G1849"
+        },
+        {
+          "month": "2022-11",
+          "index": 129.7,
+          "sourceCell": "csv-61241-14!G1861"
+        },
+        {
+          "month": "2022-12",
+          "index": 130.4,
+          "sourceCell": "csv-61241-14!G1873"
+        },
+        {
+          "month": "2023-01",
+          "index": 138.9,
+          "sourceCell": "csv-61241-14!G1885"
+        },
+        {
+          "month": "2023-02",
+          "index": 139.6,
+          "sourceCell": "csv-61241-14!G1897"
+        },
+        {
+          "month": "2023-03",
+          "index": 138.7,
+          "sourceCell": "csv-61241-14!G1909"
+        },
+        {
+          "month": "2023-04",
+          "index": 138.5,
+          "sourceCell": "csv-61241-14!G1921"
+        },
+        {
+          "month": "2023-05",
+          "index": 137.8,
+          "sourceCell": "csv-61241-14!G1933"
+        },
+        {
+          "month": "2023-06",
+          "index": 136.3,
+          "sourceCell": "csv-61241-14!G1945"
+        },
+        {
+          "month": "2023-07",
+          "index": 135.6,
+          "sourceCell": "csv-61241-14!G1957"
+        },
+        {
+          "month": "2023-08",
+          "index": 136.1,
+          "sourceCell": "csv-61241-14!G1969"
+        },
+        {
+          "month": "2023-09",
+          "index": 135.4,
+          "sourceCell": "csv-61241-14!G1981"
+        },
+        {
+          "month": "2023-10",
+          "index": 133.9,
+          "sourceCell": "csv-61241-14!G1993"
+        },
+        {
+          "month": "2023-11",
+          "index": 131.8,
+          "sourceCell": "csv-61241-14!G2005"
+        },
+        {
+          "month": "2023-12",
+          "index": 130.4,
+          "sourceCell": "csv-61241-14!G2017"
+        },
+        {
+          "month": "2024-01",
+          "index": 129.4,
+          "sourceCell": "csv-61241-14!G2029"
+        },
+        {
+          "month": "2024-02",
+          "index": 128.6,
+          "sourceCell": "csv-61241-14!G2041"
+        },
+        {
+          "month": "2024-03",
+          "index": 127.5,
+          "sourceCell": "csv-61241-14!G2053"
+        },
+        {
+          "month": "2024-04",
+          "index": 127.7,
+          "sourceCell": "csv-61241-14!G2065"
+        },
+        {
+          "month": "2024-05",
+          "index": 127.6,
+          "sourceCell": "csv-61241-14!G2077"
+        },
+        {
+          "month": "2024-06",
+          "index": 127.7,
+          "sourceCell": "csv-61241-14!G2089"
+        },
+        {
+          "month": "2024-07",
+          "index": 127.2,
+          "sourceCell": "csv-61241-14!G2101"
+        },
+        {
+          "month": "2024-08",
+          "index": 126.9,
+          "sourceCell": "csv-61241-14!G2113"
+        },
+        {
+          "month": "2024-09",
+          "index": 126.7,
+          "sourceCell": "csv-61241-14!G2125"
+        },
+        {
+          "month": "2024-10",
+          "index": 126.5,
+          "sourceCell": "csv-61241-14!G2137"
+        },
+        {
+          "month": "2024-11",
+          "index": 126.4,
+          "sourceCell": "csv-61241-14!G2149"
+        },
+        {
+          "month": "2024-12",
+          "index": 126.6,
+          "sourceCell": "csv-61241-14!G2161"
+        },
+        {
+          "month": "2025-01",
+          "index": 124.8,
+          "sourceCell": "csv-61241-14!G2173"
+        },
+        {
+          "month": "2025-02",
+          "index": 124.7,
+          "sourceCell": "csv-61241-14!G2185"
+        },
+        {
+          "month": "2025-03",
+          "index": 124.8,
+          "sourceCell": "csv-61241-14!G2197"
+        },
+        {
+          "month": "2025-04",
+          "index": 124.5,
+          "sourceCell": "csv-61241-14!G2209"
+        },
+        {
+          "month": "2025-05",
+          "index": 124.6,
+          "sourceCell": "csv-61241-14!G2221"
+        },
+        {
+          "month": "2025-06",
+          "index": 124.6,
+          "sourceCell": "csv-61241-14!G2233"
+        },
+        {
+          "month": "2025-07",
+          "index": 124.6,
+          "sourceCell": "csv-61241-14!G2245"
+        },
+        {
+          "month": "2025-08",
+          "index": 124.7,
+          "sourceCell": "csv-61241-14!G2257"
+        },
+        {
+          "month": "2025-09",
+          "index": 124.7,
+          "sourceCell": "csv-61241-14!G2269"
+        },
+        {
+          "month": "2025-10",
+          "index": 124.7,
+          "sourceCell": "csv-61241-14!G2281"
+        },
+        {
+          "month": "2025-11",
+          "index": 124.5,
+          "sourceCell": "csv-61241-14!G2293"
+        },
+        {
+          "month": "2025-12",
+          "index": 124.3,
+          "sourceCell": "csv-61241-14!G2305"
+        },
+        {
+          "month": "2026-01",
+          "index": 120.8,
+          "sourceCell": "csv-61241-14!G2317"
+        },
+        {
+          "month": "2026-02",
+          "index": 119.6,
+          "sourceCell": "csv-61241-14!G2329"
+        },
+        {
+          "month": "2026-03",
+          "index": 119.2,
+          "sourceCell": "csv-61241-14!G2341"
+        },
+        {
+          "month": "2026-04",
+          "index": 118.9,
+          "sourceCell": "csv-61241-14!G2353"
+        },
+        {
+          "month": "2026-05",
+          "index": 118.4,
+          "sourceCell": "csv-61241-14!G2365"
+        },
+        {
+          "month": "2026-06",
+          "index": 118.1,
+          "sourceCell": "csv-61241-14!G2377"
+        },
+        {
+          "month": "2026-07",
+          "index": 118,
+          "sourceCell": "csv-61241-14!G2389"
+        },
+        {
+          "month": "2026-08",
+          "index": 117.8,
+          "sourceCell": "csv-61241-14!G2401"
+        },
+        {
+          "month": "2026-09",
+          "index": 117.8,
+          "sourceCell": "csv-61241-14!G2413"
+        }
+      ]
+    },
+    "oil": {
+      "name": "Heizöl",
+      "code": "CC13-0453001100",
+      "description": "Leichtes Heizöl für private Haushalte",
+      "months": [
+        {
+          "month": "2020-01",
+          "index": 133.3,
+          "sourceCell": "csv-61241-10!G485"
+        },
+        {
+          "month": "2020-02",
+          "index": 122.1,
+          "sourceCell": "csv-61241-10!G489"
+        },
+        {
+          "month": "2020-03",
+          "index": 109.5,
+          "sourceCell": "csv-61241-10!G493"
+        },
+        {
+          "month": "2020-04",
+          "index": 105.6,
+          "sourceCell": "csv-61241-10!G497"
+        },
+        {
+          "month": "2020-05",
+          "index": 98.2,
+          "sourceCell": "csv-61241-10!G501"
+        },
+        {
+          "month": "2020-06",
+          "index": 96.2,
+          "sourceCell": "csv-61241-10!G505"
+        },
+        {
+          "month": "2020-07",
+          "index": 92.1,
+          "sourceCell": "csv-61241-10!G509"
+        },
+        {
+          "month": "2020-08",
+          "index": 88.4,
+          "sourceCell": "csv-61241-10!G513"
+        },
+        {
+          "month": "2020-09",
+          "index": 82.1,
+          "sourceCell": "csv-61241-10!G517"
+        },
+        {
+          "month": "2020-10",
+          "index": 84.7,
+          "sourceCell": "csv-61241-10!G521"
+        },
+        {
+          "month": "2020-11",
+          "index": 86.2,
+          "sourceCell": "csv-61241-10!G525"
+        },
+        {
+          "month": "2020-12",
+          "index": 101.7,
+          "sourceCell": "csv-61241-10!G529"
+        },
+        {
+          "month": "2021-01",
+          "index": 115.9,
+          "sourceCell": "csv-61241-10!G533"
+        },
+        {
+          "month": "2021-02",
+          "index": 123.5,
+          "sourceCell": "csv-61241-10!G537"
+        },
+        {
+          "month": "2021-03",
+          "index": 131.1,
+          "sourceCell": "csv-61241-10!G541"
+        },
+        {
+          "month": "2021-04",
+          "index": 128.2,
+          "sourceCell": "csv-61241-10!G545"
+        },
+        {
+          "month": "2021-05",
+          "index": 133.4,
+          "sourceCell": "csv-61241-10!G549"
+        },
+        {
+          "month": "2021-06",
+          "index": 137.7,
+          "sourceCell": "csv-61241-10!G553"
+        },
+        {
+          "month": "2021-07",
+          "index": 141.9,
+          "sourceCell": "csv-61241-10!G557"
+        },
+        {
+          "month": "2021-08",
+          "index": 139.4,
+          "sourceCell": "csv-61241-10!G561"
+        },
+        {
+          "month": "2021-09",
+          "index": 145.6,
+          "sourceCell": "csv-61241-10!G565"
+        },
+        {
+          "month": "2021-10",
+          "index": 171.2,
+          "sourceCell": "csv-61241-10!G569"
+        },
+        {
+          "month": "2021-11",
+          "index": 174.4,
+          "sourceCell": "csv-61241-10!G573"
+        },
+        {
+          "month": "2021-12",
+          "index": 163.9,
+          "sourceCell": "csv-61241-10!G577"
+        },
+        {
+          "month": "2022-01",
+          "index": 176.3,
+          "sourceCell": "csv-61241-10!G581"
+        },
+        {
+          "month": "2022-02",
+          "index": 188.5,
+          "sourceCell": "csv-61241-10!G585"
+        },
+        {
+          "month": "2022-03",
+          "index": 320.4,
+          "sourceCell": "csv-61241-10!G589"
+        },
+        {
+          "month": "2022-04",
+          "index": 255.2,
+          "sourceCell": "csv-61241-10!G593"
+        },
+        {
+          "month": "2022-05",
+          "index": 260.4,
+          "sourceCell": "csv-61241-10!G597"
+        },
+        {
+          "month": "2022-06",
+          "index": 287.3,
+          "sourceCell": "csv-61241-10!G601"
+        },
+        {
+          "month": "2022-07",
+          "index": 287.5,
+          "sourceCell": "csv-61241-10!G605"
+        },
+        {
+          "month": "2022-08",
+          "index": 294.7,
+          "sourceCell": "csv-61241-10!G609"
+        },
+        {
+          "month": "2022-09",
+          "index": 303.7,
+          "sourceCell": "csv-61241-10!G613"
+        },
+        {
+          "month": "2022-10",
+          "index": 313.1,
+          "sourceCell": "csv-61241-10!G617"
+        },
+        {
+          "month": "2022-11",
+          "index": 270.8,
+          "sourceCell": "csv-61241-10!G621"
+        },
+        {
+          "month": "2022-12",
+          "index": 238,
+          "sourceCell": "csv-61241-10!G625"
+        },
+        {
+          "month": "2023-01",
+          "index": 230.2,
+          "sourceCell": "csv-61241-10!G629"
+        },
+        {
+          "month": "2023-02",
+          "index": 210.7,
+          "sourceCell": "csv-61241-10!G633"
+        },
+        {
+          "month": "2023-03",
+          "index": 205.9,
+          "sourceCell": "csv-61241-10!G637"
+        },
+        {
+          "month": "2023-04",
+          "index": 199.6,
+          "sourceCell": "csv-61241-10!G641"
+        },
+        {
+          "month": "2023-05",
+          "index": 181,
+          "sourceCell": "csv-61241-10!G645"
+        },
+        {
+          "month": "2023-06",
+          "index": 182.4,
+          "sourceCell": "csv-61241-10!G649"
+        },
+        {
+          "month": "2023-07",
+          "index": 185.5,
+          "sourceCell": "csv-61241-10!G653"
+        },
+        {
+          "month": "2023-08",
+          "index": 211.9,
+          "sourceCell": "csv-61241-10!G657"
+        },
+        {
+          "month": "2023-09",
+          "index": 224.7,
+          "sourceCell": "csv-61241-10!G661"
+        },
+        {
+          "month": "2023-10",
+          "index": 224.9,
+          "sourceCell": "csv-61241-10!G665"
+        },
+        {
+          "month": "2023-11",
+          "index": 218.4,
+          "sourceCell": "csv-61241-10!G669"
+        },
+        {
+          "month": "2023-12",
+          "index": 211.9,
+          "sourceCell": "csv-61241-10!G673"
+        },
+        {
+          "month": "2024-01",
+          "index": 208.8,
+          "sourceCell": "csv-61241-10!G677"
+        },
+        {
+          "month": "2024-02",
+          "index": 215.4,
+          "sourceCell": "csv-61241-10!G681"
+        },
+        {
+          "month": "2024-03",
+          "index": 206.8,
+          "sourceCell": "csv-61241-10!G685"
+        },
+        {
+          "month": "2024-04",
+          "index": 211.9,
+          "sourceCell": "csv-61241-10!G689"
+        },
+        {
+          "month": "2024-05",
+          "index": 198.6,
+          "sourceCell": "csv-61241-10!G693"
+        },
+        {
+          "month": "2024-06",
+          "index": 196.9,
+          "sourceCell": "csv-61241-10!G697"
+        },
+        {
+          "month": "2024-07",
+          "index": 199.8,
+          "sourceCell": "csv-61241-10!G701"
+        },
+        {
+          "month": "2024-08",
+          "index": 192.2,
+          "sourceCell": "csv-61241-10!G705"
+        },
+        {
+          "month": "2024-09",
+          "index": 184.5,
+          "sourceCell": "csv-61241-10!G709"
+        },
+        {
+          "month": "2024-10",
+          "index": 194.8,
+          "sourceCell": "csv-61241-10!G713"
+        },
+        {
+          "month": "2024-11",
+          "index": 191.1,
+          "sourceCell": "csv-61241-10!G717"
+        },
+        {
+          "month": "2024-12",
+          "index": 190.7,
+          "sourceCell": "csv-61241-10!G721"
+        },
+        {
+          "month": "2025-01",
+          "index": 206.3,
+          "sourceCell": "csv-61241-10!G725"
+        },
+        {
+          "month": "2025-02",
+          "index": 200.5,
+          "sourceCell": "csv-61241-10!G729"
+        },
+        {
+          "month": "2025-03",
+          "index": 189.5,
+          "sourceCell": "csv-61241-10!G733"
+        },
+        {
+          "month": "2025-04",
+          "index": 184.7,
+          "sourceCell": "csv-61241-10!G737"
+        },
+        {
+          "month": "2025-05",
+          "index": 179.7,
+          "sourceCell": "csv-61241-10!G741"
+        },
+        {
+          "month": "2025-06",
+          "index": 185.9,
+          "sourceCell": "csv-61241-10!G745"
+        },
+        {
+          "month": "2025-07",
+          "index": 189.9,
+          "sourceCell": "csv-61241-10!G749"
+        },
+        {
+          "month": "2025-08",
+          "index": 182.2,
+          "sourceCell": "csv-61241-10!G753"
+        },
+        {
+          "month": "2025-09",
+          "index": 184.7,
+          "sourceCell": "csv-61241-10!G757"
+        },
+        {
+          "month": "2025-10",
+          "index": 183.2,
+          "sourceCell": "csv-61241-10!G761"
+        },
+        {
+          "month": "2025-11",
+          "index": 195.6,
+          "sourceCell": "csv-61241-10!G765"
+        },
+        {
+          "month": "2025-12",
+          "index": 183.9,
+          "sourceCell": "csv-61241-10!G769"
+        },
+        {
+          "month": "2026-01",
+          "index": 185.2,
+          "sourceCell": "csv-61241-10!G773"
+        },
+        {
+          "month": "2026-02",
+          "index": 191.1,
+          "sourceCell": "csv-61241-10!G777"
+        },
+        {
+          "month": "2026-03",
+          "index": 273.7,
+          "sourceCell": "csv-61241-10!G781"
+        },
+        {
+          "month": "2026-04",
+          "index": 286.5,
+          "sourceCell": "csv-61241-10!G785"
+        },
+        {
+          "month": "2026-05",
+          "index": 265.7,
+          "sourceCell": "csv-61241-10!G789"
+        },
+        {
+          "month": "2026-06",
+          "index": 240.5,
+          "sourceCell": "csv-61241-10!G793"
+        },
+        {
+          "month": "2026-07",
+          "index": 255.8,
+          "sourceCell": "csv-61241-10!G797"
+        },
+        {
+          "month": "2026-08",
+          "index": 272.5,
+          "sourceCell": "csv-61241-10!G801"
+        },
+        {
+          "month": "2026-09",
+          "index": 323,
+          "sourceCell": "csv-61241-10!G805"
+        }
+      ]
+    },
+    "gas": {
+      "name": "Erdgas",
+      "code": "CC13-0452103000",
+      "description": "Erdgas, ohne Umlage",
+      "months": [
+        {
+          "month": "2020-01",
+          "index": 101,
+          "sourceCell": "csv-61241-03!G969"
+        },
+        {
+          "month": "2020-02",
+          "index": 101,
+          "sourceCell": "csv-61241-03!G977"
+        },
+        {
+          "month": "2020-03",
+          "index": 101.2,
+          "sourceCell": "csv-61241-03!G985"
+        },
+        {
+          "month": "2020-04",
+          "index": 101.2,
+          "sourceCell": "csv-61241-03!G993"
+        },
+        {
+          "month": "2020-05",
+          "index": 101.1,
+          "sourceCell": "csv-61241-03!G1001"
+        },
+        {
+          "month": "2020-06",
+          "index": 101.1,
+          "sourceCell": "csv-61241-03!G1009"
+        },
+        {
+          "month": "2020-07",
+          "index": 99,
+          "sourceCell": "csv-61241-03!G1017"
+        },
+        {
+          "month": "2020-08",
+          "index": 99.2,
+          "sourceCell": "csv-61241-03!G1025"
+        },
+        {
+          "month": "2020-09",
+          "index": 98.9,
+          "sourceCell": "csv-61241-03!G1033"
+        },
+        {
+          "month": "2020-10",
+          "index": 98.9,
+          "sourceCell": "csv-61241-03!G1041"
+        },
+        {
+          "month": "2020-11",
+          "index": 98.7,
+          "sourceCell": "csv-61241-03!G1049"
+        },
+        {
+          "month": "2020-12",
+          "index": 98.8,
+          "sourceCell": "csv-61241-03!G1057"
+        },
+        {
+          "month": "2021-01",
+          "index": 103,
+          "sourceCell": "csv-61241-03!G1065"
+        },
+        {
+          "month": "2021-02",
+          "index": 103.1,
+          "sourceCell": "csv-61241-03!G1073"
+        },
+        {
+          "month": "2021-03",
+          "index": 103.3,
+          "sourceCell": "csv-61241-03!G1081"
+        },
+        {
+          "month": "2021-04",
+          "index": 103.2,
+          "sourceCell": "csv-61241-03!G1089"
+        },
+        {
+          "month": "2021-05",
+          "index": 103.3,
+          "sourceCell": "csv-61241-03!G1097"
+        },
+        {
+          "month": "2021-06",
+          "index": 103.4,
+          "sourceCell": "csv-61241-03!G1105"
+        },
+        {
+          "month": "2021-07",
+          "index": 103.7,
+          "sourceCell": "csv-61241-03!G1113"
+        },
+        {
+          "month": "2021-08",
+          "index": 104.1,
+          "sourceCell": "csv-61241-03!G1121"
+        },
+        {
+          "month": "2021-09",
+          "index": 104.6,
+          "sourceCell": "csv-61241-03!G1129"
+        },
+        {
+          "month": "2021-10",
+          "index": 106.3,
+          "sourceCell": "csv-61241-03!G1137"
+        },
+        {
+          "month": "2021-11",
+          "index": 108.5,
+          "sourceCell": "csv-61241-03!G1145"
+        },
+        {
+          "month": "2021-12",
+          "index": 110.9,
+          "sourceCell": "csv-61241-03!G1153"
+        },
+        {
+          "month": "2022-01",
+          "index": 132.5,
+          "sourceCell": "csv-61241-03!G1161"
+        },
+        {
+          "month": "2022-02",
+          "index": 137.9,
+          "sourceCell": "csv-61241-03!G1169"
+        },
+        {
+          "month": "2022-03",
+          "index": 146,
+          "sourceCell": "csv-61241-03!G1177"
+        },
+        {
+          "month": "2022-04",
+          "index": 151.7,
+          "sourceCell": "csv-61241-03!G1185"
+        },
+        {
+          "month": "2022-05",
+          "index": 160.5,
+          "sourceCell": "csv-61241-03!G1193"
+        },
+        {
+          "month": "2022-06",
+          "index": 165.2,
+          "sourceCell": "csv-61241-03!G1201"
+        },
+        {
+          "month": "2022-07",
+          "index": 182.1,
+          "sourceCell": "csv-61241-03!G1209"
+        },
+        {
+          "month": "2022-08",
+          "index": 192,
+          "sourceCell": "csv-61241-03!G1217"
+        },
+        {
+          "month": "2022-09",
+          "index": 204.8,
+          "sourceCell": "csv-61241-03!G1225"
+        },
+        {
+          "month": "2022-10",
+          "index": 220.1,
+          "sourceCell": "csv-61241-03!G1233"
+        },
+        {
+          "month": "2022-11",
+          "index": 227.2,
+          "sourceCell": "csv-61241-03!G1241"
+        },
+        {
+          "month": "2022-12",
+          "index": 137.6,
+          "sourceCell": "csv-61241-03!G1249"
+        },
+        {
+          "month": "2023-01",
+          "index": 201,
+          "sourceCell": "csv-61241-03!G1257"
+        },
+        {
+          "month": "2023-02",
+          "index": 202.2,
+          "sourceCell": "csv-61241-03!G1265"
+        },
+        {
+          "month": "2023-03",
+          "index": 203.7,
+          "sourceCell": "csv-61241-03!G1273"
+        },
+        {
+          "month": "2023-04",
+          "index": 203,
+          "sourceCell": "csv-61241-03!G1281"
+        },
+        {
+          "month": "2023-05",
+          "index": 201.6,
+          "sourceCell": "csv-61241-03!G1289"
+        },
+        {
+          "month": "2023-06",
+          "index": 199.6,
+          "sourceCell": "csv-61241-03!G1297"
+        },
+        {
+          "month": "2023-07",
+          "index": 197.6,
+          "sourceCell": "csv-61241-03!G1305"
+        },
+        {
+          "month": "2023-08",
+          "index": 196.3,
+          "sourceCell": "csv-61241-03!G1313"
+        },
+        {
+          "month": "2023-09",
+          "index": 194,
+          "sourceCell": "csv-61241-03!G1321"
+        },
+        {
+          "month": "2023-10",
+          "index": 191.5,
+          "sourceCell": "csv-61241-03!G1329"
+        },
+        {
+          "month": "2023-11",
+          "index": 185.7,
+          "sourceCell": "csv-61241-03!G1337"
+        },
+        {
+          "month": "2023-12",
+          "index": 184.4,
+          "sourceCell": "csv-61241-03!G1345"
+        },
+        {
+          "month": "2024-01",
+          "index": 188.6,
+          "sourceCell": "csv-61241-03!G1353"
+        },
+        {
+          "month": "2024-02",
+          "index": 187,
+          "sourceCell": "csv-61241-03!G1361"
+        },
+        {
+          "month": "2024-03",
+          "index": 184.9,
+          "sourceCell": "csv-61241-03!G1369"
+        },
+        {
+          "month": "2024-04",
+          "index": 192.1,
+          "sourceCell": "csv-61241-03!G1377"
+        },
+        {
+          "month": "2024-05",
+          "index": 191.2,
+          "sourceCell": "csv-61241-03!G1385"
+        },
+        {
+          "month": "2024-06",
+          "index": 191.1,
+          "sourceCell": "csv-61241-03!G1393"
+        },
+        {
+          "month": "2024-07",
+          "index": 191,
+          "sourceCell": "csv-61241-03!G1401"
+        },
+        {
+          "month": "2024-08",
+          "index": 190.2,
+          "sourceCell": "csv-61241-03!G1409"
+        },
+        {
+          "month": "2024-09",
+          "index": 190.3,
+          "sourceCell": "csv-61241-03!G1417"
+        },
+        {
+          "month": "2024-10",
+          "index": 189.9,
+          "sourceCell": "csv-61241-03!G1425"
+        },
+        {
+          "month": "2024-11",
+          "index": 190.4,
+          "sourceCell": "csv-61241-03!G1433"
+        },
+        {
+          "month": "2024-12",
+          "index": 191.5,
+          "sourceCell": "csv-61241-03!G1441"
+        },
+        {
+          "month": "2025-01",
+          "index": 189.6,
+          "sourceCell": "csv-61241-03!G1449"
+        },
+        {
+          "month": "2025-02",
+          "index": 190.7,
+          "sourceCell": "csv-61241-03!G1457"
+        },
+        {
+          "month": "2025-03",
+          "index": 191.4,
+          "sourceCell": "csv-61241-03!G1465"
+        },
+        {
+          "month": "2025-04",
+          "index": 191.8,
+          "sourceCell": "csv-61241-03!G1473"
+        },
+        {
+          "month": "2025-05",
+          "index": 191.1,
+          "sourceCell": "csv-61241-03!G1481"
+        },
+        {
+          "month": "2025-06",
+          "index": 191.2,
+          "sourceCell": "csv-61241-03!G1489"
+        },
+        {
+          "month": "2025-07",
+          "index": 191.5,
+          "sourceCell": "csv-61241-03!G1497"
+        },
+        {
+          "month": "2025-08",
+          "index": 191.6,
+          "sourceCell": "csv-61241-03!G1505"
+        },
+        {
+          "month": "2025-09",
+          "index": 191.6,
+          "sourceCell": "csv-61241-03!G1513"
+        },
+        {
+          "month": "2025-10",
+          "index": 191.6,
+          "sourceCell": "csv-61241-03!G1521"
+        },
+        {
+          "month": "2025-11",
+          "index": 191.3,
+          "sourceCell": "csv-61241-03!G1529"
+        },
+        {
+          "month": "2025-12",
+          "index": 190.9,
+          "sourceCell": "csv-61241-03!G1537"
+        },
+        {
+          "month": "2026-01",
+          "index": 182.8,
+          "sourceCell": "csv-61241-03!G1545"
+        },
+        {
+          "month": "2026-02",
+          "index": 182.4,
+          "sourceCell": "csv-61241-03!G1553"
+        },
+        {
+          "month": "2026-03",
+          "index": 182.4,
+          "sourceCell": "csv-61241-03!G1561"
+        },
+        {
+          "month": "2026-04",
+          "index": 182.7,
+          "sourceCell": "csv-61241-03!G1569"
+        },
+        {
+          "month": "2026-05",
+          "index": 183.3,
+          "sourceCell": "csv-61241-03!G1577"
+        },
+        {
+          "month": "2026-06",
+          "index": 183.5,
+          "sourceCell": "csv-61241-03!G1585"
+        },
+        {
+          "month": "2026-07",
+          "index": 184.2,
+          "sourceCell": "csv-61241-03!G1593"
+        },
+        {
+          "month": "2026-08",
+          "index": 184.8,
+          "sourceCell": "csv-61241-03!G1601"
+        },
+        {
+          "month": "2026-09",
+          "index": 186.3,
+          "sourceCell": "csv-61241-03!G1609"
+        }
+      ]
+    },
+    "lpg": {
+      "name": "Flüssiggas",
+      "code": "CC13-0452200200",
+      "description": "Flüssiggas, Füllung eines Tankbehälters",
+      "months": [
+        {
+          "month": "2020-01",
+          "index": 119.3,
+          "sourceCell": "csv-61241-13!G484"
+        },
+        {
+          "month": "2020-02",
+          "index": 113.1,
+          "sourceCell": "csv-61241-13!G488"
+        },
+        {
+          "month": "2020-03",
+          "index": 105.5,
+          "sourceCell": "csv-61241-13!G492"
+        },
+        {
+          "month": "2020-04",
+          "index": 94.6,
+          "sourceCell": "csv-61241-13!G496"
+        },
+        {
+          "month": "2020-05",
+          "index": 93,
+          "sourceCell": "csv-61241-13!G500"
+        },
+        {
+          "month": "2020-06",
+          "index": 96.2,
+          "sourceCell": "csv-61241-13!G504"
+        },
+        {
+          "month": "2020-07",
+          "index": 92.4,
+          "sourceCell": "csv-61241-13!G508"
+        },
+        {
+          "month": "2020-08",
+          "index": 93.6,
+          "sourceCell": "csv-61241-13!G512"
+        },
+        {
+          "month": "2020-09",
+          "index": 92.8,
+          "sourceCell": "csv-61241-13!G516"
+        },
+        {
+          "month": "2020-10",
+          "index": 96.4,
+          "sourceCell": "csv-61241-13!G520"
+        },
+        {
+          "month": "2020-11",
+          "index": 98.7,
+          "sourceCell": "csv-61241-13!G524"
+        },
+        {
+          "month": "2020-12",
+          "index": 104.3,
+          "sourceCell": "csv-61241-13!G528"
+        },
+        {
+          "month": "2021-01",
+          "index": 123,
+          "sourceCell": "csv-61241-13!G532"
+        },
+        {
+          "month": "2021-02",
+          "index": 127.2,
+          "sourceCell": "csv-61241-13!G536"
+        },
+        {
+          "month": "2021-03",
+          "index": 133.5,
+          "sourceCell": "csv-61241-13!G540"
+        },
+        {
+          "month": "2021-04",
+          "index": 130.8,
+          "sourceCell": "csv-61241-13!G544"
+        },
+        {
+          "month": "2021-05",
+          "index": 126.4,
+          "sourceCell": "csv-61241-13!G548"
+        },
+        {
+          "month": "2021-06",
+          "index": 126.5,
+          "sourceCell": "csv-61241-13!G552"
+        },
+        {
+          "month": "2021-07",
+          "index": 135.9,
+          "sourceCell": "csv-61241-13!G556"
+        },
+        {
+          "month": "2021-08",
+          "index": 140.7,
+          "sourceCell": "csv-61241-13!G560"
+        },
+        {
+          "month": "2021-09",
+          "index": 145.4,
+          "sourceCell": "csv-61241-13!G564"
+        },
+        {
+          "month": "2021-10",
+          "index": 169.9,
+          "sourceCell": "csv-61241-13!G568"
+        },
+        {
+          "month": "2021-11",
+          "index": 181.3,
+          "sourceCell": "csv-61241-13!G572"
+        },
+        {
+          "month": "2021-12",
+          "index": 177.9,
+          "sourceCell": "csv-61241-13!G576"
+        },
+        {
+          "month": "2022-01",
+          "index": 178.7,
+          "sourceCell": "csv-61241-13!G580"
+        },
+        {
+          "month": "2022-02",
+          "index": 179.4,
+          "sourceCell": "csv-61241-13!G584"
+        },
+        {
+          "month": "2022-03",
+          "index": 266.5,
+          "sourceCell": "csv-61241-13!G588"
+        },
+        {
+          "month": "2022-04",
+          "index": 294.3,
+          "sourceCell": "csv-61241-13!G592"
+        },
+        {
+          "month": "2022-05",
+          "index": 266,
+          "sourceCell": "csv-61241-13!G596"
+        },
+        {
+          "month": "2022-06",
+          "index": 226.9,
+          "sourceCell": "csv-61241-13!G600"
+        },
+        {
+          "month": "2022-07",
+          "index": 223.5,
+          "sourceCell": "csv-61241-13!G604"
+        },
+        {
+          "month": "2022-08",
+          "index": 217.1,
+          "sourceCell": "csv-61241-13!G608"
+        },
+        {
+          "month": "2022-09",
+          "index": 210.5,
+          "sourceCell": "csv-61241-13!G612"
+        },
+        {
+          "month": "2022-10",
+          "index": 204.1,
+          "sourceCell": "csv-61241-13!G616"
+        },
+        {
+          "month": "2022-11",
+          "index": 179.9,
+          "sourceCell": "csv-61241-13!G620"
+        },
+        {
+          "month": "2022-12",
+          "index": 166.4,
+          "sourceCell": "csv-61241-13!G624"
+        },
+        {
+          "month": "2023-01",
+          "index": 165.4,
+          "sourceCell": "csv-61241-13!G628"
+        },
+        {
+          "month": "2023-02",
+          "index": 178.7,
+          "sourceCell": "csv-61241-13!G632"
+        },
+        {
+          "month": "2023-03",
+          "index": 179.8,
+          "sourceCell": "csv-61241-13!G636"
+        },
+        {
+          "month": "2023-04",
+          "index": 164.1,
+          "sourceCell": "csv-61241-13!G640"
+        },
+        {
+          "month": "2023-05",
+          "index": 157.4,
+          "sourceCell": "csv-61241-13!G644"
+        },
+        {
+          "month": "2023-06",
+          "index": 146.8,
+          "sourceCell": "csv-61241-13!G648"
+        },
+        {
+          "month": "2023-07",
+          "index": 141.1,
+          "sourceCell": "csv-61241-13!G652"
+        },
+        {
+          "month": "2023-08",
+          "index": 144.3,
+          "sourceCell": "csv-61241-13!G656"
+        },
+        {
+          "month": "2023-09",
+          "index": 152.5,
+          "sourceCell": "csv-61241-13!G660"
+        },
+        {
+          "month": "2023-10",
+          "index": 154.7,
+          "sourceCell": "csv-61241-13!G664"
+        },
+        {
+          "month": "2023-11",
+          "index": 157.5,
+          "sourceCell": "csv-61241-13!G668"
+        },
+        {
+          "month": "2023-12",
+          "index": 158.9,
+          "sourceCell": "csv-61241-13!G672"
+        },
+        {
+          "month": "2024-01",
+          "index": 164.2,
+          "sourceCell": "csv-61241-13!G676"
+        },
+        {
+          "month": "2024-02",
+          "index": 168.1,
+          "sourceCell": "csv-61241-13!G680"
+        },
+        {
+          "month": "2024-03",
+          "index": 165.6,
+          "sourceCell": "csv-61241-13!G684"
+        },
+        {
+          "month": "2024-04",
+          "index": 177.9,
+          "sourceCell": "csv-61241-13!G688"
+        },
+        {
+          "month": "2024-05",
+          "index": 172.4,
+          "sourceCell": "csv-61241-13!G692"
+        },
+        {
+          "month": "2024-06",
+          "index": 166.7,
+          "sourceCell": "csv-61241-13!G696"
+        },
+        {
+          "month": "2024-07",
+          "index": 168,
+          "sourceCell": "csv-61241-13!G700"
+        },
+        {
+          "month": "2024-08",
+          "index": 168.9,
+          "sourceCell": "csv-61241-13!G704"
+        },
+        {
+          "month": "2024-09",
+          "index": 168.2,
+          "sourceCell": "csv-61241-13!G708"
+        },
+        {
+          "month": "2024-10",
+          "index": 182.3,
+          "sourceCell": "csv-61241-13!G712"
+        },
+        {
+          "month": "2024-11",
+          "index": 187.9,
+          "sourceCell": "csv-61241-13!G716"
+        },
+        {
+          "month": "2024-12",
+          "index": 193.6,
+          "sourceCell": "csv-61241-13!G720"
+        },
+        {
+          "month": "2025-01",
+          "index": 200.6,
+          "sourceCell": "csv-61241-13!G724"
+        },
+        {
+          "month": "2025-02",
+          "index": 204.4,
+          "sourceCell": "csv-61241-13!G728"
+        },
+        {
+          "month": "2025-03",
+          "index": 201.6,
+          "sourceCell": "csv-61241-13!G732"
+        },
+        {
+          "month": "2025-04",
+          "index": 196.2,
+          "sourceCell": "csv-61241-13!G736"
+        },
+        {
+          "month": "2025-05",
+          "index": 182.5,
+          "sourceCell": "csv-61241-13!G740"
+        },
+        {
+          "month": "2025-06",
+          "index": 178.9,
+          "sourceCell": "csv-61241-13!G744"
+        },
+        {
+          "month": "2025-07",
+          "index": 179.3,
+          "sourceCell": "csv-61241-13!G748"
+        },
+        {
+          "month": "2025-08",
+          "index": 179.2,
+          "sourceCell": "csv-61241-13!G752"
+        },
+        {
+          "month": "2025-09",
+          "index": 179.1,
+          "sourceCell": "csv-61241-13!G756"
+        },
+        {
+          "month": "2025-10",
+          "index": 180.5,
+          "sourceCell": "csv-61241-13!G760"
+        },
+        {
+          "month": "2025-11",
+          "index": 180.8,
+          "sourceCell": "csv-61241-13!G764"
+        },
+        {
+          "month": "2025-12",
+          "index": 183.7,
+          "sourceCell": "csv-61241-13!G768"
+        },
+        {
+          "month": "2026-01",
+          "index": 188.5,
+          "sourceCell": "csv-61241-13!G772"
+        },
+        {
+          "month": "2026-02",
+          "index": 193,
+          "sourceCell": "csv-61241-13!G776"
+        },
+        {
+          "month": "2026-03",
+          "index": 222.9,
+          "sourceCell": "csv-61241-13!G780"
+        },
+        {
+          "month": "2026-04",
+          "index": 268.5,
+          "sourceCell": "csv-61241-13!G784"
+        },
+        {
+          "month": "2026-05",
+          "index": 240.1,
+          "sourceCell": "csv-61241-13!G788"
+        },
+        {
+          "month": "2026-06",
+          "index": 222,
+          "sourceCell": "csv-61241-13!G792"
+        },
+        {
+          "month": "2026-07",
+          "index": 203.6,
+          "sourceCell": "csv-61241-13!G796"
+        },
+        {
+          "month": "2026-08",
+          "index": 205.3,
+          "sourceCell": "csv-61241-13!G800"
+        },
+        {
+          "month": "2026-09",
+          "index": 210.4,
+          "sourceCell": "csv-61241-13!G804"
+        }
+      ]
+    }
+  }
+}
