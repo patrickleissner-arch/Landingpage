@@ -71,7 +71,7 @@ const OEFFENTLICHE_ENDUNGEN = new Set([
   '.html', '.css', '.js', '.png', '.jpg', '.jpeg', '.webp', '.gif', '.svg', '.ico',
   '.ttf', '.woff', '.woff2', '.mp4', '.webm', '.pdf', '.xml', '.txt', '.webmanifest',
 ]);
-const INTERNE_PFADE = /^\/(?:server\.js$|node_modules(?:\/|$)|docs(?:\/|$))|\/\.(?!well-known\/)/i;
+const INTERNE_PFADE = /^\/(?:server\.js$|node_modules(?:\/|$)|tools(?:\/|$)|docs(?:\/|$))|\/\.(?!well-known\/)/i;
 
 app.use((req, res, next) => {
   let pfad;
@@ -91,6 +91,7 @@ app.use((req, res, next) => {
 // Platzhalter-Ordner aus der Apache-Zeit (termin/index.html usw.) leiteten
 // per Meta-Refresh weiter – zwei Umwege auf jedem Klick zu „Termin buchen“.
 const SEITEN = {
+  '/agnes-rechner':         'agnes-rechner.html',
   '/beratung-technik':      'beratung-technik.html',
   '/koordination-netzwerk': 'koordination-netzwerk.html',
   '/unabhaengigkeit':       'unabhaengigkeit.html',
@@ -121,7 +122,7 @@ const UMZUEGE = {
 function ordnerSeitenFinden(ordner, basis = '') {
   const gefunden = {};
   for (const e of fs.readdirSync(ordner, { withFileTypes: true })) {
-    if (!e.isDirectory() || e.name.startsWith('.') || ['node_modules', 'assets', 'docs'].includes(e.name)) continue;
+    if (!e.isDirectory() || e.name.startsWith('.') || ['node_modules', 'assets', 'docs', 'tools'].includes(e.name)) continue;
     const rel  = basis + '/' + e.name;
     const voll = path.join(ordner, e.name);
     if (fs.existsSync(path.join(voll, 'index.html'))) gefunden[rel.toLowerCase()] = path.join(voll, 'index.html');
