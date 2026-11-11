@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>AgNes-Rechner für Speicher & Gewerbe · Patrick Leißner</title><meta name="description" content="AgNes-Szenariorechner für Speicher, Gewerbe und Industrie: Jahresbezug, Benutzungsstunden, Netzentgelte und mögliche Entlastungen transparent vergleichen."><link rel="canonical" href="https://patrickleissner.de/agnes-rechner"><link rel="icon" href="/assets/img/logo-mark.webp">
+<title>AgNes-Rechner: Lastspitzen & Kostenrisiko · Patrick Leißner</title><meta name="description" content="Was kostet Weiter wie bisher? Prüfe deine Lastspitzenkosten und mögliche Einsparungen. Mit Lastgang und Netzpreisblatt wird daraus eine individuelle Analyse."><link rel="canonical" href="https://patrickleissner.de/agnes-rechner"><link rel="icon" href="/assets/img/logo-mark.webp">
 <!-- AgNes: Szenariorechner; Parameter und Quellen vor Änderung der Rechtslage prüfen. -->
 <style>
 :root{
@@ -88,328 +88,88 @@ body{font-family:Outfit,system-ui,sans-serif}.card{background:linear-gradient(16
 .seg{grid-template-columns:1fr}.seg button{text-align:left}#business-note{margin-top:18px}
 </style>
 <link rel="stylesheet" href="/mobile-dock.css"><script src="/mobile-dock.js" defer></script>
-</head>
+<style>
+h2{font-size:clamp(1.35rem,2.7vw,2rem);line-height:1.2;margin:8px 0 18px}h3{font-size:1.2rem}.grid{grid-template-columns:minmax(290px,.85fr) minmax(0,1.4fr)}.grid>*{min-width:0}.outcome{padding:28px}.eyebrow{margin-top:0}.confirm{display:flex;gap:10px;align-items:flex-start;color:var(--text);line-height:1.5;margin:20px 0}.confirm input{margin-top:5px;accent-color:var(--teal);flex:none;width:18px;height:18px}.compare{display:grid;gap:18px;margin:24px 0}.compare span{display:block;font-size:.9rem;margin-bottom:8px}.compare i{display:block;height:24px;background:var(--orange);border-radius:4px;width:0}.compare div+div i{background:var(--teal)}.risk{font-size:1.3rem;color:var(--teal)}.takeaway{border-top:1px solid var(--line);padding-top:20px;margin-top:24px}.takeaway p{color:var(--muted)}.future{margin:24px 0 48px}.analysis-section{scroll-margin-top:24px}.analysis-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:24px}.step-number{color:var(--orange);font-size:2rem}.analysis-grid p{color:var(--muted)}.results{grid-template-columns:1fr}.res{display:flex;align-items:center;justify-content:space-between;gap:12px}.res b{font-size:1.5rem}.src{margin-top:45px}select{min-height:46px}.motion{min-height:44px}.btn{min-height:46px}.wrap{padding-bottom:100px}
+@media(max-width:800px){.grid,.analysis-grid{grid-template-columns:1fr}.outcome{padding:20px}.res{flex-wrap:wrap}}@media(prefers-reduced-motion:no-preference){.compare i{transition:width .3s ease}}
+</style></head>
 <body><a class="skip" href="#calculator">Zum Rechner springen</a>
-<div class="wrap"><nav><a href="https://patrickleissner.de">Patrick Leißner · Frei durch eigene Energie.</a><a href="https://patrickleissner.de/#rechner">Zur Website ↗</a></nav>
-  <p class="eyebrow">SPEICHER &amp; GEWERBE · DEINE ENTSCHEIDUNG</p><h1>Heute planen.<br><em>Morgen den Unterschied kennen.</em></h1>
-  <p class="sub">AgNes-Szenariorechner: Vergleiche Speicherprojekte oder die Netzentgelte deines Gewerbeanschlusses. Mit Verbrauch, Benutzungsstunden und transparenten Annahmen wird der Unterschied sichtbar.</p>
-
-  <div class="status" role="note">
-    <span class="dot"></span>
-    <div><b>Verfahrensstand:</b> Stand der Prüfung: 16.10.2026. Die BNetzA hat einen Festlegungsentwurf veröffentlicht; der Beschluss ist für 2026 vorgesehen. Tarifhöhe und individuelle Berechtigung werden hier nicht festgestellt. Alle Euro-Werte sind Szenarien, keine zugesicherte Ersparnis.</div>
-  </div>
-
-  <div class="card countdown" id="storage-countdown">
-    <div>
-      <div class="cd-title">Planungsziel: Investitionsentscheidung noch 2026 vorbereiten</div>
-      <div class="cd-sub">Countdown bis 01.01.2027, 00:00 Uhr (Berlin). Keine bestätigte Antragsfrist. Maßgeblich sind die endgültige Festlegung und ihre Übergangsregeln. Eine Anfrage oder Einreichung allein sichert keinen Bestandsschutz.</div>
-    </div>
-    <div class="tiles" id="tiles" aria-live="off">
-      <div class="tile"><span class="n" id="cd-d">--</span><small>Tage</small></div>
-      <div class="tile"><span class="n" id="cd-h">--</span><small>Std</small></div>
-      <div class="tile"><span class="n" id="cd-m">--</span><small>Min</small></div>
-      <div class="tile"><span class="n" id="cd-s">--</span><small>Sek</small></div>
-    </div>
-    <div class="bar"><i id="cd-bar"></i></div>
-  </div>
-
-  <main class="grid" id="calculator">
-    <div class="card">
-      <div class="seg" role="group" aria-label="Fall wählen">
-        <button type="button" id="seg-s" aria-pressed="true">Eigenständiger Speicher</button>
-        <button type="button" id="seg-g" aria-pressed="false">Gewerbe &amp; Industrie</button>
-        <button type="button" id="seg-i" aria-pressed="false">Heimspeicher / Eigenverbrauch</button>
-      </div>
-
-      <label for="mwh">Dein jährlicher Stromverbrauch (kWh)</label>
-      <div class="row">
-        <input type="range" id="mwh-r" aria-label="Jährlicher Stromverbrauch" min="0" max="1000000000" step="1000" value="2000000">
-        <input type="number" id="mwh" max="1000000000" min="0" step="1" value="2000000">
-      </div>
-      <div class="hint" id="mwh-hint">Bei Speichern: Ladestrom pro Jahr.</div>
-
-      <div id="capacity-inputs">
-        <label for="kw">Angenommene abrechnungsrelevante Anschlusskapazität (kW)</label>
-        <input id="kw" type="number" min="0" max="1000000" step="1" value="1000" required>
-        <p class="hint">Nicht die Speicherkapazität in kWh. Der Verbrauch bestimmt diese Leistung nicht. Anschluss- und Betriebskonzept müssen separat geprüft werden.</p>
-        <label for="a-sp">Angenommener Kapazitätspreis (€/kW pro Jahr)</label>
-        <input id="a-sp" type="number" min="0" max="1000" step="0.1" value="10" required>
-        <p class="hint">10 € ist ein frei gewähltes Rechenbeispiel, kein veröffentlichter AgNes-Tarif. Ändere den Wert für deine Sensitivitätsanalyse.</p>
-      </div>
-
-      <div id="business-inputs" hidden>
-        <label for="hours">Benutzungsstunden pro Jahr (h/a)</label>
-        <input id="hours" type="number" min="1" max="8760" step="1" value="4000" required>
-        <p class="hint">Benutzungsstunden = Jahresbezug ÷ gemessene Jahreshöchstleistung. Das sind nicht die Öffnungs- oder Betriebsstunden. Aus deinen Angaben leiten wir die Leistung ab.</p>
-        <label for="work-price">Arbeitspreis Netzentgelt (ct/kWh, netto)</label>
-        <input id="work-price" type="number" min="0" max="100" step="0.01" value="1.5" required>
-        <label for="power-price">Leistungspreis (€/kW pro Jahr, netto)</label>
-        <input id="power-price" type="number" min="0" max="2000" step="0.01" value="70" required>
-        <label for="discount-a">Angenommene Entlastung – Szenario A (%)</label>
-        <input id="discount-a" type="number" min="0" max="100" step="0.1" value="20" required>
-        <label for="discount-b">Angenommene Entlastung – Szenario B (%)</label>
-        <input id="discount-b" type="number" min="0" max="100" step="0.1" value="0" required>
-        <p class="hint">Alle Startwerte sind Rechenbeispiele, keine AgNes-Tarife oder zugesagten Rabatte. Übernimm Arbeits- und Leistungspreis aus dem zu Netzebene und Benutzungsstunden passenden Preisblatt deines Netzbetreibers.</p>
-      </div>
-      <div id="comparison-settings">
-      <label id="years-label" for="yrs">Betrachtungszeitraum ab 2029</label>
-      <select id="yrs">
-        <option value="1">1 Jahr</option>
-        <option value="3">3 Jahre</option>
-        <option value="5" selected>5 Jahre</option>
-        <option value="10">10 Jahre</option>
-      </select>
-
-      <details id="storage-method"><summary>Was vergleicht der Rechner?</summary>
-      <p class="hint">Nur den angenommenen jährlichen Kapazitätspreis eines eigenständigen Speichers: kW × €/kW/Jahr. Im Vergleichsfall mit anwendbarer Vollbefreiung setzen wir diesen Bestandteil mit 0 € an. Normale Netzentgelte deines Verbrauchs, Baukostenzuschüsse, Steuern, Betriebskosten, dynamische Entgelte und Erlöse sind nicht enthalten.</p>
-      <p class="hint">Die Mehrjahresrechnung unterstellt konstante Preise und eine Befreiung während des gesamten gewählten Zeitraums. Keine Abzinsung oder Renditeberechnung.</p></details>
-      </div>
-      <p id="input-error" role="alert" hidden>Bitte gib gültige, nicht negative Werte innerhalb der angegebenen Grenzen ein.</p>
-    </div>
-
-    <div>
-      <div class="stage" id="stage">
-        <canvas id="cv" aria-hidden="true"></canvas>
-        <div class="lbl a" id="la"><b>0 €</b><span>Bestandsschutz</span></div>
-        <div class="lbl b" id="lb"><b>0 €</b><span>ohne Bestandsschutz</span></div>
-        <div class="fallback" id="fallback"><div class="fb" id="fba" style="background:var(--teal)"></div><div class="fb" id="fbb" style="background:var(--orange)"></div></div>
-      </div>
-      <section class="card" id="home-advice" aria-live="polite" hidden>
-        <p class="eyebrow">DEIN HEIMSPEICHER</p>
-        <h2>Eigenverbrauch braucht einen anderen Vergleich.</h2>
-        <p>Für Heimspeicher sieht der hier zugrunde gelegte BNetzA-Zwischenstand kein gesondertes Speichernetzentgelt vor. Deshalb gibt es hier keinen Euro-Vergleich „mit oder ohne Befreiung“.</p>
-        <p>Für dein Zuhause sind PV-Erzeugung, Stromverbrauch und die Nutzung deines Speichers entscheidend. Diese Größen kannst du im PV- und Speicher-Rechner vergleichen.</p>
-        <a class="btn" href="/pv-speicher-rechner">PV &amp; Speicher vergleichen ↗</a>
-        <p class="hint">Gemischte Gewerbe- und Eigenverbrauchskonzepte prüfen wir individuell. Dein gesamter Stromverbrauch wird durch einen Speicher nicht pauschal von Netzentgelten befreit.</p>
-      </section>
-      <div class="results" id="comparison-results" aria-live="polite" aria-atomic="true">
-        <div class="res a"><small id="ta">Mit Bestandsschutz / Jahr</small><b id="ra">0 €</b></div>
-        <div class="res b"><small id="tb">Ohne Bestandsschutz / Jahr</small><b id="rb">0 €</b></div>
-        <div class="res d"><small id="td">Differenz im Zeitraum</small><b id="rd">0 €</b></div>
-      </div>
-      <p class="explain" id="explain"></p><p class="hint" id="formula"></p><button type="button" class="motion" id="motion" aria-pressed="false">Animationen anhalten</button>
-    </div>
-
-  </main><div class="card" id="business-note" hidden>
-    <h2>Deinen Gewerbeanschluss jetzt prüfen.</h2>
-    <p>Mit Stromrechnung, Lastgang und Preisblatt können wir Bezugsleistung, Benutzungsstunden und mögliche Entlastungen einordnen. Ein hoher Verbrauch allein begründet keinen Rabatt. Die Speicher-FID und der Countdown für Speicherprojekte gelten nicht pauschal für deinen Gewerbestrombezug.</p>
-    <p class="hint">Individuelle Netzentgelte und ihre AgNes-Übergangsregeln sind gesondert zu prüfen. Der Vergleich unterstellt frei gewählte, über den gesamten Zeitraum konstante Entlastungen auf Arbeits- und Leistungspreis. Er bildet keinen gesetzlichen Anspruch oder Bestandsschutz ab. Grundpreise, Messentgelte, Umlagen, Steuern und Umsatzsteuer fehlen; keine Abzinsung.</p>
-    <a href="https://www.bundesnetzagentur.de/DE/Beschlusskammern/GBK/Ebene1_Rahmen/AgNes/start.html" style="color:var(--teal)" target="_blank" rel="noopener">BNetzA: Verfahrensstand und Folgefestlegungen ↗</a>
-  </div><div class="cta" id="storage-cta">
-    <p><b>Dein nächster Schritt: Projekt und Befreiungsmöglichkeit prüfen lassen.</b> Kläre jetzt Anschlusskonzept, Investitionsentscheidung und Inbetriebnahmetermin. Die Kontaktaufnahme ist noch kein Befreiungsantrag und keine endgültige Investitionsentscheidung.</p>
-  </div>
-
-  <section class="steps" id="storage-steps"><h2>Was jetzt vorbereitet werden sollte.</h2><ol><li><b>Projekt einordnen.</b> Nutzung, Standort, Anschlusskapazität und Netzbetreiber klären.</li><li><b>Entscheidung belastbar machen.</b> Voraussetzungen und Nachweise einer endgültigen Investitionsentscheidung (FID) prüfen.</li><li><b>Umsetzung und Befreiung abstimmen.</b> Inbetriebnahme bis spätestens 04.08.2029 und Anwendbarkeit von § 118 Abs. 6 EnWG prüfen. Kein automatischer Anspruch durch dieses Formular.</li></ol></section><div class="src">
-    <b>Quellen und Hinweise</b>
-    <ul>
-      <li><a href="https://www.bundesnetzagentur.de/DE/Fachthemen/ElektrizitaetundGas/Netzentgelte/Anreizregulierung/Agnes/start.html" target="_blank" rel="noopener">Bundesnetzagentur: „AgNes“ erklärt</a></li>
-      <li><a href="https://bundesnetzagentur.de/DE/Beschlusskammern/GBK/Ebene1_Rahmen/AgNes/start.html" target="_blank" rel="noopener">BNetzA: Festlegungsverfahren und aktueller Entwurf</a></li>
-      <li><a href="https://bundesnetzagentur.de/DE/Beschlusskammern/GBK/GBK_Termine/GBK_Termine.html" target="_blank" rel="noopener">BNetzA: Erläuterung zum Vertrauensschutz (27.05.2026)</a></li>
-      <li><a href="https://www.bundesnetzagentur.de/SharedDocs/Pressemitteilungen/20260527_AgnesKurzInfo.pdf?__blob=publicationFile&amp;v=3" target="_blank" rel="noopener">BNetzA: Kapazitätspreis für neue Speicher; Heimspeicher gesondert betrachten</a></li>
-    </ul>
-    Der Rechner liefert eine unverbindliche Modellrechnung. Ob und in welchem Umfang Bestandsschutz greift, hängt von der finalen Festlegung der Bundesnetzagentur und den Voraussetzungen im Einzelfall ab. Dies ist keine Rechts- oder Steuerberatung.
-  </div>
+<div class="wrap">
+<nav><a href="/">Patrick Leißner · Frei durch eigene Energie.</a><a href="/#rechner">Zur Website ↗</a></nav>
+<p class="eyebrow">AGNES-RECHNER · LASTSPITZEN &amp; KOSTENRISIKO</p>
+<h1>Was kostet dich<br><em>Weiter wie bisher?</em></h1>
+<p class="sub">Gleicher Stromverbrauch heißt nicht gleiche Stromkosten. Wenn Maschinen, Ladepunkte und weitere Verbraucher gleichzeitig laufen, können teure Lastspitzen entstehen. Prüfe, was eine gezielte Begrenzung rechnerisch verändern könnte.</p>
+<div class="status"><span class="dot"></span><div><b>Heute rechnen. Morgen vorbereitet sein.</b> Der Kostenvergleich unten nutzt heutige Jahresleistungspreise. AgNes ist ein gesonderter Ausblick: Der Entwurf sieht die neue Systematik grundsätzlich ab 2029 vor. Daraus folgt keine allgemeine Handlungsfrist zum 1. Januar 2027.</div></div>
+<main id="calculator">
+<div class="grid">
+<section class="card" aria-labelledby="input-title">
+<h2 id="input-title">Dein Anschluss</h2>
+<label for="customer">Welche Abrechnung hast du?</label>
+<select id="customer"><option value="business">Gewerbe · Jahresleistungspreis</option><option value="unknown" selected>Gewerbe · Tarif noch unklar</option><option value="home">Eigenheim / ohne Leistungspreis</option></select>
+<p class="hint">Ein Jahresleistungspreis steht in €/kW pro Jahr auf deiner Rechnung. Monatsleistungspreise und Sondervereinbarungen brauchen eine individuelle Prüfung.</p>
+<div id="business-fields" hidden>
+<label for="peak">Gemessene Jahreshöchstleistung (kW)</label>
+<input id="peak" type="number" min="0" max="1000000" step="any" placeholder="z. B. 100" required>
+<p class="hint">Höchster Viertelstunden-Mittelwert des vollständigen Abrechnungsjahres – keine Anschlussleistung oder Geräteleistung.</p>
+<label for="price">Jahresleistungspreis (€/kW/Jahr, netto)</label>
+<input id="price" type="number" min="0" max="10000" step="any" placeholder="Aus deinem Netzpreisblatt" required>
+<label for="target">Angenommene begrenzte Spitze (kW)</label>
+<input id="target" type="number" min="0" max="1000000" step="any" placeholder="z. B. 70" required>
+<p class="hint">Ein Prüfziel, noch keine technisch zugesicherte Reduktion. Der Lastgang zeigt, ob Steuerung oder Speicher diese Grenze halten können.</p>
+<label for="years">Vergleich bei unveränderten Bedingungen</label>
+<select id="years"><option value="1">1 vollständiges Jahr</option><option value="3">3 vollständige Jahre</option><option value="5">5 vollständige Jahre</option></select>
+<label class="confirm"><input type="checkbox" id="same-tariff"> Für diesen vereinfachten Vergleich unterstelle ich dieselbe Tarifklasse und denselben Leistungspreis.</label>
+<p class="hint">Sinkt die Spitze, steigen bei gleichem Jahresbezug die Benutzungsstunden. Das kann die Tarifklasse und damit Arbeits- und Leistungspreis verändern.</p>
+<button class="motion" type="button" id="example">Rechenbeispiel einsetzen: 100 → 70 kW</button>
+<p id="example-note" class="hint" hidden>Beispielwerte, keine Kundendaten: 100 kW, 70 kW und 100 €/kW/Jahr.</p>
 </div>
-
-<script src="/assets/vendor/three-r128.min.js"></script>
-<script>
-(function(){
-  // ---------- Konfiguration ----------
-  var DEADLINE = new Date('2027-01-01T00:00:00+01:00');
-  var START = new Date('2026-10-16T00:00:00+02:00');
-
-  var $ = function(id){return document.getElementById(id)};
-  var fmtEUR = new Intl.NumberFormat('de-DE',{style:'currency',currency:'EUR',maximumFractionDigits:0});
-  var state = {seg:'s'};
-
-  // ---------- Countdown ----------
-  var last = {};
-  function setTile(id,val){
-    var el=$(id), t=String(val).padStart(2,'0');
-    if(last[id]!==t){el.textContent=t;el.classList.remove('tick');void el.offsetWidth;el.classList.add('tick');last[id]=t;}
-  }
-  function tickCD(){
-    var now=new Date(), ms=Math.max(0,DEADLINE-now);
-    var s=Math.floor(ms/1000);
-    setTile('cd-d',Math.floor(s/86400));
-    setTile('cd-h',Math.floor(s%86400/3600));
-    setTile('cd-m',Math.floor(s%3600/60));
-    setTile('cd-s',s%60);
-    var p=Math.min(1,Math.max(0,(now-START)/(DEADLINE-START)));
-    $('cd-bar').style.width=(p*100).toFixed(1)+'%';
-    if(ms===0){document.querySelector('.cd-title').textContent='Planungsziel 2026 erreicht – aktuellen Regelungsstand prüfen';document.querySelector('.cd-sub').textContent='Der Countdown ist abgelaufen. Daraus folgt weder ein Anspruch noch der Ausschluss einer Befreiung. Bitte die inzwischen geltenden Regeln individuell prüfen.';}
-  }
-  tickCD(); setInterval(tickCD,1000);
-
-  // ---------- Rechenlogik ----------
-  function num(id){var v=parseFloat($(id).value.replace(',','.'));return isFinite(v)&&v>=0?v:0}
-  function calc(){
-    var yrs=Number($('yrs').value), kw=num('kw'), price=num('a-sp');
-    if(state.seg==='g'){
-      var peak=num('mwh')/num('hours');
-      var work=num('mwh')*num('work-price')/100, power=peak*num('power-price');
-      var base=work+power, a=base*(1-num('discount-a')/100), b=base*(1-num('discount-b')/100);
-      return {alt:a,neu:b,diff:(b-a)*yrs,yrs:yrs,peak:peak,work:work,power:power,base:base};
-    }
-    return {alt:0,neu:kw*price,diff:kw*price*yrs,yrs:yrs};
-  }
-
-  // ---------- Tween Zahlen ----------
-  var shown=new WeakMap();
-  function tweenText(el,to,fmt){
-    if(reduce){el.textContent=fmt(to);shown.set(el,to);return;}
-    var from=shown.get(el)||0, t0=performance.now(), dur=700;
-    if(el._raf)cancelAnimationFrame(el._raf);
-    (function step(t){
-      var k=Math.min(1,(t-t0)/dur), e=1-Math.pow(1-k,3), v=from+(to-from)*e;
-      el.textContent=fmt(v); shown.set(el,v);
-      if(k<1)el._raf=requestAnimationFrame(step);
-    })(t0);
-  }
-
-  // ---------- 3D-Szene ----------
-  var target={a:0,b:0}, cur={a:0,b:0}, MAXH=5, hasGL=false;
-  var scene,camera,renderer,barA,barB,parts,partsPos,mouse={x:0,y:0};
-  var reduce=window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  var stage=$('stage'), cv=$('cv');
-  try{
-    if(!window.THREE)throw new Error('no three');
-    renderer=new THREE.WebGLRenderer({canvas:cv,antialias:true,alpha:true});
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio||1,2));
-    hasGL=true;
-  }catch(e){hasGL=false;cv.style.display='none';$('fallback').style.display='flex';}
-
-  if(hasGL){
-    scene=new THREE.Scene();
-    camera=new THREE.PerspectiveCamera(40,1,0.1,100);
-    scene.add(new THREE.AmbientLight(0xb5c5b2,0.7));
-    var dl=new THREE.DirectionalLight(0xffffff,0.8);dl.position.set(4,9,6);scene.add(dl);
-    var pl1=new THREE.PointLight(0xa6d2b0,1.6,16);pl1.position.set(-3,3,3);scene.add(pl1);
-    var pl2=new THREE.PointLight(0xd0ab3b,1.6,16);pl2.position.set(3,3,3);scene.add(pl2);
-
-    var plat=new THREE.Mesh(new THREE.CylinderGeometry(6,6,0.12,64),new THREE.MeshStandardMaterial({color:0x143729,metalness:0.5,roughness:0.5}));
-    plat.position.y=-0.07;scene.add(plat);
-    var grid=new THREE.GridHelper(11,22,0x52765b,0x254838);grid.position.y=0.001;scene.add(grid);
-
-    function mkBar(color,x){
-      var g=new THREE.CylinderGeometry(1.15,1.15,1,6);
-      var m=new THREE.MeshStandardMaterial({color:color,emissive:color,emissiveIntensity:0.35,metalness:0.35,roughness:0.3});
-      var mesh=new THREE.Mesh(g,m);
-      var edges=new THREE.LineSegments(new THREE.EdgesGeometry(g),new THREE.LineBasicMaterial({color:0xffffff,transparent:true,opacity:0.35}));
-      mesh.add(edges);mesh.position.x=x;scene.add(mesh);return mesh;
-    }
-    barA=mkBar(0xa6d2b0,-2.6);
-    barB=mkBar(0xd0ab3b,2.6);
-
-    var N=260;partsPos=new Float32Array(N*3);
-    for(var i=0;i<N;i++){partsPos[i*3]=(Math.random()-0.5)*12;partsPos[i*3+1]=Math.random()*7;partsPos[i*3+2]=(Math.random()-0.5)*8;}
-    var pg=new THREE.BufferGeometry();pg.setAttribute('position',new THREE.BufferAttribute(partsPos,3));
-    parts=new THREE.Points(pg,new THREE.PointsMaterial({color:0xb8cead,size:0.045,transparent:true,opacity:0.65}));
-    scene.add(parts);
-
-    function resize(){
-      var w=stage.clientWidth,h=stage.clientHeight;
-      if(!w || !h)return;
-      renderer.setSize(w,h,false);camera.aspect=w/h;camera.updateProjectionMatrix();
-    }
-    resize();
-    if(window.ResizeObserver)new ResizeObserver(resize).observe(stage);else window.addEventListener('resize',resize);
-    stage.addEventListener('pointermove',function(e){
-      var r=stage.getBoundingClientRect();
-      mouse.x=((e.clientX-r.left)/r.width-0.5)*2;mouse.y=((e.clientY-r.top)/r.height-0.5)*2;
-    });
-
-    var v3=new THREE.Vector3(), t0=performance.now();
-    function place(el,obj,h){
-      v3.set(obj.position.x,h+0.5,0).project(camera);
-      var w=stage.clientWidth,hh=stage.clientHeight;
-      el.style.left=((v3.x*0.5+0.5)*w)+'px';
-      el.style.top=((-v3.y*0.5+0.5)*hh)+'px';
-    }
-    (function loop(now){
-      if(stage.hidden || document.hidden){requestAnimationFrame(loop);return;}
-      var t=(now-t0)/1000;
-      cur.a=reduce?target.a:cur.a+(target.a-cur.a)*0.06;cur.b=reduce?target.b:cur.b+(target.b-cur.b)*0.06;
-      var ha=Math.max(0.04,cur.a),hb=Math.max(0.04,cur.b);
-      barA.scale.y=ha;barA.position.y=ha/2;
-      barB.scale.y=hb;barB.position.y=hb/2;
-      if(!reduce){
-        barA.rotation.y+=0.006;barB.rotation.y-=0.006;
-        var ang=Math.sin(t*0.18)*0.3+mouse.x*0.25;
-        camera.position.set(Math.sin(ang)*13,4.5-mouse.y*0.8,Math.cos(ang)*13);
-        var p=partsPos;for(var i=1;i<p.length;i+=3){p[i]+=0.006;if(p[i]>7)p[i]=0;}
-        parts.geometry.attributes.position.needsUpdate=true;
-      }else{camera.position.set(0,4.5,13);}
-      camera.lookAt(0,1.8,0);
-      place($('la'),barA,ha);place($('lb'),barB,hb);
-      if(!document.hidden)renderer.render(scene,camera);
-      requestAnimationFrame(loop);
-    })(performance.now());
-  }
-
-  // ---------- Darstellung aktualisieren ----------
-  var TXT={s:{a:'Mit anwendbarer Befreiung',b:'Ohne Befreiung (Annahme)',
-    ex:'Verglichen wird nur der angenommene Kapazitätspreis. Nach dem BNetzA-Vorschlag setzt Vertrauensschutz bei noch nicht betriebenen Speichern eine endgültige Investitionsentscheidung vor Inkrafttreten der Festlegung und die Inbetriebnahme bis spätestens 04.08.2029 voraus. Zusätzlich müssen die Voraussetzungen der einschlägigen Befreiung erfüllt sein.',
-    h:'Dein Verbrauch dient der Projekteinschätzung. Die folgende Kapazitätspreisrechnung hängt von kW ab, nicht von verbrauchten kWh.'}};
-  function update(){
-    var home=state.seg==='i', business=state.seg==='g';
-    $('business-inputs').hidden=!business;
-    $('business-note').hidden=!business;
-    $('storage-countdown').hidden=business;
-    $('storage-steps').hidden=business;
-    $('storage-cta').hidden=business;
-    $('storage-method').hidden=business;
-    $('years-label').textContent=business?'Betrachtungszeitraum (Modellannahme)':'Betrachtungszeitraum ab 2029';
-    $('home-advice').hidden=!home;
-    $('comparison-results').hidden=home;
-    $('comparison-settings').hidden=home;
-    $('explain').hidden=home;
-    var valid=['mwh'].concat(home?[]:business?['hours','work-price','power-price','discount-a','discount-b']:['kw','a-sp']).every(function(id){return $(id).value!=='' && $(id).checkValidity() && Number.isFinite(Number($(id).value));});
-    $('input-error').hidden=valid;
-    if(!valid || home){
-      ['ra','rb','rd'].forEach(function(id){if($(id)._raf)cancelAnimationFrame($(id)._raf);$(id).textContent='—';});
-      target.a=0;target.b=0;$('stage').hidden=true;
-      $('formula').textContent='';
-      $('explain').textContent=home?'Für Heimspeicher sieht der BNetzA-Zwischenstand kein gesondertes Speichernetzentgelt vor. Eigenverbrauchs- und gemischte Gewerbekonzepte brauchen eine individuelle Einordnung. Eine pauschale Befreiung deines gesamten Stromverbrauchs oder eine Euro-Ersparnis lässt sich daraus nicht ableiten.':'Bitte korrigiere deine Eingaben, um das Szenario zu berechnen.';
-      return;
-    }
-    $('stage').hidden=false;
-    var r=calc(), T=business?{a:'Szenario A · '+num('discount-a')+' % Entlastung',b:'Szenario B · '+num('discount-b')+' % Entlastung',ex:'Deine rechnerische Jahreshöchstleistung: '+r.peak.toLocaleString('de-DE',{maximumFractionDigits:2})+' kW. Ohne angenommene Entlastung: '+fmtEUR.format(r.work)+' Arbeitspreis + '+fmtEUR.format(r.power)+' Leistungspreis = '+fmtEUR.format(r.base)+' netto pro Jahr. Die 3-D-Säulen zeigen die zwei von dir gewählten Entlastungsszenarien.',h:'Gewerbe: jährlicher Netzbezug am betrachteten Anschluss. Verbrauch und Benutzungsstunden bestimmen hier die Rechnung.'}:TXT.s;
-    $('formula').textContent='Rechenweg: '+num('kw').toLocaleString('de-DE')+' kW × '+num('a-sp').toLocaleString('de-DE')+' €/kW/Jahr × '+r.yrs+' Jahre. Dein Jahresverbrauch: '+num('mwh').toLocaleString('de-DE')+' kWh (Kontext, kein Rechenfaktor).';
-    if(business)$('formula').textContent='Rechenweg: '+num('mwh').toLocaleString('de-DE')+' kWh ÷ '+num('hours').toLocaleString('de-DE')+' h = '+r.peak.toLocaleString('de-DE',{maximumFractionDigits:2})+' kW. Regelentgelt = kWh × ct/kWh ÷ 100 + kW × €/kW/Jahr. Je Szenario: Regelentgelt × (1 − Entlastung / 100). Differenz = (B − A) × Jahre; negative Werte bedeuten, dass B günstiger ist.';
-    var mx=Math.max(r.alt,r.neu,1);
-    target.a=MAXH*r.alt/mx;target.b=MAXH*r.neu/mx;
-    if(!hasGL){$('fba').style.height=(280*r.alt/mx)+'px';$('fbb').style.height=(280*r.neu/mx)+'px';}
-    var e=function(v){return fmtEUR.format(Math.round(v))};
-    tweenText($('ra'),r.alt,e);tweenText($('rb'),r.neu,e);tweenText($('rd'),r.diff,e);
-    tweenText($('la').querySelector('b'),r.alt,e);tweenText($('lb').querySelector('b'),r.neu,e);
-    $('la').querySelector('span').textContent=T.a;$('lb').querySelector('span').textContent=T.b;
-    $('ta').textContent=T.a+' / Jahr';$('tb').textContent=T.b+' / Jahr';
-    $('td').textContent='Differenz in '+r.yrs+(r.yrs===1?' Jahr':' Jahren');
-    $('explain').textContent=T.ex;$('mwh-hint').textContent=T.h;
-  }
-
-  // ---------- Eingaben ----------
-  function link(r,n){
-    $(r).addEventListener('input',function(){$(n).value=$(r).value;update()});
-    $(n).addEventListener('input',function(){$(r).value=$(n).value;update()});
-  }
-  link('mwh-r','mwh');
-  ['yrs','a-sp','kw','hours','work-price','power-price','discount-a','discount-b'].forEach(function(id){$(id).addEventListener('input',update)});
-  function setSeg(s){
-    state.seg=s;
-    $('seg-s').setAttribute('aria-pressed',s==='s');$('seg-i').setAttribute('aria-pressed',s==='i');
-    $('capacity-inputs').hidden=(s!=='s');$('seg-g').setAttribute('aria-pressed',s==='g');
-    $('mwh-hint').textContent=s==='i'?'Dein Haushalts- oder Betriebsverbrauch ist keine pauschal befreite Strommenge.':TXT.s.h;
-    update();
-  }
-  $('seg-s').addEventListener('click',function(){setSeg('s')});
-  $('seg-g').addEventListener('click',function(){setSeg('g')});
-  $('seg-i').addEventListener('click',function(){setSeg('i')});
-  $('motion').addEventListener('click',function(){reduce=!reduce;this.setAttribute('aria-pressed',String(reduce));this.textContent=reduce?'Animationen starten':'Animationen anhalten';document.body.classList.toggle('paused',reduce);update();});
-  $('motion').setAttribute('aria-pressed',String(reduce));$('motion').textContent=reduce?'Animationen starten':'Animationen anhalten';document.body.classList.toggle('paused',reduce);
-  update();
-})();
-</script>
-<footer class="wrap"><span>© 2026 Patrick Leißner</span><a href="/impressum">Impressum</a><a href="/datenschutz">Datenschutz</a></footer><nav class="dock" aria-label="Schnellkontakt"><a class="dock__call" href="tel:+491734994994">Anrufen</a><a class="dock__cta" href="/termin">Termin buchen</a></nav></body>
-</html>
+</section>
+<section class="card outcome" aria-labelledby="result-title">
+<p class="eyebrow">DEINE ERSTE EINSCHÄTZUNG</p>
+<h2 id="result-title">Kostenrisiko erkennen.</h2>
+<p id="guidance">Ob Lastspitzen deine Rechnung erhöhen, hängt vom Tarif ab. Prüfe den Leistungspreis auf deiner Jahresrechnung. Mit Lastgang und Netzpreisblatt ermitteln wir anschließend dein konkretes Potenzial.</p>
+<div id="numeric" hidden>
+<p class="hint" id="basis"></p>
+<div class="compare" aria-hidden="true"><div><span>Weiter wie bisher</span><i id="bar-current"></i></div><div><span>Mit begrenzter Spitze</span><i id="bar-target"></i></div></div>
+<div class="results" aria-live="polite" aria-atomic="true">
+<div class="res b"><small>Weiter wie bisher / Jahr</small><b id="current">—</b></div>
+<div class="res a"><small>Mit begrenzter Spitze / Jahr</small><b id="limited">—</b></div>
+<div class="res d"><small>Rechnerische Differenz / Jahr</small><b id="saving">—</b></div>
+</div>
+<p id="risk" class="risk"></p><p id="formula" class="hint"></p>
+<p class="hint">Nur Leistungskosten, netto. Die Differenz ist ein rechnerisches Einsparpotenzial vor Investition und laufenden Maßnahmenkosten, keine zugesicherte Ersparnis. Strombezug, Arbeitspreise, Grund- und Messpreise sowie Steuern werden nicht verglichen. Die Mehrjahreszahl unterstellt konstante Preise und Spitzen, ohne Abzinsung; sie ist keine AgNes-Prognose.</p>
+</div>
+<p id="input-error" role="alert" hidden></p>
+<div class="takeaway"><b id="takeaway-title">Dein nächster Schritt: Daten statt Vermutungen.</b><p id="takeaway-copy">Fordere beim Netzbetreiber oder Messstellenbetreiber den Viertelstundenlastgang eines vollständigen Abrechnungsjahres an. Wir prüfen die Spitzen, geeignete Maßnahmen und deren Wirtschaftlichkeit.</p></div>
+<a class="btn" href="#analyse">Lastganganalyse vorbereiten ↓</a>
+</section>
+</div>
+<section class="card future">
+<p class="eyebrow">AGNES · GESONDERTER AUSBLICK</p>
+<h2>Künftig zählt auch, wie oft du die Grenze überschreitest.</h2>
+<p>Für Niederspannungsanschlüsse mit mehr als 100.000 kWh Jahresbezug und Anschlüsse oberhalb der Niederspannung sieht der Entwurf bestellte Kapazität und Arbeitspreise vor. Bezug oberhalb der bestellten Kapazität soll teurer abgerechnet werden.</p>
+<p><b>Das Risiko ohne Analyse:</b> Du könntest mehr Kapazität als nötig bestellen oder wiederholt teure Überschreitungsmengen beziehen. Erst Lastgang, passende Preisannahmen und die endgültigen Regeln erlauben einen sinnvollen Szenariovergleich. Die heutigen Leistungskosten oben werden deshalb nicht als künftige AgNes-Kosten fortgeschrieben.</p>
+<p class="hint">Für übliche Haushalte und kleinere Niederspannungsverbraucher bis 100.000 kWh sieht der Entwurf grundsätzlich Grund- und Arbeitspreise vor. Keine pauschale individuelle Spitzenleistungsgebühr. Eigenständige Speicherprojekte prüfen wir gesondert.</p>
+</section>
+<section id="analyse" class="analysis-section">
+<p class="eyebrow">VOM RECHENBEISPIEL ZU DEINEN ZAHLEN</p>
+<h2>Dein Lastgang macht den Unterschied sichtbar.</h2>
+<p>Der Rechner gibt dir eine erste Orientierung. Mit deinen Messwerten berechnen wir die bisherigen Lastspitzenkosten und prüfen, welcher Anteil sich technisch und wirtschaftlich vermeiden lässt.</p>
+<div class="analysis-grid">
+<article class="card"><span class="step-number">01</span><h3>Daten zusammenstellen</h3><p>Viertelstundenlastgang für ein vollständiges Abrechnungsjahr als CSV oder Excel, mit Zeitstempel und Einheit (kW oder kWh je Intervall). Dazu Jahresrechnung und das passende Netzpreisblatt.</p></article>
+<article class="card"><span class="step-number">02</span><h3>Potenzial prüfen</h3><p>Wir prüfen Gleichzeitigkeit, Dauer und Häufigkeit der Spitzen. Zuerst Steuerung und Ladezeiten, anschließend einen Speicher, wenn er sinnvoll ist. Geplante Verbraucher berücksichtigen wir mit.</p></article>
+<article class="card"><span class="step-number">03</span><h3>Entscheidung treffen</h3><p>Du erhältst einen nachvollziehbaren Vergleich von Betrieb ohne Maßnahme und möglichen Änderungen – mit Kosten, Annahmen und Grenzen der Berechnung.</p></article>
+</div>
+<div class="cta"><p><b>Jetzt prüfen, bevor weitere große Verbraucher hinzukommen.</b><br>Vereinbare ein Gespräch zur Lastganganalyse. Dabei klären wir auch, wie du uns deine Unterlagen bereitstellst.</p><a class="btn" href="/termin">Lastganganalyse besprechen ↗</a></div>
+<p class="hint">Hier werden keine Dateien hochgeladen und keine Rechenwerte übertragen. Bereits entstandene Jahresspitzen lassen sich durch eine spätere Maßnahme nicht rückwirkend beseitigen.</p>
+</section>
+<section class="src"><h2>Grundlagen &amp; Quellen</h2>
+<p>Quellen geprüft am 11. November 2026. AgNes: Festlegungsentwurf, Beschluss laut Bundesnetzagentur für Ende 2026 vorgesehen. Keine Garantie für künftige Preise oder eine individuelle Ersparnis.</p>
+<ul><li><a href="https://www.eam-netz.de/ueber-uns/netzinformationen/netzentgelte/netzentgelte-strom/" target="_blank" rel="noopener">EAM Netz: Viertelstunden-Jahreshöchstleistung und Preisblätter</a></li>
+<li><a href="https://bundesnetzagentur.de/SharedDocs/Pressemitteilungen/DE/2026/20260806_Agnes.html" target="_blank" rel="noopener">Bundesnetzagentur: AgNes-Verfahrensstand und Zeitplan</a></li>
+<li><a href="https://www.bundesnetzagentur.de/DE/Beschlusskammern/1_GZ/GBK-GZ/2025/GBK-25-01-1x3_AgNes/Downloads/FL-Entwurf_DE_DL_BF.html" target="_blank" rel="noopener">AgNes-Entwurf: insbesondere Abschnitt 8</a></li></ul>
+</section></main>
+<footer><span>© 2026 Patrick Leißner</span><a href="/impressum">Impressum</a><a href="/datenschutz">Datenschutz</a></footer>
+</div>
+<nav class="dock" aria-label="Schnellkontakt"><a class="dock__call" href="tel:+491734994994">Anrufen</a><a class="dock__cta" href="/termin">Termin buchen</a></nav>
+<script src="/assets/js/agnes-model.js"></script><script src="/assets/js/agnes-rechner.js"></script>
+</body></html>

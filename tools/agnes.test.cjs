@@ -1,36 +1,30 @@
-const fs=require('fs'),vm=require('vm'),assert=require('assert');
-const html=fs.readFileSync(__dirname+'/../agnes-rechner.html','utf8');
-function run(now='2026-10-16T12:00:00+02:00'){
- const els={};
- const make=()=>({value:'',textContent:'',style:{},hidden:false,events:{},classList:{add(){},remove(){},toggle(){}},setAttribute(){},addEventListener(t,f){this.events[t]=f;},querySelector(q){return this.children[q]??=(make());},children:{},checkValidity(){const n=Number(this.value);return Number.isFinite(n)&&n>=Number(this.min??0)&&n<=Number(this.max??Infinity);}});
- for(const match of html.matchAll(/<[^>]+\bid="([^"]+)"[^>]*>/g)){const el=els[match[1]]=make();for(const a of ['value','min','max']){const r=match[0].match(new RegExp(a+'="([^"]+)"'));if(r)el[a]=r[1];}}
- els.yrs.value='5';
- const other={};
- const FakeDate=class extends Date{constructor(...a){super(...(a.length?a:[now]));}};
- const context={document:{hidden:false,getElementById(id){assert(els[id],'Missing '+id);return els[id];},querySelector(s){return other[s]??=make();},body:make()},window:{matchMedia(){return {matches:true};}},Intl,Date:FakeDate,performance:{now(){return 0;}},setInterval(){},cancelAnimationFrame(){},requestAnimationFrame(){}};
- vm.runInNewContext(html.match(/<script>([\s\S]*?)<\/script>/)[1],context);
- return {els,other};
+const assert=require('node:assert/strict');
+const {calculate}=require('../assets/js/agnes-model.js');
+assert.deepEqual(calculate(100,70,100,1),{current:10000,limited:7000,saving:3000,total:3000,years:1});
+assert.equal(calculate(100,70,100,5).total,15000);
+assert.equal(calculate(100,100,100,3).saving,0);
+assert.equal(calculate(0,0,100,1).saving,0);
+assert.equal(calculate(100,70,0,1).saving,0);
+assert.equal(calculate(10.5,8,70.2,1).saving,175.5);
+for(const args of [[100,101,100,1],[-1,0,100,1],[100,-1,100,1],[100,70,-1,1],[NaN,0,1,1],[100,70,Infinity,1],[100,70,100,2],[1000001,0,100,1]]){
+  assert.throws(()=>calculate(...args),RangeError);
 }
-let {els:e}=run();
-assert.match(e.rb.textContent,/10.000/);assert.match(e.rd.textContent,/50.000/);
-e.mwh.value='4000';e.mwh.events.input();assert.match(e.rb.textContent,/10.000/);
-e.kw.value='250';e.kw.events.input();assert.match(e.rb.textContent,/2.500/);assert.match(e.rd.textContent,/12.500/);
-e['a-sp'].value='0';e['a-sp'].events.input();assert.match(e.rb.textContent,/^0/);
-e.kw.value='-1';e.kw.events.input();assert.equal(e['input-error'].hidden,false);assert.equal(e.rb.textContent,'—');
-e.kw.value='1000';e.kw.events.input();e['seg-i'].events.click();assert.equal(e.rb.textContent,'—');assert.equal(e.stage.hidden,true);assert.equal(e['home-advice'].hidden,false);assert.equal(e['comparison-results'].hidden,true);assert.equal(e['comparison-settings'].hidden,true);assert.match(e.explain.textContent,/Heimspeicher/);
-e['seg-s'].events.click();assert.equal(e.stage.hidden,false);assert.equal(e['home-advice'].hidden,true);assert.equal(e['comparison-results'].hidden,false);assert.equal(e['comparison-settings'].hidden,false);
-e.mwh.value='';e.mwh.events.input();assert.equal(e['input-error'].hidden,false);
-let expired=run('2027-01-02T00:00:00+01:00');assert.match(expired.other['.cd-title'].textContent,/erreicht/);assert.equal(expired.els['cd-d'].textContent,'00');
-console.log('PASS: baseline, consumption independence, capacity sensitivity, zero tariff, invalid and empty inputs, segment switching, deadline expiration, no-WebGL fallback.');
-
-const g=run().els;g['seg-g'].events.click();
-assert.match(g.rb.textContent,/65.000/);assert.match(g.ra.textContent,/52.000/);assert.match(g.rd.textContent,/65.000/);
-assert.equal(g['storage-countdown'].hidden,true);assert.equal(g['business-inputs'].hidden,false);
-g.hours.value='8000';g.hours.events.input();assert.match(g.rb.textContent,/47.500/);
-g.hours.value='0';g.hours.events.input();assert.equal(g['input-error'].hidden,false);
-g.hours.value='8761';g.hours.events.input();assert.equal(g['input-error'].hidden,false);
-g.hours.value='4000';g['discount-a'].value='101';g.hours.events.input();assert.equal(g['input-error'].hidden,false);
-g['discount-a'].value='0';g['discount-b'].value='20';g.hours.events.input();assert.match(g.rd.textContent,/-13.000|−13.000|-65.000|−65.000/);
-g.mwh.value='0';g.mwh.events.input();assert.match(g.rb.textContent,/^0/);
-g['seg-s'].events.click();assert.equal(g['storage-countdown'].hidden,false);assert.equal(g['business-inputs'].hidden,true);
-console.log('PASS: commercial tariff arithmetic, hours sensitivity and bounds, discount bounds, reversed savings, zero consumption and switching.');
+const fs=require('node:fs'),vm=require('node:vm'),path=require('node:path');
+const html=fs.readFileSync(path.join(__dirname,'../agnes-rechner.html'),'utf8');
+const els={};
+for(const match of html.matchAll(/id="([^"]+)"/g)){
+  els[match[1]]={value:'',checked:false,hidden:false,textContent:'',style:{},events:{},checkValidity(){return Number.isFinite(Number(this.value)) && Number(this.value)>=0;},addEventListener(event,fn){this.events[event]=fn;}};
+}
+els.customer.value='unknown';els.years.value='1';
+vm.runInNewContext(fs.readFileSync(path.join(__dirname,'../assets/js/agnes-rechner.js'),'utf8'),{document:{getElementById:id=>els[id]},Intl,AgnesModel:{calculate}});
+assert.equal(els.numeric.hidden,true);
+els.customer.value='business';els.customer.events.input();
+assert.equal(els['business-fields'].hidden,false);assert.equal(els.numeric.hidden,true);
+els.example.events.click();
+assert.equal(els.numeric.hidden,false);assert.match(els.saving.textContent,/3\.000/);
+els.target.value='101';els.target.events.input();assert.equal(els.numeric.hidden,true);assert.equal(els['input-error'].hidden,false);
+els.target.value='70';els['same-tariff'].checked=false;els['same-tariff'].events.input();assert.equal(els.numeric.hidden,true);
+els['same-tariff'].checked=true;els.target.value='';els.target.events.input();assert.equal(els.numeric.hidden,true);
+els.example.events.click();els.customer.value='home';els.customer.events.input();assert.equal(els.numeric.hidden,true);assert.equal(els['business-fields'].hidden,true);
+assert.doesNotMatch(html,/id="cd-d"|discount-a|three-r128/);
+console.log('PASS: annual and multi-year arithmetic, zero/decimal values, invalid inputs, missing data, tariff confirmation, example and household switching.');
