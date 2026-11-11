@@ -78,7 +78,9 @@ app.use((req, res, next) => {
   try { pfad = path.posix.normalize(decodeURIComponent(req.path)); }
   catch { return res.status(400).end(); }
   const endung = path.posix.extname(pfad).toLowerCase();
-  if (INTERNE_PFADE.test(pfad) || (endung && !OEFFENTLICHE_ENDUNGEN.has(endung))) {
+  // Only this reviewed public dataset is exempt; other JSON stays private.
+  const energieDaten = pfad === '/energiekosten-entwicklung/data.json';
+  if (INTERNE_PFADE.test(pfad) || (endung && !OEFFENTLICHE_ENDUNGEN.has(endung) && !energieDaten)) {
     return res.status(404).end();
   }
   next();
