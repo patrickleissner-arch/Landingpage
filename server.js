@@ -93,7 +93,7 @@ app.use((req, res, next) => {
 // Platzhalter-Ordner aus der Apache-Zeit (termin/index.html usw.) leiteten
 // per Meta-Refresh weiter – zwei Umwege auf jedem Klick zu „Termin buchen“.
 const SEITEN = {
-  '/agnes-rechner':         'agnes-rechner.html',
+
   '/beratung-technik':      'beratung-technik.html',
   '/koordination-netzwerk': 'koordination-netzwerk.html',
   '/unabhaengigkeit':       'unabhaengigkeit.html',
@@ -108,6 +108,9 @@ const SEITEN = {
   '/batteriespeicher':      'batteriespeicher.html',
 };
 const UMZUEGE = {
+  '/agnes-rechner': '/agnes-kostenrechner',
+  '/agnes-rechner.html': '/agnes-kostenrechner',
+  '/agnes-rechner/index.html': '/agnes-kostenrechner',
   // Versicherung wird ueber diese Website nicht mehr vermarktet (25.09.2026).
   // Die .html-Variante muss mit: Ohne sie liefert die Auffangroute unter der
   // alten Adresse stillschweigend die Startseite aus - fuer Suchmaschinen ein
