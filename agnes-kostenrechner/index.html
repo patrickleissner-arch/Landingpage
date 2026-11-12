@@ -1,0 +1,176 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>AgNes-Kostenrechner: Netzentgelte ab 2029 mit Lastgang berechnen · Patrick Leißner</title>
+<meta name="description" content="Was kosten die neuen Netzentgelte deinen Betrieb? Vergleiche heutige Regeln und AgNes, mit und ohne Batteriespeicher, über 3, 5, 10 und 20 Jahre. Mit eigenem Lastgang.">
+<link rel="canonical" href="https://patrickleissner.de/agnes-kostenrechner">
+<link rel="icon" href="/assets/img/logo-mark.webp">
+<!-- Rechtsstand: Festlegungsentwurf AgNes vom 06.08.2026. Nach dem Beschluss der Bundesnetzagentur
+     Fristen, Regeln und Texte neu prüfen (siehe CLAUDE.md). Regeln stehen in model.js. -->
+<link rel="stylesheet" href="/agnes-kostenrechner/rechner.css">
+<link rel="stylesheet" href="/mobile-dock.css"><script src="/mobile-dock.js" defer></script>
+</head>
+<body>
+<a class="sprung" href="#ergebnis">Zum Ergebnis springen</a>
+<header class="kopf">
+  <nav class="kopf__zeile" aria-label="Seite"><a class="marke" href="/">Patrick Leißner</a><a href="/agnes-rechner">Zum Schnellcheck Lastspitzen</a></nav>
+  <h1>Was kosten die neuen Netzentgelte deinen Betrieb?</h1>
+  <p class="kopf__text">Der Rechner vergleicht die Netzentgelte nach heutigen Regeln mit der geplanten Systematik AgNes, mit und ohne Batteriespeicher, über 3, 5, 10 und 20 Jahre. Am genauesten wird er mit deinem Viertelstunden-Lastgang.</p>
+  <ol class="fristen" aria-label="Termine laut Festlegungsentwurf">
+    <li class="fristen__jetzt"><b id="tage">–</b><span>Tage bis zum Stichtag für den Bestandsschutz neuer Speicher: Investitionsentscheidung bis 31.12.2026</span></li>
+    <li><b>31.03.2027</b><span>Nachweis beim Netzbetreiber</span></li>
+    <li><b>01.01.2029</b><span>Neue Netzentgelte gelten</span></li>
+    <li><b>04.08.2029</b><span>Speicher spätestens in Betrieb</span></li>
+  </ol>
+  <p class="hinweis">Alle Termine und Regeln stammen aus dem Festlegungsentwurf vom 6. August 2026. Die Bundesnetzagentur will noch 2026 beschließen; bis dahin kann sich der Entwurf ändern. Die Fristen betreffen nur Speicherprojekte, die auf die Netzentgeltbefreiung setzen. Für Verbraucher ohne Speicher folgt daraus keine Handlungsfrist.</p>
+</header>
+
+<main class="raster">
+<form class="eingabe" id="formular" novalidate>
+
+  <fieldset>
+    <legend>Anschluss und Lastgang</legend>
+    <label class="ablage" id="ablage" for="datei">
+      <input type="file" id="datei" accept=".csv,.txt,.tsv,text/csv,text/plain">
+      <b>Lastgang laden</b>
+      <span>CSV-Datei vom Netz- oder Messstellenbetreiber hierher ziehen oder auswählen. Sie wird nur in deinem Browser ausgewertet und nicht übertragen oder gespeichert.</span>
+    </label>
+    <div id="lg-box" hidden>
+      <p class="status" id="lg-status" role="status"></p>
+      <div class="paar">
+        <label>Werte sind<select id="einheit"><option value="kW">Leistung in kW</option><option value="kWh">Arbeit in kWh je Intervall</option></select></label>
+        <label>Intervall<select id="intervall"><option value="15">15 Minuten</option><option value="30">30 Minuten</option><option value="60">60 Minuten</option></select></label>
+      </div>
+      <button type="button" class="leise" id="lg-weg">Lastgang entfernen</button>
+    </div>
+    <div class="paar">
+      <label>Jahresverbrauch<span class="feld"><input id="kwh" type="number" inputmode="decimal" min="1" step="1000" value="100000"><i>kWh</i></span></label>
+      <label>Jahreshöchstleistung<span class="feld"><input id="peak" type="number" inputmode="decimal" min="0.1" step="1" value="80"><i>kW</i></span></label>
+    </div>
+    <p class="klein" id="profil-hinweis">Ohne Lastgang rechnet die Seite mit einem Beispielprofil für einen Gewerbebetrieb, das auf beide Werte skaliert wird.</p>
+  </fieldset>
+
+  <fieldset>
+    <legend>Netzentgelte heute</legend>
+    <p class="klein">Aus dem Preisblatt des Netzbetreibers, netto. Die Preisklasse richtet sich nach den Benutzungsstunden.</p>
+    <div class="paar">
+      <label>Leistungspreis unter 2.500 h<span class="feld"><input id="lpN" type="number" inputmode="decimal" min="0" step="1" value="25"><i>€/kW</i></span></label>
+      <label>Arbeitspreis unter 2.500 h<span class="feld"><input id="apN" type="number" inputmode="decimal" min="0" step="0.1" value="7"><i>ct/kWh</i></span></label>
+      <label>Leistungspreis ab 2.500 h<span class="feld"><input id="lpH" type="number" inputmode="decimal" min="0" step="1" value="140"><i>€/kW</i></span></label>
+      <label>Arbeitspreis ab 2.500 h<span class="feld"><input id="apH" type="number" inputmode="decimal" min="0" step="0.1" value="2.5"><i>ct/kWh</i></span></label>
+    </div>
+  </fieldset>
+
+  <fieldset>
+    <legend>AgNes ab 2029: Annahmen</legend>
+    <p class="klein">Diese Preise gibt es noch nicht. Sie stehen erst in den Preisblättern, voraussichtlich im Oktober 2028. Rechne deshalb mit mehreren Annahmen und betrachte die Spanne.</p>
+    <div class="paar">
+      <label>Kapazitätspreis<span class="feld"><input id="kp" type="number" inputmode="decimal" min="0" step="5" value="110"><i>€/kW</i></span></label>
+      <label>Arbeitspreis AP1<span class="feld"><input id="ap1" type="number" inputmode="decimal" min="0" step="0.1" value="3.5"><i>ct/kWh</i></span></label>
+      <label>AP2 über der Bestellkapazität<span class="feld"><input id="ap2f" type="number" inputmode="decimal" min="100" max="1000" step="10" value="300"><i>% von AP1</i></span></label>
+      <label>Preissteigerung pro Jahr<span class="feld"><input id="steig" type="number" inputmode="decimal" min="-10" max="20" step="0.5" value="3"><i>%</i></span></label>
+    </div>
+    <p class="klein">Der Entwurf gibt für AP2 200 bis 350 % des AP1 vor. Die Bestellkapazität wählt der Rechner so, dass die Jahreskosten am niedrigsten sind.</p>
+  </fieldset>
+
+  <fieldset>
+    <legend>Batteriespeicher</legend>
+    <div class="paar">
+      <label>Leistung<span class="feld"><input id="sP" type="number" inputmode="decimal" min="0" step="5" value="40"><i>kW</i></span></label>
+      <label>Kapazität<span class="feld"><input id="sE" type="number" inputmode="decimal" min="0" step="5" value="80"><i>kWh</i></span></label>
+      <label>Wirkungsgrad<span class="feld"><input id="eta" type="number" inputmode="decimal" min="50" max="100" step="1" value="90"><i>%</i></span></label>
+      <label>Inbetriebnahme<select id="ibn"><option>2026</option><option selected>2027</option><option>2028</option><option>2029</option><option>2030</option></select></label>
+      <label class="breit">Investition, optional<span class="feld"><input id="invest" type="number" inputmode="decimal" min="0" step="1000" placeholder="nicht berücksichtigt"><i>€ netto</i></span></label>
+    </div>
+    <label class="haken"><input type="checkbox" id="eigen" checked><span>Der Speicher wird auch am Markt eingesetzt und bekäme ohne Bestandsschutz ein eigenes Speicherentgelt.</span></label>
+    <div class="paar" id="entgelt-felder">
+      <label>Speicherentgelt ohne Bestandsschutz<span class="feld"><input id="entgelt" type="number" inputmode="decimal" min="0" step="0.1" value="5.14"><i>€/kW</i></span></label>
+      <label>Weitere Mehrkosten ohne Schutz<span class="feld"><input id="sonst" type="number" inputmode="decimal" min="0" step="50" value="0"><i>€/Jahr</i></span></label>
+    </div>
+    <p class="klein">5,14 €/kW ist der gleitende Mittelwert 2022 bis 2026 aus der Rechentabelle des Entwurfs. Ein Speicher, der nur hinter dem Zähler Lastspitzen kappt, wird laut Entwurf mit der Verbrauchsanlage abgerechnet und zahlt kein eigenes Entgelt. Entferne dann den Haken.</p>
+  </fieldset>
+
+  <fieldset>
+    <legend>Betrachtung</legend>
+    <label>Erstes Jahr<select id="start"><option value="2029" selected>2029, erstes Jahr mit AgNes</option><option value="2027">2027, zwei Jahre nach heutigen Regeln, dann AgNes</option></select></label>
+  </fieldset>
+</form>
+
+<section class="ergebnis" id="ergebnis" aria-live="polite">
+  <p class="fehler" id="fehler" role="alert" hidden></p>
+
+  <figure class="buehne" id="buehne">
+    <div class="buehne__ersatz" id="ersatz" hidden><svg id="dauerlinie" viewBox="0 0 600 260" role="img" aria-label="Jahresdauerlinie der Last mit Kappgrenze"></svg></div>
+    <figcaption>
+      <b id="gebirge-titel">Lastgebirge</b>
+      <span>Jeder Grat ist ein Tag, von links Januar bis rechts Dezember, von hinten 0 Uhr bis vorn 24 Uhr. Die goldene Ebene liegt auf der Bestellkapazität mit Speicher. Was darüber herausragt, kostet den teuren AP2. Zum Drehen ziehen.</span>
+    </figcaption>
+    <div class="ebene-wahl" role="group" aria-label="Höhe der Ebene">
+      <button type="button" data-ebene="mit" aria-pressed="true">Mit Speicher</button>
+      <button type="button" data-ebene="ohne" aria-pressed="false">Ohne Speicher</button>
+      <button type="button" data-ebene="heute" aria-pressed="false">Kappgrenze heute</button>
+    </div>
+  </figure>
+
+  <dl class="kennzahlen" id="kennzahlen"></dl>
+
+  <div class="horizont" role="group" aria-label="Zeitraum">
+    <span>Zeitraum</span>
+    <button type="button" data-n="3" aria-pressed="false">3 Jahre</button>
+    <button type="button" data-n="5" aria-pressed="false">5 Jahre</button>
+    <button type="button" data-n="10" aria-pressed="false">10 Jahre</button>
+    <button type="button" data-n="20" aria-pressed="true">20 Jahre</button>
+  </div>
+
+  <div class="tuerme" id="tuerme" aria-hidden="true"></div>
+
+  <div class="aussagen">
+    <div class="aussage" id="a-agnes"><span></span><b></b><small></small></div>
+    <div class="aussage" id="a-speicher"><span></span><b></b><small></small></div>
+    <div class="aussage aussage--gold" id="a-schutz"><span></span><b></b><small></small></div>
+  </div>
+
+  <ul class="meldungen" id="meldungen"></ul>
+
+  <details>
+    <summary>Ein Jahr im Detail</summary>
+    <div class="tabelle-rahmen"><table id="detail"></table></div>
+  </details>
+  <details>
+    <summary>Alle Jahre</summary>
+    <div class="tabelle-rahmen"><table id="jahre"></table></div>
+  </details>
+  <details open>
+    <summary>So rechnet die Seite</summary>
+    <ul class="methode">
+      <li><b>Heute:</b> Jahreshöchstleistung mal Leistungspreis plus Verbrauch mal Arbeitspreis. Unter 2.500 Benutzungsstunden gilt die Preisklasse mit niedrigem Leistungs- und hohem Arbeitspreis, darüber die andere.</li>
+      <li><b>AgNes laut Entwurf:</b> Für Anschlüsse mit mehr als 100.000 kWh ersetzt ein Kapazitätspreis auf die bestellte Kapazität den Leistungspreis. Mengen bis zur Bestellkapazität kosten AP1, Mengen darüber in der jeweiligen Viertelstunde AP2. Die Bestellkapazität ist zwischen 10 % der Vorjahresspitze und der Netzanschlusskapazität frei wählbar.</li>
+      <li><b>Speicher:</b> Er entlädt, sobald die Last über der Grenze liegt, und lädt darunter nach, begrenzt durch Leistung, Kapazität und Wirkungsgrad. Keine Prognosefehler, keine Alterung, keine Erlöse aus Eigenverbrauch oder Handel.</li>
+      <li><b>Bestandsschutz:</b> Laut Entwurf bleibt die 20-jährige Befreiung nach § 118 Abs. 6 EnWG erhalten, wenn die endgültige Investitionsentscheidung vor dem 1. Januar 2027 fällt (verbindliche Bestellungen über mindestens die Hälfte des Investitionsvolumens), der Nachweis bis 31. März 2027 beim Netzbetreiber liegt und der Speicher bis 4. August 2029 in Betrieb geht. Einen Antrag bei der Behörde sieht der Entwurf nicht vor.</li>
+      <li><b>Nicht enthalten:</b> Strombeschaffung, Umlagen, Steuern, Mess- und Grundpreise, Wartung, Finanzierung. Alle Beträge netto, ohne Abzinsung, Preisstand 2026 mit der eingestellten Steigerung.</li>
+    </ul>
+    <p class="klein">Quellen, geprüft am 12.11.2026:
+      <a href="https://www.bundesnetzagentur.de/DE/Fachthemen/ElektrizitaetundGas/Netzentgelte/Anreizregulierung/Agnes/start.html" target="_blank" rel="noopener">Bundesnetzagentur, AgNes erklärt</a>,
+      <a href="https://www.bundesnetzagentur.de/SharedDocs/Pressemitteilungen/DE/2026/20260527_Agnes.html" target="_blank" rel="noopener">Pressemitteilung vom 27.05.2026</a>,
+      <a href="https://www.pv-magazine.de/2026/08/06/konsultation-fuer-finalen-agnes-festlegungsentwurf-eroeffnet/" target="_blank" rel="noopener">pv magazine zum Festlegungsentwurf</a>,
+      <a href="https://www.pv-magazine.de/2026/09/15/lastspitzenkappung-unter-agnes-ohne-leistungspreis-relevanter-denn-je/" target="_blank" rel="noopener">pv magazine zur Lastspitzenkappung</a>,
+      <a href="https://batteriespeicher-report.de/aktuelles/agnes-festlegungsentwurf-2026" target="_blank" rel="noopener">Batteriespeicher-Report zu Fristen und Speicherentgelt</a>.
+      Keine Rechts- oder Steuerberatung und keine Zusage einer Ersparnis.</p>
+  </details>
+  <div class="weiter">
+    <div><b>Die Zahlen sind eine Orientierung, die Auslegung ist Handarbeit.</b><p>Mit deinem Lastgang und dem Preisblatt deines Netzbetreibers prüfen wir, welche Speichergröße passt und ob ein laufendes Projekt die Voraussetzungen für den Bestandsschutz erfüllen kann.</p></div>
+    <div class="weiter__knoepfe"><a class="knopf" href="/termin">Lastganganalyse besprechen</a><button type="button" class="drucken" id="drucken">Ergebnis drucken oder als PDF sichern</button></div>
+  </div>
+</section>
+</main>
+
+<footer class="fuss"><span>© 2026 Patrick Leißner</span><a href="/batteriespeicher">Batteriespeicher</a><a href="/impressum">Impressum</a><a href="/datenschutz">Datenschutz</a></footer>
+<nav class="dock" aria-label="Schnellkontakt"><a class="dock__call" href="tel:+491734994994">Anrufen</a><a class="dock__cta" href="/termin">Termin buchen</a></nav>
+<script src="/assets/vendor/three-r128.min.js" defer></script>
+<script src="/agnes-kostenrechner/model.js" defer></script>
+<script src="/agnes-kostenrechner/lastgebirge3d.js" defer></script>
+<script src="/agnes-kostenrechner/ui.js" defer></script>
+</body>
+</html>
